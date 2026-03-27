@@ -13,7 +13,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
-
 public class SignUpController {
 
     // Thêm @FXML để kết nối với Scene Builder
@@ -60,12 +59,10 @@ public class SignUpController {
         try {
             // FileWriter với tham số 'true' có nghĩa là: Ghi tiếp nối (Append) vào cuối file, không xóa dữ liệu cũ
             java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter("users.txt", true));
-
             // Ghi định dạng: email,password
             writer.write(email + "," + password);
             writer.newLine(); // Xuống dòng cho tài khoản tiếp theo
             writer.close();   // Nhớ đóng file sau khi ghi xong
-
         } catch (Exception e) {
             showError("Lỗi hệ thống: Không thể lưu tài khoản!");
             return; // Dừng lại không chuyển cảnh nếu bị lỗi lưu file
