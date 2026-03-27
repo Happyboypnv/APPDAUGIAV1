@@ -69,7 +69,6 @@ public class SignInController {
             showAlert(Alert.AlertType.ERROR, "Thất bại", "Email hoặc mật khẩu không chính xác!");
         }
     }
-
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
