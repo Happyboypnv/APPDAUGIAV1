@@ -5,7 +5,9 @@
     <scanScope>JavaOnly</scanScope>
     <copyLibs>true</copyLibs>
     <option name="thirdPartyClasspath" />
-    <option name="activeLocationIds" />
+    <option name="activeLocationIds">
+      <option value="23dfc2ef-c6f1-4d2b-b78a-8b58f408de81" />
+    </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
@@ -19,6 +21,7 @@
             </map>
           </option>
         </ConfigurationLocation>
+        <ConfigurationLocation id="23dfc2ef-c6f1-4d2b-b78a-8b58f408de81" type="LOCAL_FILE" scope="All" description="hipiti">D:\UET\PhongcodeJava\LTNC\APPDAUGIA\config\checkstyle.xml</ConfigurationLocation>
       </list>
     </option>
   </component>
