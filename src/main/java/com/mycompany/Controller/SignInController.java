@@ -7,6 +7,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class SignInController {
 
@@ -75,5 +81,26 @@ public class SignInController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void handleSwitchToSignUp(ActionEvent event) {
+        try {
+            // 1. Tải file FXML của màn hình Đăng ký
+            Parent signUpRoot = FXMLLoader.load(getClass().getResource("/SignUp.fxml"));
+
+            // 2. Lấy Stage hiện tại từ sự kiện (Event)
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // 3. Tạo Scene mới với root là màn hình Đăng ký
+            Scene scene = new Scene(signUpRoot);
+
+            // 4. Thiết lập Stage để hiển thị Scene mới
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Bạn có thể thêm thông báo lỗi ở đây nếu không tìm thấy file FXML
+        }
     }
 }

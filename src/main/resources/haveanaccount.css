@@ -1,9 +1,0 @@
-.my-custom-button{
-    -fx-background-color: #1c254b;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 30; /* Bo góc tròn hẳn 2 đầu */
-    -fx-font-family: "Poppins"; /* Hoặc font bạn đang dùng */
-    -fx-font-weight: bold;
-    -fx-font-size: 16px;
-    -fx-padding: 10 20 10 20; /* Căn chỉnh khoảng cách chữ và viền nút */
-}
