@@ -21,7 +21,7 @@
             </map>
           </option>
         </ConfigurationLocation>
-        <ConfigurationLocation id="23dfc2ef-c6f1-4d2b-b78a-8b58f408de81" type="LOCAL_FILE" scope="All" description="hipiti">D:\UET\PhongcodeJava\LTNC\APPDAUGIA\config\checkstyle.xml</ConfigurationLocation>
+        <ConfigurationLocation id="23dfc2ef-c6f1-4d2b-b78a-8b58f408de81" type="LOCAL_FILE" scope="All" description="hipiti">$PROJECT_DIR$/config/checkstyle.xml</ConfigurationLocation>
       </list>
     </option>
   </component>

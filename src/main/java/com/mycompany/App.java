@@ -26,8 +26,8 @@ public class App extends Application {
             primaryStage.setTitle("Sign Up Account");
 
             // Nếu bạn muốn bỏ thanh tiêu đề trắng của Windows để nhìn app "xịn" hơn:
-            // primaryStage.initStyle(StageStyle.TRANSPARENT);
-            // scene.setFill(Color.TRANSPARENT);
+             primaryStage.initStyle(StageStyle.TRANSPARENT);
+             scene.setFill(Color.TRANSPARENT);
 
             primaryStage.setScene(scene);
             primaryStage.setResizable(false); // Giữ nguyên form đẹp như thiết kế
