@@ -21,11 +21,11 @@
     <children>
         <Label alignment="CENTER" layoutX="84.0" layoutY="40.0" prefHeight="94.0" prefWidth="167.0" styleClass="logo-font" stylesheets="@nen.css" text="HiPiTi" />
         <Label layoutX="84.0" layoutY="143.0" prefHeight="70.0" prefWidth="289.0" styleClass="heading-title" stylesheets="@nen.css" text="Login" />
-        <VBox layoutX="487.0" layoutY="127.0" prefHeight="338.0" prefWidth="338.0" styleClass="my-custom-form" stylesheets="@nen.css">
+        <VBox alignment="CENTER" layoutX="470.0" layoutY="104.0" prefHeight="338.0" prefWidth="338.0" styleClass="my-custom-form" stylesheets="@nen.css">
          <children>
-                <AnchorPane prefHeight="318.0" prefWidth="341.0">
+                <AnchorPane prefHeight="395.0" prefWidth="335.0">
                     <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="103.0" layoutY="31.0" prefHeight="53.0" prefWidth="110.0" text="Sign in" textFill="WHITE">
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="109.0" layoutY="32.0" prefHeight="53.0" prefWidth="110.0" text="Sign in" textFill="WHITE">
                             <font>
                                 <Font name="Arial Bold" size="26.0" />
                             </font>
@@ -45,7 +45,20 @@
                         <Button layoutX="90.0" layoutY="239.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@nen.css" text="Login" />
                     </children>
                 </AnchorPane>
+            <Separator maxWidth="-Infinity" prefHeight="5.0" prefWidth="246.0">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Separator>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#switchToSignUp" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-button" stylesheets="@haveanaccount.css" text="Don't have an account? Sign Up" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets top="12.0" />
+               </VBox.margin>
+            </Button>
          </children>
+         <padding>
+            <Insets bottom="40.0" />
+         </padding>
         </VBox>
         <Label layoutX="82.0" layoutY="213.0" prefHeight="40.0" prefWidth="271.0" styleClass="sub-heading-title" text="Sign in to continue" />
         <Separator layoutX="84.0" layoutY="309.0" prefHeight="53.0" prefWidth="110.0" styleClass="custom-separator" stylesheets="@nen.css" />

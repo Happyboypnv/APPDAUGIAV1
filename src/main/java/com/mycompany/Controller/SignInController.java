@@ -7,6 +7,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 public class SignInController {
 
@@ -69,12 +75,28 @@ public class SignInController {
             showAlert(Alert.AlertType.ERROR, "Thất bại", "Email hoặc mật khẩu không chính xác!");
         }
     }
-
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    public void switchToSignUp(ActionEvent event) throws IOException {
+        // 1. Tải file FXML của màn hình Sign Up
+        // LƯU Ý: Thay "SignUp.fxml" bằng tên file FXML thực tế của bạn
+        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/SignUp.fxml"));
+
+        // 2. Tạo một Scene (cảnh) mới chứa giao diện Sign Up
+        Scene signUpScene = new Scene(signUpRoot);
+
+        // 3. Lấy Stage (cửa sổ ứng dụng hiện tại) từ sự kiện click chuột
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // 4. Đặt Scene mới lên Stage và hiển thị
+        window.setScene(signUpScene);
+        window.show();
     }
 }
