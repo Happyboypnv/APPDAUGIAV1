@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         String filename = "user.ser";
-        List<user> users = new ArrayList<user>();
+        List<User> Users = new ArrayList<User>();
         Scanner input = new Scanner(System.in);
         int n = Integer.parseInt(input.nextLine());
         for(int i = 0; i < n; i++){
@@ -14,23 +14,23 @@ public class Main {
             String[] tmp =  line.split("\\s+");
             String name = tmp[0];
             String password = tmp[1];
-            user u = new user(name,password);
-            users.add(u);
+            User u = new User(name,password);
+            Users.add(u);
         }
         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))){
-            out.writeObject(users);
+            out.writeObject(Users);
         }
         catch(IOException ioe){
             ioe.printStackTrace();
         }
-        List<user> users2 = new ArrayList<>();
+        List<User> users2 = new ArrayList<>();
         try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))){
-            users2 = (List<user>) in.readObject();
+            users2 = (List<User>) in.readObject();
         }
         catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        for(user u : users2){
+        for(User u : users2){
             System.out.println(u.toString());
         }
     }
