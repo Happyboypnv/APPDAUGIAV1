@@ -8,7 +8,6 @@ public class GiaoDich {
     private double giaChot;
     private User winner;
     private User seller;
-
     public GiaoDich(String id, PhienDauGia phienDauGia) {
         this.id = id;
         this.phienDauGia = phienDauGia;

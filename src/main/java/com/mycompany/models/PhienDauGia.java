@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package com.mycompany.models;
 
 import java.time.LocalDateTime;
@@ -13,7 +8,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-
 public class PhienDauGia {
     private String id;
     private String name;
@@ -34,7 +28,7 @@ public class PhienDauGia {
     private Timeline countDownTimeLine;
     private int giayConLai = 6;
     private Runnable endGame;
-
+    private String state = "PENDING";
     public PhienDauGia(String id, String name, Product sanPhanDauGia, double giaKhoiDiem, User seller) {
         this.id = id;
         this.name = name;
@@ -48,18 +42,16 @@ public class PhienDauGia {
             if (this.giayConLai > 0) {
                 System.out.println("Hết giá sau: " + this.giayConLai + "s...");
             }
-
         }, new KeyValue[0])});
         this.countDownTimeLine.setCycleCount(5);
         this.countDownTimeLine.setOnFinished((event) -> this.ketThucPhien());
     }
-
     public void batDauPhien() {
+        this.setState("RUNING");
         this.thoiGianBatDau = LocalDateTime.now();
         this.giayConLai = 6;
         this.countDownTimeLine.playFromStart();
     }
-
     public boolean nguoiChoiTraGia(User bidder, double giaMoi) {
         if (bidder.equals(this.seller)) {
             return false;
@@ -84,8 +76,8 @@ public class PhienDauGia {
             return false;
         }
     }
-
     public void ketThucPhien() {
+        setState("END");
         this.thoiGianKetThuc = LocalDateTime.now();
         long tongSoGiay = ChronoUnit.SECONDS.between(this.thoiGianBatDau, this.thoiGianKetThuc);
         long gio = tongSoGiay / 3600L;
@@ -97,46 +89,37 @@ public class PhienDauGia {
         } else {
             this.winner = null;
         }
-
         if (this.endGame != null) {
             this.endGame.run();
         }
 
     }
-
     public void setOnAutionFinished(Runnable endGame) {
         this.endGame = endGame;
     }
-
     public double getGiaChot() {
         return this.giaDanDau;
     }
-
     public Product getSanPham() {
         return this.sanPhanDauGia;
     }
-
     public String getThoiGianDauGia() {
         return this.thoiGianDauGia;
     }
-
     public User getWinner() {
         return this.winner;
     }
-
     public User getSeller() {
         return this.seller;
     }
-
     public String getName() {
         return this.name;
     }
-
     public String getId() {
         return this.id;
     }
-
     public double getGiaKhoiDiem() {
         return this.giaKhoiDiem;
     }
+    public void setState(String state) {this.state = state;}
 }
