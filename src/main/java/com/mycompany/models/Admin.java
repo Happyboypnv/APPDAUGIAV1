@@ -1,8 +1,8 @@
 package com.mycompany.models;
 
-public class Admin extends Person {
+public class Admin extends ConNguoi {
     @Override
-    protected String findPerson(Person other) {
+    protected String timKiemNguoiDung(ConNguoi other) {
         return other.toString();
     }
 
