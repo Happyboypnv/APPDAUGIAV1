@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class SanPham implements Serializable {
     private String tenSanPham;
-    private final String maSanPham;
+    private String maSanPham;
     public SanPham(String tenSanPham, String maSanPham) {
         this.tenSanPham = tenSanPham;
         this.maSanPham = maSanPham;
