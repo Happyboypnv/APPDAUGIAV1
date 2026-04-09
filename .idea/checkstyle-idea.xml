@@ -5,12 +5,11 @@
     <scanScope>JavaOnly</scanScope>
     <copyLibs>true</copyLibs>
     <option name="thirdPartyClasspath" />
-    <option name="activeLocationIds">
-      <option value="23dfc2ef-c6f1-4d2b-b78a-8b58f408de81" />
-    </option>
+    <option name="activeLocationIds" />
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
+<<<<<<< HEAD
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">
           (bundled)
           <option name="properties">
@@ -22,6 +21,9 @@
           </option>
         </ConfigurationLocation>
         <ConfigurationLocation id="23dfc2ef-c6f1-4d2b-b78a-8b58f408de81" type="LOCAL_FILE" scope="All" description="hipiti">$PROJECT_DIR$/config/checkstyle.xml</ConfigurationLocation>
+=======
+        <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+>>>>>>> cf358943d323c337ec82dc51fd592260717750bc
       </list>
     </option>
   </component>
