@@ -6,5 +6,5 @@ public interface IKhoLuuTruNguoiDung {
     void luu(NguoiDung nguoiDung);
     NguoiDung timTheoMa(String maTimKiem);
     Map<String, NguoiDung> layTatCa();
-
+    boolean kiemTraNguoiDung(String email, String password);
 }

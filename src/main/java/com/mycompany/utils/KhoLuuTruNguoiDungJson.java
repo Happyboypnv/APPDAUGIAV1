@@ -27,7 +27,7 @@ public class KhoLuuTruNguoiDungJson implements IKhoLuuTruNguoiDung{
         duLieu.maCuoiCung++;
         String maMoi = String.format("PPTT%06d", duLieu.maCuoiCung);
         nguoiDung.setMaNguoiDung(maMoi);
-        duLieu.danhSach.put(maMoi, nguoiDung);
+        duLieu.danhSach.put(nguoiDung.layThuDienTu(), nguoiDung);
         ghiVaoFile(duLieu);
     }
     public NguoiDung timTheoMa(String maTimKiem){
@@ -55,5 +55,12 @@ public class KhoLuuTruNguoiDungJson implements IKhoLuuTruNguoiDung{
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+    public boolean kiemTraNguoiDung(String email, String password){
+        Map<String, NguoiDung> danhSachNguoiDung = layTatCa();
+        if(danhSachNguoiDung == null) return false;
+        NguoiDung nguoiDung = layTatCa().get(email);
+        if(nguoiDung == null) return false;
+        return nguoiDung.layMatKhau().equals(password);
     }
 }

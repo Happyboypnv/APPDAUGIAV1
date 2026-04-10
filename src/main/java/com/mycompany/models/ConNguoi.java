@@ -31,4 +31,5 @@ public abstract class ConNguoi implements Serializable {
     public String layNgaySinh() {return this.ngaySinh;}
     public String layMaNguoiDung() {return this.maNguoiDung;}
     public void setMaNguoiDung(String maNguoiDung) {this.maNguoiDung = maNguoiDung;}
+    public String layMatKhau() {return this.matKhau;}
 }
