@@ -57,8 +57,9 @@ public class SignUpController {
 
         // 4. Chuyển cảnh nếu mọi thứ hợp lệ
         try {
+            String firstChar = String.valueOf(email.charAt(0)).toLowerCase(); // Lấy chữ cái đầu trong email để cho vào ..._User
             // FileWriter với tham số 'true' có nghĩa là: Ghi tiếp nối (Append) vào cuối file, không xóa dữ liệu cũ
-            java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter("users.txt", true));
+            java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(UserDatabaseStarter.createFile(firstChar), true));
             // Ghi định dạng: email,password
             writer.write(email + "," + password);
             writer.newLine(); // Xuống dòng cho tài khoản tiếp theo

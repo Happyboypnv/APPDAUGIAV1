@@ -4,122 +4,104 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class PhienDauGia {
-    private String id;
-    private String name;
+    private String maPhienDauGia;
+    private String tenPhienDauGia;
     private double giaKhoiDiem;
     private double giaDanDau;
     private double buocGia;
+    private final double doLechGiaMin = 0.06;
+
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
-    private List<User> listBidders = new ArrayList();
-    private User seller;
-    private final double doLechGiaMin = 0.06;
-    private User winner;
     private String thoiGianDauGia;
-    private final long donViGio = 3600L;
-    private final long donViPhut = 60L;
-    private Product sanPhanDauGia;
+
+    private List<NguoiDung> danhSachNguoiTraGia = new ArrayList<>();
+    private NguoiDung nguoiBan;
+    private NguoiDung nguoiThangCuoc;
+    private SanPham sanPhanDauGia;
+
     private boolean ok = false;
-    private Timeline countDownTimeLine;
-    private int giayConLai = 6;
-    private Runnable endGame;
-    private String state = "PENDING";
-    public PhienDauGia(String id, String name, Product sanPhanDauGia, double giaKhoiDiem, User seller) {
-        this.id = id;
-        this.name = name;
+
+    // THAY ĐỔI 1: Sử dụng Enum thay vì String
+    private TrangThaiPhien trangThai = TrangThaiPhien.DANG_CHO;
+
+    // THAY ĐỔI 2: Thêm ổ khóa đa luồng
+    private final transient ReentrantLock lock = new ReentrantLock();
+
+    public PhienDauGia(String maPhienDauGia, String tenPhienDauGia, SanPham sanPhanDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {
+        this.maPhienDauGia = maPhienDauGia;
+        this.tenPhienDauGia = tenPhienDauGia;
         this.giaKhoiDiem = giaKhoiDiem;
-        this.seller = seller;
-        this.buocGia = giaKhoiDiem * 0.06;
+        this.nguoiBan = nguoiBan;
+        this.buocGia = giaKhoiDiem * this.doLechGiaMin;
         this.giaDanDau = giaKhoiDiem;
         this.sanPhanDauGia = sanPhanDauGia;
-        this.countDownTimeLine = new Timeline(new KeyFrame[]{new KeyFrame(Duration.seconds((double)1.0F), (event) -> {
-            --this.giayConLai;
-            if (this.giayConLai > 0) {
-                System.out.println("Hết giá sau: " + this.giayConLai + "s...");
-            }
-        }, new KeyValue[0])});
-        this.countDownTimeLine.setCycleCount(5);
-        this.countDownTimeLine.setOnFinished((event) -> this.ketThucPhien());
     }
+
     public void batDauPhien() {
-        this.setState("RUNING");
+        this.trangThai = TrangThaiPhien.DANG_DIEN_RA;
         this.thoiGianBatDau = LocalDateTime.now();
-        this.giayConLai = 6;
-        this.countDownTimeLine.playFromStart();
     }
-    public boolean nguoiChoiTraGia(User bidder, double giaMoi) {
-        if (bidder.equals(this.seller)) {
-            return false;
-        } else if (!this.ok) {
-            if (giaMoi >= this.giaDanDau) {
-                this.giaDanDau = giaMoi;
-                this.listBidders.add(bidder);
-                this.ok = true;
-                this.giayConLai = 6;
-                this.countDownTimeLine.playFromStart();
-                return true;
-            } else {
-                return false;
-            }
-        } else if (giaMoi >= this.giaDanDau + this.buocGia) {
-            this.giaDanDau = giaMoi;
-            this.listBidders.add(bidder);
-            this.giayConLai = 6;
-            this.countDownTimeLine.playFromStart();
-            return true;
-        } else {
+
+    // THAY ĐỔI 3: Áp dụng Lock để chống Race Condition khi nhiều user đặt giá
+    public boolean nguoiChoiTraGia(NguoiDung bidder, double giaMoi) {
+        // Chặn ngay từ cửa nếu là người bán hoặc phiên chưa diễn ra
+        if (bidder.equals(this.nguoiBan) || this.trangThai != TrangThaiPhien.DANG_DIEN_RA) {
             return false;
         }
+        lock.lock(); // BẮT ĐẦU KHÓA
+        try {
+            if (!this.ok) {
+                if (giaMoi >= this.giaKhoiDiem) {
+                    capNhatThongTinGia(bidder, giaMoi);
+                    return true;
+                }
+            } else {
+                if (giaMoi >= this.giaDanDau + this.buocGia) {
+                    capNhatThongTinGia(bidder, giaMoi);
+                    return true;
+                }
+            }
+            return false;
+        } finally {
+            lock.unlock(); // LUÔN LUÔN MỞ KHÓA
+        }
     }
+
+    // Tách riêng logic cập nhật để tái sử dụng
+    private void capNhatThongTinGia(NguoiDung bidder, double giaMoi) {
+        this.giaDanDau = giaMoi;
+        this.danhSachNguoiTraGia.add(bidder);
+        this.ok = true;
+        // Việc đếm lại 6 giây sẽ do bộ đếm bên ngoài (Controller/Server) đảm nhận
+    }
+
     public void ketThucPhien() {
-        setState("END");
+        this.trangThai = TrangThaiPhien.KET_THUC;
         this.thoiGianKetThuc = LocalDateTime.now();
+
         long tongSoGiay = ChronoUnit.SECONDS.between(this.thoiGianBatDau, this.thoiGianKetThuc);
         long gio = tongSoGiay / 3600L;
-        long phut = tongSoGiay % 3600L / 60L;
+        long phut = (tongSoGiay % 3600L) / 60L;
         long giay = tongSoGiay % 60L;
         this.thoiGianDauGia = String.format("%02d:%02d:%02d", gio, phut, giay);
-        if (!this.listBidders.isEmpty()) {
-            this.winner = (User)this.listBidders.get(this.listBidders.size() - 1);
-        } else {
-            this.winner = null;
-        }
-        if (this.endGame != null) {
-            this.endGame.run();
-        }
 
+        if (!this.danhSachNguoiTraGia.isEmpty()) {
+            this.nguoiThangCuoc = this.danhSachNguoiTraGia.get(this.danhSachNguoiTraGia.size() - 1);
+        }
     }
-    public void setOnAutionFinished(Runnable endGame) {
-        this.endGame = endGame;
-    }
-    public double getGiaChot() {
-        return this.giaDanDau;
-    }
-    public Product getSanPham() {
-        return this.sanPhanDauGia;
-    }
-    public String getThoiGianDauGia() {
-        return this.thoiGianDauGia;
-    }
-    public User getWinner() {
-        return this.winner;
-    }
-    public User getSeller() {
-        return this.seller;
-    }
-    public String getName() {
-        return this.name;
-    }
-    public String getId() {
-        return this.id;
-    }
-    public double getGiaKhoiDiem() {
-        return this.giaKhoiDiem;
-    }
-    public void setState(String state) {this.state = state;}
+
+    // Getters
+    public TrangThaiPhien layTrangThai() { return this.trangThai; }
+    public double layGiaChot() { return this.giaDanDau; }
+    public SanPham laySanPham() { return this.sanPhanDauGia; }
+    public String layThoiGianDauGia() { return this.thoiGianDauGia; }
+    public NguoiDung layNguoiThangCuoc() { return this.nguoiThangCuoc; }
+    public NguoiDung layNguoiBan() { return this.nguoiBan; }
+    public String layTenPhienDauGia() { return this.tenPhienDauGia; }
+    public String layMaPhienDauGia() { return this.maPhienDauGia; }
+    public double layGiaKhoiDiem() { return this.giaKhoiDiem; }
 }
