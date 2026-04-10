@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="617.0" prefWidth="878.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignInController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignInController">
     <opaqueInsets>
         <Insets />
     </opaqueInsets>
@@ -19,9 +19,9 @@
         <Cursor fx:constant="DEFAULT" />
     </cursor>
     <children>
-        <Label alignment="CENTER" layoutX="84.0" layoutY="40.0" prefHeight="94.0" prefWidth="167.0" styleClass="logo-font" stylesheets="@nen.css" text="HiPiTi" />
-        <Label layoutX="84.0" layoutY="143.0" prefHeight="70.0" prefWidth="289.0" styleClass="heading-title" stylesheets="@nen.css" text="Login" />
-        <VBox alignment="CENTER" layoutX="470.0" layoutY="104.0" prefHeight="338.0" prefWidth="338.0" styleClass="my-custom-form" stylesheets="@nen.css">
+        <Label alignment="CENTER" layoutX="76.0" layoutY="74.0" prefHeight="94.0" prefWidth="167.0" styleClass="logo-font" stylesheets="@nen.css" text="HiPiTi" />
+        <Label layoutX="76.0" layoutY="196.0" prefHeight="70.0" prefWidth="289.0" styleClass="heading-title" stylesheets="@nen.css" text="Login" />
+        <VBox alignment="CENTER" layoutX="470.0" layoutY="104.0" prefHeight="450.0" prefWidth="338.0" styleClass="my-custom-form" stylesheets="@nen.css">
          <children>
                 <AnchorPane prefHeight="395.0" prefWidth="335.0">
                     <children>
@@ -60,9 +60,9 @@
             <Insets bottom="40.0" />
          </padding>
         </VBox>
-        <Label layoutX="82.0" layoutY="213.0" prefHeight="40.0" prefWidth="271.0" styleClass="sub-heading-title" text="Sign in to continue" />
-        <Separator layoutX="84.0" layoutY="309.0" prefHeight="53.0" prefWidth="110.0" styleClass="custom-separator" stylesheets="@nen.css" />
-        <Label layoutX="82.0" layoutY="369.0" opacity="0.62" styleClass="sub2-heading-title" stylesheets="@nen.css" text="Transparent, trustworth and fast-pace " />
-        <Label layoutX="84.0" layoutY="407.0" opacity="0.62" prefHeight="30.0" prefWidth="233.0" styleClass="sub2-heading-title" stylesheets="@nen.css" text="Designed by team Hipiti" />
+        <Label layoutX="74.0" layoutY="266.0" prefHeight="40.0" prefWidth="271.0" styleClass="sub-heading-title" text="Sign in to continue" />
+        <Separator layoutX="76.0" layoutY="426.0" prefHeight="53.0" prefWidth="110.0" styleClass="custom-separator" stylesheets="@nen.css" />
+        <Label layoutX="74.0" layoutY="486.0" opacity="0.62" styleClass="sub2-heading-title" stylesheets="@nen.css" text="Transparent, trustworth and fast-pace " />
+        <Label layoutX="76.0" layoutY="524.0" opacity="0.62" prefHeight="30.0" prefWidth="233.0" styleClass="sub2-heading-title" stylesheets="@nen.css" text="Designed by team Hipiti" />
     </children>
 </AnchorPane>

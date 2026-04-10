@@ -56,11 +56,18 @@ public class KhoLuuTruNguoiDungJson implements IKhoLuuTruNguoiDung{
             e.printStackTrace();
         }
     }
-    public boolean kiemTraNguoiDung(String email, String password){
-        Map<String, NguoiDung> danhSachNguoiDung = layTatCa();
-        if(danhSachNguoiDung == null) return false;
-        NguoiDung nguoiDung = layTatCa().get(email);
-        if(nguoiDung == null) return false;
-        return nguoiDung.layMatKhau().equals(password);
+
+    @Override
+    public boolean kiemTraNguoiDung(String email, String password) {
+        Map<String,NguoiDung> danhSachNguoiDung =  layTatCa();
+        if (danhSachNguoiDung == null) {
+            return false;
+        }
+        NguoiDung check = danhSachNguoiDung.get(email);
+        if (check == null){
+            return false;
+        } else {
+            return check.layMatKhau().equals(password);
+        }
     }
 }

@@ -56,7 +56,7 @@
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
-                        <DatePicker fx:id="datePicker" layoutX="29.0" layoutY="317.0" prefHeight="40.0" prefWidth="300.0" promptText="Select" stylesheets="@nen.css">
+                        <DatePicker fx:id="dateOfBirthPicker" layoutX="29.0" layoutY="317.0" prefHeight="40.0" prefWidth="300.0" promptText="Select" stylesheets="@nen.css">
                             <styleClass>
                                 <String fx:value="my-custom-text" />
                                 <String fx:value="custom-dropdown" />
