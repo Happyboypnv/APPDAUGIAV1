@@ -1,23 +1,48 @@
 package com.mycompany.models;
-import  java.io.*;
-public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
-    public String name; // username nen la duy nhat
-    public transient String password;
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
-    }
 
-    public String getName() {
-        return name;
+public class User extends Person implements IPersonActions{
+    private String address;
+    private String phoneNumber;
+    private double balance;
+    public User(String name){
+        super(name);
+    }
+    public User(String id, String fullName, String email, String birth, String address, String phoneNumber){
+        super(id, fullName, email, birth);
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.balance = 0;
+        //List<Transactions> transactions = new ArrayList<>();
+        /*
+        Transactions
+        -> ID
+           Product -> name, ...;
+           Time
+           Seller
+           Buyer
+         */
     }
 
     @Override
-    public String toString() {
-        return name + ","  + password;
+    protected String findPerson(Person self) {
+        //self o day la ban than user nay, se duoc truyen vao ngay trong controller
+        return self.toString();
     }
 
-    //Ko nên để Bidder và Seller là interface vì khi implement vào user vẫn có thể ép kiểu ngược lại bidder thành seller và seller thành bidder vì bản chất nó vẫn là seller nên chỉ cần instance of user là ép từ cái này thành cái kia được rồi
-    // Bidder và seller nên đóng vai trò là lớp wrapper, bọc lấy user (bidder / seller has a user). User đóng vai trò thuần lưu thông tin của ng dùng, còn 2 lớp wrapper kia định nghĩa các phương thức chỉ riêng mỗi vai trò có => lớp này k dùng được phương thức riêng của lớp kia và k ép lớp này thành lớp kia được
+    @Override
+    public void buy(Product p) {
+        // Lấy tên user từ thuộc tính hoặc hàm toString để in ra cho trực quan
+        System.out.println("[MUA] Người dùng " + this.toString().split("\n")[1] + " đang đặt giá mua: " + p.getName());
+    }
+
+    @Override
+    public void sell(Product p) {
+        System.out.println("[BÁN] Người dùng " + this.toString().split("\n")[1] + " đang đăng bán: " + p.getName());
+    }
+
+    @Override
+    public void quitBiddingRoom(){
+        System.out.println("Người dùng đã rời phòng đấu giá.");
+    }
+    public String getName(){return this.getFullName();}
 }

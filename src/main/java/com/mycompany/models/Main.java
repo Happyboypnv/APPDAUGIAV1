@@ -1,37 +1,41 @@
 package com.mycompany.models;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-public class Main {
+
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+public class Main extends Application {
     public static void main(String[] args) {
-        String filename = "user.ser";
-        List<User> Users = new ArrayList<User>();
-        Scanner input = new Scanner(System.in);
-        int n = Integer.parseInt(input.nextLine());
-        for(int i = 0; i < n; i++){
-            String line = input.nextLine().trim();
-            String[] tmp =  line.split("\\s+");
-            String name = tmp[0];
-            String password = tmp[1];
-            User u = new User(name,password);
-            Users.add(u);
-        }
-        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))){
-            out.writeObject(Users);
-        }
-        catch(IOException ioe){
-            ioe.printStackTrace();
-        }
-        List<User> users2 = new ArrayList<>();
-        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))){
-            users2 = (List<User>) in.readObject();
-        }
-        catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        for(User u : users2){
-            System.out.println(u.toString());
-        }
+        launch(args);
+    }
+
+    public void start(Stage primaryStage) {
+        User seller = new User("phongvan");
+        User buyer1 = new User("phongnguyen");
+        User buyer2 = new User("happyboy");
+        Product luv = new Product("001", "Ao da");
+        PhienDauGia phienDauGia = new PhienDauGia("P01", "Dau gia ao luv", luv, (double)1.0E7F, seller);
+        phienDauGia.batDauPhien();
+        phienDauGia.setOnAutionFinished(() -> {
+            System.out.println("\n--- KẾT QUẢ PHIÊN ĐẤU GIÁ ---");
+            System.out.println("Người chiến thắng: " + phienDauGia.getWinner().getName());
+            System.out.printf("Giá chốt: %,.0f VNĐ\n", phienDauGia.getGiaChot());
+            System.out.println("Tổng thời gian diễn ra: " + phienDauGia.getThoiGianDauGia());
+            GiaoDich giaoDich = new GiaoDich("001", phienDauGia);
+            System.out.println(giaoDich.toString());
+            Platform.exit();
+        });
+        Timeline timeline = new Timeline(new KeyFrame[]{new KeyFrame(Duration.seconds((double)4.0F), (e) -> {
+            System.out.println("Nguoi A tra gia 15000000");
+            phienDauGia.nguoiChoiTraGia(buyer1, (double)1.5E7F);
+        }, new KeyValue[0]), new KeyFrame(Duration.seconds((double)9.0F), (e) -> {
+            System.out.println("Nguoi B tra gia 20000000");
+            phienDauGia.nguoiChoiTraGia(buyer2, (double)2.0E7F);
+        }, new KeyValue[0])});
+        timeline.play();
     }
 }
