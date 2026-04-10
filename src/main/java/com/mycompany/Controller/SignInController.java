@@ -41,10 +41,7 @@ public class SignInController {
             // Đọc từng dòng cho đến khi hết file
             while ((line = reader.readLine()) != null) {
                 // Cắt dòng văn bản bằng dấu phẩy
-                String[] parts = line.split(",");
-
-                // Đảm bảo dòng có đủ 2 phần (email và password)
-                if (parts.length == 2) {
+                String[] parts = line.split(",");if (parts.length == 2) {
                     String savedEmail = parts[0];
                     String savedPassword = parts[1];
 
@@ -55,6 +52,9 @@ public class SignInController {
                     }
                 }
             }
+
+                // Đảm bảo dòng có đủ 2 phần (email và password)
+
             reader.close();
 
         } catch (Exception e) {

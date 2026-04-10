@@ -7,7 +7,7 @@ public abstract class ConNguoi implements Serializable {
     private String hoTen;
     private String thuDienTu;
     private String ngaySinh;
-
+    private String matKhau;
     protected abstract String timKiemNguoiDung(ConNguoi person);
     @Override
     public String toString () {
@@ -17,10 +17,10 @@ public abstract class ConNguoi implements Serializable {
                 "\nBrith: " + ngaySinh;
     }
 
-    protected ConNguoi(String maNguoiDung, String hoTen, String thuDienTu, String ngaySinh) {
-        this.maNguoiDung = maNguoiDung;
+    protected ConNguoi(String hoTen, String thuDienTu, String matKhau, String ngaySinh) {
         this.hoTen = hoTen;
         this.thuDienTu = thuDienTu;
+        this.matKhau = matKhau;
         this.ngaySinh = ngaySinh;
     }
     protected ConNguoi(String hoTen){this.hoTen = hoTen;}
@@ -30,4 +30,5 @@ public abstract class ConNguoi implements Serializable {
     public String layThuDienTu() {return this.thuDienTu;}
     public String layNgaySinh() {return this.ngaySinh;}
     public String layMaNguoiDung() {return this.maNguoiDung;}
+    public void setMaNguoiDung(String maNguoiDung) {this.maNguoiDung = maNguoiDung;}
 }
