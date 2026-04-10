@@ -1,9 +1,8 @@
-package com.mycompany.models;
+package com.mycompanytest.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class PhienDauGia {
     private String maPhien;
@@ -44,6 +43,14 @@ public class PhienDauGia {
         this.giaHienTai = giaMoi;
         this.danhSachNguoiTraGia.add(nguoiMua);
         // Việc đếm lại 6 giây sẽ do bộ đếm bên ngoài (Controller/Server) đảm nhận
+    }
+
+    @Override
+    public String toString() {
+        return "Mã phiên: " + maPhien +
+                "\nTên phiên: " + tenPhien +
+                "\nTrạng thái: " + trangThai +
+                "\n";
     }
 
     //Setters

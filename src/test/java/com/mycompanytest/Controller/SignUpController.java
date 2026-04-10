@@ -1,4 +1,4 @@
-package com.mycompany.Controller;
+package com.mycompanytest.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML; // Quan trọng
@@ -87,7 +87,7 @@ public class SignUpController {
             Parent root = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
 
             // 2. Lấy ra cửa sổ (Stage) hiện tại đang mở
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             // 3. Đặt giao diện mới lên cửa sổ
             Scene scene = new Scene(root);

@@ -1,5 +1,5 @@
 
-package com.mycompany.models;
+package com.mycompanytest.models;
 
 public class GiaoDich {
     private final String id;

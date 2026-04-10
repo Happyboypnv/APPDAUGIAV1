@@ -1,4 +1,4 @@
-package com.mycompany.models;
+package com.mycompanytest.models;
 
 import java.util.List;
 import java.util.ArrayList;
