@@ -30,9 +30,6 @@ public class KhoLuuTruNguoiDungJson implements IKhoLuuTruNguoiDung{
         duLieu.danhSach.put(nguoiDung.layThuDienTu(), nguoiDung);
         ghiVaoFile(duLieu);
     }
-    public NguoiDung timTheoMa(String maTimKiem){
-        return docTuFile().danhSach.get(maTimKiem);
-    }
     public Map<String, NguoiDung> layTatCa(){
         return docTuFile().danhSach;
     }

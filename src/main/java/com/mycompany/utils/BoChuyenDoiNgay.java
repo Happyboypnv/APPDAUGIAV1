@@ -14,6 +14,7 @@ public class BoChuyenDoiNgay extends TypeAdapter<LocalDate> {
     public void write(JsonWriter out, LocalDate localDate) throws IOException {
         if(localDate == null) return;
         out.value(localDate.toString());
+        // localDate -> String
     }
     @Override
     public LocalDate read(JsonReader in) throws IOException {

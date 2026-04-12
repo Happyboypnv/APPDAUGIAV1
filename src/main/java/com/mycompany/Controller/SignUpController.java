@@ -1,6 +1,5 @@
 package com.mycompany.Controller;
 
-import com.mycompany.models.ConNguoi;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML; // Quan trọng
 import javafx.fxml.FXMLLoader; // Quan trọng
@@ -15,8 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
 import java.time.*;
-import java.util.*;
-import java.io.*;
+
 import com.mycompany.utils.KhoLuuTruNguoiDungJson;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.utils.*;
@@ -60,7 +58,7 @@ public class SignUpController {
         return age >= 18;
     }
     public void handleSignUp(ActionEvent event) {
-        String name = nameField.getText().trim();
+        String name = nameField.getText().trim(); /// cat het khoang trong di
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
         LocalDate date = datePicker.getValue();
@@ -100,7 +98,7 @@ public class SignUpController {
     public void handleGoToSignIn(ActionEvent event) throws IOException {
         // 1. Tải file FXML của màn hình Sign Up
         // LƯU Ý: Thay "SignUp.fxml" bằng tên file FXML thực tế của bạn
-        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/SignIn.fxml"));
+        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
 
         // 2. Tạo một Scene (cảnh) mới chứa giao diện Sign Up
         Scene signUpScene = new Scene(signUpRoot);

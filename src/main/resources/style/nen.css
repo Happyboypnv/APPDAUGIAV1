@@ -67,7 +67,7 @@
 .custom-dropdown {
    -fx-background-color: rgba(255, 255, 255, 0.2);
    -fx-background-radius: 20;
-   -fx-text-fill: white; /* Đổi màu chữ người dùng gõ vào thành màu trắng */}
+   -fx-text-fill: white; /* Đổi màu chữ người dùng gõ vào thành màu trắng */
    /* 1. Tạo nền mờ và bo góc cho toàn bộ khung DatePicker */
     -fx-pref-height: 42; /* Chỉnh độ cao cho thanh thoát */
     -fx-pref-width: 300; /* Tùy chỉnh độ rộng theo form của bạn */

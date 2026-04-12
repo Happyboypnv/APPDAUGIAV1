@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignUpController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignUpController">
     <opaqueInsets>
         <Insets />
     </opaqueInsets>
@@ -21,10 +21,10 @@
         <Cursor fx:constant="DEFAULT" />
     </cursor>
     <children>
-        <Label alignment="CENTER" layoutX="78.0" layoutY="64.0" prefHeight="94.0" prefWidth="167.0" styleClass="logo-font" stylesheets="@nen.css" text="HiPiTi" />
-        <Label layoutX="78.0" layoutY="207.0" prefHeight="70.0" prefWidth="289.0" styleClass="heading-title" stylesheets="@nen.css" text="Create" />
-        <Label layoutX="78.0" layoutY="261.0" prefHeight="70.0" prefWidth="289.0" styleClass="heading-title" stylesheets="@nen.css" text="New Account" />
-        <VBox layoutX="484.0" layoutY="48.0" prefHeight="552.0" prefWidth="359.0" styleClass="my-custom-form" stylesheets="@nen.css">
+        <Label alignment="CENTER" layoutX="78.0" layoutY="64.0" prefHeight="94.0" prefWidth="167.0" styleClass="logo-font" stylesheets="@../style/nen.css" text="HiPiTi" />
+        <Label layoutX="78.0" layoutY="207.0" prefHeight="70.0" prefWidth="289.0" styleClass="heading-title" stylesheets="@../style/nen.css" text="Create" />
+        <Label layoutX="78.0" layoutY="261.0" prefHeight="70.0" prefWidth="289.0" styleClass="heading-title" stylesheets="@../style/nen.css" text="New Account" />
+        <VBox layoutX="484.0" layoutY="48.0" prefHeight="552.0" prefWidth="359.0" styleClass="my-custom-form" stylesheets="@../style/nen.css">
          <children>
                 <AnchorPane prefHeight="543.0" prefWidth="357.0">
                     <children>
@@ -43,36 +43,36 @@
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="nameField" layoutX="29.0" layoutY="106.0" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-text" stylesheets="@nen.css" />
-                        <TextField fx:id="emailField" layoutX="29.0" layoutY="173.0" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-text" stylesheets="@nen.css" />
+                        <TextField fx:id="nameField" layoutX="29.0" layoutY="106.0" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-text" stylesheets="@../style/nen.css" />
+                        <TextField fx:id="emailField" layoutX="29.0" layoutY="173.0" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-text" stylesheets="@../style/nen.css" />
                         <Label layoutX="36.0" layoutY="223.0" prefHeight="17.0" prefWidth="128.0" text="PASSWORD" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
-                        <PasswordField fx:id="passwordField" layoutX="29.0" layoutY="240.0" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-text" stylesheets="@nen.css" />
+                        <PasswordField fx:id="passwordField" layoutX="29.0" layoutY="240.0" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-text" stylesheets="@../style/nen.css" />
                         <Label layoutX="36.0" layoutY="292.0" prefHeight="17.0" prefWidth="110.0" text="DATE OF BIRTH" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
-                        <DatePicker fx:id="datePicker" layoutX="29.0" layoutY="317.0" prefHeight="40.0" prefWidth="300.0" promptText="Select" stylesheets="@nen.css">
+                        <DatePicker fx:id="datePicker" layoutX="29.0" layoutY="317.0" prefHeight="40.0" prefWidth="300.0" promptText="Select" stylesheets="@../style/nen.css">
                             <styleClass>
                                 <String fx:value="my-custom-text" />
                                 <String fx:value="custom-dropdown" />
                                 <String fx:value="date-picker" />
                             </styleClass>
                         </DatePicker>
-                        <Button layoutX="101.0" layoutY="381.0" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@nen.css" text="Sign Up" />
-                  <Button layoutX="50.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleGoToSignIn" prefHeight="40.0" prefWidth="260.0" styleClass="my-custom-button" stylesheets="@haveanaccount.css" text="I already have an account" />
+                        <Button layoutX="101.0" layoutY="381.0" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Sign Up" />
+                  <Button layoutX="50.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleGoToSignIn" prefHeight="40.0" prefWidth="260.0" styleClass="my-custom-button" stylesheets="@../style/haveanaccount.css" text="I already have an account" />
                   <Separator layoutX="56.0" layoutY="447.0" prefHeight="2.0" prefWidth="246.0" />
                     </children>
                 </AnchorPane>
          </children>
         </VBox>
         <Label layoutX="78.0" layoutY="331.0" prefHeight="40.0" prefWidth="271.0" styleClass="sub-heading-title" text="Start your bid now" />
-        <Separator layoutX="78.0" layoutY="414.0" prefHeight="53.0" prefWidth="110.0" styleClass="custom-separator" stylesheets="@nen.css" />
-        <Label layoutX="78.0" layoutY="485.0" opacity="0.62" styleClass="sub2-heading-title" stylesheets="@nen.css" text="Transparent, trustworth and fast-pace " />
-        <Label layoutX="78.0" layoutY="515.0" opacity="0.62" prefHeight="30.0" prefWidth="233.0" styleClass="sub2-heading-title" stylesheets="@nen.css" text="Designed by team Hipiti" />
+        <Separator layoutX="78.0" layoutY="414.0" prefHeight="53.0" prefWidth="110.0" styleClass="custom-separator" stylesheets="@../style/nen.css" />
+        <Label layoutX="78.0" layoutY="485.0" opacity="0.62" styleClass="sub2-heading-title" stylesheets="@../style/nen.css" text="Transparent, trustworth and fast-pace " />
+        <Label layoutX="78.0" layoutY="515.0" opacity="0.62" prefHeight="30.0" prefWidth="233.0" styleClass="sub2-heading-title" stylesheets="@../style/nen.css" text="Designed by team Hipiti" />
     </children>
 </AnchorPane>

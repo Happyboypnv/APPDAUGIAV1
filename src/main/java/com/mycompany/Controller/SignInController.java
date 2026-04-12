@@ -1,20 +1,16 @@
 package com.mycompany.Controller;
 
-import com.mycompany.models.NguoiDung;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.Map;
 
 import com.mycompany.utils.*;
 
@@ -41,7 +37,7 @@ public class SignInController {
 
             // Chuyen qua giao dien Home luon
             try {
-                Parent homeRoot = FXMLLoader.load(getClass().getResource("/Home.fxml"));
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("/view/Home.fxml"));
                 Scene homeScene = new Scene(homeRoot);
                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 window.setScene(homeScene);
@@ -63,7 +59,7 @@ public class SignInController {
 
     @FXML
     public void switchToSignUp(ActionEvent event) throws IOException {
-        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/SignUp.fxml"));
+        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"));
         Scene signUpScene = new Scene(signUpRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(signUpScene);
