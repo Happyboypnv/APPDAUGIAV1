@@ -1,4 +1,4 @@
-package com.mycompany.models;
+package com.mycompanytest.models;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -10,11 +10,8 @@ public class NguoiDung extends ConNguoi implements HanhDongNguoiDung {
     public NguoiDung(String hoTen){
         super(hoTen);
     }
-    public NguoiDung(String hoTen, String thuDienTu, String maKhau, String ngaySinh){
-        super(hoTen, thuDienTu, maKhau, ngaySinh);
-    }
-    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu, String matKhau, String ngaySinh, String diaChi, String soDienThoai){
-        super(hoTen, thuDienTu, matKhau,ngaySinh);
+    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu, String ngaySinh, String diaChi, String soDienThoai){
+        super(maNguoiDung, hoTen, thuDienTu, ngaySinh);
         this.diaChi = diaChi;
         this.soDienThoai = soDienThoai;
         this.soDuKhaDung = 0;

@@ -1,4 +1,4 @@
-package com.mycompany.models;
+package com.mycompanytest.models;
 
 public class Admin extends ConNguoi {
     @Override
@@ -8,7 +8,7 @@ public class Admin extends ConNguoi {
 
     //void banAccount
 
-    Admin (String hoTen, String thuDienTu, String matKhau, String ngaySinh) {
-        super(hoTen,  thuDienTu, matKhau, ngaySinh);
+    Admin (String id, String fullName, String email, String birth) {
+        super(id, fullName, email, birth);
     }
 }
