@@ -70,4 +70,12 @@ public class KhoLuuTruNguoiDungJson implements IKhoLuuTruNguoiDung{
             return check.layMatKhau().equals(password);
         }
     }
+    public boolean kiemTraEmail(String email) {
+        Map<String, NguoiDung> danhSach = layTatCa();
+        if(danhSach == null) return true;
+        if(danhSach.containsKey(email)){
+            return false;
+        }
+        return true;
+    }
 }

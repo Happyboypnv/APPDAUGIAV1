@@ -7,4 +7,5 @@ public interface IKhoLuuTruNguoiDung {
     NguoiDung timTheoMa(String maTimKiem);
     Map<String, NguoiDung> layTatCa();
     boolean kiemTraNguoiDung(String email, String password);
+    boolean kiemTraEmail(String email);
 }

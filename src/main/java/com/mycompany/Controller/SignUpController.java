@@ -80,6 +80,10 @@ public class SignUpController {
             showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", "Ngày sinh chưa hợp lệ!");
             return;
         }
+        if(khoLuuTruNguoiDung.kiemTraEmail(email) == false) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", "Email đã tồn tại!");
+            return;
+        }
         String birth = datePicker.getValue().toString();
         NguoiDung nguoiDung = new NguoiDung(name, email, password, birth);
         khoLuuTruNguoiDung.luu(nguoiDung);
