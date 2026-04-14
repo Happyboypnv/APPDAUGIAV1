@@ -35,4 +35,6 @@ public abstract class ConNguoi implements Serializable {
     }
 
     public void setMaNguoiDung(String maNguoiDung) {this.maNguoiDung = maNguoiDung;}
+
+    public abstract PhienDauGia taoPhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem);
 }

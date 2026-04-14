@@ -15,9 +15,9 @@ public class PhienDauGia {
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
 
-    private List<NguoiDung> danhSachNguoiTraGia = new ArrayList<>();
-    private NguoiDung nguoiBan;
-    private NguoiDung nguoiThangCuoc;
+    private List<NguoiMua> danhSachNguoiTraGia = new ArrayList<>();
+    private NguoiBan nguoiBan;
+    private NguoiMua nguoiThangCuoc; // Sua cac cho nguoi dung thanh dung role cua no
     private SanPham sanPhamDauGia;
 
     private boolean daCoGia = false;
@@ -30,13 +30,32 @@ public class PhienDauGia {
         this.tenPhien = tenPhien;
         this.sanPhamDauGia = sanPhanDauGia;
         this.giaHienTai = giaKhoiDiem;
-        this.nguoiBan = nguoiBan;
-
+        NguoiBan nguoiban = new NguoiBan(nguoiBan);
+        this.nguoiBan = nguoiban; // set nguoi tao phien la nguoi ban
         buocGia = 0.0;
-        this.trangThai = TrangThaiPhien.DANG_CHO;
+        this.trangThai = TrangThaiPhien.DANG_CHO_DUYET;
+        nguoiban.setPhienDauGia(this); // tuong tu nhu voi nguoi mua, cho nguoi ban co 1 phien dau gia de goi phuong thuc k phai truyen lai tham so phien dau gia nua
     }
 
-    public void capNhatThongTin(NguoiDung nguoiMua, double giaMoi) {
+    public void themVaoPhong(NguoiDung nguoiMua) {
+        if (this.trangThai==TrangThaiPhien.DANG_MO || this.trangThai==TrangThaiPhien.DANG_DIEN_RA) {
+            NguoiMua nguoimua = new NguoiMua(nguoiMua);
+            danhSachNguoiTraGia.add(0, nguoimua);
+            nguoimua.setPhienDauGia(this); // y nghia la nguoi mua dang tham gia cai phien nay, ti nua goi method roi phong hay dat bid kh can truyen vao tham so PhienDauGia nua
+            return;
+        } // them vao dau danh sach cho do bi lan voi set nguoi tra gia cao nhat
+        System.out.println("Phòng chưa mở hoặc đã kết thúc!"); // thay bang throw loi sau
+    }
+
+    public void xoaKhoiPhong(NguoiMua nguoiMua) {
+        if (this.trangThai==TrangThaiPhien.DANG_DIEN_RA) {
+            nguoiMua.setPhienDauGia(null); // nguoi mua k con tham gia phien dau gia nay nua
+            return;
+        }
+        System.out.println("Phiên đã kết thúc!");
+    }
+
+    public void capNhatThongTin(NguoiMua nguoiMua, double giaMoi) {
         if (!daCoGia) {
             this.buocGia = giaHienTai * this.doLechGiaMin;
             daCoGia = true;
@@ -65,8 +84,8 @@ public class PhienDauGia {
     public double getBuocGia() { return this.buocGia; }
     public SanPham getSanPham() { return this.sanPhamDauGia; }
 //    public LocalDateTime getThoiGianDauGia() { return thoiGianKetThuc-thoiGianBatDau; }
-    public NguoiDung getNguoiThangCuoc() { return this.nguoiThangCuoc; }
-    public NguoiDung getNguoiBan() { return this.nguoiBan; }
+    public NguoiDung getNguoiThangCuoc() { return this.nguoiThangCuoc.getNguoiDung(); }
+    public NguoiDung getNguoiBan() { return this.nguoiBan.getNguoiDung(); }
 //    public String getTenPhienDauGia() { return this.tenPhienDauGia; }
     public String getMaPhien() { return this.maPhien; }
 //    public double getGiaKhoiDiem() { return this.giaKhoiDiem; }
