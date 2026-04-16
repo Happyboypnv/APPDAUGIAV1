@@ -31,7 +31,6 @@ public class PhienDauGia {
         this.sanPhamDauGia = sanPhanDauGia;
         this.giaHienTai = giaKhoiDiem;
         this.nguoiBan = nguoiBan;
-
         buocGia = 0.0;
         this.trangThai = TrangThaiPhien.DANG_CHO;
     }
