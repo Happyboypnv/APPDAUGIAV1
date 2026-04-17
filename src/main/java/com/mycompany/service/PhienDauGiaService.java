@@ -1,20 +1,23 @@
+// PhienDauGiaService.java — nhận interface qua constructor
 package com.mycompany.service;
 
 import com.mycompany.models.*;
 import java.time.LocalDateTime;
 
 public class PhienDauGiaService {
-    private QuanLyCacPhienService dieuKhienPhien = new QuanLyCacPhienService();
+    private final IQuanLyCacPhienService dieuKhienPhien; // Phụ thuộc vào abstraction
+
+    public PhienDauGiaService(IQuanLyCacPhienService dieuKhienPhien) {
+        this.dieuKhienPhien = dieuKhienPhien;
+    }
 
     public void batDauPhien(PhienDauGia phien) {
-        LocalDateTime now = LocalDateTime.now();
-        phien.setThoiGianBatDau(now);
+        phien.setThoiGianBatDau(LocalDateTime.now());
         phien.setTrangThai(TrangThaiPhien.DANG_DIEN_RA);
     }
 
     public void dongPhien(PhienDauGia phien) {
-        LocalDateTime now = LocalDateTime.now();
-        phien.setthoiGianKetThuc(now);
+        phien.setthoiGianKetThuc(LocalDateTime.now());
         phien.setTrangThai(TrangThaiPhien.KET_THUC);
         if (phien.getdaCoGia()) {
             phien.setNguoiThangCuoc();
@@ -23,9 +26,13 @@ public class PhienDauGiaService {
     }
 
     public void datGia(PhienDauGia phien, NguoiDung nguoiMua, double gia) {
-        if (phien.getTrangThai() != TrangThaiPhien.KET_THUC && !nguoiMua.equals(phien.getNguoiBan()) && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
+        if (phien.getTrangThai() != TrangThaiPhien.KET_THUC
+                && !nguoiMua.equals(phien.getNguoiBan())
+                && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
             synchronized (phien) {
-                if (phien.getTrangThai() != TrangThaiPhien.KET_THUC && !nguoiMua.equals(phien.getNguoiBan()) && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
+                if (phien.getTrangThai() != TrangThaiPhien.KET_THUC
+                        && !nguoiMua.equals(phien.getNguoiBan())
+                        && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
                     phien.capNhatThongTin(nguoiMua, gia);
                 }
             }

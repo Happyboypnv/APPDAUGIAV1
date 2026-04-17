@@ -1,49 +1,44 @@
+// NguoiDung.java — sửa SRP + bug List
 package com.mycompany.models;
-
-import java.util.List;
+import com.mycompany.Action.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class NguoiDung extends ConNguoi implements HanhDongNguoiDung {
+public class NguoiDung extends ConNguoi implements IHanhDongMua, IHanhDongBan, IHanhDongRoiPhong {
     private String diaChi;
     private String soDienThoai;
     private double soDuKhaDung;
-    public NguoiDung(String hoTen){
+    private List<GiaoDich> cacGiaoDich; // Fix: khai báo field
+
+    public NguoiDung(String hoTen) {
         super(hoTen);
     }
-    public NguoiDung(String hoTen, String thuDienTu, String maKhau, String ngaySinh){
-        super(hoTen, thuDienTu, maKhau, ngaySinh);
+
+    public NguoiDung(String hoTen, String thuDienTu, String matKhau, String ngaySinh) {
+        super(hoTen, thuDienTu, matKhau, ngaySinh);
     }
-    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu, String matKhau, String ngaySinh, String diaChi, String soDienThoai){
-        super(hoTen, thuDienTu, matKhau,ngaySinh);
+
+    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu,
+                     String matKhau, String ngaySinh, String diaChi, String soDienThoai) {
+        super(hoTen, thuDienTu, matKhau, ngaySinh);
         this.diaChi = diaChi;
         this.soDienThoai = soDienThoai;
         this.soDuKhaDung = 0;
-        List<GiaoDich> cacGiaoDich = new ArrayList<>();
-        /*
-        Transactions
-        -> maNguoiDung
-           Product -> name, ...;
-           Time
-           Seller
-           Buyer
-         */
+        this.cacGiaoDich = new ArrayList<>(); // Fix: gán vào field thực
     }
-    @Override
-    protected String timKiemNguoiDung(ConNguoi self) {
-        //self o day la ban than NguoiDung nay, se duoc truyen vao ngay trong controller
-        return self.toString();
-    }
+
     @Override
     public void mua(SanPham p) {
-        // Lấy tên NguoiDung từ thuộc tính hoặc hàm toString để in ra cho trực quan
-        System.out.println("[MUA] Người dùng " + this.toString().split("\n")[1] + " đang đặt giá mua: " + p.layTenSanPham());
+        // Không in log ở đây — để Controller/View xử lý
     }
+
     @Override
     public void ban(SanPham p) {
-        System.out.println("[BÁN] Người dùng " + this.toString().split("\n")[1] + " đang đăng bán: " + p.layTenSanPham());
+        // Không in log ở đây
     }
+
     @Override
-    public void roiKhoiPhong(){
-        System.out.println("Người dùng đã rời phòng đấu giá.");
+    public void roiKhoiPhong() {
+        // Không in log ở đây
     }
 }

@@ -1,25 +1,15 @@
+// QuanLyCacPhienService.java — implement interface
 package com.mycompany.service;
 
-import com.mycompany.models.*;
-import java.util.*;
-import java.util.concurrent.*;
+import com.mycompany.models.PhienDauGia;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class QuanLyCacPhienService {
+public class QuanLyCacPhienService implements IQuanLyCacPhienService {
     private static final Map<String, PhienDauGia> danhSachPhien = new ConcurrentHashMap<>();
 
-    public void them(PhienDauGia phien) {
-        danhSachPhien.put(phien.getMaPhien(),  phien);
-    }
-
-    public void xoa(PhienDauGia phien) {
-        danhSachPhien.remove(phien.getMaPhien());
-    }
-
-    public void xoa(String maPhien) {
-        danhSachPhien.remove(maPhien);
-    }
-
-    public PhienDauGia tim(String maPhien) {
-        return danhSachPhien.get(maPhien);
-    }
+    @Override public void them(PhienDauGia phien)   { danhSachPhien.put(phien.getMaPhien(), phien); }
+    @Override public void xoa(PhienDauGia phien)    { danhSachPhien.remove(phien.getMaPhien()); }
+    @Override public void xoa(String maPhien)        { danhSachPhien.remove(maPhien); }
+    @Override public PhienDauGia tim(String maPhien) { return danhSachPhien.get(maPhien); }
 }
