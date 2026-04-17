@@ -1,5 +1,6 @@
 package com.mycompany.Controller;
 
+import com.mycompany.exception.Login.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML; // Quan trọng
 import javafx.fxml.FXMLLoader; // Quan trọng
@@ -24,26 +25,30 @@ public class SignUpController {
     @FXML private PasswordField passwordField;
     @FXML private DatePicker datePicker;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
-    public boolean checkName(String name){
-        if(name == null || name.isEmpty()) return false;
+    public void checkName(String name) throws UserNameException {
+        if(name == null || name.isEmpty()) throw new UserNameException("Tên đang bỏ trống!");
         String nameRegex = "^[\\p{L} .'-]{2,30}$";
         // p{L} : cho phep ngon ngu tieng Viet
         //  .'- : cho phep dau cach, dau cham, dau nhay don, dau gach ngang
         // {2, 30} : do dai trong khoang thu 2 den 30
-        return  name.matches(nameRegex);
+        if(!name.matches(nameRegex)) throw new UserNameException("Tên không hợp lệ");
         // check xem chuoi name co matches voi luat Regex khong
     }
-    public boolean checkEmail(String email){
-        if(email == null || email.isEmpty()) return false;
+    public void checkEmail(String email)throws EmailException {
+        if(email == null || email.isEmpty()) throw  new EmailException("Email đang bỏ trống!");
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-z]+$";
         // email co dang la nguyenvana @ gmail . com
         // dau cong dang sau moi [] la yeu cau moi phan co it nhat mot ky tu
-        return  email.matches( emailRegex );
+        if(!email.matches( emailRegex )) throw new EmailException("Email không hợp lệ!");
+        if(!khoLuuTruNguoiDung.kiemTraEmail(email)) throw new EmailException("Email đã tồn tại!");
     }
-    public  boolean checkPassword(String password){
-        if(password == null || password.isEmpty()) return false;
+    public void checkUser(String email, String password) throws UserException {
+        if(khoLuuTruNguoiDung.kiemTraNguoiDung(email, password)) throw new UserException("Tài khoản đã tồn tại!");
+    }
+    public  void checkPassword(String password)throws PasswordException {
+        if(password == null || password.isEmpty()) throw new PasswordException("Mật khẩu đang bỏ trống!");
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!#%*?&])[A-za-z0-9@$!#%*?&]{8,}$";
-        return  password.matches( passwordRegex );
+       if(!password.matches( passwordRegex )) throw new PasswordException("Mat khẩu không hợp lệ!");
         // ?=.*[A-Z] check nhanh co it nhat mot ki tu A-Z khong
         // ?=.*[a-z] check nhanh co it nhat mot ki tu a-z khong
         // ?=.*[0-9] check nhanh co it nhat mot ki tu 0-9 khong
@@ -51,48 +56,35 @@ public class SignUpController {
         // [A-za-z0-9@$!#%*?&] cac ki tu co the duoc phep su dung trong mat khau
         // {8,} co it nhat 8 ki tu
     }
-    public boolean checkDate(LocalDate date){
-        if(date == null) return false;
-        if(date.isAfter(LocalDate.now())) return false;
+    public void checkDate(LocalDate date) throws DateException {
+        if(date == null) throw new DateException("Ngày sinh đang bỏ trống!");
+        if(date.isAfter(LocalDate.now())) throw new DateException("Ngày sinh không hợp lệ!");
         int age = Period.between(date, LocalDate.now()).getYears();
-        return age >= 18;
+        if(age < 18) throw new DateException("Bạn chưa đủ 18 tuổi");
     }
     public void handleSignUp(ActionEvent event) {
-        String name = nameField.getText().trim(); /// cat het khoang trong di
-        String email = emailField.getText().trim();
-        String password = passwordField.getText().trim();
-        LocalDate date = datePicker.getValue();
-        if(!checkName(name)) {
-            showAlert(Alert.AlertType.WARNING,"Lỗi đăng ký", "Tên chưa hợp lệ!");
-            return;
+        String password = null;
+        try {
+            String name = nameField.getText().trim();
+            String email = emailField.getText().trim();
+            password = passwordField.getText().trim();
+            LocalDate date = datePicker.getValue();
+            checkName(name);
+            checkEmail(email);
+            checkPassword(password);
+            checkDate(date);
+            String birth = datePicker.getValue().toString();
+            NguoiDung nguoiDung = new NguoiDung(name, email, password, birth);
+            khoLuuTruNguoiDung.luu(nguoiDung);
+            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công tài khoản!");
+            try {
+                handleGoToSignIn(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (UserNameException | EmailException | PasswordException | DateException e) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", e.getMessage());
         }
-        if(!checkEmail(email)){
-            showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", "Email chưa hợp lệ!");
-            return;
-        }
-        if(!checkPassword(password)) {
-            showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", "Mật khẩu chưa hợp lệ!");
-            return;
-        }
-        if(!checkDate(date)) {
-            showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", "Ngày sinh chưa hợp lệ!");
-            return;
-        }
-        if(khoLuuTruNguoiDung.kiemTraEmail(email) == false) {
-            showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", "Email đã tồn tại!");
-            return;
-        }
-        String birth = datePicker.getValue().toString();
-        NguoiDung nguoiDung = new NguoiDung(name, email, password, birth);
-        khoLuuTruNguoiDung.luu(nguoiDung);
-        showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công tài khoản!");
-        try{
-            handleGoToSignIn(event);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-
     }
     @FXML
     public void handleGoToSignIn(ActionEvent event) throws IOException {

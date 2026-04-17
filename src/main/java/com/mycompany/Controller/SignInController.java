@@ -1,5 +1,8 @@
 package com.mycompany.Controller;
 
+import com.mycompany.exception.Login.PasswordException;
+import com.mycompany.exception.Login.UserException;
+import com.mycompany.exception.Login.UserNameException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -20,21 +23,28 @@ public class SignInController {
     @FXML private PasswordField passwordField; // nơi nhận vào input của user
     private IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
 
+    public void checkEmail(String email) throws UserNameException {
+        if(email == null || email.isEmpty()) throw new UserNameException("Email đang bỏ trống!");
+    }
+
+    public void checkPassword(String password)throws PasswordException {
+        if(password == null || password.isEmpty()) throw new PasswordException("Mật khẩu đang bỏ trống!");
+    }
+
+    public void checkUser(String email, String password) throws UserException {
+        if (!khoLuuTruNguoiDung.kiemTraNguoiDung(email, password)) throw new UserException("Sai email hoặc mật khẩu");
+    }
+
     @FXML
     public void handleLogin(ActionEvent event) {
-        String email = emailField.getText().trim();
-        String password = passwordField.getText().trim();
-
-
-        if (email.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập đầy đủ Email và Password!");
-            return;
-        }
-
-        if (khoLuuTruNguoiDung.kiemTraNguoiDung(email, password)) {
+        try {
+            String email = emailField.getText().trim();
+            String password = passwordField.getText().trim();
+            checkEmail(email);
+            checkPassword(password);
+            checkUser(email, password);
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng nhập thành công! Chào mừng bạn.");
             System.out.println("Đăng nhập thành công với email: " + email);
-
             // Chuyen qua giao dien Home luon
             try {
                 Parent homeRoot = FXMLLoader.load(getClass().getResource("/view/Home.fxml"));
@@ -45,10 +55,11 @@ public class SignInController {
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện trang chủ không thành công!");
             }
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Thất bại", "Email hoặc mật khẩu không chính xác!");
+        } catch (UserException | UserNameException | PasswordException e) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi đăng nhập", e.getMessage());
         }
     }
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
