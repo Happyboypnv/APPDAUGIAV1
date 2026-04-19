@@ -1,9 +1,11 @@
 package com.mycompany.models;
 
+import com.mycompany.action.HanhDongNguoiDung;
+
 import java.util.List;
 import java.util.ArrayList;
 
-public class NguoiDung extends ConNguoi implements HanhDongNguoiDung{
+public class NguoiDung extends ConNguoi implements HanhDongNguoiDung {
     private String diaChi;
     private String soDienThoai;
     private double soDuKhaDung;

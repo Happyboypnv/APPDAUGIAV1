@@ -1,6 +1,8 @@
 package com.mycompany.models;
 
 
+import com.mycompany.action.HanhDongNguoiBan;
+
 public class NguoiBan implements HanhDongNguoiBan {
     private NguoiDung nguoiDung;
     private PhienDauGia phienDauGia;

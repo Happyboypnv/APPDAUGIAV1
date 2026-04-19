@@ -1,4 +1,4 @@
-package com.mycompany.models;
+package com.mycompany.action;
 
 public interface HanhDongNguoiBan {
     void batDauPhienDauGia();

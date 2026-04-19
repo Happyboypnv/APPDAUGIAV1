@@ -1,6 +1,8 @@
 package com.mycompany.models;
 // Ap dung decorator, cho nguoi dung cac chuc nang dac biet cua rieng no o cac lop wrapper
 
+import com.mycompany.action.HanhDongNguoiMua;
+
 public class NguoiMua implements HanhDongNguoiMua {
     private NguoiDung nguoiDung;
     private PhienDauGia phienDauGia;

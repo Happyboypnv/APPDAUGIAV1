@@ -1,4 +1,7 @@
-package com.mycompany.models;
+package com.mycompany.action;
+
+import com.mycompany.models.PhienDauGia;
+import com.mycompany.models.SanPham;
 
 public interface HanhDongNguoiDung {
     void vaoPhong(PhienDauGia phienDauGia);
