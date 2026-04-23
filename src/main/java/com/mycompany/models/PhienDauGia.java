@@ -3,7 +3,7 @@ package com.mycompany.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class PhienDauGia {
     private String maPhien;
@@ -25,6 +25,8 @@ public class PhienDauGia {
     // THAY ĐỔI 1: Sử dụng Enum thay vì String
     private TrangThaiPhien trangThai;
 
+    private boolean isClosed;
+    private final transient ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {
         this.maPhien = maPhien;
         this.tenPhien = tenPhien;
@@ -72,4 +74,5 @@ public class PhienDauGia {
     public boolean getdaCoGia() {
         return daCoGia;
     }
+    public ReentrantReadWriteLock getLock() { return lock; }
 }
