@@ -3,35 +3,28 @@ package com.mycompany.models;
 import java.util.List;
 import java.util.ArrayList;
 
-public class NguoiDung extends ConNguoi implements HanhDongNguoiDung {
+public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTheTraGia {
     private String diaChi;
     private String soDienThoai;
     private double soDuKhaDung;
-    public NguoiDung(String hoTen){
-        super(hoTen);
-    }
-    public NguoiDung(String hoTen, String thuDienTu, String maKhau, String ngaySinh){
-        super(hoTen, thuDienTu, maKhau, ngaySinh);
-    }
-    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu, String matKhau, String ngaySinh, String diaChi, String soDienThoai){
-        super(hoTen, thuDienTu, matKhau,ngaySinh);
+    private List<GiaoDich> cacGiaoDich; // ✅ khai báo field
+
+    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu,
+                     String matKhau, String ngaySinh,
+                     String diaChi, String soDienThoai) {
+        super(hoTen, thuDienTu, matKhau, ngaySinh);
         this.diaChi = diaChi;
         this.soDienThoai = soDienThoai;
         this.soDuKhaDung = 0;
-        List<GiaoDich> cacGiaoDich = new ArrayList<>();
-        /*
-        Transactions
-        -> maNguoiDung
-           Product -> name, ...;
-           Time
-           Seller
-           Buyer
-         */
+        this.cacGiaoDich = new ArrayList<>();
     }
-    @Override
-    protected String timKiemNguoiDung(ConNguoi self) {
-        //self o day la ban than NguoiDung nay, se duoc truyen vao ngay trong controller
-        return self.toString();
+
+    public List<GiaoDich> layCacGiaoDich() {
+        return cacGiaoDich;
+    }
+
+    public void themGiaoDich(GiaoDich gd) {
+        this.cacGiaoDich.add(gd);
     }
     @Override
     public void mua(SanPham p) {
