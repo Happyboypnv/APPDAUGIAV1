@@ -42,12 +42,9 @@ public class SignUpController {
         if(!email.matches( emailRegex )) throw new EmailException("Email không hợp lệ!");
         if(!khoLuuTruNguoiDung.kiemTraEmail(email)) throw new EmailException("Email đã tồn tại!");
     }
-    public void checkUser(String email, String password) throws UserException {
-        if(khoLuuTruNguoiDung.kiemTraNguoiDung(email, password)) throw new UserException("Tài khoản đã tồn tại!");
-    }
     public  void checkPassword(String password)throws PasswordException {
         if(password == null || password.isEmpty()) throw new PasswordException("Mật khẩu đang bỏ trống!");
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!#%*?&])[A-za-z0-9@$!#%*?&]{8,}$";
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!#%*?&])[A-Za-z0-9@$!#%*?&]{8,}$";
        if(!password.matches( passwordRegex )) throw new PasswordException("Mat khẩu không hợp lệ!");
         // ?=.*[A-Z] check nhanh co it nhat mot ki tu A-Z khong
         // ?=.*[a-z] check nhanh co it nhat mot ki tu a-z khong

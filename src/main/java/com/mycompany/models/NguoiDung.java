@@ -9,7 +9,7 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
     private double soDuKhaDung;
     private List<GiaoDich> cacGiaoDich; // ✅ khai báo field
 
-    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu,
+    public NguoiDung(String hoTen, String thuDienTu,
                      String matKhau, String ngaySinh,
                      String diaChi, String soDienThoai) {
         super(hoTen, thuDienTu, matKhau, ngaySinh);
@@ -18,7 +18,11 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
         this.soDuKhaDung = 0;
         this.cacGiaoDich = new ArrayList<>();
     }
-
+    public NguoiDung(String hoTen, String thuDienTu, String matKhau, String ngaySinh) {
+        super(hoTen, thuDienTu, matKhau, ngaySinh);
+        this.cacGiaoDich = new ArrayList<>();
+        this.soDuKhaDung = 0;
+    }
     public List<GiaoDich> layCacGiaoDich() {
         return cacGiaoDich;
     }
