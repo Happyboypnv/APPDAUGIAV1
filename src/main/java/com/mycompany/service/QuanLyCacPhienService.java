@@ -17,7 +17,7 @@ public class QuanLyCacPhienService {
                 }
             }
         }
-        return instance; // ✅ return nằm ngoài synchronized
+        return instance;
     }
     private QuanLyCacPhienService() {}
     private final Map<String, PhienDauGia> danhSachPhien = new ConcurrentHashMap<>();

@@ -24,10 +24,12 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
         this.soDuKhaDung = 0;
     }
     public List<GiaoDich> layCacGiaoDich() {
+        if (cacGiaoDich == null) cacGiaoDich = new ArrayList<>();
         return cacGiaoDich;
     }
 
     public void themGiaoDich(GiaoDich gd) {
+        if (cacGiaoDich == null) cacGiaoDich = new ArrayList<>();
         this.cacGiaoDich.add(gd);
     }
     @Override
