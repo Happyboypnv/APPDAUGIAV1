@@ -41,7 +41,11 @@ public class NguoiDung extends ConNguoi implements HanhDongNguoiDung {
 
     @Override
     public void vaoPhong(PhienDauGia phienDauGia) {
-        phienDauGia.themVaoPhong(this);
+        try {
+            phienDauGia.themVaoPhong(this);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override

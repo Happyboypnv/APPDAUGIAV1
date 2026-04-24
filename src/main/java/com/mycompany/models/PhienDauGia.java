@@ -3,6 +3,8 @@ package com.mycompany.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PhienDauGia {
@@ -25,6 +27,8 @@ public class PhienDauGia {
     // THAY ĐỔI 1: Sử dụng Enum thay vì String
     private TrangThaiPhien trangThai;
 
+    private final Lock lock = new ReentrantLock();
+
     public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {
         this.maPhien = maPhien;
         this.tenPhien = tenPhien;
@@ -37,14 +41,23 @@ public class PhienDauGia {
         nguoiban.setPhienDauGia(this); // tuong tu nhu voi nguoi mua, cho nguoi ban co 1 phien dau gia de goi phuong thuc k phai truyen lai tham so phien dau gia nua
     }
 
-    public void themVaoPhong(NguoiDung nguoiMua) {
-        if (this.trangThai==TrangThaiPhien.DANG_MO || this.trangThai==TrangThaiPhien.DANG_DIEN_RA) {
-            NguoiMua nguoimua = new NguoiMua(nguoiMua);
-            danhSachNguoiTraGia.add(0, nguoimua);
-            nguoimua.setPhienDauGia(this); // y nghia la nguoi mua dang tham gia cai phien nay, ti nua goi method roi phong hay dat bid kh can truyen vao tham so PhienDauGia nua
-            return;
-        } // them vao dau danh sach cho do bi lan voi set nguoi tra gia cao nhat
-        System.out.println("Phòng chưa mở hoặc đã kết thúc!"); // thay bang throw loi sau
+    public void themVaoPhong(NguoiDung nguoiMua) throws InterruptedException {
+        if (lock.tryLock(200, TimeUnit.MILLISECONDS)) {
+            try {
+                if (this.trangThai == TrangThaiPhien.DANG_MO || this.trangThai == TrangThaiPhien.DANG_DIEN_RA) {
+                    NguoiMua nguoimua = new NguoiMua(nguoiMua);
+                    danhSachNguoiTraGia.add(0, nguoimua); // them vao dau danh sach cho do bi lan voi set nguoi tra gia cao nhat
+                    nguoimua.setPhienDauGia(this); // y nghia la nguoi mua dang tham gia cai phien nay, ti nua goi method roi phong hay dat bid kh can truyen vao tham so PhienDauGia nua
+                    return;
+                }
+                throw new InterruptedException("Phòng chưa mở hoặc đã kết thúc!");
+            } finally {
+                lock.unlock();
+            }
+        } else {
+            throw new InterruptedException("Hệ thống đang đầy, thử lại sau");
+        }
+
     }
 
     public void xoaKhoiPhong(NguoiMua nguoiMua) {
