@@ -3,9 +3,7 @@ package com.mycompany.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class PhienDauGia {
     private String maPhien;
@@ -17,9 +15,9 @@ public class PhienDauGia {
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
 
-    private List<NguoiMua> danhSachNguoiTraGia = new ArrayList<>();
-    private NguoiBan nguoiBan;
-    private NguoiMua nguoiThangCuoc; // Sua cac cho nguoi dung thanh dung role cua no
+    private List<NguoiDung> danhSachNguoiTraGia = new ArrayList<>();
+    private NguoiDung nguoiBan;
+    private NguoiDung nguoiThangCuoc;
     private SanPham sanPhamDauGia;
 
     private boolean daCoGia = false;
@@ -27,48 +25,19 @@ public class PhienDauGia {
     // THAY ĐỔI 1: Sử dụng Enum thay vì String
     private TrangThaiPhien trangThai;
 
-    private final Lock lock = new ReentrantLock();
-
+    private boolean isClosed;
+    private final transient ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {
         this.maPhien = maPhien;
         this.tenPhien = tenPhien;
         this.sanPhamDauGia = sanPhanDauGia;
         this.giaHienTai = giaKhoiDiem;
-        NguoiBan nguoiban = new NguoiBan(nguoiBan);
-        this.nguoiBan = nguoiban; // set nguoi tao phien la nguoi ban
+        this.nguoiBan = nguoiBan;
         buocGia = 0.0;
         this.trangThai = TrangThaiPhien.DANG_CHO_DUYET;
-        nguoiban.setPhienDauGia(this); // tuong tu nhu voi nguoi mua, cho nguoi ban co 1 phien dau gia de goi phuong thuc k phai truyen lai tham so phien dau gia nua
     }
 
-    public void themVaoPhong(NguoiDung nguoiMua) throws InterruptedException {
-        if (lock.tryLock(200, TimeUnit.MILLISECONDS)) {
-            try {
-                if (this.trangThai == TrangThaiPhien.DANG_MO || this.trangThai == TrangThaiPhien.DANG_DIEN_RA) {
-                    NguoiMua nguoimua = new NguoiMua(nguoiMua);
-                    danhSachNguoiTraGia.add(0, nguoimua); // them vao dau danh sach cho do bi lan voi set nguoi tra gia cao nhat
-                    nguoimua.setPhienDauGia(this); // y nghia la nguoi mua dang tham gia cai phien nay, ti nua goi method roi phong hay dat bid kh can truyen vao tham so PhienDauGia nua
-                    return;
-                }
-                throw new InterruptedException("Phòng chưa mở hoặc đã kết thúc!");
-            } finally {
-                lock.unlock();
-            }
-        } else {
-            throw new InterruptedException("Hệ thống đang đầy, thử lại sau");
-        }
-
-    }
-
-    public void xoaKhoiPhong(NguoiMua nguoiMua) {
-        if (this.trangThai==TrangThaiPhien.DANG_DIEN_RA) {
-            nguoiMua.setPhienDauGia(null); // nguoi mua k con tham gia phien dau gia nay nua
-            return;
-        }
-        System.out.println("Phiên đã kết thúc!");
-    }
-
-    public void capNhatThongTin(NguoiMua nguoiMua, double giaMoi) {
+    public void capNhatThongTin(NguoiDung nguoiMua, double giaMoi) {
         if (!daCoGia) {
             this.buocGia = giaHienTai * this.doLechGiaMin;
             daCoGia = true;
@@ -97,12 +66,13 @@ public class PhienDauGia {
     public double getBuocGia() { return this.buocGia; }
     public SanPham getSanPham() { return this.sanPhamDauGia; }
 //    public LocalDateTime getThoiGianDauGia() { return thoiGianKetThuc-thoiGianBatDau; }
-    public NguoiDung getNguoiThangCuoc() { return this.nguoiThangCuoc.getNguoiDung(); }
-    public NguoiDung getNguoiBan() { return this.nguoiBan.getNguoiDung(); }
+    public NguoiDung getNguoiThangCuoc() { return this.nguoiThangCuoc; }
+    public NguoiDung getNguoiBan() { return this.nguoiBan; }
 //    public String getTenPhienDauGia() { return this.tenPhienDauGia; }
     public String getMaPhien() { return this.maPhien; }
 //    public double getGiaKhoiDiem() { return this.giaKhoiDiem; }
     public boolean getdaCoGia() {
         return daCoGia;
     }
+    public ReentrantReadWriteLock getLock() { return lock; }
 }

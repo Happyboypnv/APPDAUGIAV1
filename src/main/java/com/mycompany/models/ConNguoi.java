@@ -8,7 +8,6 @@ public abstract class ConNguoi implements Serializable {
     private String thuDienTu;
     private String ngaySinh;
     private String matKhau;
-    protected abstract String timKiemNguoiDung(ConNguoi person);
     @Override
     public String toString () {
         return "maNguoiDung: " + maNguoiDung +
@@ -35,6 +34,4 @@ public abstract class ConNguoi implements Serializable {
     }
 
     public void setMaNguoiDung(String maNguoiDung) {this.maNguoiDung = maNguoiDung;}
-
-    public abstract PhienDauGia taoPhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem);
 }

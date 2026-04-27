@@ -2,10 +2,17 @@ package com.mycompany.service;
 
 import com.mycompany.models.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 public class PhienDauGiaService {
-    private QuanLyCacPhienService dieuKhienPhien = new QuanLyCacPhienService();
-
+    private QuanLyCacPhienService dieuKhienPhien = QuanLyCacPhienService.getInstance();// Singleton
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
+    private final Map<String, ScheduledFuture<?>> activeTimes = new ConcurrentHashMap<>();
     public void batDauPhien(PhienDauGia phien) {
         LocalDateTime now = LocalDateTime.now();
         phien.setThoiGianBatDau(now);
