@@ -5,8 +5,4 @@ public class Admin extends ConNguoi {
         super(hoTen,  thuDienTu, matKhau, ngaySinh);
     }
 
-    @Override
-    public PhienDauGia taoPhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem) {
-        return null;
-    }
 }
