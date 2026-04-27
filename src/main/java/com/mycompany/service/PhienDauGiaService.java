@@ -29,7 +29,7 @@ public class PhienDauGiaService {
         dieuKhienPhien.xoa(phien); // k nen xoa luon sau khi ket thuc vi con luu lich su phien nua
     }
 
-    public void datGia(PhienDauGia phien, NguoiMua nguoiMua, double gia) {
+    public void datGia(PhienDauGia phien, NguoiDung nguoiMua, double gia) {
         if (phien.getTrangThai() != TrangThaiPhien.KET_THUC && !nguoiMua.equals(phien.getNguoiBan()) && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
             synchronized (phien) {
                 if (phien.getTrangThai() != TrangThaiPhien.KET_THUC && !nguoiMua.equals(phien.getNguoiBan()) && gia >= phien.getGiaHienTai() + phien.getBuocGia()) { // bi lap???
