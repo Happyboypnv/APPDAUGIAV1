@@ -1,4 +1,4 @@
-package com.mycompany.service;
+package com.mycompany.service.NguoiDung;
 
 import com.mycompany.models.NguoiDung;
 import com.mycompany.utils.IKhoLuuTruNguoiDung;
