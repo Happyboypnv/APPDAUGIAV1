@@ -59,6 +59,34 @@ public class PhienDauGia {
     public void setNguoiThangCuoc() {
         if (!danhSachNguoiTraGia.isEmpty()) nguoiThangCuoc = danhSachNguoiTraGia.get(danhSachNguoiTraGia.size() - 1);
     }
+    public void setMaPhien(String maPhien) {
+        this.maPhien = maPhien;
+    }
+
+    public void setTenPhien(String tenPhien) {
+        this.tenPhien = tenPhien;
+    }
+
+    public void setGiaHienTai(double giaHienTai) {
+        this.giaHienTai = giaHienTai;
+    }
+
+    public void setBuocGia(double buocGia) {
+        this.buocGia = buocGia;
+    }
+
+    public void setNguoiThangCuoc(NguoiDung nguoiThangCuoc) {
+        this.nguoiThangCuoc = nguoiThangCuoc;
+    }
+
+    public void setSanPham(SanPham sanPham) {
+        this.sanPhamDauGia = sanPham;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
+    }
+
     // Getters
     public TrangThaiPhien getTrangThai() { return this.trangThai; }
     public double getGiaHienTai() { return this.giaHienTai; }
@@ -67,10 +95,35 @@ public class PhienDauGia {
 //    public LocalDateTime getThoiGianDauGia() { return thoiGianKetThuc-thoiGianBatDau; }
     public NguoiDung getNguoiThangCuoc() { return this.nguoiThangCuoc; }
     public NguoiDung getNguoiBan() { return this.nguoiBan; }
-//    public String getTenPhienDauGia() { return this.tenPhienDauGia; }
+   public String getTenPhienDauGia() { return this.tenPhien; }
     public String getMaPhien() { return this.maPhien; }
 //    public double getGiaKhoiDiem() { return this.giaKhoiDiem; }
     public boolean getdaCoGia() {
         return daCoGia;
+    }
+    public String getTenSanPham() {
+        return this.sanPhamDauGia.layTenSanPham();
+    }
+    public String getMaSanPham() {
+        return this.sanPhamDauGia.layMaSanPham();
+    }
+
+    public String getTenPhien() {
+        return tenPhien;
+    }
+
+    public LocalDateTime getThoiGianBatDau() {
+        return thoiGianBatDau;
+    }
+
+    public LocalDateTime getThoiGianKetThuc() {
+        return thoiGianKetThuc;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+    public String getMaPhienDauGia() {
+        return maPhien;
     }
 }

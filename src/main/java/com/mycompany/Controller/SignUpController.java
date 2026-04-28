@@ -16,7 +16,7 @@ import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
 import java.time.*;
 
-import com.mycompany.utils.KhoLuuTruNguoiDungJson;
+import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.utils.*;
 public class SignUpController {
@@ -24,7 +24,7 @@ public class SignUpController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private DatePicker datePicker;
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
+    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
     public void checkName(String name) throws UserNameException {
         if(name == null || name.isEmpty()) throw new UserNameException("Tên đang bỏ trống!");
         String nameRegex = "^[\\p{L} .'-]{2,30}$";
@@ -72,7 +72,9 @@ public class SignUpController {
             checkDate(date);
             String birth = datePicker.getValue().toString();
             NguoiDung nguoiDung = new NguoiDung(name, email, password, birth);
+            System.out.println("👤 Đang lưu user: " + name + " | " + email);
             khoLuuTruNguoiDung.luu(nguoiDung);
+            System.out.println("✅ Đã lưu user thành công với mã: " + nguoiDung.layMaNguoiDung());
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công tài khoản!");
             try {
                 handleGoToSignIn(event);

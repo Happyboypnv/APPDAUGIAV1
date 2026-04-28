@@ -18,13 +18,14 @@ public class SignInController {
 
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField; // nơi nhận vào input của user
-    private IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
+    private IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
 
     @FXML
     public void handleLogin(ActionEvent event) {
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
 
+        System.out.println("🔐 Đang đăng nhập với email: " + email);
 
         if (email.isEmpty() || password.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập đầy đủ Email và Password!");
@@ -33,7 +34,7 @@ public class SignInController {
 
         if (khoLuuTruNguoiDung.kiemTraNguoiDung(email, password)) {
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng nhập thành công! Chào mừng bạn.");
-            System.out.println("Đăng nhập thành công với email: " + email);
+            System.out.println("✅ Đăng nhập thành công với email: " + email);
 
             // Chuyen qua giao dien Home luon
             try {

@@ -45,4 +45,28 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
     public void roiKhoiPhong(){
         System.out.println("Người dùng đã rời phòng đấu giá.");
     }
+
+    public String layDiaChi() {
+        return diaChi;
+    }
+
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
+    }
+
+    public String laySoDienThoai() {
+        return soDienThoai;
+    }
+
+    public void setSoDienThoai(String soDienThoai) {
+        this.soDienThoai = soDienThoai;
+    }
+
+    public double laySoDuKhaDung() {
+        return soDuKhaDung;
+    }
+
+    public void setSoDuKhaDung(double soDuKhaDung) {
+        this.soDuKhaDung = soDuKhaDung;
+    }
 }

@@ -7,4 +7,6 @@ public interface IKhoLuuTruNguoiDung {
     Map<String, NguoiDung> layTatCa();
     boolean kiemTraNguoiDung(String email, String password);
     boolean kiemTraEmail(String email);
+    void xoa(NguoiDung nguoiDung);
+    void capNhat(NguoiDung nguoiDung);
 }
