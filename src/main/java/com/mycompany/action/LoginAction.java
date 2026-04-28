@@ -17,19 +17,74 @@ import com.mycompany.exception.Login.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
 
+/**
+ * LoginAction - Class xử lý đăng ký và đăng nhập người dùng
+ *
+ * MỤC ĐÍCH:
+ * - Quản lý toàn bộ logic đăng ký (sign up) và đăng nhập (sign in)
+ * - Validate thông tin đầu vào
+ * - Tạo và xác thực JWT token
+ * - Đảm bảo thread-safe cho nhiều người dùng cùng lúc
+ *
+ * KẾT NỐI VỚI CONTROLLERS:
+ * - SignInController gọi LoginAction.dangNhap() khi submit form đăng nhập
+ * - SignUpController gọi LoginAction.dangKy() khi submit form đăng ký
+ * - Sau đăng nhập thành công → chuyển đến HomeController
+ * - Sau đăng ký thành công → chuyển đến SignInController
+ *
+ * TÍNH NĂNG CHÍNH:
+ * - Đăng ký: Validate input, tạo user mới, lưu database
+ * - Đăng nhập: Kiểm tra credentials, tạo session + token
+ * - Validation: Regex patterns cho email, password, phone, name
+ * - Thread-safe: ReentrantLock để tránh race condition
+ * - Error handling: Custom exceptions với thông báo rõ ràng
+ *
+ * DESIGN PATTERN:
+ * - Singleton: Chỉ có 1 instance LoginAction
+ * - Strategy: Sử dụng IKhoLuuTruNguoiDung interface
+ * - Exception handling: Custom exceptions cho từng loại lỗi
+ */
 public class LoginAction {
     private static LoginAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
     private final Lock lock = new ReentrantLock();
     private LoginAction() {};
 
+    /**
+     * getInstance() - Singleton pattern
+     * Đảm bảo chỉ có 1 instance LoginAction trong toàn bộ ứng dụng
+     *
+     * @return Instance duy nhất của LoginAction
+     */
     public static LoginAction getInstance() {
         if (instance==null) {
             instance = new LoginAction();
         }
         return instance; // Chi nen co 1 doi tuong dam nhan viec dang ky va dang nhap cho do ton tai nguyen, tranh xung dot
     }
-    
+
+    /**
+     * checkSignUp(String name, String email, String password, LocalDate birthDate) - Validate thông tin đăng ký
+     *
+     * MỤC ĐÍCH:
+     * - Kiểm tra tất cả thông tin đăng ký có hợp lệ không
+     * - Throw custom exceptions nếu có lỗi
+     *
+     * VALIDATION RULES:
+     * - Name: 2-30 ký tự, hỗ trợ tiếng Việt, space, dấu
+     * - Email: Format chuẩn, chưa tồn tại trong hệ thống
+     * - Password: 8+ ký tự, ít nhất 1 hoa, 1 thường, 1 số, 1 đặc biệt
+     * - BirthDate: Không null, không phải tương lai, >= 18 tuổi
+     *
+     * @param name Họ tên người dùng
+     * @param email Email đăng ký
+     * @param password Mật khẩu
+     * @param birthDate Ngày sinh
+     * @throws UserNameException nếu tên không hợp lệ
+     * @throws EmailException nếu email không hợp lệ/đã tồn tại
+     * @throws PasswordException nếu mật khẩu không hợp lệ
+     * @throws DateException nếu ngày sinh không hợp lệ
+     */
     private void checkSignUp(String name, String email, String password, LocalDate birthDate) throws UserNameException,EmailException,PasswordException,DateException {
         if(name == null || name.isEmpty()) throw new UserNameException("Tên đang bỏ trống!");
         String nameRegex = "^[\\p{L} .'-]{2,30}$";
@@ -62,20 +117,67 @@ public class LoginAction {
         if(age < 18) throw new DateException("Bạn chưa đủ 18 tuổi");
     }
 
+    /**
+     * checkSignIn(String email, String password) - Validate thông tin đăng nhập
+     *
+     * MỤC ĐÍCH:
+     * - Kiểm tra thông tin đăng nhập có hợp lệ không
+     * - Throw custom exceptions nếu có lỗi
+     *
+     * VALIDATION RULES:
+     * - Email: Không được null/empty
+     * - Password: Không được null/empty
+     * - Credentials: Phải khớp với database
+     *
+     * @param email Email đăng nhập
+     * @param password Mật khẩu
+     * @throws EmailException nếu email null/empty
+     * @throws PasswordException nếu password null/empty
+     * @throws UserException nếu email/password không khớp
+     */
     private void checkSignIn(String email,String password) throws EmailException,PasswordException, UserException {
         if(email == null || email.isEmpty()) throw new EmailException("Email đang bỏ trống!");
         if(password == null || password.isEmpty()) throw new PasswordException("Mật khẩu đang bỏ trống!");
         if (!khoLuuTruNguoiDung.kiemTraNguoiDung(email, password)) throw new UserException("Sai email hoặc mật khẩu");
     }
 
+    /**
+     * dangKy(ActionEvent event, String name, String email, String password, LocalDate birthdate) - Xử lý đăng ký
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Được gọi từ SignUpController khi submit form đăng ký
+     *
+     * QUY TRÌNH:
+     * 1. Thử lấy lock trong 500ms (thread-safe)
+     * 2. Validate thông tin đăng ký
+     * 3. Tạo object NguoiDung mới
+     * 4. Lưu vào database qua IKhoLuuTruNguoiDung
+     * 5. Thông báo thành công
+     * 6. Chuyển sang trang đăng nhập
+     *
+     * THREAD-SAFE:
+     * - Sử dụng tryLock() để tránh block quá lâu
+     * - Unlock trong finally block
+     *
+     * XỬ LÝ LỖI:
+     * - Validation errors → Custom exceptions → Alert warnings
+     * - Lock timeout → Alert system busy
+     * - InterruptedException → Thread interrupt + alert
+     * - Other exceptions → Generic error alert
+     *
+     * @param event ActionEvent từ button click
+     * @param name Họ tên
+     * @param email Email
+     * @param password Mật khẩu
+     * @param birthdate Ngày sinh
+     */
     @FXML
     public void dangKy(ActionEvent event, String name, String email, String password, LocalDate birthdate) {
         try {
             if (lock.tryLock(500, TimeUnit.MILLISECONDS)) { // Thử lấy lock trong 0.5s, nếu không được sẽ trả về false và không thực hiện đăng ký
                 try {
                     checkSignUp(name, email, password, birthdate); // check thông tin đky
-                    String birth = birthdate.toString();
-                    NguoiDung nguoiDung = new NguoiDung(name, email, password, birth);
+                    NguoiDung nguoiDung = new NguoiDung(name, email, password, birthdate.toString());
                     khoLuuTruNguoiDung.luu(nguoiDung); // lưu người dùng (sau lưu vào db)
                     HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công tài khoản!");
                     try {
@@ -100,6 +202,36 @@ public class LoginAction {
         }
     }
 
+    /**
+     * dangNhap(ActionEvent event, String email, String password) - Xử lý đăng nhập
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Được gọi từ SignInController khi submit form đăng nhập
+     *
+     * QUY TRÌNH:
+     * 1. Thử lấy lock trong 500ms (thread-safe)
+     * 2. Validate thông tin đăng nhập
+     * 3. Lấy thông tin user từ database
+     * 4. Tạo JWT token
+     * 5. Set session trong SessionManager
+     * 6. Thông báo thành công + log
+     * 7. Chuyển sang trang Home
+     *
+     * THREAD-SAFE:
+     * - Sử dụng tryLock() để tránh block
+     * - Unlock trong finally block
+     *
+     * XỬ LÝ LỖI:
+     * - Validation errors → Custom exceptions → Alert warnings
+     * - Lock timeout → Alert system busy
+     * - InterruptedException → Thread interrupt + alert
+     * - IOException khi navigation → Print stack trace + alert
+     * - Other exceptions → Generic error alert
+     *
+     * @param event ActionEvent từ button click
+     * @param email Email đăng nhập
+     * @param password Mật khẩu
+     */
     @FXML
     public void dangNhap(ActionEvent event, String email, String password) {
         try {
@@ -134,6 +266,7 @@ public class LoginAction {
             Thread.currentThread().interrupt();
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi hệ thống", "Đăng nhập bị gián đoạn, vui lòng thử lại!");
         } catch (Exception e) {
+            e.printStackTrace();
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi không xác định", "Đã xảy ra lỗi không xác định, vui lòng thử lại!");
         }
     }

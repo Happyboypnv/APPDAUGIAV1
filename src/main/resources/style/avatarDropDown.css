@@ -1,0 +1,22 @@
+.custom-dropdown {
+    -fx-background-color: #0f172a;
+    -fx-border-color: #3b82f6;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 3);
+}
+
+.custom-dropdown .menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 8 12;
+}
+
+.custom-dropdown .menu-item:hover {
+    -fx-background-color: #1e3a8a;
+}
+
+.custom-dropdown .menu-item .label {
+    -fx-text-fill: white;
+}

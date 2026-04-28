@@ -7,12 +7,42 @@ import com.mycompany.utils.KhoLuuTruNguoiDungJson;
 import com.mycompany.exception.Login.*;
 import javafx.scene.control.TextField;
 
+/**
+ * ProfileAction - Class xử lý các thao tác trên trang Profile
+ *
+ * MỤC ĐÍCH:
+ * - Quản lý logic chỉnh sửa thông tin cá nhân
+ * - Validate dữ liệu profile trước khi lưu
+ * - Enable/disable editing mode cho các trường
+ *
+ * KẾT NỐI VỚI CONTROLLER:
+ * - ProfileController gọi các phương thức của ProfileAction
+ * - ProfileController.onClickedEditName() → ProfileAction.editField()
+ * - ProfileController.onClickedEditPhone() → ProfileAction.editField()
+ * - ProfileController.onClickedEditAddress() → ProfileAction.editField()
+ * - ProfileController.onClickedSaveButton() → ProfileAction.checkInfo()
+ *
+ * TÍNH NĂNG CHÍNH:
+ * - Edit field: Bật/tắt chế độ chỉnh sửa cho TextField
+ * - Validation: Kiểm tra name, phone, address theo regex
+ * - Error handling: Throw custom exceptions với thông báo rõ ràng
+ *
+ * DESIGN PATTERN:
+ * - Singleton: Chỉ có 1 instance ProfileAction
+ * - Business Logic Layer: Tách logic validation ra khỏi UI
+ */
 public class ProfileAction {
     private static ProfileAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
 
     private ProfileAction() {}
 
+    /**
+     * getInstance() - Singleton pattern
+     * Đảm bảo chỉ có 1 instance ProfileAction trong toàn bộ ứng dụng
+     *
+     * @return Instance duy nhất của ProfileAction
+     */
     public static ProfileAction getInstance() {
         if (instance == null) {
             instance = new ProfileAction();
@@ -20,6 +50,24 @@ public class ProfileAction {
         return instance; // Chi nen co 1 doi tuong dam nhan viec xu ly thao tac o trang ca nhan
     }
 
+    /**
+     * checkInfo(String name, String phoneNumber, String address) - Validate thông tin profile
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Được gọi từ ProfileController.onClickedSaveButton()
+     * - Validate trước khi lưu thông tin mới
+     *
+     * VALIDATION RULES:
+     * - Name: 2-30 ký tự, hỗ trợ tiếng Việt, space, dấu
+     * - Phone: 10-15 chữ số
+     * - Address: Format "Xã, Thành phố" (2 phần cách nhau bởi dấu phẩy)
+     *
+     * @param name Họ tên mới
+     * @param phoneNumber Số điện thoại mới
+     * @param address Địa chỉ mới
+     * @throws UserNameException nếu tên không hợp lệ
+     * @throws PhoneNumberException nếu số điện thoại không hợp lệ
+     */
     public void checkInfo(String name, String phoneNumber,String address) throws UserNameException, PhoneNumberException {
         if(name == null || name.isEmpty()) throw new UserNameException("Tên đang bỏ trống!");
         String nameRegex = "^[\\p{L} .'-]{2,30}$";
@@ -48,6 +96,22 @@ public class ProfileAction {
         if (!address.matches(addressRegex)) throw new UserNameException("Địa chỉ không hợp lệ! Vui lòng nhập đúng định dạng: 'Xã, Thành phố'");
     }
 
+    /**
+     * editField(TextField field, boolean editing) - Bật/tắt chế độ chỉnh sửa cho TextField
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Được gọi từ ProfileController khi click các nút edit
+     * - ProfileController.onClickedEditName() → editField(nameField, true)
+     * - ProfileController.onClickedEditPhone() → editField(phoneField, true)
+     * - ProfileController.onClickedSaveButton() → editField(all fields, false)
+     *
+     * CHỨC NĂNG:
+     * - editing = true: Cho phép nhập text, focus vào field
+     * - editing = false: Khóa field, không cho nhập
+     *
+     * @param field TextField cần chỉnh sửa
+     * @param editing true = enable editing, false = disable editing
+     */
     public void editField(TextField field, boolean editing) {
         field.setEditable(editing);
         field.setOpacity(1.0); // set lại ít mờ hơn

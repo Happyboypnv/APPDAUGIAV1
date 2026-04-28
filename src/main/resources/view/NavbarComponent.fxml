@@ -53,6 +53,9 @@
          <image>
             <Image url="@../image/default_avatar.jpg" />
          </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </ImageView>
    </children>
 </VBox>
