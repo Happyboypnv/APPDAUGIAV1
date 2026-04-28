@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="710.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.FinanceController">
+   <children>
+       <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
+      <Label alignment="CENTER" text="Liên kết tài khoản" textFill="WHITE" StackPane.alignment="TOP_CENTER">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <StackPane.margin>
+            <Insets right="30.0" top="30.0" />
+         </StackPane.margin>
+      </Label>
+      <ComboBox fx:id="banks" prefWidth="150.0" styleClass="combo-box" stylesheets="@../style/dropDown.css" StackPane.alignment="TOP_CENTER">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <StackPane.margin>
+            <Insets left="160.0" top="105.0" />
+         </StackPane.margin>
+      </ComboBox>
+      <Label text="Ngân hàng:" textFill="WHITE" StackPane.alignment="TOP_CENTER">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+         <StackPane.margin>
+            <Insets right="150.0" top="100.0" />
+         </StackPane.margin>
+      </Label>
+      <Label text="Số tài khoản:" textFill="WHITE" StackPane.alignment="TOP_CENTER">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+         <StackPane.margin>
+            <Insets right="130.0" top="150.0" />
+         </StackPane.margin>
+      </Label>
+      <TextField fx:id="bankAccount" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="TOP_RIGHT">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+         <StackPane.margin>
+            <Insets right="150.0" top="150.0" />
+         </StackPane.margin>
+      </TextField>
+      <Separator maxWidth="-Infinity" prefHeight="53.0" prefWidth="554.0" styleClass="custom-separator" stylesheets="@../style/nen.css" StackPane.alignment="CENTER_RIGHT">
+         <StackPane.margin>
+            <Insets bottom="140.0" right="50.0" />
+         </StackPane.margin>
+      </Separator>
+      <Label text="Nạp Tiền" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="-60.0" right="135.0" />
+         </StackPane.margin>
+      </Label>
+      <Button fx:id="linkToBankButton" mnemonicParsing="false" onMouseClicked="#onClickedLinkToBank" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Liên kết" StackPane.alignment="CENTER_RIGHT">
+         <StackPane.margin>
+            <Insets bottom="240.0" right="250.0" />
+         </StackPane.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Label text="Số tiền:" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+         <StackPane.margin>
+            <Insets right="190.0" top="160.0" />
+         </StackPane.margin>
+      </Label>
+      <TextField fx:id="depositField" alignment="CENTER_RIGHT" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="CENTER">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+         <StackPane.margin>
+            <Insets bottom="-60.0" left="200.0" top="100.0" />
+         </StackPane.margin>
+      </TextField>
+      <Label text="Rút Tiền" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <StackPane.margin>
+            <Insets right="140.0" top="420.0" />
+         </StackPane.margin>
+      </Label>
+      <Label text="Số tiền:" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+         <StackPane.margin>
+            <Insets right="190.0" top="520.0" />
+         </StackPane.margin>
+      </Label>
+      <TextField fx:id="withdrawField" alignment="CENTER_RIGHT" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="CENTER">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+         <StackPane.margin>
+            <Insets left="200.0" top="520.0" />
+         </StackPane.margin>
+      </TextField>
+      <Label text="Số dư hiện tại: " textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="50.0" right="30.0" />
+         </StackPane.margin>
+      </Label>
+      <TextField fx:id="currentBalanceField" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" opacity="0.0" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="CENTER_RIGHT">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+         <StackPane.margin>
+            <Insets bottom="50.0" right="50.0" />
+         </StackPane.margin>
+      </TextField>
+      <Button fx:id="depositButton" mnemonicParsing="false" onMouseClicked="#onClickedDeposit" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Xác nhận" StackPane.alignment="CENTER_RIGHT">
+         <StackPane.margin>
+            <Insets right="250.0" top="300.0" />
+         </StackPane.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="withdrawButton" mnemonicParsing="false" onMouseClicked="#onClickedWithdraw" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Xác nhận" StackPane.alignment="CENTER_RIGHT">
+         <StackPane.margin>
+            <Insets right="250.0" top="650.0" />
+         </StackPane.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <ImageView fx:id="editBankAccountBtn" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#onClickedEditBankAccount" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT">
+         <image>
+            <Image url="@../image/pen.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <StackPane.margin>
+            <Insets bottom="370.0" right="100.0" />
+         </StackPane.margin>
+      </ImageView>
+    </children>
+</StackPane>

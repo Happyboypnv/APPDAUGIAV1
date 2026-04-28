@@ -2,77 +2,144 @@ package com.mycompany.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mycompany.models.NguoiDung;
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KhoLuuTruNguoiDungJson implements IKhoLuuTruNguoiDung{
+public class KhoLuuTruNguoiDungJson implements IKhoLuuTruNguoiDung {
     private static final String TEN_FILE = "dulieunguoidung.json";
+    private static final Object LOCK = new Object();
     private final Gson boChuyenDoiGson;
+    // Sử dụng Type để giúp Gson hiểu cấu trúc phức tạp bên trong Map
+    private static final Type KIEU_DU_LIEU = new TypeToken<DuLieuNguoiDung>(){}.getType();
 
-    private static class DuLieuNguoiDung{
+    private static class DuLieuNguoiDung {
         int maCuoiCung = 0;
-        Map<String, NguoiDung> danhSach =  new HashMap<String, NguoiDung>();
+        Map<String, NguoiDung> danhSach = new HashMap<>();
     }
-    public  KhoLuuTruNguoiDungJson() {
+
+   public KhoLuuTruNguoiDungJson() {
         boChuyenDoiGson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new BoChuyenDoiNgay())
+                .registerTypeAdapter(LocalDateTime.class, new BoChuyenDoiNgayGio())
                 .setPrettyPrinting()
                 .create();
+        // Di chuyển mật khẩu cũ nếu cần
+        diChuyenMatKhau();
     }
-    public synchronized void luu(NguoiDung nguoiDung){
-        DuLieuNguoiDung duLieu = docTuFile();
-        duLieu.maCuoiCung++;
-        String maMoi = String.format("PPTT%06d", duLieu.maCuoiCung);
-        nguoiDung.setMaNguoiDung(maMoi);
-        duLieu.danhSach.put(nguoiDung.layThuDienTu(), nguoiDung);
-        ghiVaoFile(duLieu);
+
+    @Override
+    public void luu(NguoiDung nguoiDung) {
+        synchronized (LOCK) {
+            DuLieuNguoiDung duLieu = docTuFile();
+            duLieu.maCuoiCung++;
+            String maMoi = String.format("PPTT%06d", duLieu.maCuoiCung);
+            nguoiDung.setMaNguoiDung(maMoi);
+            duLieu.danhSach.put(nguoiDung.layThuDienTu(), nguoiDung);
+            ghiVaoFile(duLieu);
+        }
     }
-    public Map<String, NguoiDung> layTatCa(){
+
+    @Override
+    public void capNhatNguoiDung(NguoiDung nguoiDung) {
+        synchronized (LOCK) {
+            DuLieuNguoiDung duLieu = docTuFile();
+            // Update existing user (keeps the same ID and maCuoiCung)
+            duLieu.danhSach.put(nguoiDung.layThuDienTu(), nguoiDung);
+            ghiVaoFile(duLieu);
+        }
+    }
+
+    @Override
+    public synchronized Map<String, NguoiDung> layTatCa() {
         return docTuFile().danhSach;
     }
-    public DuLieuNguoiDung docTuFile(){
+
+    // Đổi private để dùng nội bộ, thêm synchronized để an toàn luồng
+    private synchronized DuLieuNguoiDung docTuFile() {
         File file = new File(TEN_FILE);
-        if(!file.exists() || file.length() == 0) return new DuLieuNguoiDung();
-        try(Reader nguoiDoc = new FileReader(file)){
-            DuLieuNguoiDung kq = boChuyenDoiGson.fromJson(nguoiDoc, DuLieuNguoiDung.class);
-            if(kq ==  null) return new DuLieuNguoiDung();
-            return kq;
-        }
-        catch(Exception e){
+        if (!file.exists() || file.length() == 0) return new DuLieuNguoiDung();
+
+        try (Reader nguoiDoc = new FileReader(file)) {
+            DuLieuNguoiDung kq = boChuyenDoiGson.fromJson(nguoiDoc, KIEU_DU_LIEU);
+            return (kq == null) ? new DuLieuNguoiDung() : kq;
+        } catch (IOException e) {
+            System.err.println("Lỗi đọc file: " + e.getMessage());
             return new DuLieuNguoiDung();
         }
     }
-    private void ghiVaoFile(DuLieuNguoiDung duLieu){
-        try(Writer nguoiGhi = new FileWriter(TEN_FILE)){
+
+    private synchronized void ghiVaoFile(DuLieuNguoiDung duLieu) {
+        try (Writer nguoiGhi = new FileWriter(TEN_FILE)) {
             boChuyenDoiGson.toJson(duLieu, nguoiGhi);
-        }
-        catch(Exception e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public boolean kiemTraNguoiDung(String email, String password) {
-        Map<String,NguoiDung> danhSachNguoiDung =  layTatCa();
-        if (danhSachNguoiDung == null) {
-            return false;
-        }
-        NguoiDung check = danhSachNguoiDung.get(email);
-        if (check == null){
-            return false;
-        } else {
-            return check.layMatKhau().equals(password);
+        synchronized (LOCK) {
+            Map<String, NguoiDung> danhSach = layTatCa();
+            if (danhSach == null) return false;
+            NguoiDung check = danhSach.get(email);
+            if (check == null) return false;
+            return com.mycompany.utils.BoMaHoaMatKhau.kiemTraMatKhau(password, check.layMatKhau(), check.laySalt());
         }
     }
+
     public boolean kiemTraEmail(String email) {
-        Map<String, NguoiDung> danhSach = layTatCa();
-        if(danhSach == null) return true;
-        if(danhSach.containsKey(email)){
-            return false;
+        synchronized (LOCK) {
+            Map<String, NguoiDung> danhSach = layTatCa();
+            if (danhSach == null) return true;
+            return !danhSach.containsKey(email);
         }
-        return true;
+    }
+
+    public NguoiDung layNguoiDungTheoEmail(String email) {
+        synchronized (LOCK) {
+            Map<String, NguoiDung> danhSach = layTatCa();
+            return danhSach.get(email);
+        }
+    }
+
+    // Phương thức di chuyển dữ liệu cũ sang mật khẩu mã hóa
+    public void diChuyenMatKhau() {
+        synchronized (LOCK) {
+            DuLieuNguoiDung duLieu = docTuFile();
+            boolean daThayDoi = false;
+            for (NguoiDung nguoiDung : duLieu.danhSach.values()) {
+                if (nguoiDung.laySalt() == null || nguoiDung.laySalt().isEmpty()) {
+                    // Giả sử mật khẩu cũ là plain text, tạo salt và hash
+                    String salt = com.mycompany.utils.BoMaHoaMatKhau.taoSalt();
+                    String hashedPassword = com.mycompany.utils.BoMaHoaMatKhau.maHoaMatKhau(nguoiDung.layMatKhau(), salt);
+                    // Cần cách để set lại, nhưng ConNguoi không có setter cho matKhau và salt
+                    // Vấn đề: các field là private, không có setter
+                    // Cần thêm setter hoặc reflection
+                    try {
+                        Field matKhauField = nguoiDung.getClass().getSuperclass().getDeclaredField("matKhau");
+                        matKhauField.setAccessible(true);
+                        matKhauField.set(nguoiDung, hashedPassword);
+
+                        Field saltField = nguoiDung.getClass().getSuperclass().getDeclaredField("salt");
+                        saltField.setAccessible(true);
+                        saltField.set(nguoiDung, salt);
+                        daThayDoi = true;
+                    } catch (Exception e) {
+                        System.err.println("Lỗi di chuyển mật khẩu: " + e.getMessage());
+                    }
+                }
+            }
+            if (daThayDoi) {
+                ghiVaoFile(duLieu);
+                System.out.println("Đã di chuyển mật khẩu cũ sang mã hóa.");
+            }
+        }
     }
 }

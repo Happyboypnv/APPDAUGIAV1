@@ -63,8 +63,8 @@
                                 <String fx:value="date-picker" />
                             </styleClass>
                         </DatePicker>
-                        <Button layoutX="101.0" layoutY="381.0" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Sign Up" />
-                  <Button layoutX="50.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleGoToSignIn" prefHeight="40.0" prefWidth="260.0" styleClass="my-custom-button" stylesheets="@../style/haveanaccount.css" text="I already have an account" />
+                        <Button layoutX="101.0" layoutY="381.0" mnemonicParsing="false" onAction="#signUp" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Sign Up" />
+                  <Button layoutX="50.0" layoutY="475.0" mnemonicParsing="false" onAction="#goToSignIn" prefHeight="40.0" prefWidth="260.0" styleClass="my-custom-button" stylesheets="@../style/haveanaccount.css" text="I already have an account" />
                   <Separator layoutX="56.0" layoutY="447.0" prefHeight="2.0" prefWidth="246.0" />
                     </children>
                 </AnchorPane>

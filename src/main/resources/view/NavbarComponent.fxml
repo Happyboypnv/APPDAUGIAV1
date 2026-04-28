@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Navbar Component - Can be included in any page - layout chung cho nhiều trang, chỉ cần sửa NavbarComponent.fxml là tất cả các trang đều tự động cập nhật theo -->
+
+<VBox fx:id="navBar" maxWidth="230.0" minWidth="180.0" prefWidth="230.0" spacing="10.0" style="-fx-background-color: #181c2f; -fx-padding: 80 0 0 20; -fx-background-radius: 15;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.NavBarController">
+   <children>
+      <ImageView fx:id="homeIcon" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#returnToHome" pickOnBounds="true" preserveRatio="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <image>
+            <Image url="@../image/square.png" />
+         </image>
+         <VBox.margin>
+            <Insets bottom="50.0" top="-60.0" />
+         </VBox.margin>
+      </ImageView>
+      <Label fx:id="createAuction" style="-fx-text-fill: #b6bfff; -fx-font-size: 18px; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 10 10;" text="Tạo phiên đấu giá">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label fx:id="transactionHistory" style="-fx-text-fill: #b6bfff; -fx-font-size: 18px; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 10 10;" text="Lịch sử giao dịch">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label fx:id="financeManagement" onMouseClicked="#navigateToFinance" style="-fx-text-fill: #b6bfff; -fx-font-size: 18px; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 10 10;" text="Tài chính">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <ImageView fx:id="avatarImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#handleAvatarClick" pickOnBounds="true" preserveRatio="true">
+         <VBox.margin>
+            <Insets top="360.0" />
+         </VBox.margin>
+         <image>
+            <Image url="@../image/default_avatar.jpg" />
+         </image>
+      </ImageView>
+   </children>
+</VBox>

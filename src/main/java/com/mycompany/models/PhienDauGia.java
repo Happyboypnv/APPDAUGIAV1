@@ -26,7 +26,6 @@ public class PhienDauGia {
     private TrangThaiPhien trangThai;
 
     private boolean isClosed;
-    private final transient ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {
         this.maPhien = maPhien;
         this.tenPhien = tenPhien;
@@ -74,5 +73,4 @@ public class PhienDauGia {
     public boolean getdaCoGia() {
         return daCoGia;
     }
-    public ReentrantReadWriteLock getLock() { return lock; }
 }

@@ -11,7 +11,6 @@ import java.util.concurrent.ScheduledFuture;
 
 public class PhienDauGiaService {
     private QuanLyCacPhienService dieuKhienPhien = QuanLyCacPhienService.getInstance();// Singleton
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
     private final Map<String, ScheduledFuture<?>> activeTimes = new ConcurrentHashMap<>();
     public void batDauPhien(PhienDauGia phien) {
         LocalDateTime now = LocalDateTime.now();
