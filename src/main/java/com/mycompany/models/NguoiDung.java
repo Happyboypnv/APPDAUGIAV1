@@ -23,6 +23,26 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
         this.cacGiaoDich = new ArrayList<>();
         this.soDuKhaDung = 0;
     }
+    /**
+     * Lấy số dư khả dụng hiện tại của người dùng.
+     * Dùng trong GiaoDichService khi kiểm tra / trừ / cộng tiền.
+     */
+    public double getSoDuKhaDung() {
+        return soDuKhaDung;
+    }
+
+    /**
+     * Cập nhật số dư khả dụng của người dùng.
+     * Dùng khi:
+     *  - xacNhanThanhToan(): trừ tiền người mua, cộng tiền người bán
+     *  - hoanTien()        : cộng lại tiền cho người mua
+     *
+     * @param soDuKhaDung số dư mới sau khi cộng/trừ
+     */
+    public void setSoDuKhaDung(double soDuKhaDung) {
+        this.soDuKhaDung = soDuKhaDung;
+    }
+
     public List<GiaoDich> layCacGiaoDich() {
         if (cacGiaoDich == null) cacGiaoDich = new ArrayList<>();
         return cacGiaoDich;
