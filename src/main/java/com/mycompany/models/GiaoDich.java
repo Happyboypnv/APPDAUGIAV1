@@ -10,6 +10,20 @@ public class GiaoDich {
     }
 
     public String toString() {
-        return String.format("--- THÔNG TIN PHIÊN ĐẤU GIÁ [%s] ---\n| Sản phẩm:    %-20s |\n| Người bán:   %-20s |\n| Người mua:   %-20s |\n| Thời lượng:   %-20s |\n| Giá chốt:    %,17.0f VNĐ |\n------------------------------------", id, phienDauGia.getSanPham().layTenSanPham(), phienDauGia.getNguoiThangCuoc().layHoTen(), phienDauGia.getNguoiThangCuoc().layHoTen(), "Tạm thời không hỗ trợ", phienDauGia.getGiaHienTai());
+        return String.format(
+                "--- THÔNG TIN PHIÊN ĐẤU GIÁ [%s] ---\n" +
+                        "| Sản phẩm:    %-20s |\n" +
+                        "| Người bán:   %-20s |\n" +
+                        "| Người mua:   %-20s |\n" +
+                        "| Thời lượng:  %-20s |\n" +
+                        "| Giá chốt:    %,17.0f VNĐ |\n" +
+                        "------------------------------------",
+                id,
+                phienDauGia.getSanPham().layTenSanPham(),
+                phienDauGia.getNguoiBan().layHoTen(),
+                phienDauGia.getNguoiThangCuoc().layHoTen(),
+                "Tạm thời không hỗ trợ",
+                phienDauGia.getGiaHienTai()
+        );
     }
 }

@@ -1,44 +1,48 @@
-// NguoiDung.java — sửa SRP + bug List
 package com.mycompany.models;
-import com.mycompany.Action.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class NguoiDung extends ConNguoi implements IHanhDongMua, IHanhDongBan, IHanhDongRoiPhong {
+import java.util.List;
+import java.util.ArrayList;
+
+public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTheTraGia {
     private String diaChi;
     private String soDienThoai;
     private double soDuKhaDung;
-    private List<GiaoDich> cacGiaoDich; // Fix: khai báo field
+    private List<GiaoDich> cacGiaoDich; // ✅ khai báo field
 
-    public NguoiDung(String hoTen) {
-        super(hoTen);
-    }
-
-    public NguoiDung(String hoTen, String thuDienTu, String matKhau, String ngaySinh) {
-        super(hoTen, thuDienTu, matKhau, ngaySinh);
-    }
-
-    public NguoiDung(String maNguoiDung, String hoTen, String thuDienTu,
-                     String matKhau, String ngaySinh, String diaChi, String soDienThoai) {
+    public NguoiDung(String hoTen, String thuDienTu,
+                     String matKhau, String ngaySinh,
+                     String diaChi, String soDienThoai) {
         super(hoTen, thuDienTu, matKhau, ngaySinh);
         this.diaChi = diaChi;
         this.soDienThoai = soDienThoai;
         this.soDuKhaDung = 0;
-        this.cacGiaoDich = new ArrayList<>(); // Fix: gán vào field thực
+        this.cacGiaoDich = new ArrayList<>();
+    }
+    public NguoiDung(String hoTen, String thuDienTu, String matKhau, String ngaySinh) {
+        super(hoTen, thuDienTu, matKhau, ngaySinh);
+        this.cacGiaoDich = new ArrayList<>();
+        this.soDuKhaDung = 0;
+    }
+    public List<GiaoDich> layCacGiaoDich() {
+        if (cacGiaoDich == null) cacGiaoDich = new ArrayList<>();
+        return cacGiaoDich;
     }
 
+    public void themGiaoDich(GiaoDich gd) {
+        if (cacGiaoDich == null) cacGiaoDich = new ArrayList<>();
+        this.cacGiaoDich.add(gd);
+    }
     @Override
     public void mua(SanPham p) {
-        // Không in log ở đây — để Controller/View xử lý
+        // Lấy tên NguoiDung từ thuộc tính hoặc hàm toString để in ra cho trực quan
+        System.out.println("[MUA] Người dùng " + this.toString().split("\n")[1] + " đang đặt giá mua: " + p.layTenSanPham());
     }
-
     @Override
     public void ban(SanPham p) {
-        // Không in log ở đây
+        System.out.println("[BÁN] Người dùng " + this.toString().split("\n")[1] + " đang đăng bán: " + p.layTenSanPham());
     }
-
     @Override
-    public void roiKhoiPhong() {
-        // Không in log ở đây
+    public void roiKhoiPhong(){
+        System.out.println("Người dùng đã rời phòng đấu giá.");
     }
 }

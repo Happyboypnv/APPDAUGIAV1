@@ -1,23 +1,26 @@
-// PhienDauGiaService.java — nhận interface qua constructor
 package com.mycompany.service;
 
 import com.mycompany.models.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 public class PhienDauGiaService {
-    private final IQuanLyCacPhienService dieuKhienPhien; // Phụ thuộc vào abstraction
-
-    public PhienDauGiaService(IQuanLyCacPhienService dieuKhienPhien) {
-        this.dieuKhienPhien = dieuKhienPhien;
-    }
-
+    private QuanLyCacPhienService dieuKhienPhien = QuanLyCacPhienService.getInstance();// Singleton
+    private final Map<String, ScheduledFuture<?>> activeTimes = new ConcurrentHashMap<>();
     public void batDauPhien(PhienDauGia phien) {
-        phien.setThoiGianBatDau(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        phien.setThoiGianBatDau(now);
         phien.setTrangThai(TrangThaiPhien.DANG_DIEN_RA);
     }
 
     public void dongPhien(PhienDauGia phien) {
-        phien.setthoiGianKetThuc(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        phien.setthoiGianKetThuc(now);
         phien.setTrangThai(TrangThaiPhien.KET_THUC);
         if (phien.getdaCoGia()) {
             phien.setNguoiThangCuoc();
@@ -26,13 +29,9 @@ public class PhienDauGiaService {
     }
 
     public void datGia(PhienDauGia phien, NguoiDung nguoiMua, double gia) {
-        if (phien.getTrangThai() != TrangThaiPhien.KET_THUC
-                && !nguoiMua.equals(phien.getNguoiBan())
-                && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
+        if (phien.getTrangThai() != TrangThaiPhien.KET_THUC && !nguoiMua.equals(phien.getNguoiBan()) && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
             synchronized (phien) {
-                if (phien.getTrangThai() != TrangThaiPhien.KET_THUC
-                        && !nguoiMua.equals(phien.getNguoiBan())
-                        && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
+                if (phien.getTrangThai() != TrangThaiPhien.KET_THUC && !nguoiMua.equals(phien.getNguoiBan()) && gia >= phien.getGiaHienTai() + phien.getBuocGia()) {
                     phien.capNhatThongTin(nguoiMua, gia);
                 }
             }
