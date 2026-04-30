@@ -32,7 +32,7 @@ public class KetNoiCSDL {
     /// Thread B goi get() -> JVM tim trong map cua B -> tra ve connB
     /// -> cung goi get() tren mot ThreadLocal nhung nhan 2 gia tri khac nhau
 
-    /// withInitial(supplier)  : con thuc khoi tao gia tri mac dinh
+    /// withInitial(supplier)  : cong thuc khoi tao gia tri mac dinh
     ///  lan dau luong goi get() -> JVM goi supplier de tao Connection
     ///  tu lan 2 : tim thay trong Map -> tra ve luong khong goi supplier nua
     /// withInitial() nhan vao tham so la mot Supplier<T>

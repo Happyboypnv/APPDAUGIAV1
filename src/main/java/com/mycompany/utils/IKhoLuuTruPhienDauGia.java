@@ -5,7 +5,7 @@ import com.mycompany.models.PhienDauGia;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-interface IKhoLuuTruPhienDauGia {
+public interface IKhoLuuTruPhienDauGia {
     void luuPhienDauGia(PhienDauGia phienDauGia);
     PhienDauGia layPhienDauGia(String maPhien);
     Map<String, PhienDauGia> layTatCaPhienDauGia();
