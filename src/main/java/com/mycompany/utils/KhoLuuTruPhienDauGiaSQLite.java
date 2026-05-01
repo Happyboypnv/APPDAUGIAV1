@@ -144,7 +144,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                 );
                 phienDauGia.setBuocGia(rs.getDouble("buoc_gia"));
                 phienDauGia.setThoiGianBatDau(LocalDateTime.parse(rs.getString("thoi_gian_bat_dau")));
-                phienDauGia.setthoiGianKetThuc(LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")));
+                phienDauGia.setThoiGianKetThuc(LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")));
                 phienDauGia.setTrangThai(TrangThaiPhien.valueOf(rs.getString("trang_thai")));
                 phienDauGia.setClosed(rs.getBoolean("is_closed"));
                 phienDauGia.setNguoiThangCuoc(nguoiThangCuoc);
@@ -200,7 +200,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                     );
                     phien.setBuocGia(rs.getDouble("buoc_gia"));
                     phien.setThoiGianBatDau(LocalDateTime.parse(rs.getString("thoi_gian_bat_dau")));
-                    phien.setthoiGianKetThuc(LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")));
+                    phien.setThoiGianKetThuc(LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")));
                     phien.setTrangThai(TrangThaiPhien.valueOf(rs.getString("trang_thai")));
                     phien.setClosed(rs.getBoolean("is_closed"));
                     phien.setNguoiThangCuoc(nguoiThangCuoc);

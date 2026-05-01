@@ -1,6 +1,7 @@
-package com.mycompany.service;
+package com.mycompany.action;
 
 import com.mycompany.models.*;
+
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -19,11 +20,25 @@ public class QuanLyCacPhienService {
         }
         return instance;
     }
-    private QuanLyCacPhienService() {}
+
+    private QuanLyCacPhienService() {
+    }
+
     private final Map<String, PhienDauGia> danhSachPhien = new ConcurrentHashMap<>();
 
-    public void them(PhienDauGia phien) { danhSachPhien.put(phien.getMaPhien(), phien); }
-    public void xoa(PhienDauGia phien)  { danhSachPhien.remove(phien.getMaPhien()); }
-    public void xoa(String maPhien)     { danhSachPhien.remove(maPhien); }
-    public PhienDauGia tim(String maPhien) { return danhSachPhien.get(maPhien); }
+    public void them(PhienDauGia phien) {
+        danhSachPhien.putIfAbsent(phien.getMaPhien(), phien);
+    }
+
+    public void xoa(PhienDauGia phien) {
+        danhSachPhien.remove(phien.getMaPhien());
+    }
+
+    public void xoa(String maPhien) {
+        danhSachPhien.remove(maPhien);
+    }
+
+    public PhienDauGia tim(String maPhien) {
+        return danhSachPhien.get(maPhien);
+    }
 }

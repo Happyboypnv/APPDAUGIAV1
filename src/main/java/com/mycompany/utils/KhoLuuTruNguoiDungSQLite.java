@@ -88,7 +88,9 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     @Override
     public void luu(NguoiDung nguoiDung) {
         // Hàm sinhMaMoi() sẽ đếm số người dùng hiện có rồi +1
-        if(kiemTraEmail(nguoiDung.layThuDienTu())) {
+        // kiemTraEmail() returns true if email DOESN'T exist (safe to register)
+        // So we check if it returns FALSE (email DOES exist) → reject
+        if(!kiemTraEmail(nguoiDung.layThuDienTu())) {
             System.err.println("Email đã tồn tại: " + nguoiDung.layThuDienTu());
             return;
         }
