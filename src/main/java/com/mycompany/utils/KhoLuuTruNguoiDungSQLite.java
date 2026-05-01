@@ -88,7 +88,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     @Override
     public void luu(NguoiDung nguoiDung) {
         // Hàm sinhMaMoi() sẽ đếm số người dùng hiện có rồi +1
-        if(!kiemTraEmail(nguoiDung.layThuDienTu())) {
+        if(kiemTraEmail(nguoiDung.layThuDienTu())) {
             System.err.println("Email đã tồn tại: " + nguoiDung.layThuDienTu());
             return;
         }
@@ -113,9 +113,9 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             ps.setString(3, nguoiDung.layThuDienTu());      // Vị trí 3 = thu_dien_tu (email)
             ps.setString(4, nguoiDung.layMatKhau());        // Vị trí 4 = mat_khau
             ps.setString(5, nguoiDung.layNgaySinh());       // Vị trí 5 = ngay_sinh
-            ps.setString(6, nguoiDung.layDiaChi());        // Vị trí 6 = dia_chi
-            ps.setString(7, nguoiDung.laySoDienThoai());  // Vị trí 7 = so_dien_thoai
-            ps.setDouble(8, nguoiDung.laySoDuKhaDung()); // Vị trí 8 = so_du_kha_dung
+            ps.setString(6, nguoiDung.getDiaChi());        // Vị trí 6 = dia_chi
+            ps.setString(7, nguoiDung.getSoDienThoai());  // Vị trí 7 = so_dien_thoai
+            ps.setDouble(8, nguoiDung.getSoDuKhaDung()); // Vị trí 8 = so_du_kha_dung
 
             // Thực thi câu lệnh INSERT
             // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
@@ -131,6 +131,41 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
         } catch (SQLException e) {
             // Nếu có lỗi (kết nối thất bại, SQL sai, ...) → in lỗi ra stderr
             System.err.println("Lỗi lưu người dùng: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void capNhatNguoiDung(NguoiDung nguoiDung) {
+        // Kiểm tra người dùng có tồn tại không
+        if (nguoiDung == null || nguoiDung.layMaNguoiDung() == null) {
+            System.err.println("Không thể cập nhật: Người dùng null hoặc không có mã");
+            return;
+        }
+
+        String sql = "UPDATE nguoi_dung SET " +
+                "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, ngay_sinh = ?, dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ? " +
+                "WHERE ma_nguoi_dung = ?";
+
+        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+            // Điền dữ liệu vào các vị trí ?
+            ps.setString(1, nguoiDung.layHoTen());          // ho_ten
+            ps.setString(2, nguoiDung.layThuDienTu());      // thu_dien_tu (email)
+            ps.setString(3, nguoiDung.layMatKhau());        // mat_khau
+            ps.setString(4, nguoiDung.layNgaySinh());       // ngay_sinh
+            ps.setString(5, nguoiDung.getDiaChi());         // dia_chi
+            ps.setString(6, nguoiDung.getSoDienThoai());    // so_dien_thoai
+            ps.setDouble(7, nguoiDung.getSoDuKhaDung());    // so_du_kha_dung
+            ps.setString(8, nguoiDung.layMaNguoiDung());    // WHERE ma_nguoi_dung
+
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
+
+            // Commit để đảm bảo data được cập nhật
+            ps.getConnection().commit();
+            System.out.println("COMMIT cập nhật user: " + nguoiDung.layMaNguoiDung());
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi cập nhật người dùng: " + e.getMessage());
         }
     }
 
@@ -217,39 +252,6 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
 
         } catch (SQLException e) {
             System.err.println("Lỗi xóa người dùng: " + e.getMessage());
-        }
-    }
-    public void capNhat(NguoiDung nguoiDung){
-        // Kiểm tra người dùng có tồn tại không
-        if (nguoiDung == null || nguoiDung.layMaNguoiDung() == null) {
-            System.err.println("Không thể cập nhật: Người dùng null hoặc không có mã");
-            return;
-        }
-
-        String sql = "UPDATE nguoi_dung SET " +
-                "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, ngay_sinh = ?, dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ? " +
-                "WHERE ma_nguoi_dung = ?";
-
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
-            // Điền dữ liệu vào các vị trí ?
-            ps.setString(1, nguoiDung.layHoTen());          // ho_ten
-            ps.setString(2, nguoiDung.layThuDienTu());      // thu_dien_tu (email)
-            ps.setString(3, nguoiDung.layMatKhau());        // mat_khau
-            ps.setString(4, nguoiDung.layNgaySinh());       // ngay_sinh
-            ps.setString(5, nguoiDung.layDiaChi());         // dia_chi
-            ps.setString(6, nguoiDung.laySoDienThoai());    // so_dien_thoai
-            ps.setDouble(7, nguoiDung.laySoDuKhaDung());    // so_du_kha_dung
-            ps.setString(8, nguoiDung.layMaNguoiDung());    // WHERE ma_nguoi_dung
-
-            int rowsAffected = ps.executeUpdate();
-            System.out.println("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
-
-            // Commit để đảm bảo data được cập nhật
-            ps.getConnection().commit();
-            System.out.println("COMMIT cập nhật user: " + nguoiDung.layMaNguoiDung());
-
-        } catch (SQLException e) {
-            System.err.println("Lỗi cập nhật người dùng: " + e.getMessage());
         }
     }
     /**

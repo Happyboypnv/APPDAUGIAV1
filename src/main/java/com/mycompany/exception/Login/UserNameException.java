@@ -1,4 +1,4 @@
-package com.mycompany.exception;
+package com.mycompany.exception.Login;
 
 public class UserNameException extends Exception{
     public UserNameException(String message){

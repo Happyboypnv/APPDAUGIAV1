@@ -33,7 +33,7 @@ public class PhienDauGia {
         this.giaHienTai = giaKhoiDiem;
         this.nguoiBan = nguoiBan;
         buocGia = 0.0;
-        this.trangThai = TrangThaiPhien.DANG_CHO;
+        this.trangThai = TrangThaiPhien.DANG_CHO_DUYET;
     }
 
     public void capNhatThongTin(NguoiDung nguoiMua, double giaMoi) {

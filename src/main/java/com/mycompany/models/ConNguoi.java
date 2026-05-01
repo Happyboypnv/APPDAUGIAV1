@@ -8,6 +8,7 @@ public abstract class ConNguoi implements Serializable {
     private String thuDienTu;
     private String ngaySinh;
     private String matKhau;
+    private String salt;
     @Override
     public String toString () {
         return "maNguoiDung: " + maNguoiDung +
@@ -19,7 +20,8 @@ public abstract class ConNguoi implements Serializable {
     protected ConNguoi(String hoTen, String thuDienTu, String matKhau, String ngaySinh) {
         this.hoTen = hoTen;
         this.thuDienTu = thuDienTu;
-        this.matKhau = matKhau;
+        this.salt = com.mycompany.utils.BoMaHoaMatKhau.taoSalt();
+        this.matKhau = com.mycompany.utils.BoMaHoaMatKhau.maHoaMatKhau(matKhau, this.salt);
         this.ngaySinh = ngaySinh;
     }
     protected ConNguoi(String hoTen){this.hoTen = hoTen;}
@@ -33,5 +35,13 @@ public abstract class ConNguoi implements Serializable {
         return matKhau;
     }
 
+    public String laySalt() {
+        return salt;
+    }
+
     public void setMaNguoiDung(String maNguoiDung) {this.maNguoiDung = maNguoiDung;}
+
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
+    }
 }

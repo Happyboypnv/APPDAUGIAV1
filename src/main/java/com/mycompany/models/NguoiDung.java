@@ -8,7 +8,8 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
     private String soDienThoai;
     private double soDuKhaDung;
     private List<GiaoDich> cacGiaoDich; // ✅ khai báo field
-
+    private String soTaiKhoan;
+    private String nganHang;
     public NguoiDung(String hoTen, String thuDienTu,
                      String matKhau, String ngaySinh,
                      String diaChi, String soDienThoai) {
@@ -32,6 +33,36 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
         if (cacGiaoDich == null) cacGiaoDich = new ArrayList<>();
         this.cacGiaoDich.add(gd);
     }
+    public void setSoDuKhaDung(double soDuKhaDung) {
+        this.soDuKhaDung = soDuKhaDung;
+    }
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
+    }
+    public void setSoDienThoai(String soDienThoai) {
+        this.soDienThoai = soDienThoai;
+    }
+    public String getSoTaiKhoan() {
+        return soTaiKhoan;
+    }
+    public void setSoTaiKhoan(String soTaiKhoan) {
+        this.soTaiKhoan = soTaiKhoan;
+    }
+    public String getNganHang() {
+        return nganHang;
+    }
+    public void setNganHang(String nganHang) {
+        this.nganHang = nganHang;
+    }
+    public double getSoDuKhaDung() {
+        return soDuKhaDung;
+    }
+    public String getDiaChi() {
+        return diaChi;
+    }
+    public String getSoDienThoai() {
+        return soDienThoai;
+    }
     @Override
     public void mua(SanPham p) {
         // Lấy tên NguoiDung từ thuộc tính hoặc hàm toString để in ra cho trực quan
@@ -44,29 +75,5 @@ public class NguoiDung extends ConNguoi implements CoTheBan, CoTheRoiPhong, CoTh
     @Override
     public void roiKhoiPhong(){
         System.out.println("Người dùng đã rời phòng đấu giá.");
-    }
-
-    public String layDiaChi() {
-        return diaChi;
-    }
-
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
-    }
-
-    public String laySoDienThoai() {
-        return soDienThoai;
-    }
-
-    public void setSoDienThoai(String soDienThoai) {
-        this.soDienThoai = soDienThoai;
-    }
-
-    public double laySoDuKhaDung() {
-        return soDuKhaDung;
-    }
-
-    public void setSoDuKhaDung(double soDuKhaDung) {
-        this.soDuKhaDung = soDuKhaDung;
     }
 }
