@@ -1,5 +1,6 @@
 package com.mycompany;
 
+import com.mycompany.utils.KetNoiCSDL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +14,11 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            // Khởi tạo database trước khi load giao diện
+            System.out.println("🗄️ Đang khởi tạo database...");
+            KetNoiCSDL.khoiTao();
+            System.out.println("✅ Database đã sẵn sàng!");
+
             // 1. Tải file giao diện đăng ký (SignUp.fxml)
             // Đảm bảo tên file khớp chính xác (phân biệt hoa thường)
             Parent root = FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"));

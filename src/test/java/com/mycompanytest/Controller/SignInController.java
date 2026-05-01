@@ -69,7 +69,7 @@ public class SignInController {
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng nhập thành công! Chào mừng bạn.");
             System.out.println("Đăng nhập thành công với email: " + email);
 
-            // TẠI ĐÂY: Bạn có thể viết thêm code chuyển sang giao diện TRANG CHỦ (Home.fxml)
+            // TẠI ĐÂY: Bạn có thể viết thêm code chuyển sang giao diện TRANG CHỦ (Template.fxml)
 
         } else {
             showAlert(Alert.AlertType.ERROR, "Thất bại", "Email hoặc mật khẩu không chính xác!");
