@@ -1,5 +1,5 @@
 package com.mycompany.models;
 
-interface CoTheRoiPhong {
+public interface CoTheRoiPhong {
     void roiKhoiPhong();
 }

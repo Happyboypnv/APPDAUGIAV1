@@ -10,7 +10,6 @@ import javafx.scene.control.Alert;
 import java.io.IOException; // Quan trọng
 import java.time.*;
 
-import com.mycompany.exception.Login.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc

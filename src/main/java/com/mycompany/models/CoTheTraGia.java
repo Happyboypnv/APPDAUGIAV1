@@ -1,5 +1,5 @@
 package com.mycompany.models;
 
-interface CoTheTraGia {
+public interface CoTheTraGia {
     void mua(SanPham p);
 }

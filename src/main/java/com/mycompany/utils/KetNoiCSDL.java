@@ -164,10 +164,12 @@ public class KetNoiCSDL {
             "FOREIGN KEY (ma_nguoi_thang_cuoc) REFERENCES nguoi_dung(ma_nguoi_dung), " +
             "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
 
-        String sqlGiaoDich = "CREATE TABLE IF NOT EXISTS giao_dich (" +
-            "id TEXT PRIMARY KEY, " +
-            "ma_phien TEXT, " +
-            "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
+         String sqlGiaoDich = "CREATE TABLE IF NOT EXISTS giao_dich (" +
+             "ma_giao_dich TEXT PRIMARY KEY, " +
+             "ma_phien TEXT NOT NULL, " +
+             "trang_thai TEXT NOT NULL, " +
+             "thoi_gian_tao TEXT NOT NULL, " +
+             "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
 
         String sqlNguoiTraGia = "CREATE TABLE IF NOT EXISTS nguoi_tra_gia (" +
             "ma_phien TEXT, " +
