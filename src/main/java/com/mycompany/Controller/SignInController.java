@@ -15,7 +15,7 @@ public class SignInController {
 
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField; // nơi nhận vào input của user
-    private IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
+    private IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
 
     @FXML
     public void signIn(ActionEvent event) {

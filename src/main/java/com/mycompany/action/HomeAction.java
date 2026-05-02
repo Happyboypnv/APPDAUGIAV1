@@ -1,6 +1,6 @@
 package com.mycompany.action;
 
-import com.mycompany.exception.Login.*;
+import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import javafx.fxml.FXML; // Quan trọng
 import javafx.fxml.FXMLLoader; // Quan trọng
 import javafx.scene.Parent; // Quan trọng
@@ -8,11 +8,9 @@ import javafx.scene.Scene; // Quan trọng // Để xử lý dữ liệu ngày t
 import javafx.scene.control.Alert;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
-import java.time.*;
+
 import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.KhoLuuTruNguoiDungJson;
 import com.mycompany.utils.SessionManager;
-import com.mycompany.exception.Login.*;
 
 import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
 
@@ -40,7 +38,7 @@ import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
  */
 public class HomeAction {
     private static HomeAction instance;
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
+    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
     private final Lock lock = new ReentrantLock();
     private HomeAction() {};
 

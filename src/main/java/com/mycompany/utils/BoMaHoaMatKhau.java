@@ -8,6 +8,21 @@ import java.util.Base64;
 /**
  * Lớp BoMaHoaMatKhau cung cấp các hàm để mã hóa, tạo salt và kiểm tra mật khẩu
  * sử dụng thuật toán SHA-256 kết hợp với salt để tăng tính bảo mật
+ *
+ * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
+ * - Class mới được tạo để thay thế plain text password storage
+ * - Cung cấp password hashing với salt cho bảo mật cao
+ * - Được sử dụng trong:
+ *   + ConNguoi constructor (tự động hash khi tạo user)
+ *   + LoginAction.dangKy() (hash password trước khi lưu)
+ *   + KhoLuuTruNguoiDungSQLite.kiemTraNguoiDung() (verify login)
+ *   + KhoLuuTruNguoiDungSQLite.migratePlainTextPasswords() (migration cũ)
+ *
+ * Bảo mật được cải thiện:
+ * - SHA-256: Thuật toán hash an toàn, không thể reverse
+ * - Salt: Mỗi user có salt riêng → chống rainbow table attack
+ * - Base64 encoding: Dễ lưu trữ trong database
+ * - Timing attack protection: equals() comparison
  */
 public class BoMaHoaMatKhau {
     // Thuật toán mã hóa SHA-256 - một trong những thuật toán hash an toàn nhất hiện nay

@@ -66,11 +66,11 @@ public class TokenUtil {
                            user.layThuDienTu() + ":" +
                            user.layHoTen() + ":" +
                            user.layNgaySinh() + ":" +
-                           user.layDiaChi() + ":" +
-                           user.laySoDienThoai() + ":" +
-                           user.laySoDuKhaDung() + ":" +
-                           user.laySoTaiKhoan() + ":" +
-                           user.layNganHang() + ":" +
+                           user.getDiaChi() + ":" +
+                           user.getSoDienThoai() + ":" +
+                           user.getSoDuKhaDung() + ":" +
+                           user.getSoTaiKhoan() + ":" +
+                           user.getNganHang() + ":" +
                            System.currentTimeMillis();
         // Ví dụ: "1:admin@gmail.com:Nguyễn Văn A:2000-01-15:Hà Nội:0123456789:1000000:123456:Vietcombank:1718350000000"
 

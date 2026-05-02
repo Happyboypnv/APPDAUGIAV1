@@ -50,8 +50,6 @@ public interface IKhoLuuTruNguoiDung {
      * @param nguoiDung Đối tượng NguoiDung đã được cập nhật
      *                  Phải có ID và maCuoiCung để xác định bản ghi nào cập nhật
      */
-    void capNhatNguoiDung(NguoiDung nguoiDung);
-
     /**
      * PHƯƠNG THỨC: layTatCa()
      * MỤC ĐÍCH: Lấy toàn bộ danh sách người dùng
@@ -99,4 +97,6 @@ public interface IKhoLuuTruNguoiDung {
      *        - kiemTraEmail("admin@gmail.com") = false nếu tồn tại
      */
     boolean kiemTraEmail(String email);
+    void xoa(NguoiDung nguoiDung);
+    void capNhatNguoiDung(NguoiDung nguoiDung);
 }

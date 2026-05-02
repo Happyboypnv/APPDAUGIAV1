@@ -1,10 +1,8 @@
 package com.mycompany.action;
 
 import com.mycompany.exception.Login.*;
-import java.time.*;
 import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.KhoLuuTruNguoiDungJson;
-import com.mycompany.exception.Login.*;
+import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import javafx.scene.control.TextField;
 
 /**
@@ -33,7 +31,7 @@ import javafx.scene.control.TextField;
  */
 public class ProfileAction {
     private static ProfileAction instance;
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
+    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
 
     private ProfileAction() {}
 

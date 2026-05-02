@@ -1,5 +1,7 @@
 package com.mycompany;
 
+import com.mycompany.utils.KetNoiCSDL;
+import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +15,30 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            // Khởi tạo database trước khi load giao diện
+            System.out.println("🗄️ Đang khởi tạo database...");
+            KetNoiCSDL.khoiTao();
+            System.out.println("✅ Database đã sẵn sàng!");
+
+            // THAY ĐỔI QUAN TRỌNG (SQLite Migration):
+            // Lý do thêm: Migrate users cũ từ JSON sang SQLite
+            // Vấn đề: Users cũ có password plain text, SQLite expect hashed
+            // Giải pháp: Gọi migratePlainTextPasswords() sau DB init
+            //
+            // Quy trình:
+            // 1. KhoLuuTruNguoiDungSQLite userStorage = new KhoLuuTruNguoiDungSQLite()
+            //    → Tạo instance của storage class
+            // 2. userStorage.migratePlainTextPasswords()
+            //    → Tự động tìm và migrate users cũ
+            // 3. Chỉ chạy một lần khi app start
+            // 4. Thread-safe vì chạy trước UI load
+            //
+            // Kết quả: Tất cả users đều có password hashed + salt
+            System.out.println("🔄 Đang kiểm tra migration passwords...");
+            KhoLuuTruNguoiDungSQLite userStorage = new KhoLuuTruNguoiDungSQLite();
+            userStorage.migratePlainTextPasswords();
+            System.out.println("✅ Migration hoàn thành!");
+
             // 1. Tải file giao diện đăng ký (SignUp.fxml)
             // Đảm bảo tên file khớp chính xác (phân biệt hoa thường)
             Parent root = FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"));

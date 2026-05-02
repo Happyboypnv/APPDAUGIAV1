@@ -1,16 +1,12 @@
 package com.mycompany.action;
 
-import com.mycompany.Controller.FinanceController;
-import com.mycompany.exception.Login.*;
-import java.time.*;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.mycompany.models.NguoiDung;
 import com.mycompany.utils.CapNhatThongTinNguoiDung;
 import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.KhoLuuTruNguoiDungJson;
-import com.mycompany.exception.Login.*;
+import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import com.mycompany.utils.SessionManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -42,7 +38,7 @@ import javafx.scene.control.TextField;
  */
 public class FinanceAction {
     private static FinanceAction instance;
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungJson();
+    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
 
     private FinanceAction() {}
 
@@ -105,7 +101,7 @@ public class FinanceAction {
                 throw new NumberFormatException();
             }
             NguoiDung currentUser = SessionManager.getInstance().getCurrentUser(); // lấy người dùng hiện tại
-            double newBalance = currentUser.laySoDuKhaDung() + amount; // cộng thêm số tiền thêm vào
+            double newBalance = currentUser.getSoDuKhaDung() + amount; // cộng thêm số tiền thêm vào
             Map<String, String> updateBalance = new HashMap<>();
             updateBalance.put("balance", String.valueOf(newBalance));
             CapNhatThongTinNguoiDung.getInstance().updateUser(updateBalance); // tạo map để update
@@ -140,7 +136,7 @@ public class FinanceAction {
      */
     public void withdraw(double amount) {
         NguoiDung currentUser = SessionManager.getInstance().getCurrentUser();
-        double currentBalance = currentUser.laySoDuKhaDung();
+        double currentBalance = currentUser.getSoDuKhaDung();
         try {
             if (amount <=0) {
                 throw new NumberFormatException();
