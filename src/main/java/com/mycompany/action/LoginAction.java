@@ -10,7 +10,6 @@ import javafx.scene.control.Alert;
 import java.io.IOException; // Quan trọng
 import java.time.*;
 
-import com.mycompany.exception.Login.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
@@ -142,31 +141,28 @@ public class LoginAction {
     /**
      * dangKy(ActionEvent event, String name, String email, String password, LocalDate birthdate) - Xử lý đăng ký
      *
-     * KẾT NỐI VỚI CONTROLLER:
-     * - Được gọi từ SignUpController khi submit form đăng ký
+     * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
+     * - Trước: NguoiDung nguoiDung = new NguoiDung(name, email, password, birthdate.toString())
+     *          → Lưu password plain text
+     * - Sau: Tạo salt + hash password trước khi tạo NguoiDung object
      *
-     * QUY TRÌNH:
-     * 1. Thử lấy lock trong 500ms (thread-safe)
-     * 2. Validate thông tin đăng ký
-     * 3. Tạo object NguoiDung mới
-     * 4. Lưu vào database qua IKhoLuuTruNguoiDung
-     * 5. Thông báo thành công
-     * 6. Chuyển sang trang đăng nhập
+     * Quy trình mới:
+     * 1. Validate thông tin đăng ký (name, email, password, birthdate)
+     * 2. Tạo salt ngẫu nhiên (16 bytes Base64)
+     * 3. Hash password với salt (SHA-256)
+     * 4. Tạo NguoiDung object với password đã hash + salt
+     * 5. Lưu vào database
+     * 6. Thông báo thành công + chuyển sang trang đăng nhập
      *
-     * THREAD-SAFE:
-     * - Sử dụng tryLock() để tránh block quá lâu
-     * - Unlock trong finally block
-     *
-     * XỬ LÝ LỖI:
-     * - Validation errors → Custom exceptions → Alert warnings
-     * - Lock timeout → Alert system busy
-     * - InterruptedException → Thread interrupt + alert
-     * - Other exceptions → Generic error alert
+     * Bảo mật được cải thiện:
+     * - Rainbow table attack: Không thể vì mỗi user có salt khác nhau
+     * - Brute force: Phải crack từng hash riêng biệt
+     * - Dictionary attack: Salt làm cho dictionary attack kém hiệu quả
      *
      * @param event ActionEvent từ button click
      * @param name Họ tên
      * @param email Email
-     * @param password Mật khẩu
+     * @param password Mật khẩu (plain text từ form)
      * @param birthdate Ngày sinh
      */
     @FXML
@@ -175,7 +171,18 @@ public class LoginAction {
             if (lock.tryLock(500, TimeUnit.MILLISECONDS)) { // Thử lấy lock trong 0.5s, nếu không được sẽ trả về false và không thực hiện đăng ký
                 try {
                     checkSignUp(name, email, password, birthdate); // check thông tin đky
-                    NguoiDung nguoiDung = new NguoiDung(name, email, password, birthdate.toString());
+
+                    // THAY ĐỔI QUAN TRỌNG: Hash password với salt trước khi lưu
+                    // Lý do: Bảo mật - không lưu plain text password
+                    // Cách hoạt động:
+                    // 1. BoMaHoaMatKhau.taoSalt() → tạo 16 bytes random, encode Base64
+                    // 2. BoMaHoaMatKhau.maHoaMatKhau(password, salt) → SHA-256 hash
+                    // 3. Tạo NguoiDung với password đã hash và salt
+                    String salt = BoMaHoaMatKhau.taoSalt();
+                    String hashedPassword = BoMaHoaMatKhau.maHoaMatKhau(password, salt);
+                    NguoiDung nguoiDung = new NguoiDung(name, email, hashedPassword, birthdate.toString());
+                    nguoiDung.setSalt(salt);  // THAY ĐỔI: Set salt vào NguoiDung object
+
                     khoLuuTruNguoiDung.luu(nguoiDung); // lưu người dùng (sau lưu vào db)
                     HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công tài khoản!");
                     try {

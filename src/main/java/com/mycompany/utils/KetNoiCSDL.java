@@ -93,6 +93,10 @@ public class KetNoiCSDL {
     private static void caiDatPragma(Connection conn) throws SQLException {
         /// conn la con duong noi tu java den SQL
         /// Statement la chiec xe cho hang
+        /// ⚠️ QUAN TRỌNG: Phải execute PRAGMA TRƯỚC khi setAutoCommit(false)
+        /// Lý do: PRAGMA statements không thể thực thi bên trong transaction
+        /// - Nếu setAutoCommit(false) trước → transaction bắt đầu
+        /// - Sau đó execute PRAGMA → ERROR: "Safety level may not be changed inside a transaction"
         try(Statement stmt = conn.createStatement()) {
             /// WAL = Write - Ahead Logging
             /// che do mac dinh (DELETE journal):
@@ -120,11 +124,33 @@ public class KetNoiCSDL {
             /// OFF : -> khong fsync -> nhanh nhat nhung co the mat du lieu nhung giao pho het cho he dieu hanh tu quyet.
             stmt.execute("PRAGMA synchronous=NORMAL;");
         }
+
+        /// FIX QUAN TRỌNG (AutoCommit Issue):
+        /// - SQLite JDBC driver chạy ở auto-commit mode mặc định
+        /// - Khi auto-commit = true, gọi commit() sẽ throw "database in auto-commit mode"
+        /// - Giải pháp: Tắt auto-commit để có thể gọi commit() thủ công (MỘT KHI PRAGMA đã xong)
+        /// - Lợi ích: Kiểm soát transaction, đảm bảo data consistency
+        conn.setAutoCommit(false);
+        System.out.println("✅ AutoCommit tắt - Sử dụng manual commit");
     }
 
     /// khoi tao bang
     /// tao mot bang can thiet neu chua ton tai
     /// goi 1 lan trong app.java truoc khi load FXML
+    ///
+    /// THAY ĐỔI QUAN TRỌNG (SQLite Migration):
+    /// 1. Thêm cột 'salt TEXT NOT NULL' vào bảng nguoi_dung
+    ///    - Lý do: Cần thiết cho password hashing với salt
+    ///    - Trước đây: Password chỉ hash đơn giản → dễ bị rainbow table attack
+    ///    - Bây giờ: Password + salt → mỗi user có hash khác nhau
+    ///
+    /// 2. Thêm logic ALTER TABLE để migration database cũ
+    ///    - Kiểm tra và thêm cột salt nếu chưa có
+    ///    - Cho phép migrate từ phiên bản JSON sang SQLite
+    ///
+    /// 3. Cập nhật các bảng khác với default values
+    ///    - giao_dich: thêm trang_thai và thoi_gian_tao
+    ///    - Đảm bảo backward compatibility
     public static void khoiTao() {
 
         String sqlNguoiDung = "CREATE TABLE IF NOT EXISTS nguoi_dung (" +
@@ -132,6 +158,7 @@ public class KetNoiCSDL {
             "ho_ten TEXT NOT NULL, " +
             "thu_dien_tu TEXT UNIQUE NOT NULL, " +
             "mat_khau TEXT NOT NULL, " +
+            "salt TEXT NOT NULL, " +  // THAY ĐỔI: Thêm cột salt cho password hashing
             "ngay_sinh TEXT, " +
             "dia_chi TEXT, " +
             "so_dien_thoai TEXT, " +
@@ -167,6 +194,8 @@ public class KetNoiCSDL {
         String sqlGiaoDich = "CREATE TABLE IF NOT EXISTS giao_dich (" +
             "id TEXT PRIMARY KEY, " +
             "ma_phien TEXT, " +
+            "trang_thai TEXT DEFAULT 'PENDING', " +  // THAY ĐỔI: Thêm default status
+            "thoi_gian_tao TEXT DEFAULT CURRENT_TIMESTAMP, " +  // THAY ĐỔI: Thêm timestamp
             "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
 
         String sqlNguoiTraGia = "CREATE TABLE IF NOT EXISTS nguoi_tra_gia (" +
@@ -182,6 +211,24 @@ public class KetNoiCSDL {
             System.out.println("Đang tạo bảng nguoi_dung...");
             stmt.execute(sqlNguoiDung);
             System.out.println("Bảng nguoi_dung đã tạo");
+
+            // THAY ĐỔI QUAN TRỌNG: Migration logic cho database cũ
+            // Lý do: Khi migrate từ JSON sang SQLite, database cũ không có cột salt
+            // Giải pháp: Tự động thêm cột salt vào database hiện có
+            // Cách hoạt động:
+            // 1. Thử ALTER TABLE để thêm cột salt
+            // 2. Nếu thành công → database cũ, đã thêm cột
+            // 3. Nếu lỗi (cột đã tồn tại) → database mới, bỏ qua
+            // 4. Kết quả: Tất cả database đều có cột salt
+            try {
+                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN salt TEXT;");
+                System.out.println("✅ Đã thêm cột salt vào bảng nguoi_dung (migration thành công)");
+            } catch (SQLException e) {
+                // THAY ĐỔI: Xử lý lỗi graceful thay vì crash
+                // Trước: Lỗi ALTER TABLE → crash app
+                // Sau: Lỗi ALTER TABLE → log và tiếp tục (cột đã tồn tại)
+                System.out.println("ℹ️ Cột salt đã tồn tại (không cần migration)");
+            }
 
             System.out.println("Đang tạo bảng san_pham...");
             stmt.execute(sqlSanPham);
@@ -199,9 +246,9 @@ public class KetNoiCSDL {
             stmt.execute(sqlNguoiTraGia);
             System.out.println("Bảng nguoi_tra_gia đã tạo");
 
-            System.out.println("Database khởi tạo thành công");
+            System.out.println("✅ Database khởi tạo thành công");
         } catch (SQLException e) {
-            System.err.println("Lỗi khởi tạo DB: " + e.getMessage());
+            System.err.println("❌ Lỗi khởi tạo DB: " + e.getMessage());
             e.printStackTrace();
         }
     }

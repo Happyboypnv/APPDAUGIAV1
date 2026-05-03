@@ -37,7 +37,6 @@ public interface IKhoLuuTruNguoiDung {
      *                  Lưu ý: ID sẽ được gán tự động, không cần set trước
      */
     void luu(NguoiDung nguoiDung);
-
     /**
      * PHƯƠNG THỨC: capNhatNguoiDung(NguoiDung nguoiDung)
      * MỤC ĐÍCH: Cập nhật thông tin của một người dùng đã tồn tại
@@ -50,6 +49,8 @@ public interface IKhoLuuTruNguoiDung {
      * @param nguoiDung Đối tượng NguoiDung đã được cập nhật
      *                  Phải có ID và maCuoiCung để xác định bản ghi nào cập nhật
      */
+    void capNhatNguoiDung(NguoiDung nguoiDung);
+
     /**
      * PHƯƠNG THỨC: layTatCa()
      * MỤC ĐÍCH: Lấy toàn bộ danh sách người dùng
@@ -97,6 +98,12 @@ public interface IKhoLuuTruNguoiDung {
      *        - kiemTraEmail("admin@gmail.com") = false nếu tồn tại
      */
     boolean kiemTraEmail(String email);
+
+    /**
+     * PHƯƠNG THỨC: xoa(NguoiDung nguoiDung)
+     * MỤC ĐÍCH: Xóa một người dùng khỏi hệ thống
+     *
+     * @param nguoiDung Đối tượng NguoiDung cần xóa
+     */
     void xoa(NguoiDung nguoiDung);
-    void capNhatNguoiDung(NguoiDung nguoiDung);
 }

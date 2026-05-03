@@ -7,12 +7,12 @@ import java.util.Map;
 
 /**
  * TokenUtil - Utility class untuk JWT Token management
- *
+ * <p>
  * MỤC ĐÍCH:
  * - Tạo JWT token chứa thông tin người dùng
  * - Giải mã token để lấy thông tin người dùng
  * - Xác thực token (kiểm tra hợp lệ hay không)
- *
+ * <p>
  * TOKEN FORMAT:
  * [Base64_Encoded_Data].[Signature]
  * Ví dụ: "eyJ1c2VySWQiOiIxIiwibmFtZSI6IE5ndXllbiBWYW4gQSJ9.123456"
@@ -170,17 +170,7 @@ public class TokenUtil {
             if (userData.length < 4) return null;
 
             // 🔹 BƯỚC 5: Tạo Map chứa các field
-            Map<String, Object> userInfo = new HashMap<>();
-            userInfo.put("userId", userData[0]);
-            userInfo.put("email", userData[1]);
-            userInfo.put("name", userData[2]);
-            userInfo.put("birth", userData[3]);
-            userInfo.put("address", userData[4]);
-            userInfo.put("phone", userData[5]);
-            // Chuyển balance từ string sang Double
-            userInfo.put("balance", Double.parseDouble(userData[6]));
-            userInfo.put("bankAccount", userData[7]);
-            userInfo.put("bankName", userData[8]);
+            Map<String, Object> userInfo = getStringObjectMap(userData);
 
             // 🔹 BƯỚC 6: Trả về Map
             return userInfo;
@@ -190,6 +180,21 @@ public class TokenUtil {
             // Nếu có lỗi giải mã, token invalid → trả về null
             return null;
         }
+    }
+
+    private static Map<String, Object> getStringObjectMap(String[] userData) {
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("userId", userData[0]);
+        userInfo.put("email", userData[1]);
+        userInfo.put("name", userData[2]);
+        userInfo.put("birth", userData[3]);
+        userInfo.put("address", userData[4]);
+        userInfo.put("phone", userData[5]);
+        // Chuyển balance từ string sang Double
+        userInfo.put("balance", Double.parseDouble(userData[6]));
+        userInfo.put("bankAccount", userData[7]);
+        userInfo.put("bankName", userData[8]);
+        return userInfo;
     }
 
     /**
