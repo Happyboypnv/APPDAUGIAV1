@@ -100,8 +100,8 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
         // Dấu ? là placeholder - để lại chỗ trống cho dữ liệu thực tế
         // Dùng placeholder tránh SQL Injection - an toàn hơn ghép string thô
         String sql = "INSERT INTO nguoi_dung " +
-                "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, ngay_sinh, dia_chi, so_dien_thoai, so_du_kha_dung) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, dia_chi, so_dien_thoai, so_du_kha_dung) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         // AN TOÀN (DÙNG CÁI NÀY):
         // Dùng ? là "chỗ trống", không ghép string
         // Database sẽ xử lý ? như một tham số dữ liệu, không phải SQL code
@@ -114,10 +114,11 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             ps.setString(2, nguoiDung.layHoTen());          // Vị trí 2 = ho_ten
             ps.setString(3, nguoiDung.layThuDienTu());      // Vị trí 3 = thu_dien_tu (email)
             ps.setString(4, nguoiDung.layMatKhau());        // Vị trí 4 = mat_khau
-            ps.setString(5, nguoiDung.layNgaySinh());       // Vị trí 5 = ngay_sinh
-            ps.setString(6, nguoiDung.getDiaChi());        // Vị trí 6 = dia_chi
-            ps.setString(7, nguoiDung.getSoDienThoai());  // Vị trí 7 = so_dien_thoai
-            ps.setDouble(8, nguoiDung.getSoDuKhaDung()); // Vị trí 8 = so_du_kha_dung
+            ps.setString(5, nguoiDung.laySalt());           // Vị trí 5 = salt
+            ps.setString(6, nguoiDung.layNgaySinh());       // Vị trí 6 = ngay_sinh
+            ps.setString(7, nguoiDung.getDiaChi());        // Vị trí 7 = dia_chi
+            ps.setString(8, nguoiDung.getSoDienThoai());  // Vị trí 8 = so_dien_thoai
+            ps.setDouble(9, nguoiDung.getSoDuKhaDung()); // Vị trí 9 = so_du_kha_dung
 
             // Thực thi câu lệnh INSERT
             // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
@@ -145,7 +146,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
         }
 
         String sql = "UPDATE nguoi_dung SET " +
-                "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, ngay_sinh = ?, dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ? " +
+                "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ? " +
                 "WHERE ma_nguoi_dung = ?";
 
         try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
@@ -153,11 +154,12 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             ps.setString(1, nguoiDung.layHoTen());          // ho_ten
             ps.setString(2, nguoiDung.layThuDienTu());      // thu_dien_tu (email)
             ps.setString(3, nguoiDung.layMatKhau());        // mat_khau
-            ps.setString(4, nguoiDung.layNgaySinh());       // ngay_sinh
-            ps.setString(5, nguoiDung.getDiaChi());         // dia_chi
-            ps.setString(6, nguoiDung.getSoDienThoai());    // so_dien_thoai
-            ps.setDouble(7, nguoiDung.getSoDuKhaDung());    // so_du_kha_dung
-            ps.setString(8, nguoiDung.layMaNguoiDung());    // WHERE ma_nguoi_dung
+            ps.setString(4, nguoiDung.laySalt());           // salt
+            ps.setString(5, nguoiDung.layNgaySinh());       // ngay_sinh
+            ps.setString(6, nguoiDung.getDiaChi());         // dia_chi
+            ps.setString(7, nguoiDung.getSoDienThoai());    // so_dien_thoai
+            ps.setDouble(8, nguoiDung.getSoDuKhaDung());    // so_du_kha_dung
+            ps.setString(9, nguoiDung.layMaNguoiDung());    // WHERE ma_nguoi_dung
 
             int rowsAffected = ps.executeUpdate();
             System.out.println("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
@@ -218,6 +220,13 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
                 nd.setSoDienThoai(rs.getString("so_dien_thoai"));
                 nd.setSoDuKhaDung(rs.getDouble("so_du_kha_dung"));
 
+                // FIX QUAN TRỌNG (App Restart Issue):
+                // - Trước: Không retrieve/set salt từ database
+                // - Sau: Retrieve và set salt từ database
+                // - Lý do: Khi app restart, salt cần được load để password verification hoạt động
+                // - Vấn đề: Nếu salt = null, login sẽ fail vì BoMaHoaMatKhau.kiemTraMatKhau() cần salt
+                nd.setSalt(rs.getString("salt"));
+
                 // Thêm vào Map: email làm key, NguoiDung làm value
                 // Nếu email chưa tồn tại → thêm vào
                 // Nếu email đã tồn tại → cập nhật (ghi đè)
@@ -260,23 +269,29 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
      * METHOD: kiemTraNguoiDung()
      * Mục đích: Kiểm tra đăng nhập - xác minh email VÀ password có khớp không.
      *
-     * Quy trình:
-     * 1. Tìm người dùng theo email trong database
-     * 2. Nếu tìm thấy → so sánh password nhập vào với password trong DB
-     * 3. Nếu cả email và password đều khớp → return true (đăng nhập thành công)
-     * 4. Nếu email không tồn tại hoặc password sai → return false (đăng nhập thất bại)
+     * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
+     * - Trước: return matKhauTrongDB.equals(password) → so sánh plain text
+     * - Sau: BoMaHoaMatKhau.kiemTraMatKhau() → verify hash với salt
      *
-     * Tối ưu: SELECT mat_khau (không SELECT *) → tải dữ liệu ít hơn
+     * Quy trình mới:
+     * 1. Tìm người dùng theo email trong database
+     * 2. Nếu tìm thấy → lấy salt và hash từ DB
+     * 3. Sử dụng BoMaHoaMatKhau.kiemTraMatKhau() để verify password
+     * 4. Nếu cả email và password đều khớp → return true (đăng nhập thành công)
+     * 5. Nếu email không tồn tại hoặc password sai → return false (đăng nhập thất bại)
+     *
+     * Tối ưu: SELECT mat_khau, salt (chỉ lấy dữ liệu cần thiết)
      *
      * @param email    - Email người dùng nhập vào
-     * @param password - Password người dùng nhập vào
+     * @param password - Password người dùng nhập vào (plain text)
      * @return true = đăng nhập thành công, false = thất bại
      */
     @Override
     public boolean kiemTraNguoiDung(String email, String password) {
-        // Chỉ lấy cột mat_khau (cần thiết cho kiểm tra)
-        // Dùng WHERE để lọc theo email (thu_dien_tu)
-        String sql = "SELECT mat_khau FROM nguoi_dung WHERE thu_dien_tu = ?";
+        // THAY ĐỔI: Chỉ lấy cột mat_khau và salt (cần thiết cho kiểm tra)
+        // Trước: SELECT * → lấy tất cả cột (chậm hơn)
+        // Sau: SELECT mat_khau, salt → chỉ lấy cần thiết (nhanh hơn)
+        String sql = "SELECT mat_khau, salt FROM nguoi_dung WHERE thu_dien_tu = ?";
         // try-with-resources: tự động đóng PreparedStatement
         try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
             // Điền email vào placeholder ?
@@ -289,16 +304,24 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
                 // rs.next() = kiểm tra xem có dòng nào khớp không
                 // true = tìm thấy email, false = email không tồn tại
                 if (rs.next()) {
-                    // Lấy password từ cơ sở dữ liệu
-                    // rs.getString("mat_khau") = lấy giá trị cột mat_khau
-                    String matKhauTrongDB = rs.getString("mat_khau");
+                    // THAY ĐỔI: Lấy password hash và salt từ cơ sở dữ liệu
+                    // Trước: Chỉ có mat_khau (plain text)
+                    // Sau: mat_khau (hashed) + salt (cho verification)
+                    String matKhauHashTrongDB = rs.getString("mat_khau");
+                    String saltTrongDB = rs.getString("salt");
+
                     System.out.println(" Tìm thấy user với email: " + email);
-                    System.out.println(" Password trong DB: " + matKhauTrongDB);
+                    System.out.println(" Password hash trong DB: " + matKhauHashTrongDB);
+                    System.out.println(" Salt trong DB: " + saltTrongDB);
                     System.out.println(" Password nhập vào: " + password);
-                    // matKhauTrongDB != null  → đảm bảo không null trước khi so sánh
-                    // matKhauTrongDB.equals(password) → so sánh password
-                    // Cả hai điều kiện phải true → return true
-                    return matKhauTrongDB != null && matKhauTrongDB.equals(password);
+
+                    // THAY ĐỔI QUAN TRỌNG: Sử dụng BoMaHoaMatKhau để verify password
+                    // Trước: matKhauTrongDB.equals(password) → plain text comparison
+                    // Sau: BoMaHoaMatKhau.kiemTraMatKhau() → cryptographic verification
+                    // matKhauHashTrongDB != null && saltTrongDB != null → đảm bảo không null
+                    // BoMaHoaMatKhau.kiemTraMatKhau() → verify password với hash + salt
+                    return matKhauHashTrongDB != null && saltTrongDB != null &&
+                           com.mycompany.utils.BoMaHoaMatKhau.kiemTraMatKhau(password, matKhauHashTrongDB, saltTrongDB);
                 } else {
                     System.out.println(" Không tìm thấy user với email: " + email);
                 }
@@ -410,6 +433,70 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             // Fallback: Nếu có lỗi bất ngờ → return mã mặc định
             // Dùng mã này cho người dùng đầu tiên (khi DB rỗng hoặc lỗi)
             return "PPPT000001";
+        }
+    }
+
+    /**
+     * METHOD: migratePlainTextPasswords()
+     * Mục đích: Migrate mật khẩu plain text (từ JSON) sang hashed passwords
+     *
+     * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
+     * - Lý do thêm: Users cũ từ JSON có password plain text
+     * - Vấn đề: Login logic mới expect hashed passwords
+     * - Giải pháp: Tự động migrate khi app khởi động
+     *
+     * Quy trình migration:
+     * 1. Tìm tất cả users có salt = null hoặc rỗng (users cũ)
+     * 2. Đối với mỗi user đó:
+     *    - Lấy password hiện tại (plain text từ JSON)
+     *    - Tạo salt mới (16 bytes random)
+     *    - Hash password với salt mới (SHA-256)
+     *    - Cập nhật DB với hash và salt mới
+     * 3. Users mới: Đã có salt từ lúc đăng ký
+     *
+     * Khi nào gọi: Trong App.java, sau khi DB init, trước khi load UI
+     * Thread-safe: Chạy một lần khi app start, không có concurrent issues
+     *
+     * Kết quả: Tất cả users đều có password hashed + salt
+     */
+    public void migratePlainTextPasswords() {
+        System.out.println("🔄 Bắt đầu migrate mật khẩu plain text...");
+
+        // THAY ĐỔI: Query để tìm users cần migrate
+        // salt IS NULL OR salt = '' → users từ JSON migration
+        String sql = "SELECT ma_nguoi_dung, mat_khau FROM nguoi_dung WHERE salt IS NULL OR salt = ''";
+        try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            int migratedCount = 0;
+            while (rs.next()) {
+                String maNguoiDung = rs.getString("ma_nguoi_dung");
+                String plainPassword = rs.getString("mat_khau");
+
+                // THAY ĐỔI: Tạo salt và hash mới cho migration
+                // BoMaHoaMatKhau.taoSalt() → 16 bytes random Base64
+                // BoMaHoaMatKhau.maHoaMatKhau() → SHA-256 hash
+                String newSalt = com.mycompany.utils.BoMaHoaMatKhau.taoSalt();
+                String hashedPassword = com.mycompany.utils.BoMaHoaMatKhau.maHoaMatKhau(plainPassword, newSalt);
+
+                // THAY ĐỔI: Cập nhật DB với password đã hash
+                // Sử dụng PreparedStatement để tránh SQL injection
+                String updateSql = "UPDATE nguoi_dung SET mat_khau = ?, salt = ? WHERE ma_nguoi_dung = ?";
+                try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(updateSql)) {
+                    ps.setString(1, hashedPassword);  // Password đã hash
+                    ps.setString(2, newSalt);          // Salt mới
+                    ps.setString(3, maNguoiDung);     // WHERE condition
+                    ps.executeUpdate();
+                    ps.getConnection().commit();      // THAY ĐỔI: Explicit commit cho WAL mode
+                    migratedCount++;
+                    System.out.println("✅ Migrated user: " + maNguoiDung);
+                }
+            }
+
+            System.out.println("🎉 Hoàn thành migrate " + migratedCount + " users");
+
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi migrate passwords: " + e.getMessage());
         }
     }
 }
