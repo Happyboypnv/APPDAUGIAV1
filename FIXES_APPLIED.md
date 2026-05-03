@@ -318,3 +318,84 @@ The following files were edited during this review:
 **Status:** ✅ ALL ISSUES RESOLVED  
 **Next Steps:** Run project build and deployment tests
 
+
+# 📊 KỀ HOẠCH CHI TIẾT - 3 BƯỚC TIẾP THEO PHÁT TRIỂN ỨNG DỤNG ĐẤU GIÁ
+
+**Team:** HiPiTi - 4 Developers  
+**Ngày tạo:** 2026-05-03  
+**Timeline:** 3 Tuần (21 ngày)  
+**Status:** 📋 Planning
+
+---
+
+## 📌 MỤC LỤC
+
+1. [Tóm Tắt Điều Hành](#tóm-tắt-điều-hành)
+2. [Bước 1: Client-Server Architecture](#bước-1-client-server-architecture)
+3. [Bước 2: Multithreading](#bước-2-multithreading)
+4. [Bước 3: Real-time Notifications](#bước-3-real-time-notifications)
+5. [Timeline & Milestones](#timeline--milestones)
+6. [Team Assignment](#team-assignment)
+7. [Risks & Mitigation](#risks--mitigation)
+8. [Appendix](#appendix)
+
+---
+
+## 🎯 TÓM TẮT ĐIỀU HÀNH
+
+### Mục Tiêu Chính
+Xây dựng một nền tảng đấu giá **trực tuyến phân tán** có khả năng hỗ trợ **hàng trăm người dùng đồng thời** với **cập nhật real-time**.
+
+### Hiện Trạng
+- ✅ UI JavaFX hoàn thành
+- ✅ Database SQLite set up
+- ✅ Business logic (Services, Controllers) tạo sơ bộ
+- ❌ Chưa có client-server communication
+- ❌ Chưa có multi-user support
+- ❌ Chưa có real-time updates
+
+### Kỳ Vọng Sau 3 Tuần
+- ✅ Server có thể handle 100+ clients
+- ✅ Real-time bid updates
+- ✅ Multi-user auction sessions
+- ✅ Synchronized transactions
+- ✅ Persistent data storage
+
+### Key Metrics
+
+| Tiêu Chí | Giá Trị |
+|----------|--------|
+| **Timeline** | 3 Tuần (21 ngày) |
+| **Team Size** | 4 Developers |
+| **Complexity** | 🔴 Cao |
+| **Priority** | 🔴 Cao |
+| **Target Load** | 100+ concurrent users |
+
+---
+
+## 🏗️ BƯỚC 1: CLIENT-SERVER ARCHITECTURE
+
+### 1.1 Lựa Chọn Công Nghệ
+
+Để xây dựng giao tiếp giữa client và server, ta có 3 lựa chọn chính:
+
+| Tiêu Chí | Socket (Java NIO) | HTTP/REST API | WebSocket |
+|----------|------------------|---------------|-----------|
+| **Real-time** | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐⭐ |
+| **Dễ dàng** | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Scalability** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Phù hợp đấu giá?** | ✅ Tốt | ⚠️ Trung bình | ✅ Tốt nhất |
+
+### 🎯 Đề Xuất
+**Bắt đầu với Socket TCP** → Nâng cấp thành WebSocket sau
+
+**Lý do:**
+- Socket TCP đơn giản, kiểm soát tốt
+- Tương thích với Java hiện tại
+- Dễ test và debug
+- WebSocket là bước tiếp theo tự nhiên
+
+---
+
+### 1.2 Kiến Trúc Tổng Thể
+
