@@ -1,6 +1,5 @@
 package com.mycompany.action;
 
-import com.mycompany.exception.Login.*;
 import com.mycompany.models.NguoiDung;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -12,9 +11,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
-import java.time.*;
+
 import com.mycompany.utils.SessionManager;
-import com.mycompany.exception.Login.*;
 
 /**
  * HandleNavigationAndAlert - Class xử lý điều hướng và thông báo
@@ -158,6 +156,14 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         Scene homeScene = new Scene(financeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(homeScene);
+        window.show();
+    }
+
+    public void goToChangePassword(Event event) throws IOException {
+        StackPane changeRoot = FXMLLoader.load(getClass().getResource("/view/ChangePassword.fxml"));
+        Scene changeScene = new Scene(changeRoot);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(changeScene);
         window.show();
     }
 

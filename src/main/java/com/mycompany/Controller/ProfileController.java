@@ -11,6 +11,8 @@ import javafx.fxml.Initializable;
 
 import javafx.scene.image.ImageView;
 
+import javafx.event.ActionEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -189,6 +191,15 @@ public class ProfileController implements Initializable {
         } catch (Exception e) {
             // Xử lý lỗi: hiển thị thông báo lỗi
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", e.getMessage());
+        }
+    }
+
+    @FXML
+    public void onClickedChangePassword(ActionEvent event) {
+        try {
+            HandleNavigationAndAlert.getInstance().goToChangePassword(event);
+        } catch (IOException e) {
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện đổi mật khẩu không thành công!");
         }
     }
 

@@ -120,6 +120,10 @@ public abstract class ConNguoi implements Serializable {
         this.ngaySinh = ngaySinh;
     }
 
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
+    }
+
     // THAY ĐỔI: Thêm setter cho salt
     // Cần thiết cho migration users cũ từ JSON
     public void setSalt(String salt) {
