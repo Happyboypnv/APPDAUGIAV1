@@ -1,9 +1,7 @@
 package com.mycompany.utils;
 
-import com.mycompany.models.GiaoDich;
-import com.mycompany.models.PhienDauGia;
-import com.mycompany.models.NguoiDung;
-import com.mycompany.models.SanPham;
+import com.mycompany.models.*;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -98,7 +96,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
 
                 if (phien != null) {
                     GiaoDich giaoDich = new GiaoDich(maGiaoDich, phien);
-                    giaoDich.setTrangThai(GiaoDich.TrangThaiGiaoDich.valueOf(rs.getString("trang_thai")));
+                    giaoDich.setTrangThai(TrangThaiGiaoDich.valueOf(rs.getString("trang_thai")));
                     result.put(maGiaoDich, giaoDich);
                 }
             }
@@ -122,7 +120,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                     PhienDauGia phien = khoLuuTruPhienDauGia.layPhienDauGia(maPhien);
                     if (phien != null) {
                         GiaoDich giaoDich = new GiaoDich(maGiaoDich, phien);
-                        giaoDich.setTrangThai(GiaoDich.TrangThaiGiaoDich.valueOf(rs.getString("trang_thai")));
+                        giaoDich.setTrangThai(TrangThaiGiaoDich.valueOf(rs.getString("trang_thai")));
                         return giaoDich;
                     }
                 }
@@ -220,7 +218,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
      * Lấy danh sách giao dịch theo trạng thái
      */
     @Override
-    public List<GiaoDich> layGiaoDichTheoTrangThai(GiaoDich.TrangThaiGiaoDich trangThai) {
+    public List<GiaoDich> layGiaoDichTheoTrangThai(TrangThaiGiaoDich trangThai) {
         List<GiaoDich> result = new ArrayList<>();
         String sql = "SELECT * FROM giao_dich WHERE trang_thai = ?";
 

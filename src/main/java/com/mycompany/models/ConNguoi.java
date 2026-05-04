@@ -16,7 +16,7 @@ import java.io.Serializable;
  * - Cung cấp các phương thức getter/setter chung
  * - Mã hóa mật khẩu với salt khi tạo mới
  */
-public abstract class ConNguoi implements Serializable {
+public class ConNguoi implements Serializable {
     private String maNguoiDung;
     private String hoTen;
     private String thuDienTu;
@@ -118,6 +118,9 @@ public abstract class ConNguoi implements Serializable {
 
     public void setNgaySinh(String ngaySinh) {
         this.ngaySinh = ngaySinh;
+    }
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
     }
 
     // THAY ĐỔI: Thêm setter cho salt

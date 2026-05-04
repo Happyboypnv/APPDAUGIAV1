@@ -21,12 +21,6 @@ public class GiaoDich {
      *  DA_THANH_TOAN  : người thắng đã chuyển tiền thành công
      *  DA_HOAN_TIEN   : giao dịch bị hủy, tiền đã được hoàn lại cho người thắng
      */
-    public enum TrangThaiGiaoDich {
-        CHO_THANH_TOAN,
-        DA_THANH_TOAN,
-        DA_HOAN_TIEN
-    }
-
     // ===== CÁC THUỘC TÍNH =====
 
     /** Mã định danh duy nhất của giao dịch (ví dụ: "GD000001") */
@@ -36,7 +30,7 @@ public class GiaoDich {
     private final PhienDauGia phienDauGia;
 
     /** Trạng thái hiện tại của giao dịch */
-    private TrangThaiGiaoDich trangThai;
+    public volatile TrangThaiGiaoDich trangThai;
 
     /** Thời điểm giao dịch được tạo ra (khi phiên đấu giá kết thúc) */
     private final LocalDateTime thoiGianTao;
@@ -53,7 +47,7 @@ public class GiaoDich {
         this.id = id;
         this.phienDauGia = phienDauGia;
         // Giao dịch mới tạo ra luôn ở trạng thái CHỜ THANH TOÁN
-        this.trangThai = TrangThaiGiaoDich.CHO_THANH_TOAN;
+        this.trangThai = trangThai.CHO_THANH_TOAN;
         // Ghi nhận thời điểm tạo giao dịch
         this.thoiGianTao = LocalDateTime.now();
     }

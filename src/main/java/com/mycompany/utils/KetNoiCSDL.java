@@ -168,13 +168,6 @@ public class KetNoiCSDL {
             "ma_san_pham TEXT PRIMARY KEY, " +
             "ten_san_pham TEXT NOT NULL);";
 
-        /**
-         * FOREIGN KEY (ma_nguoi_ban) REFERENCES nguoi_dung(ma_nguoi_dung)
-         * Cần "PRAGMA foreign_keys=ON" (đã đặt trong caiDatPragma) mới có hiệu lực.
-         *
-         * trang_thai TEXT: lưu tên enum ("DANG_CHO", "DANG_DIEN_RA", "KET_THUC")
-         * SQLite không có kiểu ENUM → dùng TEXT + kiểm soát ở tầng Java.
-         */
         String sqlPhien = "CREATE TABLE IF NOT EXISTS phien_dau_gia (" +
             "ma_phien TEXT PRIMARY KEY, " +
             "ten_phien TEXT NOT NULL, " +
