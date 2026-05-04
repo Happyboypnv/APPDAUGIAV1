@@ -1,7 +1,7 @@
 package com.mycompany.action;
 
 import com.mycompany.models.GiaoDich;
-import com.mycompany.models.GiaoDich.TrangThaiGiaoDich;
+import com.mycompany.models.TrangThaiGiaoDich;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.TrangThaiPhien;
