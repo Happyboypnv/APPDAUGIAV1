@@ -185,11 +185,11 @@ public class KetNoiCSDL {
             "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
 
         String sqlGiaoDich = "CREATE TABLE IF NOT EXISTS giao_dich (" +
-            "id TEXT PRIMARY KEY, " +
-            "ma_phien TEXT, " +
-            "trang_thai TEXT DEFAULT 'PENDING', " +  // THAY ĐỔI: Thêm default status
-            "thoi_gian_tao TEXT DEFAULT CURRENT_TIMESTAMP, " +  // THAY ĐỔI: Thêm timestamp
-            "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
+                "ma_giao_dich TEXT PRIMARY KEY, " +  // ← đúng với INSERT
+                "ma_phien TEXT NOT NULL, " +
+                "trang_thai TEXT NOT NULL, " +
+                "thoi_gian_tao TEXT NOT NULL, " +
+                "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
 
         String sqlNguoiTraGia = "CREATE TABLE IF NOT EXISTS nguoi_tra_gia (" +
             "ma_phien TEXT, " +
