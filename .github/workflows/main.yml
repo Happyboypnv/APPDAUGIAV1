@@ -8,32 +8,54 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        java: [ '17' ]
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    name: Build on ${{ matrix.os }} / JDK ${{ matrix.java }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: ${{ matrix.java }}
           distribution: 'temurin'
           cache: maven
 
-      - name: Install virtual display
+      # Chỉ Linux mới cần virtual display
+      - name: Install virtual display (Linux only)
+        if: runner.os == 'Linux'
         run: sudo apt-get install -y xvfb
 
-      - name: Build with Maven
+      # Linux — dùng xvfb-run
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
         run: mvn compile --no-transfer-progress
 
-      - name: Run tests
+      - name: Test (Linux)
+        if: runner.os == 'Linux'
         run: xvfb-run mvn test --no-transfer-progress
+
+      # Windows & macOS — chạy thẳng, có màn hình sẵn
+      - name: Build (Windows / macOS)
+        if: runner.os != 'Linux'
+        run: mvn compile --no-transfer-progress
+
+      - name: Test (Windows / macOS)
+        if: runner.os != 'Linux'
+        run: mvn test --no-transfer-progress
 
       - name: Upload test report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-report
+          name: test-report-${{ matrix.os }}-jdk${{ matrix.java }}
           path: target/surefire-reports/
           retention-days: 7
