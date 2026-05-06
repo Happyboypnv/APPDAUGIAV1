@@ -1,5 +1,5 @@
 package com.mycompany.models;
 
-interface CoTheBan {
+public interface CoTheBan {
     void ban(SanPham p);
 }

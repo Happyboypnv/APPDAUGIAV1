@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignUpController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignUpController">
     <opaqueInsets>
         <Insets />
     </opaqueInsets>
@@ -63,8 +63,8 @@
                                 <String fx:value="date-picker" />
                             </styleClass>
                         </DatePicker>
-                        <Button layoutX="101.0" layoutY="381.0" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Sign Up" />
-                  <Button layoutX="50.0" layoutY="475.0" mnemonicParsing="false" onAction="#handleGoToSignIn" prefHeight="40.0" prefWidth="260.0" styleClass="my-custom-button" stylesheets="@../style/haveanaccount.css" text="I already have an account" />
+                        <Button layoutX="101.0" layoutY="381.0" mnemonicParsing="false" onAction="#signUp" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Sign Up" />
+                  <Button layoutX="50.0" layoutY="475.0" mnemonicParsing="false" onAction="#goToSignIn" prefHeight="40.0" prefWidth="260.0" styleClass="my-custom-button" stylesheets="@../style/haveanaccount.css" text="I already have an account" />
                   <Separator layoutX="56.0" layoutY="447.0" prefHeight="2.0" prefWidth="246.0" />
                     </children>
                 </AnchorPane>

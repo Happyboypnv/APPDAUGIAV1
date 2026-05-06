@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignInController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="661.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.Controller.SignInController">
     <opaqueInsets>
         <Insets />
     </opaqueInsets>
@@ -42,7 +42,7 @@
                             </font>
                         </Label>
                         <PasswordField fx:id="passwordField" layoutX="18.0" layoutY="186.0" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-text" stylesheets="@../style/nen.css" />
-                        <Button layoutX="90.0" layoutY="239.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Login" />
+                        <Button layoutX="90.0" layoutY="239.0" mnemonicParsing="false" onAction="#signIn" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Login" />
                     </children>
                 </AnchorPane>
             <Separator maxWidth="-Infinity" prefHeight="5.0" prefWidth="246.0">
@@ -50,7 +50,7 @@
                   <Insets top="15.0" />
                </VBox.margin>
             </Separator>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#switchToSignUp" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-button" stylesheets="@../style/haveanaccount.css" text="Don't have an account? Sign Up" textAlignment="CENTER">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#goToSignUp" prefHeight="40.0" prefWidth="300.0" styleClass="my-custom-button" stylesheets="@../style/haveanaccount.css" text="Don't have an account? Sign Up" textAlignment="CENTER">
                <VBox.margin>
                   <Insets top="12.0" />
                </VBox.margin>

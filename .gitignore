@@ -36,6 +36,16 @@ build/
 
 ### VS Code ###
 .vscode/
+# Logs
+logs/
+*.log
+
+# Database runtime
+hipiti.db
+hipiti.db-wal
+hipiti.db-shm
 
 ### Mac OS ###
-.DS_Store
+.DS_Store*.db
+*.db-shm
+*.db-wal

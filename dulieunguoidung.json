@@ -1,0 +1,52 @@
+{
+  "maCuoiCung": 4,
+  "danhSach": {
+    "phong@gmail.com": {
+      "soDuKhaDung": 0.0,
+      "maNguoiDung": "PPTT000001",
+      "hoTen": "nguyenvanphong",
+      "thuDienTu": "phong@gmail.com",
+      "ngaySinh": "2002-11-06",
+      "matKhau": "0dqUT5ffo5nwIphWl95WWpaZYyIsrAL+dhyTYNPa9lA\u003d",
+      "salt": "Xf8NFsMYJuYGJugFdpP65w\u003d\u003d"
+    },
+    "phongngu123@gmail.com": {
+      "soDuKhaDung": 0.0,
+      "cacGiaoDich": [],
+      "maNguoiDung": "PPTT000002",
+      "hoTen": "phongdz",
+      "thuDienTu": "phongngu123@gmail.com",
+      "ngaySinh": "2007-04-06",
+      "matKhau": "rUMtjvAgRNMNoVuMDUHdXb7WoLiEjQauLzLr+lfs/Ck\u003d",
+      "salt": "MOyUQ3jillx2i4f0FBPHyA\u003d\u003d"
+    },
+    "phongpgdz@gmail.com": {
+      "diaChi": "Xa Quang Oai, Ha Noi",
+      "soDienThoai": "0356906322",
+      "soDuKhaDung": 489.9,
+      "soTaiKhoan": "0982010510",
+      "nganHang": "MB Bank",
+      "cacGiaoDich": [],
+      "maNguoiDung": "PPTT000003",
+      "hoTen": "PhongDepZai",
+      "thuDienTu": "phongpgdz@gmail.com",
+      "ngaySinh": "2007-04-09",
+      "matKhau": "3rUu+LPzYCJo4UBBe4faaSDilG9+Lj6epuPWCnGrnBc\u003d",
+      "salt": "lkm8+q1ndlrVCKhBj3KyXA\u003d\u003d"
+    },
+    "phongdzvaicalon123@gmail.com": {
+      "diaChi": "Ba Dinh, Ha Noi",
+      "soDienThoai": "0356895274",
+      "soDuKhaDung": 509.9,
+      "soTaiKhoan": "0369888888",
+      "nganHang": "MB Bank",
+      "cacGiaoDich": [],
+      "maNguoiDung": "PPTT000004",
+      "hoTen": "PhongDepZaiVcl",
+      "thuDienTu": "phongdzvaicalon123@gmail.com",
+      "ngaySinh": "2006-03-30",
+      "matKhau": "1Nml1wEetu+6CcgkOqOlyNZKEhvQxLQ5NMnf5trakaw\u003d",
+      "salt": "xYsYOnzQNsWGjnUCyZoQDg\u003d\u003d"
+    }
+  }
+}
