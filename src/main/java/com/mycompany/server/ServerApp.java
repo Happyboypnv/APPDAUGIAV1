@@ -1,6 +1,8 @@
 package com.mycompany.server;
 
 import com.mycompany.server.controller.UserController;
+import com.mycompany.utils.KetNoiCSDL;
+import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -37,6 +39,10 @@ public class ServerApp {
 
         // Tạo HttpServer lắng nghe tại 0.0.0.0:8080
         // InetSocketAddress(PORT) = lắng nghe trên tất cả network interface
+        KetNoiCSDL.khoiTao();
+        KhoLuuTruNguoiDungSQLite userStorage = new KhoLuuTruNguoiDungSQLite();
+        userStorage.migratePlainTextPasswords();
+
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 
         // ===== KHỞI TẠO CONTROLLER =====
