@@ -183,6 +183,11 @@ public class UserController {
      * Response thất bại (404): { "thongBao": "Không tìm thấy người dùng" }
      */
     public void handleGetUser(HttpExchange exchange) throws IOException {
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
+            return;
+        }
         if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận GET\"}");
             return;
