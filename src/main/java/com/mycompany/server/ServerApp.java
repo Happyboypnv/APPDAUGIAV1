@@ -41,6 +41,7 @@ public class ServerApp {
         // InetSocketAddress(PORT) = lắng nghe trên tất cả network interface
         KetNoiCSDL.khoiTao();
         KhoLuuTruNguoiDungSQLite userStorage = new KhoLuuTruNguoiDungSQLite();
+        /// Đây là bước bảo mật. Quét toàn bộ mật khẩu cũ và mã hóa chúng bằng Salt + hash
         userStorage.migratePlainTextPasswords();
 
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -53,6 +54,7 @@ public class ServerApp {
         /**
          * POST /api/users/login
          * Đăng nhập → trả về token nếu đúng email/mật khẩu
+         * xem giai thich trong SERVER_GIAITHICH_HOANTOAN.md
          */
         server.createContext("/api/users/login", exchange -> {
             // Xử lý CORS preflight (browser gửi OPTIONS trước khi POST)
@@ -125,9 +127,16 @@ public class ServerApp {
      * @param exchange đối tượng HttpExchange của OPTIONS request
      */
     private static void xuLyCors(com.sun.net.httpserver.HttpExchange exchange) throws IOException {
+        /// cho phép tất cả các nguồn truy cập vào server này
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin",  "*");
+        /// cho phép các phương thức HTTP cụ thể
+        /// GET lấy dữ liệu
+        /// POST gửi hoặc tạo mới dữ liệu
+        /// OPTIONS phương thức ướm hỏi, Trình duyệt tự động gửi nó để hỏi xem Server có cho phép thực hiện yêu cầu hay không
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        /// cho phép các lại thông tin đi kèm
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        /// gửi mã phản hồi 200 (Thành công) nhưng không có nội dung (-1)
         exchange.sendResponseHeaders(200, -1); // -1 = không có body
         exchange.close();
     }
