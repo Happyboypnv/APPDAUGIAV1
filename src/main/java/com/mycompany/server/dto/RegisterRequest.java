@@ -20,7 +20,12 @@ public class RegisterRequest {
 
     /** Constructor rỗng bắt buộc để Gson deserialize */
     public RegisterRequest() {}
-
+    public RegisterRequest(String hoTen, String email, String matKhau, String ngaySinh) {
+        this.hoTen = hoTen;
+        this.email = email;
+        this.matKhau = matKhau;
+        this.ngaySinh = ngaySinh;
+    }
     public String getHoTen()    { return hoTen; }
     public String getEmail()    { return email; }
     public String getMatKhau()  { return matKhau; }
