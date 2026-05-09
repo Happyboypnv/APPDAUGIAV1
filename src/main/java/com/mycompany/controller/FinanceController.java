@@ -1,4 +1,4 @@
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import java.net.URL;
 import java.util.HashMap;

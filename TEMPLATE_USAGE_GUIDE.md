@@ -60,55 +60,55 @@ Example: `FinanceManagement.fxml`
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
-           prefHeight="710.0" prefWidth="893.0" 
-           style="-fx-background-color: #1c254b;" 
-           styleClass="my-custom-node" 
-           stylesheets="@../style/nen.css" 
-           xmlns="http://javafx.com/javafx/25" 
-           xmlns:fx="http://javafx.com/fxml/1" 
-           fx:controller="com.mycompany.Controller.YourPageController">
-   <children>
-      <!-- Avatar Image (Top Right) -->
-      <ImageView fx:id="avatarImage" fitHeight="40" fitWidth="40" 
-                 onMouseClicked="#handleAvatarClick" pickOnBounds="true" 
-                 preserveRatio="true" StackPane.alignment="TOP_RIGHT">
-         <StackPane.margin>
-            <Insets right="30.0" top="20.0" />
-         </StackPane.margin>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <image>
-            <Image url="@../image/default_avatar.jpg" />
-         </image>
-      </ImageView>
-      
-      <!-- ⭐ Auto-Updating Navbar Component ⭐ -->
-      <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
-      
-      <!-- Your Page Content Here -->
-      <Label text="Your Page Title" textFill="WHITE">
-         <font>
-            <Font size="31.0" />
-         </font>
-      </Label>
-      
-      <!-- Home Icon (Top Left) -->
-      <ImageView fx:id="homeIcon" fitHeight="40.0" fitWidth="40.0" 
-                 onMouseClicked="#returnToHome" pickOnBounds="true" 
-                 preserveRatio="true" StackPane.alignment="TOP_LEFT">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <StackPane.margin>
-            <Insets left="30.0" top="20.0" />
-         </StackPane.margin>
-         <image>
-            <Image url="@../image/home.png" />
-         </image>
-      </ImageView>
-   </children>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="710.0" prefWidth="893.0"
+           style="-fx-background-color: #1c254b;"
+           styleClass="my-custom-node"
+           stylesheets="@../style/nen.css"
+           xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.mycompany.controller.YourPageController">
+    <children>
+        <!-- Avatar Image (Top Right) -->
+        <ImageView fx:id="avatarImage" fitHeight="40" fitWidth="40"
+                   onMouseClicked="#handleAvatarClick" pickOnBounds="true"
+                   preserveRatio="true" StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+                <Insets right="30.0" top="20.0"/>
+            </StackPane.margin>
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <image>
+                <Image url="@../image/default_avatar.jpg"/>
+            </image>
+        </ImageView>
+
+        <!-- ⭐ Auto-Updating Navbar Component ⭐ -->
+        <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT"/>
+
+        <!-- Your Page Content Here -->
+        <Label text="Your Page Title" textFill="WHITE">
+            <font>
+                <Font size="31.0"/>
+            </font>
+        </Label>
+
+        <!-- Home Icon (Top Left) -->
+        <ImageView fx:id="homeIcon" fitHeight="40.0" fitWidth="40.0"
+                   onMouseClicked="#returnToHome" pickOnBounds="true"
+                   preserveRatio="true" StackPane.alignment="TOP_LEFT">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <StackPane.margin>
+                <Insets left="30.0" top="20.0"/>
+            </StackPane.margin>
+            <image>
+                <Image url="@../image/home.png"/>
+            </image>
+        </ImageView>
+    </children>
 </StackPane>
 ```
 
@@ -120,18 +120,19 @@ Example: `FinanceManagement.fxml`
 ### Step 3: Create Controller
 
 ```java
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import javafx.fxml.Initializable;
 
 public class YourPageController extends NavBarController implements Initializable {
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        super.initialize(url, resourceBundle);
-        // Your page-specific logic here
-    }
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    super.initialize(url, resourceBundle);
+    // Your page-specific logic here
+  }
 }
 ```
 

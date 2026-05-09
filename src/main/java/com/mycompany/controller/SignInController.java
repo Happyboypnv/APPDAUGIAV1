@@ -1,4 +1,4 @@
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.LoginAction;
