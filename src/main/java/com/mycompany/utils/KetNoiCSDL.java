@@ -48,7 +48,7 @@ public class KetNoiCSDL {
     /// tuy nhien khoi lenh Lamda() -> {} thu chat dang trien khai implement (ham get()) ma interface Supplier<T> khong THROWS
     /// -> throw ra RuntimeException ve RuntimeException thuoc nhom Unchecked Exception -> xuyen qua duoc gioi han cua Supplier de bay ra ngoai
     private static final ThreadLocal<Connection> CONNECTION =
-            ThreadLocal.withInitial( ()-> {
+        ThreadLocal.withInitial( ()-> {
                 try{
                     Connection conn = DriverManager.getConnection(URL);
                     caiDatPragma(conn);
@@ -59,7 +59,7 @@ public class KetNoiCSDL {
                     throw new RuntimeException(e);
                 }
             }
-    );
+        );
 
     /// ket noi
     /// tra ve Connection cua luong hien tai -> khong phai Lock vi no lay connection cua chinh no
@@ -185,11 +185,11 @@ public class KetNoiCSDL {
             "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
 
         String sqlGiaoDich = "CREATE TABLE IF NOT EXISTS giao_dich (" +
-                "ma_giao_dich TEXT PRIMARY KEY, " +  // ← đúng với INSERT
-                "ma_phien TEXT NOT NULL, " +
-                "trang_thai TEXT NOT NULL, " +
-                "thoi_gian_tao TEXT NOT NULL, " +
-                "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
+            "ma_giao_dich TEXT PRIMARY KEY, " +  // ← đúng với INSERT
+            "ma_phien TEXT NOT NULL, " +
+            "trang_thai TEXT NOT NULL, " +
+            "thoi_gian_tao TEXT NOT NULL, " +
+            "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
 
         String sqlNguoiTraGia = "CREATE TABLE IF NOT EXISTS nguoi_tra_gia (" +
             "ma_phien TEXT, " +
@@ -240,6 +240,11 @@ public class KetNoiCSDL {
             System.out.println("Bảng nguoi_tra_gia đã tạo");
 
             System.out.println("✅ Database khởi tạo thành công");
+            // FIX: Commit transaction sau khi tạo bảng.
+            // setAutoCommit(false) nên mọi DDL (CREATE TABLE, ALTER TABLE) cũng nằm trong transaction.
+            // Nếu không commit, transaction treo trên main thread → block các HTTP worker thread khi ghi.
+            layKetNoi().commit();
+            System.out.println("✅ Commit khoiTao thành công");
         } catch (SQLException e) {
             System.err.println("❌ Lỗi khởi tạo DB: " + e.getMessage());
             e.printStackTrace();

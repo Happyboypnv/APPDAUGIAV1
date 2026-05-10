@@ -1,4 +1,4 @@
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import com.mycompany.utils.CapNhatThongTinNguoiDung;
 import com.mycompany.action.HandleNavigationAndAlert;
@@ -11,6 +11,8 @@ import javafx.fxml.Initializable;
 
 import javafx.scene.image.ImageView;
 
+import javafx.event.ActionEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +20,6 @@ import java.util.ResourceBundle;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
-
-import javax.swing.*;
 
 /**
  * ProfileController - Controller quản lý trang Profile (Thông tin cá nhân)
@@ -189,6 +189,15 @@ public class ProfileController implements Initializable {
         } catch (Exception e) {
             // Xử lý lỗi: hiển thị thông báo lỗi
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", e.getMessage());
+        }
+    }
+
+    @FXML
+    public void onClickedChangePassword(ActionEvent event) {
+        try {
+            HandleNavigationAndAlert.getInstance().goToChangePassword(event);
+        } catch (IOException e) {
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện đổi mật khẩu không thành công!");
         }
     }
 

@@ -1,8 +1,7 @@
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.LoginAction;
-import com.mycompany.exception.Login.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML; // Quan trọng
 import javafx.scene.control.Alert;
@@ -12,8 +11,6 @@ import java.io.IOException;
 import java.time.LocalDate;               // Để xử lý dữ liệu ngày tháng (năm/tháng/ngày)
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import java.time.*;
-import com.mycompany.utils.*;
 
 public class SignUpController {
     @FXML private TextField nameField;
