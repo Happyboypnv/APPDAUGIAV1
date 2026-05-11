@@ -6,13 +6,14 @@ import com.mycompany.utils.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
 
 import java.util.Map;
 
 public class ChangePasswordAction {
     private static ChangePasswordAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
-
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ChangePasswordAction.class);
     private ChangePasswordAction() {}
 
     /**
@@ -126,7 +127,7 @@ public class ChangePasswordAction {
             HandleNavigationAndAlert.getInstance().goToProfile(stage);
         } catch (Exception e) {
             // Nếu có lỗi quay lại, chỉ log mà không crash
-            System.err.println("Lỗi quay lại profile: " + e.getMessage());
+            logger.error("Lỗi quay lại profile: " + e.getMessage());
         }
     }
 }

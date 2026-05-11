@@ -1,6 +1,7 @@
 package com.mycompany.utils;
 
 import com.mycompany.models.*;
+import org.slf4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ import java.util.List;
  * - Sử dụng ThreadLocal connections từ KetNoiCSDL
  */
 public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
-
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(KhoLuuTruGiaoDichSQLite.class);
     // Lock để đồng bộ hóa việc sinh mã giao dịch trong môi trường đa luồng
     private static final Object TRANSACTION_ID_GENERATION_LOCK = new Object();
 
@@ -42,7 +43,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                     return String.format("GD%06d", soHienCo + 1);
                 }
             } catch (SQLException e) {
-                System.err.println("[ERROR] Lỗi sinh mã giao dịch: " + e.getMessage());
+                logger.error("[ERROR] Lỗi sinh mã giao dịch: " + e.getMessage());
             }
             return String.format("GD%06d", 1);
         }
@@ -54,7 +55,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
     @Override
     public void luuGiaoDich(GiaoDich giaoDich) {
         if (kiemTraGiaoDichTonTai(giaoDich.getId())) {
-            System.out.println("[WARN] Giao dịch đã tồn tại: " + giaoDich.getId());
+           logger.info("[WARN] Giao dịch đã tồn tại: " + giaoDich.getId());
             return;
         }
 
@@ -70,9 +71,9 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
 
             int rowsAffected = ps.executeUpdate();
             ps.getConnection().commit();
-            System.out.println("[SUCCESS] Lưu giao dịch thành công: " + giaoDich.getId());
+           logger.info("[SUCCESS] Lưu giao dịch thành công: " + giaoDich.getId());
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi lưu giao dịch: " + e.getMessage());
+            logger.error("[ERROR] Lỗi lưu giao dịch: " + e.getMessage());
         }
     }
 
@@ -101,7 +102,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi lấy giao dịch: " + e.getMessage());
+            logger.error("[ERROR] Lỗi lấy giao dịch: " + e.getMessage());
         }
         return result;
     }
@@ -126,7 +127,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi tìm giao dịch: " + e.getMessage());
+            logger.error("[ERROR] Lỗi tìm giao dịch: " + e.getMessage());
         }
         return null;
     }
@@ -143,7 +144,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
             ps.getConnection().commit();
             return rows > 0;
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi xóa giao dịch: " + e.getMessage());
+            logger.error("[ERROR] Lỗi xóa giao dịch: " + e.getMessage());
         }
         return false;
     }
@@ -162,7 +163,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi kiểm tra giao dịch: " + e.getMessage());
+            logger.error("[ERROR] Lỗi kiểm tra giao dịch: " + e.getMessage());
         }
         return false;
     }
@@ -180,7 +181,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
             ps.getConnection().commit();
             return rows > 0;
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi cập nhật giao dịch: " + e.getMessage());
+            logger.error("[ERROR] Lỗi cập nhật giao dịch: " + e.getMessage());
         }
         return false;
     }
@@ -209,7 +210,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi lấy giao dịch theo người dùng: " + e.getMessage());
+            logger.error("[ERROR] Lỗi lấy giao dịch theo người dùng: " + e.getMessage());
         }
         return result;
     }
@@ -234,7 +235,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi lấy giao dịch theo trạng thái: " + e.getMessage());
+            logger.error("[ERROR] Lỗi lấy giao dịch theo trạng thái: " + e.getMessage());
         }
         return result;
     }
