@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.mycompany.server.dto.LoginRequest;
 import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.server.dto.RegisterRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,7 +28,7 @@ import java.nio.charset.StandardCharsets;
  *   getUser()  → GET  /api/users/{email}
  */
 public class ApiClient {
-
+    private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
     private static final String BASE_URL = "http://localhost:8080";
     private static final Gson gson = new Gson();
@@ -181,7 +183,7 @@ public class ApiClient {
             return response;
 
         } catch (Exception e) {
-            System.err.println("[ApiClient] Lỗi GET " + path + ": " + e.getMessage());
+            logger.error("[ApiClient] Lỗi GET " + path + ": " + e.getMessage());
             return null;
         }
     }

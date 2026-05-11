@@ -6,6 +6,8 @@ import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.TrangThaiPhien;
 import com.mycompany.utils.IKhoLuuTruGiaoDich;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ import java.util.List;
  *   GiaoDichService service = new GiaoDichService(new KhoLuuTruGiaoDichSQLite());
  */
 public class GiaoDichService {
-
+    private static final Logger logger = LoggerFactory.getLogger(GiaoDichService.class);
     // ===== PHỤ THUỘC =====
 
     /**
@@ -74,14 +76,14 @@ public class GiaoDichService {
 
         // Bước 1: Phiên phải ở trạng thái KẾT THÚC
         if (phien.getTrangThai() != TrangThaiPhien.DA_THANH_TOAN) {
-            System.out.println("[taoGiaoDich] Không thể tạo: phiên chưa kết thúc.");
+            logger.info("[taoGiaoDich] Không thể tạo: phiên chưa kết thúc.");
             return null;
         }
 
         // Bước 2: Phải có người thắng cuộc
         NguoiDung nguoiThang = phien.getNguoiThangCuoc();
         if (nguoiThang == null) {
-            System.out.println("[taoGiaoDich] Không thể tạo: không có người đặt giá.");
+            logger.info("[taoGiaoDich] Không thể tạo: không có người đặt giá.");
             return null;
         }
 
@@ -98,14 +100,14 @@ public class GiaoDichService {
         // Bước 6: Lưu vào kho (file dulieugiaodich.json)
         kho.luuGiaoDich(giaoDichMoi);
 
-        System.out.println("========================================");
-        System.out.println("[taoGiaoDich] Giao dịch tạo thành công!");
-        System.out.println("  Sản phẩm  : " + phien.getSanPham().layTenSanPham());
-        System.out.println("  Người bán : " + phien.getNguoiBan().layHoTen());
-        System.out.println("  Người mua : " + nguoiThang.layHoTen());
-        System.out.printf ("  Giá chốt  : %,.0f VNĐ%n", phien.getGiaHienTai());
-        System.out.println("  Trạng thái: CHỜ THANH TOÁN");
-        System.out.println("========================================");
+        logger.info("========================================");
+        logger.info("[taoGiaoDich] Giao dịch tạo thành công!");
+        logger.info("  Sản phẩm  : " + phien.getSanPham().layTenSanPham());
+        logger.info("  Người bán : " + phien.getNguoiBan().layHoTen());
+        logger.info("  Người mua : " + nguoiThang.layHoTen());
+        logger.info ("  Giá chốt  : %,.0f VNĐ%n", phien.getGiaHienTai());
+        logger.info("  Trạng thái: CHỜ THANH TOÁN");
+        logger.info("========================================");
 
         return giaoDichMoi;
     }
@@ -137,13 +139,13 @@ public class GiaoDichService {
 
         // Kiểm tra giao dịch tồn tại
         if (giaoDich == null) {
-            System.out.println("[xacNhanThanhToan] Giao dịch không tồn tại.");
+            logger.info("[xacNhanThanhToan] Giao dịch không tồn tại.");
             return false;
         }
 
         // Chỉ xử lý khi đang CHỜ THANH TOÁN
         if (giaoDich.getTrangThai() != TrangThaiGiaoDich.CHO_THANH_TOAN) {
-            System.out.println("[xacNhanThanhToan] Trạng thái không hợp lệ: " + giaoDich.getTrangThai());
+            logger.info("[xacNhanThanhToan] Trạng thái không hợp lệ: " + giaoDich.getTrangThai());
             return false;
         }
 
@@ -153,7 +155,7 @@ public class GiaoDichService {
 
         // Kiểm tra số dư người thắng có đủ không
         if (nguoiThang.getSoDuKhaDung() < giaChot) {
-            System.out.printf("[xacNhanThanhToan] Số dư không đủ. Cần: %,.0f | Có: %,.0f VNĐ%n",
+            logger.info("[xacNhanThanhToan] Số dư không đủ. Cần: %,.0f | Có: %,.0f VNĐ%n",
                     giaChot, nguoiThang.getSoDuKhaDung());
             return false;
         }
@@ -171,16 +173,16 @@ public class GiaoDichService {
         kho.luuGiaoDich(giaoDich);
 
         // Bước 6: Thông báo cho người bán
-        System.out.println("========================================");
-        System.out.println("[xacNhanThanhToan] Thanh toán thành công!");
-        System.out.println("  Giao dịch : " + giaoDich.getId());
-        System.out.printf ("  Số tiền   : %,.0f VNĐ%n", giaChot);
-        System.out.println("  Người mua : " + nguoiThang.layHoTen()
+        logger.info("========================================");
+        logger.info("[xacNhanThanhToan] Thanh toán thành công!");
+        logger.info("  Giao dịch : " + giaoDich.getId());
+        logger.info ("  Số tiền   : %,.0f VNĐ%n", giaChot);
+        logger.info("  Người mua : " + nguoiThang.layHoTen()
                 + String.format(" | Số dư còn: %,.0f VNĐ", nguoiThang.getSoDuKhaDung()));
-        System.out.println("  [Thông báo → " + nguoiBan.layHoTen() + "]: "
+        logger.info("  [Thông báo → " + nguoiBan.layHoTen() + "]: "
                 + "Bạn vừa nhận thanh toán cho giao dịch " + giaoDich.getId());
-        System.out.printf ("  Số dư người bán: %,.0f VNĐ%n", nguoiBan.getSoDuKhaDung());
-        System.out.println("========================================");
+        logger.info ("  Số dư người bán: %,.0f VNĐ%n", nguoiBan.getSoDuKhaDung());
+        logger.info("========================================");
 
         return true;
     }
@@ -212,13 +214,13 @@ public class GiaoDichService {
 
         // Kiểm tra giao dịch tồn tại
         if (giaoDich == null) {
-            System.out.println("[hoanTien] Giao dịch không tồn tại.");
+            logger.info("[hoanTien] Giao dịch không tồn tại.");
             return false;
         }
 
         // Không hoàn tiền lại nếu đã hoàn rồi
         if (giaoDich.getTrangThai() == TrangThaiGiaoDich.DA_HOAN_TIEN) {
-            System.out.println("[hoanTien] Giao dịch đã được hoàn tiền trước đó.");
+            logger.info("[hoanTien] Giao dịch đã được hoàn tiền trước đó.");
             return false;
         }
 
@@ -227,7 +229,7 @@ public class GiaoDichService {
         double soTienHoan    = giaoDich.getPhienDauGia().getGiaHienTai();
 
         if (nguoiThang == null) {
-            System.out.println("[hoanTien] Không tìm thấy người cần hoàn tiền.");
+            logger.info("[hoanTien] Không tìm thấy người cần hoàn tiền.");
             return false;
         }
 
@@ -245,14 +247,14 @@ public class GiaoDichService {
         // Bước 5: Lưu lịch sử vào kho
         kho.capNhatGiaoDich(giaoDich);
 
-        System.out.println("========================================");
-        System.out.println("[hoanTien] Hoàn tiền thành công!");
-        System.out.println("  Giao dịch       : " + giaoDich.getId());
-        System.out.println("  Người nhận hoàn : " + nguoiThang.layHoTen());
-        System.out.printf ("  Số tiền hoàn    : %,.0f VNĐ%n", soTienHoan);
-        System.out.printf ("  Số dư sau hoàn  : %,.0f VNĐ%n", nguoiThang.getSoDuKhaDung());
-        System.out.println("  Lý do           : " + lyDo);
-        System.out.println("========================================");
+        logger.info("========================================");
+        logger.info("[hoanTien] Hoàn tiền thành công!");
+        logger.info("  Giao dịch       : " + giaoDich.getId());
+        logger.info("  Người nhận hoàn : " + nguoiThang.layHoTen());
+        logger.info ("  Số tiền hoàn    : %,.0f VNĐ%n", soTienHoan);
+        logger.info ("  Số dư sau hoàn  : %,.0f VNĐ%n", nguoiThang.getSoDuKhaDung());
+        logger.info("  Lý do           : " + lyDo);
+        logger.info("========================================");
 
         return true;
     }
@@ -289,7 +291,7 @@ public class GiaoDichService {
 
         // Không có giao dịch nào
         if (tatCa.isEmpty()) {
-            System.out.println("[xemLichSu] Người dùng [" + maNguoiDung + "] chưa có giao dịch nào.");
+            logger.info("[xemLichSu] Người dùng [" + maNguoiDung + "] chưa có giao dịch nào.");
             return tatCa;
         }
 
@@ -298,7 +300,7 @@ public class GiaoDichService {
         int batDau    = (trang - 1) * soLuong; // chỉ số bắt đầu (0-based)
 
         if (batDau >= tatCa.size()) {
-            System.out.println("[xemLichSu] Không có dữ liệu ở trang " + trang
+            logger.info("[xemLichSu] Không có dữ liệu ở trang " + trang
                     + " (tổng " + tongTrang + " trang).");
             return List.of();
         }
@@ -307,13 +309,13 @@ public class GiaoDichService {
         List<GiaoDich> trangHienTai = tatCa.subList(batDau, ketThuc);
 
         // In tiêu đề
-        System.out.println("==========================================");
-        System.out.println("         LỊCH SỬ GIAO DỊCH               ");
-        System.out.println("==========================================");
-        System.out.println("  Người dùng : " + maNguoiDung);
-        System.out.printf ("  Trang %d / %d  |  Tổng: %d giao dịch%n",
+        logger.info("==========================================");
+        logger.info("         LỊCH SỬ GIAO DỊCH               ");
+        logger.info("==========================================");
+        logger.info("  Người dùng : " + maNguoiDung);
+        logger.info ("  Trang %d / %d  |  Tổng: %d giao dịch%n",
                 trang, tongTrang, tatCa.size());
-        System.out.println("------------------------------------------");
+        logger.info("------------------------------------------");
 
         // In chi tiết từng giao dịch
         for (int i = 0; i < trangHienTai.size(); i++) {
@@ -321,14 +323,14 @@ public class GiaoDichService {
             PhienDauGia phien  = gd.getPhienDauGia();
             NguoiDung nguoiMua = phien.getNguoiThangCuoc();
 
-            System.out.printf("  [%d] Mã GD     : %s%n", batDau + i + 1, gd.getId());
-            System.out.println("      Ngày tạo  : " + gd.getThoiGianTao());                         // ngày giờ
-            System.out.println("      Sản phẩm  : " + phien.getSanPham().layTenSanPham());
-            System.out.println("      Người bán : " + phien.getNguoiBan().layHoTen());
-            System.out.println("      Người mua : " + (nguoiMua != null ? nguoiMua.layHoTen() : "Không có"));
-            System.out.printf ("      Số tiền   : %,.0f VNĐ%n", phien.getGiaHienTai());             // số tiền
-            System.out.println("      Trạng thái: " + gd.getTrangThai().name());                     // trạng thái
-            System.out.println("  ------------------------------------------");
+            logger.info("  [%d] Mã GD     : %s%n", batDau + i + 1, gd.getId());
+            logger.info("      Ngày tạo  : " + gd.getThoiGianTao());                         // ngày giờ
+            logger.info("      Sản phẩm  : " + phien.getSanPham().layTenSanPham());
+            logger.info("      Người bán : " + phien.getNguoiBan().layHoTen());
+            logger.info("      Người mua : " + (nguoiMua != null ? nguoiMua.layHoTen() : "Không có"));
+            logger.info ("      Số tiền   : %,.0f VNĐ%n", phien.getGiaHienTai());             // số tiền
+            logger.info("      Trạng thái: " + gd.getTrangThai().name());                     // trạng thái
+            logger.info("  ------------------------------------------");
         }
 
         return trangHienTai;

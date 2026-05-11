@@ -4,6 +4,9 @@ import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.TrangThaiPhien;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.SanPham;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -16,6 +19,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
 
     // Lock để đồng bộ hóa việc sinh mã phiên đấu giá trong môi trường đa luồng
     private static final Object AUCTION_ID_GENERATION_LOCK = new Object();
+    private static final Logger logger = LoggerFactory.getLogger(KhoLuuTruPhienDauGiaSQLite.class);
     /**
      * Method(private): sinhMaPhienDauGia()
      * 1. dem so luong phien da co
@@ -38,7 +42,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                 }
             }
             catch (SQLException e) {
-                System.err.println("[ERROR] Lỗi khi sinh mã phiên đấu giá: " + e.getMessage());
+                logger.error("[ERROR] Lỗi khi sinh mã phiên đấu giá: " + e.getMessage());
             }
             return String.format("PH%06d", 1); // Trường hợp không có phiên nào, bắt đầu từ PH000001
         }
@@ -53,7 +57,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
     public void luuPhienDauGia(PhienDauGia phienDauGia) {
         /// kiem tra phien ton tai
         if(kiemTraPhienTonTai(phienDauGia.getMaPhienDauGia())){
-            System.out.println("[WARN] Phiên đấu giá đã tồn tại: " + phienDauGia.getMaPhienDauGia());
+            logger.info("[WARN] Phiên đấu giá đã tồn tại: " + phienDauGia.getMaPhienDauGia());
             return;
         }
         // FIX: kiemTraPhienTonTai() thực thi SELECT, mở transaction ngầm nhưng không commit.
@@ -62,7 +66,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         try {
             KetNoiCSDL.layKetNoi().commit();
         } catch (SQLException e) {
-            System.err.println("[WARN] Không thể commit sau kiemTra: " + e.getMessage());
+            logger.error("[WARN] Không thể commit sau kiemTra: " + e.getMessage());
         }
         /// sinh ma phien
         String maPhien = sinhMaPhienDauGia();
@@ -77,9 +81,9 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
             psSp.setString(2, phienDauGia.getSanPham().layTenSanPham());
             psSp.executeUpdate();
             psSp.getConnection().commit();
-            System.out.println("✅ Đã upsert san_pham: " + phienDauGia.getSanPham().layMaSanPham());
+            logger.info("✅ Đã upsert san_pham: " + phienDauGia.getSanPham().layMaSanPham());
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi khi lưu sản phẩm: " + e.getMessage());
+            logger.error("[ERROR] Lỗi khi lưu sản phẩm: " + e.getMessage());
             return; // Không thể tiếp tục nếu san_pham chưa được lưu
         }
 
@@ -102,16 +106,16 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
             // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
             // Trả về số dòng bị ảnh hưởng (1 = thành công)
             int rowsAffected = ps.executeUpdate();
-            System.out.println(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
+            logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
 
             // ĐẢM BẢO DATA ĐƯỢC LƯU VÀO DATABASE
             // SQLite mặc định auto-commit = true, nhưng với WAL mode cần explicit commit
             ps.getConnection().commit();
-            System.out.println("COMMIT thành công cho Phien: " + maPhien);
+            logger.info("COMMIT thành công cho Phien: " + maPhien);
 
         }
         catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi khi lưu phiên đấu giá: " + e.getMessage());
+            logger.error("[ERROR] Lỗi khi lưu phiên đấu giá: " + e.getMessage());
         }
     }
     /**
@@ -175,7 +179,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                 result.put(phienDauGia.getMaPhienDauGia(), phienDauGia);
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
+            logger.error("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
         }
         return result;
     }
@@ -232,7 +236,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi khi lấy phiên đấu giá: " + e.getMessage());
+            logger.error("[ERROR] Lỗi khi lấy phiên đấu giá: " + e.getMessage());
         }
         return null;
     }
@@ -256,7 +260,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
             ps.getConnection().commit();
             return rows > 0;
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi khi cập nhật phiên đấu giá: " + e.getMessage());
+            logger.error("[ERROR] Lỗi khi cập nhật phiên đấu giá: " + e.getMessage());
         }
         return false;
     }
@@ -270,7 +274,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
             ps.getConnection().commit();
             return rows > 0;
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi khi xóa phiên đấu giá: " + e.getMessage());
+            logger.error("[ERROR] Lỗi khi xóa phiên đấu giá: " + e.getMessage());
         }
         return false;
     }
@@ -286,7 +290,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[ERROR] Lỗi khi kiểm tra phiên đấu giá tồn tại: " + e.getMessage());
+            logger.error("[ERROR] Lỗi khi kiểm tra phiên đấu giá tồn tại: " + e.getMessage());
         }
         return false;
     }

@@ -6,6 +6,7 @@ import com.mycompany.server.controller.UserController;
 import com.mycompany.utils.KetNoiCSDL;
 import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import com.sun.net.httpserver.HttpServer;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,7 +35,7 @@ public class ServerApp {
 
     /** Cổng server lắng nghe */
     private static final int PORT = 8080;
-
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ServerApp.class);
     public static void main(String[] args) throws IOException {
 
         // ===== KHỞI TẠO DATABASE =====
@@ -135,26 +136,26 @@ public class ServerApp {
         // ===== KHỞI ĐỘNG SERVER =====
         server.start();
 
-        System.out.println("========================================");
-        System.out.println("  SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!");
-        System.out.println("  Địa chỉ: http://localhost:" + PORT);
-        System.out.println("========================================");
-        System.out.println("  USERS:");
-        System.out.println("  POST http://localhost:" + PORT + "/api/users/login");
-        System.out.println("  POST http://localhost:" + PORT + "/api/users/register");
-        System.out.println("  GET  http://localhost:" + PORT + "/api/users/{email}");
-        System.out.println("----------------------------------------");
-        System.out.println("  AUCTIONS:");
-        System.out.println("  GET  http://localhost:" + PORT + "/api/auctions");
-        System.out.println("  GET  http://localhost:" + PORT + "/api/auctions/{id}");
-        System.out.println("  POST http://localhost:" + PORT + "/api/auctions           [cần token]");
-        System.out.println("  PUT  http://localhost:" + PORT + "/api/auctions/{id}/start [cần token]");
-        System.out.println("----------------------------------------");
-        System.out.println("  BIDS:");
-        System.out.println("  POST http://localhost:" + PORT + "/api/bids               [cần token]");
-        System.out.println("  GET  http://localhost:" + PORT + "/api/bids/{phienId}");
-        System.out.println("========================================");
-        System.out.println("  Nhấn Ctrl+C để dừng server");
+        logger.info("========================================");
+        logger.info("  SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!");
+        logger.info("  Địa chỉ: http://localhost:" + PORT);
+        logger.info("========================================");
+        logger.info("  USERS:");
+        logger.info("  POST http://localhost:" + PORT + "/api/users/login");
+        logger.info("  POST http://localhost:" + PORT + "/api/users/register");
+        logger.info("  GET  http://localhost:" + PORT + "/api/users/{email}");
+        logger.info("----------------------------------------");
+        logger.info("  AUCTIONS:");
+        logger.info("  GET  http://localhost:" + PORT + "/api/auctions");
+        logger.info("  GET  http://localhost:" + PORT + "/api/auctions/{id}");
+        logger.info("  POST http://localhost:" + PORT + "/api/auctions           [cần token]");
+        logger.info("  PUT  http://localhost:" + PORT + "/api/auctions/{id}/start [cần token]");
+        logger.info("----------------------------------------");
+        logger.info("  BIDS:");
+        logger.info("  POST http://localhost:" + PORT + "/api/bids               [cần token]");
+        logger.info("  GET  http://localhost:" + PORT + "/api/bids/{phienId}");
+        logger.info("========================================");
+        logger.info("  Nhấn Ctrl+C để dừng server");
     }
 
     /**

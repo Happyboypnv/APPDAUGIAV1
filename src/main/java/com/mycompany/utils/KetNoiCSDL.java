@@ -1,5 +1,8 @@
 package com.mycompany.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.*;
 
 
@@ -19,6 +22,7 @@ import java.sql.*;
 /// 1 Connection ghi va nhieu Connection doc
 /// 2 Connection cung ghi -> 1 cai phai cho
 public class KetNoiCSDL {
+    private static final Logger logger = LoggerFactory.getLogger(KetNoiCSDL.class);
     /// URL Ket noi JDBC voi SQLite
     /// jdbc:sqlite:hipiti.db -> tao ra file hipiti.db trong thu muc chay app
     private static final String URL = "jdbc:sqlite:hipiti.db";
@@ -131,7 +135,7 @@ public class KetNoiCSDL {
         /// - Giải pháp: Tắt auto-commit để có thể gọi commit() thủ công (MỘT KHI PRAGMA đã xong)
         /// - Lợi ích: Kiểm soát transaction, đảm bảo data consistency
         conn.setAutoCommit(false);
-        System.out.println("✅ AutoCommit tắt - Sử dụng manual commit");
+        logger.info("✅ AutoCommit tắt - Sử dụng manual commit");
     }
 
     /// khoi tao bang
@@ -201,9 +205,9 @@ public class KetNoiCSDL {
             "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
 
         try (Statement stmt = layKetNoi().createStatement()) {
-            System.out.println("Đang tạo bảng nguoi_dung...");
+            logger.info("Đang tạo bảng nguoi_dung...");
             stmt.execute(sqlNguoiDung);
-            System.out.println("Bảng nguoi_dung đã tạo");
+            logger.info("Bảng nguoi_dung đã tạo");
 
             // THAY ĐỔI QUAN TRỌNG: Migration logic cho database cũ
             // Lý do: Khi migrate từ JSON sang SQLite, database cũ không có cột salt
@@ -215,38 +219,38 @@ public class KetNoiCSDL {
             // 4. Kết quả: Tất cả database đều có cột salt
             try {
                 stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN salt TEXT;");
-                System.out.println("✅ Đã thêm cột salt vào bảng nguoi_dung (migration thành công)");
+                logger.info("✅ Đã thêm cột salt vào bảng nguoi_dung (migration thành công)");
             } catch (SQLException e) {
                 // THAY ĐỔI: Xử lý lỗi graceful thay vì crash
                 // Trước: Lỗi ALTER TABLE → crash app
                 // Sau: Lỗi ALTER TABLE → log và tiếp tục (cột đã tồn tại)
-                System.out.println("ℹ️ Cột salt đã tồn tại (không cần migration)");
+                logger.info("ℹ️ Cột salt đã tồn tại (không cần migration)");
             }
 
-            System.out.println("Đang tạo bảng san_pham...");
+            logger.info("Đang tạo bảng san_pham...");
             stmt.execute(sqlSanPham);
-            System.out.println("Bảng san_pham đã tạo");
+            logger.info("Bảng san_pham đã tạo");
 
-            System.out.println("Đang tạo bảng phien_dau_gia...");
+            logger.info("Đang tạo bảng phien_dau_gia...");
             stmt.execute(sqlPhien);
-            System.out.println("Bảng phien_dau_gia đã tạo");
+            logger.info("Bảng phien_dau_gia đã tạo");
 
-            System.out.println("Đang tạo bảng giao_dich...");
+            logger.info("Đang tạo bảng giao_dich...");
             stmt.execute(sqlGiaoDich);
-            System.out.println("Bảng giao_dich đã tạo");
+            logger.info("Bảng giao_dich đã tạo");
 
-            System.out.println("Đang tạo bảng nguoi_tra_gia...");
+            logger.info("Đang tạo bảng nguoi_tra_gia...");
             stmt.execute(sqlNguoiTraGia);
-            System.out.println("Bảng nguoi_tra_gia đã tạo");
+            logger.info("Bảng nguoi_tra_gia đã tạo");
 
-            System.out.println("✅ Database khởi tạo thành công");
+            logger.info("✅ Database khởi tạo thành công");
             // FIX: Commit transaction sau khi tạo bảng.
             // setAutoCommit(false) nên mọi DDL (CREATE TABLE, ALTER TABLE) cũng nằm trong transaction.
             // Nếu không commit, transaction treo trên main thread → block các HTTP worker thread khi ghi.
             layKetNoi().commit();
-            System.out.println("✅ Commit khoiTao thành công");
+            logger.info("✅ Commit khoiTao thành công");
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khởi tạo DB: " + e.getMessage());
+            logger.error("❌ Lỗi khởi tạo DB: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -264,11 +268,11 @@ public class KetNoiCSDL {
                 conn.close();
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi đóng Connection: " + e.getMessage());
+            logger.error("Lỗi đóng Connection: " + e.getMessage());
         } catch (RuntimeException e) {
             // Neu khong the tao connection (vi du: database ko co)
             // thi chi log error va tiep tuc cleanup
-            System.err.println("Lỗi khi truy cap Connection: " + e.getMessage());
+            logger.error("Lỗi khi truy cap Connection: " + e.getMessage());
         }
         finally {
             CONNECTION.remove();

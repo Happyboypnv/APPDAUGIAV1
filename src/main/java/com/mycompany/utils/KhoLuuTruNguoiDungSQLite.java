@@ -1,6 +1,9 @@
 package com.mycompany.utils;
 
 import com.mycompany.models.NguoiDung;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +62,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
 
     // Lock để đồng bộ hóa việc sinh mã người dùng trong môi trường đa luồng
     private static final Object ID_GENERATION_LOCK = new Object();
-
+    private static final Logger logger = LoggerFactory.getLogger(KhoLuuTruNguoiDungSQLite.class);
     /**
      * METHOD: luu()
      * Mục đích: Lưu một người dùng mới vào database.
@@ -75,7 +78,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
         // kiemTraEmail() returns true if email DOESN'T exist (safe to register)
         // So we check if it returns FALSE (email DOES exist) → reject
         if(!kiemTraEmail(nguoiDung.layThuDienTu())) {
-            System.err.println("Email đã tồn tại: " + nguoiDung.layThuDienTu());
+            logger.error("Email đã tồn tại: " + nguoiDung.layThuDienTu());
             return;
         }
         String maMoi = sinhMaMoi();
@@ -108,16 +111,16 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
             // Trả về số dòng bị ảnh hưởng (1 = thành công)
             int rowsAffected = ps.executeUpdate();
-            System.out.println(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
+            logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
 
             // ĐẢM BẢO DATA ĐƯỢC LƯU VÀO DATABASE
             // SQLite mặc định auto-commit = true, nhưng với WAL mode cần explicit commit
             ps.getConnection().commit();
-            System.out.println("COMMIT thành công cho user: " + maMoi);
+            logger.info("COMMIT thành công cho user: " + maMoi);
 
         } catch (SQLException e) {
             // Nếu có lỗi (kết nối thất bại, SQL sai, ...) → in lỗi ra stderr
-            System.err.println("Lỗi lưu người dùng: " + e.getMessage());
+            logger.error("Lỗi lưu người dùng: " + e.getMessage());
         }
     }
 
@@ -125,7 +128,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     public void capNhatNguoiDung(NguoiDung nguoiDung) {
         // Kiểm tra người dùng có tồn tại không
         if (nguoiDung == null || nguoiDung.layMaNguoiDung() == null) {
-            System.err.println("Không thể cập nhật: Người dùng null hoặc không có mã");
+            logger.error("Không thể cập nhật: Người dùng null hoặc không có mã");
             return;
         }
 
@@ -146,14 +149,14 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             ps.setString(9, nguoiDung.layMaNguoiDung());    // WHERE ma_nguoi_dung
 
             int rowsAffected = ps.executeUpdate();
-            System.out.println("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
+            logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
 
             // Commit để đảm bảo data được cập nhật
             ps.getConnection().commit();
-            System.out.println("COMMIT cập nhật user: " + nguoiDung.layMaNguoiDung());
+            logger.info("COMMIT cập nhật user: " + nguoiDung.layMaNguoiDung());
 
         } catch (SQLException e) {
-            System.err.println("Lỗi cập nhật người dùng: " + e.getMessage());
+            logger.error("Lỗi cập nhật người dùng: " + e.getMessage());
         }
     }
 
@@ -215,7 +218,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             }
         } catch (SQLException e) {
             // Nếu có lỗi → in lỗi, nhưng vẫn trả về Map rỗng
-            System.err.println("Lỗi đọc danh sách: " + e.getMessage());
+            logger.error("Lỗi đọc danh sách: " + e.getMessage());
         }
 
         // Trả về Map (có thể rỗng nếu DB không có người dùng hoặc có lỗi)
@@ -225,7 +228,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     public void xoa(NguoiDung nguoiDung){
         // Kiểm tra người dùng có tồn tại không
         if (nguoiDung == null || nguoiDung.layMaNguoiDung() == null) {
-            System.err.println("Không thể xóa: Người dùng null hoặc không có mã");
+            logger.error("Không thể xóa: Người dùng null hoặc không có mã");
             return;
         }
 
@@ -236,14 +239,14 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             ps.setString(1, maNguoiDung);
 
             int rowsAffected = ps.executeUpdate();
-            System.out.println("Xóa user thành công, số dòng ảnh hưởng: " + rowsAffected);
+            logger.info("Xóa user thành công, số dòng ảnh hưởng: " + rowsAffected);
 
             // Commit để đảm bảo data được xóa
             ps.getConnection().commit();
-            System.out.println("COMMIT xóa user: " + maNguoiDung);
+            logger.info("COMMIT xóa user: " + maNguoiDung);
 
         } catch (SQLException e) {
-            System.err.println("Lỗi xóa người dùng: " + e.getMessage());
+            logger.error("Lỗi xóa người dùng: " + e.getMessage());
         }
     }
     /**
@@ -287,10 +290,10 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
                     String matKhauHashTrongDB = rs.getString("mat_khau");
                     String saltTrongDB = rs.getString("salt");
 
-                    System.out.println(" Tìm thấy user với email: " + email);
-                    System.out.println(" Password hash trong DB: " + matKhauHashTrongDB);
-                    System.out.println(" Salt trong DB: " + saltTrongDB);
-                    System.out.println(" Password nhập vào: " + password);
+                    logger.info(" Tìm thấy user với email: " + email);
+                    logger.info(" Password hash trong DB: " + matKhauHashTrongDB);
+                    logger.info(" Salt trong DB: " + saltTrongDB);
+                    logger.info(" Password nhập vào: " + password);
 
                     // THAY ĐỔI QUAN TRỌNG: Sử dụng BoMaHoaMatKhau để verify password
                     // Trước: matKhauTrongDB.equals(password) → plain text comparison
@@ -300,12 +303,12 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
                     return matKhauHashTrongDB != null && saltTrongDB != null &&
                            com.mycompany.utils.BoMaHoaMatKhau.kiemTraMatKhau(password, matKhauHashTrongDB, saltTrongDB);
                 } else {
-                    System.out.println(" Không tìm thấy user với email: " + email);
+                    logger.info(" Không tìm thấy user với email: " + email);
                 }
             }
         } catch (SQLException e) {
             // Nếu có lỗi kết nối hoặc SQL → in lỗi
-            System.err.println("Lỗi kiểm tra đăng nhập: " + e.getMessage());
+            logger.error("Lỗi kiểm tra đăng nhập: " + e.getMessage());
         }
 
         // Email không tồn tại hoặc password sai → đăng nhập thất bại
@@ -352,7 +355,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
         } catch (SQLException e) {
             // Nếu có lỗi kết nối → cho phép đăng ký (để không block user)
             // Quy tắc an toàn: nếu không chắc → cho phép user thử
-            System.err.println("Lỗi kiểm tra email: " + e.getMessage());
+            logger.error("Lỗi kiểm tra email: " + e.getMessage());
             return true;
         }
     }
@@ -398,7 +401,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
                 }
             } catch (SQLException e) {
                 // Nếu có lỗi kết nối hoặc SQL → in lỗi
-                System.err.println("Lỗi sinh mã: " + e.getMessage());
+                logger.error("Lỗi sinh mã: " + e.getMessage());
             }
 
             // Fallback: Nếu có lỗi bất ngờ → return mã mặc định
@@ -427,7 +430,7 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
      * Kết quả: Tất cả users đều có password hashed + salt
      */
     public void migratePlainTextPasswords() {
-        System.out.println("🔄 Bắt đầu migrate mật khẩu plain text...");
+        logger.info("🔄 Bắt đầu migrate mật khẩu plain text...");
 
         // THAY ĐỔI: Query để tìm users cần migrate
         // salt IS NULL OR salt = '' → users từ JSON migration
@@ -456,14 +459,14 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
                     ps.executeUpdate();
                     ps.getConnection().commit();      // THAY ĐỔI: Explicit commit cho WAL mode
                     migratedCount++;
-                    System.out.println("✅ Migrated user: " + maNguoiDung);
+                    logger.info("✅ Migrated user: " + maNguoiDung);
                 }
             }
 
-            System.out.println("🎉 Hoàn thành migrate " + migratedCount + " users");
+            logger.info("🎉 Hoàn thành migrate " + migratedCount + " users");
 
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi migrate passwords: " + e.getMessage());
+            logger.error("❌ Lỗi migrate passwords: " + e.getMessage());
         }
     }
 }
