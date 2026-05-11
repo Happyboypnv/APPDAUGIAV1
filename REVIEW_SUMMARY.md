@@ -103,7 +103,7 @@
 - Auction and transaction services
 - Proper error handling and validation
 
-### com.mycompany.Controller (6 files) ✅
+### com.mycompany.controller (6 files) ✅
 - JavaFX UI controllers
 - Proper separation from business logic
 - Navigation between screens

@@ -183,11 +183,16 @@ public class UserController {
      * Response thất bại (404): { "thongBao": "Không tìm thấy người dùng" }
      */
     public void handleGetUser(HttpExchange exchange) throws IOException {
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        /// khi gui request no gui kem mot header co dang Authorization: Bearer USER_abc@gmail.com_1714123456
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
+            return;
+        }
         if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận GET\"}");
             return;
         }
-
         // Lấy email từ URL: /api/users/abc@gmail.com → "abc@gmail.com"
         String path   = exchange.getRequestURI().getPath();
         String prefix = "/api/users/";
@@ -257,7 +262,7 @@ public class UserController {
      */
     private void guiPhanHoi(HttpExchange exchange, int statusCode, String jsonBody) throws IOException {
         byte[] bytes = jsonBody.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type",                 "application/json; charset=UTF-8");
+        exchange.getResponseHeaders().add("Content-Type","application/json; charset=UTF-8");
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin",  "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");

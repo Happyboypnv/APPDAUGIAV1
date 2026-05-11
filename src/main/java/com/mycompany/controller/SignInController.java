@@ -1,4 +1,4 @@
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.LoginAction;
@@ -15,7 +15,7 @@ public class SignInController {
 
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField; // nơi nhận vào input của user
-    private IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
 
     @FXML
     public void signIn(ActionEvent event) {

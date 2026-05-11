@@ -104,7 +104,7 @@ if(!kiemTraEmail(nguoiDung.layThuDienTu())) {
 | HanhDongNguoiBan.java | ✅ GOOD | Seller actions |
 | HanhDongNguoiMua.java | ✅ GOOD | Buyer actions |
 
-### **Package: com.mycompany.Controller**
+### **Package: com.mycompany.controller**
 | File | Status | Notes |
 |------|--------|-------|
 | SignInController.java | ✅ GOOD | Proper email validation (lowercase) |

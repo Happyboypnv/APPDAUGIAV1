@@ -49,3 +49,5 @@ hipiti.db-shm
 .DS_Store*.db
 *.db-shm
 *.db-wal
+
+.postman/

@@ -11,55 +11,43 @@ import java.util.Map;
  * /// UPDATE [tên_bảng] SET [cột_cần_sửa] = [giá_trị_mới] WHERE [điều_kiện_để_tìm_đúng_người];
  * /// DELETE FROM [tên_bảng] WHERE [điều_kiện];
  * 1️⃣  LỖ HỔNG: SQL INJECTION (Lỗ hổng bảo mật)
- *
  * 📌 NGUYÊN NHÂN:
  *    Khi ghép trực tiếp dữ liệu người dùng vào câu SQL mà không xử lý đặc biệt
- *
  * ❌ CÁCH NGUY HIỂM (Dễ bị tấn công):
  *    String email = "phong@gmail.com";
  *    String sql = "SELECT * FROM nguoi_dung WHERE email = '" + email + "'";
  *    // Kết quả SQL: SELECT * FROM nguoi_dung WHERE email = 'phong@gmail.com'
  *    // → Cách này bình thường, nhưng nếu hacker nhập gì đó?
- *
  *    HACKER NHẬP:  email = "' OR '1'='1"
  *    SQL BỊ BIẾN THÀNH:
  *      SELECT * FROM nguoi_dung WHERE email = '' OR '1'='1'
  *                                                ↑
  *                                    Điều kiện LUÔN ĐÚNG!
  *                      dau nhay don de bo qua viec nhap va lay luon True
- *
  *    ⚠️  HỆ QUẢ: Trả về TẤT CẢ hàng trong bảng → hacker truy cập được tất cả tài khoản!
- *
- *
  * ═══════════════════════════════════════════════════════════════════════════════
  * 2️⃣  GIẢI PHÁP: PREPAREDSTATEMENT (An toàn ✅)
  * ═══════════════════════════════════════════════════════════════════════════════
- *
  * 📌 NGUYÊN LÝ:
  *    PreparedStatement tách RÕNG SQL từ DỮ LIỆU → hacker không thể tiêm SQL code
  *    /// nguyen ly nay co the hieu thay vi la code SQL bthg no se chuyen tat ca trong dau ? thanh xau
  *    /// -> chi dung khi xau khop voi du lieu trong database thi moi tra ve ket qua, neu khong khop thi tra ve rong
- *
  * ✅ CÁCH AN TOÀN (Dùng PreparedStatement):
  *    String sql = "SELECT * FROM nguoi_dung WHERE email = ?";
  *    //                                                      ^
  *    //                                        Chỗ trống cho dữ liệu
- *
  *    PreparedStatement ps = conn.prepareStatement(sql);
  *    ps.setString(1, email);  // Điền dữ liệu vào chỗ trống an toàn
  *    ResultSet rs = ps.executeQuery();
- *
  *    QUY TRÌNH BÊN TRONG:
  *    1. Database nhận câu SQL với dấu ? (chế độ "template")
  *    2. Database biên dịch câu SQL → xác định cấu trúc của câu lệnh
  *    3. Dữ liệu (email) được gửi RIÊNG → không phải là SQL code
  *    4. Database chèn dữ liệu vào vị trí đủ an toàn
- *
  *    HACKER NHẬP:  email = "' OR '1'='1"
  *    MÀ DATABASE NHẬN:
  *      - SQL template:  SELECT * FROM nguoi_dung WHERE email = ?
  *      - Dữ liệu:       ' OR '1'='1  (coi như string thường, không phải SQL)
- *
  *    ✅ KẾT QUẢ: Chỉ tìm email = "' OR '1'='1" (chuỗi ký tự thông thường)
  *                Không có hàng nào khớp → trả về rỗng
  *                Hacker không thể tấn công! 🛡️
@@ -75,15 +63,11 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     /**
      * METHOD: luu()
      * Mục đích: Lưu một người dùng mới vào database.
-     *
      * Quy trình:
      * 1. Tự động sinh mã người dùng dạng: PPPT000001, PPPT000002, ...
      * 2. Set mã đó vào đối tượng NguoiDung
      * 3. Thực thi câu INSERT để lưu vào database
-     *
      * @param nguoiDung - Đối tượng người dùng cần lưu (chưa có mã)
-     * @return void (không trả về gì, chỉ lưu vào DB)
-     * @throws SQLException nếu kết nối DB thất bại
      */
     @Override
     public void luu(NguoiDung nguoiDung) {
@@ -176,18 +160,15 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     /**
      * METHOD: layTatCa()
      * Mục đích: Lấy toàn bộ danh sách người dùng từ database.
-     *
      * Cấu trúc dữ liệu trả về:
      * - Map<String, NguoiDung>
      *   + Key   = email (thu_dien_tu) → tìm kiếm nhanh bằng email
      *   + Value = đối tượng NguoiDung tương ứng
-     *
      * Lợi ích của Map:
      *   - Tìm người dùng bằng email: O(1) thay vì O(n)
      *   - Kiểm tra email tồn tại: if (map.containsKey(email))
      *
      * @return Map - Key = email, Value = NguoiDung object
-     * @throws SQLException nếu kết nối DB thất bại
      */
     @Override
     public Map<String, NguoiDung> layTatCa() {
@@ -268,20 +249,16 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     /**
      * METHOD: kiemTraNguoiDung()
      * Mục đích: Kiểm tra đăng nhập - xác minh email VÀ password có khớp không.
-     *
      * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
      * - Trước: return matKhauTrongDB.equals(password) → so sánh plain text
      * - Sau: BoMaHoaMatKhau.kiemTraMatKhau() → verify hash với salt
-     *
      * Quy trình mới:
      * 1. Tìm người dùng theo email trong database
      * 2. Nếu tìm thấy → lấy salt và hash từ DB
      * 3. Sử dụng BoMaHoaMatKhau.kiemTraMatKhau() để verify password
      * 4. Nếu cả email và password đều khớp → return true (đăng nhập thành công)
      * 5. Nếu email không tồn tại hoặc password sai → return false (đăng nhập thất bại)
-     *
      * Tối ưu: SELECT mat_khau, salt (chỉ lấy dữ liệu cần thiết)
-     *
      * @param email    - Email người dùng nhập vào
      * @param password - Password người dùng nhập vào (plain text)
      * @return true = đăng nhập thành công, false = thất bại
@@ -338,11 +315,9 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     /**
      * METHOD: kiemTraEmail()
      * Mục đích: Kiểm tra email đã tồn tại trong database chưa.
-     *
      * Giá trị trả về:
      * - true  = email CHƯA tồn tại → cho phép đăng ký
      * - false = email ĐÃ tồn tại   → báo lỗi trùng email
-     *
      * Trick tối ưu: "SELECT 1" thay vì "SELECT *"
      *   - SELECT 1 = chỉ kiểm tra có dòng nào khớp không (không lấy dữ liệu thật)
      *   - Nhanh hơn SELECT * (không tải dữ liệu không cần thiết)
@@ -385,19 +360,15 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     /**
      * METHOD (PRIVATE): sinhMaMoi()
      * Mục đích: Tự động sinh mã người dùng tăng dần.
-     *
      * Quy trình:
      * 1. Đếm số người dùng hiện có: SELECT COUNT(*)
      * 2. Lấy số đếm, cộng thêm 1 để tạo số thứ tự mới
      * 3. Format thành: "PPTT" + 6 chữ số (vd: PPTT000001)
-     *
      * Ví dụ:
      * - DB có 5 người dùng → sinh mã PPTT000006
      * - DB có 42 người dùng → sinh mã PPTT000043
      * - DB có 0 người dùng (lần đầu) → sinh mã PPPT000001
-     *
      * Fallback: Nếu có lỗi bất ngờ → return "PPTT000001"
-     *
      * Thread-safe: Sử dụng synchronized để tránh trùng lặp ID trong đa luồng
      *
      * @return String - Mã người dùng mới (dạng PPTT000001)
@@ -439,12 +410,10 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
     /**
      * METHOD: migratePlainTextPasswords()
      * Mục đích: Migrate mật khẩu plain text (từ JSON) sang hashed passwords
-     *
      * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
      * - Lý do thêm: Users cũ từ JSON có password plain text
      * - Vấn đề: Login logic mới expect hashed passwords
      * - Giải pháp: Tự động migrate khi app khởi động
-     *
      * Quy trình migration:
      * 1. Tìm tất cả users có salt = null hoặc rỗng (users cũ)
      * 2. Đối với mỗi user đó:
@@ -453,10 +422,8 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
      *    - Hash password với salt mới (SHA-256)
      *    - Cập nhật DB với hash và salt mới
      * 3. Users mới: Đã có salt từ lúc đăng ký
-     *
      * Khi nào gọi: Trong App.java, sau khi DB init, trước khi load UI
      * Thread-safe: Chạy một lần khi app start, không có concurrent issues
-     *
      * Kết quả: Tất cả users đều có password hashed + salt
      */
     public void migratePlainTextPasswords() {
