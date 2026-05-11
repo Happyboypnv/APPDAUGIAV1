@@ -29,7 +29,7 @@ import java.util.Map;
  *                      dau nhay don de bo qua viec nhap va lay luon True
  *    ⚠️  HỆ QUẢ: Trả về TẤT CẢ hàng trong bảng → hacker truy cập được tất cả tài khoản!
  * ═══════════════════════════════════════════════════════════════════════════════
- * 2️⃣  GIẢI PHÁP: PREPAREDSTATEMENT (An toàn ✅)
+ * 2️⃣  GIẢI PHÁP:   (An toàn ✅)
  * ═══════════════════════════════════════════════════════════════════════════════
  * 📌 NGUYÊN LÝ:
  *    PreparedStatement tách RÕNG SQL từ DỮ LIỆU → hacker không thể tiêm SQL code
