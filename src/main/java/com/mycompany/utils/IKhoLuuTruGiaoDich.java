@@ -1,7 +1,8 @@
 package com.mycompany.utils;
 
 import com.mycompany.models.GiaoDich;
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.TrangThaiGiaoDich;
+
 import java.util.Map;
 import java.util.List;
 
@@ -72,5 +73,5 @@ public interface    IKhoLuuTruGiaoDich {
      * @param trangThai trạng thái giao dịch cần tìm
      * @return List các giao dịch có trạng thái tương ứng
      */
-    List<GiaoDich> layGiaoDichTheoTrangThai(GiaoDich.TrangThaiGiaoDich trangThai);
+    List<GiaoDich> layGiaoDichTheoTrangThai(TrangThaiGiaoDich trangThai);
 }

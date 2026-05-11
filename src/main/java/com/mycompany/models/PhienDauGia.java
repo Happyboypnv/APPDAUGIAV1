@@ -22,10 +22,10 @@ public class PhienDauGia {
     private volatile TrangThaiPhien trangThai;
     private boolean isClosed = false;
 
-    public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhanDauGia, double giaKhoiDiem, NguoiDung nguoiBan, int thoiGian) {
+    public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhamDauGia, double giaKhoiDiem, NguoiDung nguoiBan, int thoiGian) {
         this.maPhien = maPhien;
         this.tenPhien = tenPhien;
-        this.sanPhamDauGia = sanPhanDauGia;
+        this.sanPhamDauGia = sanPhamDauGia;
         this.giaHienTai = giaKhoiDiem;
         this.nguoiBan = nguoiBan;
         this.thoiGian = thoiGian;

@@ -1,7 +1,7 @@
 package com.mycompany.action;
 
 import com.mycompany.models.GiaoDich;
-import com.mycompany.models.GiaoDich.TrangThaiGiaoDich;
+import com.mycompany.models.TrangThaiGiaoDich;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.TrangThaiPhien;
@@ -15,7 +15,7 @@ import java.util.List;
  * Đây là tầng Service (Service Layer), chịu trách nhiệm:
  *  - Kiểm tra điều kiện hợp lệ trước khi thực hiện bất kỳ thao tác nào
  *  - Xử lý logic nghiệp vụ: trừ/cộng tiền, đổi trạng thái giao dịch
- *  - Gọi kho lưu trữ (IKhoLuuTruGiaoDich) để ghi/đọc dữ liệu vào file JSON
+ *  - Gọi kho lưu trữ (IKhoLuuTruGiaoDich) để ghi/đọc dữ liệu
  *
  * Bốn chức năng chính:
  *  1. taoGiaoDich()       — Tạo giao dịch mới khi phiên đấu giá kết thúc

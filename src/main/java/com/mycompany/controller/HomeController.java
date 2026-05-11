@@ -1,12 +1,9 @@
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import com.mycompany.action.HomeAction;
-import javafx.scene.image.ImageView;
 
 /**
  * HomeController - Controller quản lý trang chủ (Home Page)

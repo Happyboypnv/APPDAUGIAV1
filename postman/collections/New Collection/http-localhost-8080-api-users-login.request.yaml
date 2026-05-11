@@ -1,0 +1,25 @@
+$kind: http-request
+name: http://localhost:8080/api/users/login
+url: http://localhost:8080/api/users/login
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"hoTen\": \"Nguyen Van A\",\r
+
+    \  \"email\": \"b@test.com\",\r
+
+    \  \"matKhau\": \"123456\",\r
+
+    \  \"ngaySinh\": \"2000-01-01\"\r
+
+    }"
+auth:
+  type: apikey
+  credentials:
+    key: Authorization
+    value: Bearer USER_b@test.com_1778342581304
+settings:
+  disabledSystemHeaders: []
+order: 1778335933386

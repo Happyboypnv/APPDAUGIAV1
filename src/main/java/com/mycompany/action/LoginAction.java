@@ -2,6 +2,7 @@ package com.mycompany.action;
 
 import com.mycompany.exception.Login.*;
 import com.mycompany.models.NguoiDung;
+import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.utils.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML; // Quan trọng
@@ -10,7 +11,6 @@ import javafx.scene.control.Alert;
 import java.io.IOException; // Quan trọng
 import java.time.*;
 
-import com.mycompany.exception.Login.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
@@ -241,39 +241,53 @@ public class LoginAction {
     @FXML
     public void dangNhap(ActionEvent event, String email, String password) {
         try {
-            if (lock.tryLock(500, TimeUnit.MILLISECONDS)) { // Thử lấy lock trong 0.5s, nếu không được sẽ trả về false và không thực hiện đăng nhập
+            if (lock.tryLock(500, TimeUnit.MILLISECONDS)) {
                 try {
-                    checkSignIn(email,password);
-                    // Lấy thông tin người dùng và tạo token
-                    KhoLuuTruNguoiDungSQLite storage = (KhoLuuTruNguoiDungSQLite) khoLuuTruNguoiDung;
-                    NguoiDung user = storage.layTatCa().get(email); // Lấy thông tin user từ database
-                    String token = TokenUtil.generateToken(user);
+                    // Kiểm tra null/empty trước
+                    if (email == null || email.isEmpty())
+                        throw new EmailException("Email đang bỏ trống!");
+                    if (password == null || password.isEmpty())
+                        throw new PasswordException("Mật khẩu đang bỏ trống!");
+
+                    // ĐỔI MỚI: Gọi server qua ApiClient thay vì DB trực tiếp
+                    LoginResponse response = ApiClient.login(email, password);
+
+                    // Kiểm tra kết quả từ server
+                    if (response == null || response.getToken() == null) {
+                        String thongBao = (response != null) ? response.getThongBao()
+                                : "Không kết nối được server";
+                        throw new UserException(thongBao);
+                    }
+
+                    // Đăng nhập thành công — lấy thông tin user từ DB local
+                    // (vẫn cần object NguoiDung cho SessionManager)
+                    NguoiDung user = khoLuuTruNguoiDung.layTatCa().get(email);
+                    String token = response.getToken();
                     SessionManager.getInstance().setSession(user, token);
 
-                    HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng nhập thành công! Chào mừng bạn.");
-                    System.out.println("Đăng nhập thành công với email: " + email);
-                    System.out.println("Token: " + token);
-                    // Chuyen qua giao dien Home luon
+                    HandleNavigationAndAlert.getInstance()
+                            .showAlert(Alert.AlertType.INFORMATION, "Thành công",
+                                    "Đăng nhập thành công! Chào mừng bạn.");
+
                     try {
                         HandleNavigationAndAlert.getInstance().handleGoToHome(event);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện trang chủ không thành công!");
                     }
+
                 } catch (UserException | EmailException | PasswordException e) {
-                    HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING, "Lỗi đăng nhập", e.getMessage());
+                    HandleNavigationAndAlert.getInstance()
+                            .showAlert(Alert.AlertType.WARNING, "Lỗi đăng nhập", e.getMessage());
                 } finally {
-                    lock.unlock(); // Đảm bảo luôn giải phóng lock sau khi hoàn thành công việc
+                    lock.unlock();
                 }
             } else {
-                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi hệ thống", "Hệ thống đang bận, vui lòng thử lại sau!");
+                HandleNavigationAndAlert.getInstance()
+                        .showAlert(Alert.AlertType.ERROR, "Lỗi hệ thống",
+                                "Hệ thống đang bận, vui lòng thử lại sau!");
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi hệ thống", "Đăng nhập bị gián đoạn, vui lòng thử lại!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi không xác định", "Đã xảy ra lỗi không xác định, vui lòng thử lại!");
         }
     }
 

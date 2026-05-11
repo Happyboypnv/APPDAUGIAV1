@@ -1,4 +1,4 @@
-package com.mycompany.Controller;
+package com.mycompany.controller;
 
 import com.mycompany.utils.CapNhatThongTinNguoiDung;
 import com.mycompany.action.HandleNavigationAndAlert;
@@ -20,8 +20,6 @@ import java.util.ResourceBundle;
 
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
-
-import javax.swing.*;
 
 /**
  * ProfileController - Controller quản lý trang Profile (Thông tin cá nhân)

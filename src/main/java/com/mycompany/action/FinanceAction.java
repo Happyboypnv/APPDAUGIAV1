@@ -72,7 +72,9 @@ public class FinanceAction {
     public void editBankAccount(TextField field, boolean editing) {
         field.setEditable(editing);
         field.setOpacity(1.0); // set lại ít mờ hơn
-        if (editing) field.requestFocus(); // tự động focus vào ô khi bắt đầu chỉnh sửa
+        if (editing) {
+            field.requestFocus(); // tự động focus vào ô khi bắt đầu chỉnh sửa
+        }
     }
 
     /**

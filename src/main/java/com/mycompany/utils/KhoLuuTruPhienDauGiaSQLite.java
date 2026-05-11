@@ -56,19 +56,43 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
             System.out.println("[WARN] Phiên đấu giá đã tồn tại: " + phienDauGia.getMaPhienDauGia());
             return;
         }
+        // FIX: kiemTraPhienTonTai() thực thi SELECT, mở transaction ngầm nhưng không commit.
+        // Nếu không commit ngay, SQLite giữ read-lock → block writer thread khác → SQLITE_BUSY.
+        // Phải commit (hoặc rollback) trước khi bắt đầu INSERT để giải phóng lock.
+        try {
+            KetNoiCSDL.layKetNoi().commit();
+        } catch (SQLException e) {
+            System.err.println("[WARN] Không thể commit sau kiemTra: " + e.getMessage());
+        }
         /// sinh ma phien
         String maPhien = sinhMaPhienDauGia();
         phienDauGia.setMaPhien(maPhien);
+
+        // FIX: Bảng san_pham phải có bản ghi trước khi phien_dau_gia tham chiếu đến nó (FOREIGN KEY).
+        // Trước đây không có chỗ nào INSERT vào san_pham → SQLITE_CONSTRAINT_FOREIGNKEY.
+        // Dùng INSERT OR IGNORE để an toàn: nếu maSanPham đã tồn tại thì bỏ qua, không lỗi.
+        String sqlSanPham = "INSERT OR IGNORE INTO san_pham (ma_san_pham, ten_san_pham) VALUES (?, ?)";
+        try (PreparedStatement psSp = KetNoiCSDL.layKetNoi().prepareStatement(sqlSanPham)) {
+            psSp.setString(1, phienDauGia.getSanPham().layMaSanPham());
+            psSp.setString(2, phienDauGia.getSanPham().layTenSanPham());
+            psSp.executeUpdate();
+            psSp.getConnection().commit();
+            System.out.println("✅ Đã upsert san_pham: " + phienDauGia.getSanPham().layMaSanPham());
+        } catch (SQLException e) {
+            System.err.println("[ERROR] Lỗi khi lưu sản phẩm: " + e.getMessage());
+            return; // Không thể tiếp tục nếu san_pham chưa được lưu
+        }
+
         /// insert vao database
         String sql = "INSERT INTO phien_dau_gia " + "(ma_phien, ten_phien, gia_hien_tai, buoc_gia, thoi_gian_bat_dau, thoi_gian_ket_thuc, trang_thai, ma_nguoi_ban, ma_san_pham, ma_nguoi_thang_cuoc, is_closed) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)){
             ps.setString(1, phienDauGia.getMaPhienDauGia());
             ps.setString(2, phienDauGia.getTenPhienDauGia());
             ps.setDouble(3, phienDauGia.getGiaHienTai());
             ps.setDouble(4, phienDauGia.getBuocGia());
-            ps.setString(5, phienDauGia.getThoiGianBatDau().toString());
-            ps.setString(6, phienDauGia.getThoiGianKetThuc().toString());
+            ps.setString(5, phienDauGia.getThoiGianBatDau() != null ? phienDauGia.getThoiGianBatDau().toString() : null);
+            ps.setString(6, phienDauGia.getThoiGianKetThuc() != null ? phienDauGia.getThoiGianKetThuc().toString() : null);
             ps.setString(7, phienDauGia.getTrangThai().name());
             ps.setString(8, phienDauGia.getNguoiBan().layMaNguoiDung());
             ps.setString(9, phienDauGia.getSanPham().layMaSanPham());
@@ -98,13 +122,13 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
     public Map<String, PhienDauGia> layTatCaPhienDauGia() {
         Map<String, PhienDauGia> result = new HashMap<>();
         String sql = "SELECT p.*, " +
-                "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
-                "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
-                "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
-                "FROM phien_dau_gia p " +
-                "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
-                "LEFT JOIN san_pham sp ON p.ma_san_pham = sp.ma_san_pham " +
-                "LEFT JOIN nguoi_dung ntc ON p.ma_nguoi_thang_cuoc = ntc.ma_nguoi_dung";
+            "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
+            "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
+            "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
+            "FROM phien_dau_gia p " +
+            "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
+            "LEFT JOIN san_pham sp ON p.ma_san_pham = sp.ma_san_pham " +
+            "LEFT JOIN nguoi_dung ntc ON p.ma_nguoi_thang_cuoc = ntc.ma_nguoi_dung";
         /**
          * SELECT p.*   /// lay toan bo cot trong bang phien_dau_gia
          * chu y : SELECT * la lay tat ca cot tu moi bang
@@ -143,8 +167,8 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                     nguoiBan
                 );
                 phienDauGia.setBuocGia(rs.getDouble("buoc_gia"));
-                phienDauGia.setThoiGianBatDau(LocalDateTime.parse(rs.getString("thoi_gian_bat_dau")));
-                phienDauGia.setThoiGianKetThuc(LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")));
+                phienDauGia.setThoiGianBatDau(rs.getString("thoi_gian_bat_dau") != null ? LocalDateTime.parse(rs.getString("thoi_gian_bat_dau")) : null);
+                phienDauGia.setThoiGianKetThuc(rs.getString("thoi_gian_ket_thuc") != null ? LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")) : null);
                 phienDauGia.setTrangThai(TrangThaiPhien.valueOf(rs.getString("trang_thai")));
                 phienDauGia.setClosed(rs.getBoolean("is_closed"));
                 phienDauGia.setNguoiThangCuoc(nguoiThangCuoc);
@@ -159,14 +183,14 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
     @Override
     public PhienDauGia layPhienDauGia(String maPhien) {
         String sql = "SELECT p.*, " +
-                "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
-                "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
-                "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
-                "FROM phien_dau_gia p " +
-                "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
-                "LEFT JOIN san_pham sp ON p.ma_san_pham = sp.ma_san_pham " +
-                "LEFT JOIN nguoi_dung ntc ON p.ma_nguoi_thang_cuoc = ntc.ma_nguoi_dung " +
-                "WHERE p.ma_phien = ?";
+            "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
+            "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
+            "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
+            "FROM phien_dau_gia p " +
+            "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
+            "LEFT JOIN san_pham sp ON p.ma_san_pham = sp.ma_san_pham " +
+            "LEFT JOIN nguoi_dung ntc ON p.ma_nguoi_thang_cuoc = ntc.ma_nguoi_dung " +
+            "WHERE p.ma_phien = ?";
         try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
             ps.setString(1, maPhien);
             try (ResultSet rs = ps.executeQuery()) {
@@ -199,8 +223,8 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
                         nguoiBan
                     );
                     phien.setBuocGia(rs.getDouble("buoc_gia"));
-                    phien.setThoiGianBatDau(LocalDateTime.parse(rs.getString("thoi_gian_bat_dau")));
-                    phien.setThoiGianKetThuc(LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")));
+                    phien.setThoiGianBatDau(rs.getString("thoi_gian_bat_dau") != null ? LocalDateTime.parse(rs.getString("thoi_gian_bat_dau")) : null);
+                    phien.setThoiGianKetThuc(rs.getString("thoi_gian_ket_thuc") != null ? LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")) : null);
                     phien.setTrangThai(TrangThaiPhien.valueOf(rs.getString("trang_thai")));
                     phien.setClosed(rs.getBoolean("is_closed"));
                     phien.setNguoiThangCuoc(nguoiThangCuoc);
@@ -219,9 +243,9 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
             ps.setString(1, phienDauGia.getTenPhienDauGia());
             ps.setDouble(2, phienDauGia.getGiaHienTai());
-            ps.setDouble(3, phienDauGia.getBuocGia());
-            ps.setString(4, phienDauGia.getThoiGianBatDau().toString());
-            ps.setString(5, phienDauGia.getThoiGianKetThuc().toString());
+            ps.setDouble(3, phienDauGia.getBuocGia()); // FIX: buocGia bị thiếu trước đây
+            ps.setString(4, phienDauGia.getThoiGianBatDau() != null ? phienDauGia.getThoiGianBatDau().toString() : null);
+            ps.setString(5, phienDauGia.getThoiGianKetThuc() != null ? phienDauGia.getThoiGianKetThuc().toString() : null); // FIX: bỏ dòng setString(5,...) trùng lặp bên dưới
             ps.setString(6, phienDauGia.getTrangThai().name());
             ps.setString(7, phienDauGia.getNguoiBan().layMaNguoiDung());
             ps.setString(8, phienDauGia.getSanPham().layMaSanPham());
