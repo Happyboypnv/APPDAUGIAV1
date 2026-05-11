@@ -1,0 +1,16 @@
+/* Làm cho Header của bảng tối màu và chữ trắng */
+.table-view .column-header {
+    -fx-background-color: #131a39;
+}
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+/* Làm nền bảng trong suốt để thấy màu nền StackPane */
+.table-view {
+    -fx-background-color: transparent;
+}
+.table-row-cell {
+    -fx-background-color: #1c254b;
+    -fx-text-fill: white;
+}

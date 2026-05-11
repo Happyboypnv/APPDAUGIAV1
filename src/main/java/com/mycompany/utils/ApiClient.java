@@ -1,6 +1,7 @@
 package com.mycompany.utils;
 
 import com.google.gson.Gson;
+import com.mycompany.server.dto.DatGiaResponse;
 import com.mycompany.server.dto.LoginRequest;
 import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.server.dto.RegisterRequest;
@@ -80,7 +81,22 @@ public class ApiClient {
         if (responseJson == null) return new LoginResponse("Không kết nối được server");
         return gson.fromJson(responseJson, LoginResponse.class);
     }
-
+    public static DatGiaResponse createBid(String maPhien, double gia, String token){
+        String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
+            put("maPhien", maPhien);
+            put("gia", gia);
+        }});
+        String responseJson = guiPost("/api/auctions/bid", jsonBody, token);
+        return gson.fromJson(responseJson, DatGiaResponse.class);
+    }
+    /**
+     * goi api get all auctions
+     * @param token
+     * @return
+     */
+    public static String getAuctions(String token){
+        return guiGet("/api/auctions", token);
+    }
     // ============================================================
     // LẤY THÔNG TIN USER
     // ============================================================
@@ -93,6 +109,7 @@ public class ApiClient {
      * @param token  token nhận được sau khi đăng nhập
      * @return JSON string chứa thông tin user
      */
+
     public static String getUser(String email, String token) {
         return guiGet("/api/users/" + email, token);
     }
@@ -100,7 +117,6 @@ public class ApiClient {
     // ============================================================
     // PHƯƠNG THỨC HỖ TRỢ (private)
     // ============================================================
-
     /**
      * Gửi HTTP POST request
      *

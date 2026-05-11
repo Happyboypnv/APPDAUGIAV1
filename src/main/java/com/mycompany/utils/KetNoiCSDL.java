@@ -11,7 +11,7 @@ import java.sql.*;
 /// -> khong can bat ky mot LOCK nao o tang Java
 /// Concurrency do SQLite WAL xu ly o tang file
 /// Khi bat WAL thi se xuat hien 3 file
-/// 1. hipiti.db (du lieu goc)
+/// 1. hipiti.db (du lieu goc)-
 /// 2. hipiti.db-wal (nhat ky ghi nhap)
 /// 3. hipiti.db-shm (File chi muc chia se - Shared Memory)
 /// + Khi doc (nhieu Connection cung doc) -> cac Connection doc lay du lieu goc tu file .db

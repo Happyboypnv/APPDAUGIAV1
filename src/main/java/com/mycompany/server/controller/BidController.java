@@ -11,6 +11,10 @@ import com.mycompany.utils.IKhoLuuTruPhienDauGia;
 import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
 import com.sun.net.httpserver.HttpExchange;
+import com.mycompany.server.dto.DatGiaRequest;
+import com.mycompany.server.dto.DatGiaResponse;
+import com.mycompany.server.dto.LichSuDatGiaResponse;
+import com.mycompany.server.dto.LuotDatGia;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -131,15 +135,15 @@ public class BidController {
         String body = docBody(exchange);
         DatGiaRequest req = gson.fromJson(body, DatGiaRequest.class);
 
-        if (req == null || req.maPhien == null || req.gia <= 0) {
+        if (req == null || req.getMaPhien() == null || req.getGia() <= 0) {
             guiPhanHoi(exchange, 400, loi("Thiếu hoặc sai thông tin: maPhien, gia (>0)"));
             return;
         }
 
         // Bước 3: Tìm phiên
-        PhienDauGia phien = khoPhien.layPhienDauGia(req.maPhien);
+        PhienDauGia phien = khoPhien.layPhienDauGia(req.getMaPhien());
         if (phien == null) {
-            guiPhanHoi(exchange, 404, loi("Không tìm thấy phiên: " + req.maPhien));
+            guiPhanHoi(exchange, 404, loi("Không tìm thấy phiên: " + req.getMaPhien()));
             return;
         }
 
@@ -159,7 +163,7 @@ public class BidController {
 
         // Bước 6: Kiểm tra giá hợp lệ trước khi gọi service
         double giaToiThieu = phien.getGiaHienTai() + phien.getBuocGia();
-        if (req.gia < giaToiThieu) {
+        if (req.getGia() < giaToiThieu) {
             guiPhanHoi(exchange, 400, loi(String.format(
                     "Giá đặt phải ≥ %.0f (giaHienTai=%.0f + buocGia=%.0f)",
                     giaToiThieu, phien.getGiaHienTai(), phien.getBuocGia())));
@@ -169,7 +173,7 @@ public class BidController {
         // Bước 7: Gọi PhienDauGiaService.datGia() — tái sử dụng logic đã có
         // datGia() xử lý: cập nhật giaHienTai, thêm vào danhSachNguoiTraGia, gia hạn nếu cần
         double giaLucDau = phien.getGiaHienTai();
-        phienDauGiaService.datGia(phien, nguoiDat, req.gia);
+        phienDauGiaService.datGia(phien, nguoiDat, req.getGia());
 
         // Bước 8: Kiểm tra datGia có thực sự thành công không
         // (service silently return nếu fail — ta so sánh giaHienTai trước/sau)
@@ -319,63 +323,6 @@ public class BidController {
             os.write(bytes);
         }
     }
-
-    // =========================================================
-    // INNER CLASSES: DTO
-    // =========================================================
-
-    /** Request body cho POST /api/bids */
-    private static class DatGiaRequest {
-        String maPhien;
-        double gia;
-    }
-
-    /** Response cho POST /api/bids thành công */
-    private static class DatGiaResponse {
-        String thongBao;
-        double giaHienTai;
-        String thoiGianKetThuc;
-
-        DatGiaResponse(String thongBao, double giaHienTai, String thoiGianKetThuc) {
-            this.thongBao       = thongBao;
-            this.giaHienTai     = giaHienTai;
-            this.thoiGianKetThuc = thoiGianKetThuc;
-        }
-    }
-
-    /** Một lượt đặt giá trong lịch sử */
-    private static class LuotDatGia {
-        int    stt;
-        String tenNguoiDat;
-        String maNguoiDat;
-
-        LuotDatGia(int stt, String tenNguoiDat, String maNguoiDat) {
-            this.stt          = stt;
-            this.tenNguoiDat  = tenNguoiDat;
-            this.maNguoiDat   = maNguoiDat;
-        }
-    }
-
-    /** Response cho GET /api/bids/{phienId} */
-    private static class LichSuDatGiaResponse {
-        String          maPhien;
-        double          giaHienTai;
-        String          trangThai;
-        int             soLuotDatGia;
-        String          nguoiDangThang;
-        List<LuotDatGia> lichSu;
-
-        LichSuDatGiaResponse(String maPhien, double giaHienTai, String trangThai,
-                              int soLuotDatGia, String nguoiDangThang, List<LuotDatGia> lichSu) {
-            this.maPhien        = maPhien;
-            this.giaHienTai     = giaHienTai;
-            this.trangThai      = trangThai;
-            this.soLuotDatGia   = soLuotDatGia;
-            this.nguoiDangThang = nguoiDangThang;
-            this.lichSu         = lichSu;
-        }
-    }
-
     private static class ThongBaoLoi {
         String loi;
         ThongBaoLoi(String loi) { this.loi = loi; }
