@@ -1,0 +1,36 @@
+2026-05-11 09:09:35.845 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 09:09:35.857 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-11 09:09:35.858 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-11 09:09:35.858 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 09:09:35.858 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-11 09:09:35.858 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-11 09:09:35.858 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-11 09:09:35.858 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-11 09:09:35.858 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 09:09:35.859 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-11 09:22:19.029 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? AutoCommit t?t - S? d?ng manual commit
+2026-05-11 09:22:19.031 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_dung...
+2026-05-11 09:22:19.031 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_dung ?� t?o
+2026-05-11 09:22:19.035 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?? C?t salt ?� t?n t?i (kh�ng c?n migration)
+2026-05-11 09:22:19.035 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng san_pham...
+2026-05-11 09:22:19.035 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng san_pham ?� t?o
+2026-05-11 09:22:19.035 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng phien_dau_gia...
+2026-05-11 09:22:19.035 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng phien_dau_gia ?� t?o
+2026-05-11 09:22:19.035 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng giao_dich...
+2026-05-11 09:22:19.037 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng giao_dich ?� t?o
+2026-05-11 09:22:19.037 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_tra_gia...
+2026-05-11 09:22:19.037 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_tra_gia ?� t?o
+2026-05-11 09:22:19.037 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Database kh?i t?o th�nh c�ng
+2026-05-11 09:22:19.037 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Commit khoiTao th�nh c�ng
+2026-05-11 09:22:19.053 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-11 09:22:19.056 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
