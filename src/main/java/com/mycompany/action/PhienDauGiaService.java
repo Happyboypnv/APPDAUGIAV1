@@ -71,20 +71,20 @@ public class PhienDauGiaService {
         }
     }
 
-    public void datGia(PhienDauGia phien, NguoiDung nguoiMua, double gia) {
+    public boolean datGia(PhienDauGia phien, NguoiDung nguoiMua, double gia) { // sua de check logic ben web socket
         Object lock = getLock(phien.getMaPhien());
 
         synchronized (lock) {
             if (phien.getTrangThai() == TrangThaiPhien.DA_THANH_TOAN) {
-                return;
+                return false;
             }
 
             if (phien.getTrangThai() == TrangThaiPhien.DA_HUY) {
-                return;
+                return false;
             }
 
             if (nguoiMua.equals(phien.getNguoiBan())) {
-                return;
+                return false;
             }
 
             //Check tiền người mua có đủ so với giá không ở đây
@@ -92,7 +92,7 @@ public class PhienDauGiaService {
             double giaToiThieu = phien.getGiaHienTai() + phien.getBuocGia();
 
             if (gia < giaToiThieu) {
-                return;
+                return false;
             }
 
             if (!phien.getdaCoGia()) {
@@ -115,6 +115,7 @@ public class PhienDauGiaService {
             }
             phien.setGiaHienTai(gia);
             phien.getDanhSachNguoiTraGia().add(nguoiMua);
+            return true;
         }
     }
 }
