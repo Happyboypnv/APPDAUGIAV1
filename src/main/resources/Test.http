@@ -1,0 +1,10 @@
+### Đăng nhập
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+Authorization: Bearer USER_b@test.com_1778342581304
+
+{
+  "email": "b@test.com",
+  "matKhau": "123456",
+  "ngaySinh": "2000-01-01"
+}

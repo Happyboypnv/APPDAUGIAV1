@@ -262,7 +262,12 @@ public class LoginAction {
                     // Đăng nhập thành công — lấy thông tin user từ DB local
                     // (vẫn cần object NguoiDung cho SessionManager)
                     NguoiDung user = khoLuuTruNguoiDung.layTatCa().get(email);
-                    String token = response.getToken();
+
+                    // Tạo token theo format TokenUtil để các trang Profile/Finance đọc được
+                    String token = TokenUtil.generateToken(user);
+
+                    // Lưu cả 2: token server (để gọi API) và token local (để đọc thông tin)
+                    // Tạm thời dùng token local cho SessionManager
                     SessionManager.getInstance().setSession(user, token);
 
                     HandleNavigationAndAlert.getInstance()

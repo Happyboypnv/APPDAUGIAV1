@@ -34,3 +34,214 @@
 2026-05-11 09:22:19.037 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Commit khoiTao th�nh c�ng
 2026-05-11 09:22:19.053 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
 2026-05-11 09:22:19.056 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
+2026-05-11 10:25:17.079 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 10:25:17.081 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng nguoi_dung...
+2026-05-11 10:25:17.081 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng nguoi_dung đã tạo
+2026-05-11 10:25:17.084 [main] INFO  com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại (không cần migration)
+2026-05-11 10:25:17.085 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng san_pham...
+2026-05-11 10:25:17.085 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng san_pham đã tạo
+2026-05-11 10:25:17.085 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng phien_dau_gia...
+2026-05-11 10:25:17.085 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng phien_dau_gia đã tạo
+2026-05-11 10:25:17.085 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng giao_dich...
+2026-05-11 10:25:17.085 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng giao_dich đã tạo
+2026-05-11 10:25:17.086 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng nguoi_tra_gia...
+2026-05-11 10:25:17.086 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng nguoi_tra_gia đã tạo
+2026-05-11 10:25:17.086 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Database khởi tạo thành công
+2026-05-11 10:25:17.086 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Commit khoiTao thành công
+2026-05-11 10:25:17.088 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-11 10:25:17.091 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-11 10:25:17.268 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-11 10:25:17.269 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 10:25:17.270 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-11 10:25:25.674 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? AutoCommit t?t - S? d?ng manual commit
+2026-05-11 10:25:25.675 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_dung...
+2026-05-11 10:25:25.675 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_dung ?� t?o
+2026-05-11 10:25:25.677 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?? C?t salt ?� t?n t?i (kh�ng c?n migration)
+2026-05-11 10:25:25.677 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng san_pham...
+2026-05-11 10:25:25.678 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng san_pham ?� t?o
+2026-05-11 10:25:25.678 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng phien_dau_gia...
+2026-05-11 10:25:25.678 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng phien_dau_gia ?� t?o
+2026-05-11 10:25:25.678 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng giao_dich...
+2026-05-11 10:25:25.679 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng giao_dich ?� t?o
+2026-05-11 10:25:25.679 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_tra_gia...
+2026-05-11 10:25:25.679 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_tra_gia ?� t?o
+2026-05-11 10:25:25.679 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Database kh?i t?o th�nh c�ng
+2026-05-11 10:25:25.679 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Commit khoiTao th�nh c�ng
+2026-05-11 10:25:25.680 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-11 10:25:25.682 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
+2026-05-11 10:26:12.626 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  INSERT th�nh c�ng, s? d�ng ?nh h??ng: 1
+2026-05-11 10:26:12.626 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - COMMIT th�nh c�ng cho user: PPPT000005
+2026-05-11 10:26:34.597 [pool-1-thread-1] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 10:26:34.600 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: happyboy@gmail.com
+2026-05-11 10:26:34.601 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: abHYfBoKqxostEUj2+7Hgi6/xKdjY1BUPQPW2PByO7A=
+2026-05-11 10:26:34.601 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: pdusObENDU7eq/xfddpVpg==
+2026-05-11 10:26:34.601 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-11 10:27:36.665 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? AutoCommit t?t - S? d?ng manual commit
+2026-05-11 10:27:36.668 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_dung...
+2026-05-11 10:27:36.669 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_dung ?� t?o
+2026-05-11 10:27:36.672 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?? C?t salt ?� t?n t?i (kh�ng c?n migration)
+2026-05-11 10:27:36.673 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng san_pham...
+2026-05-11 10:27:36.673 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng san_pham ?� t?o
+2026-05-11 10:27:36.673 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng phien_dau_gia...
+2026-05-11 10:27:36.673 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng phien_dau_gia ?� t?o
+2026-05-11 10:27:36.673 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng giao_dich...
+2026-05-11 10:27:36.674 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng giao_dich ?� t?o
+2026-05-11 10:27:36.674 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_tra_gia...
+2026-05-11 10:27:36.674 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_tra_gia ?� t?o
+2026-05-11 10:27:36.674 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Database kh?i t?o th�nh c�ng
+2026-05-11 10:27:36.675 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Commit khoiTao th�nh c�ng
+2026-05-11 10:27:36.677 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-11 10:27:36.680 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
+2026-05-11 10:27:57.121 [pool-1-thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 10:27:57.121 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: happyboy@gmail.com
+2026-05-11 10:27:57.122 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: abHYfBoKqxostEUj2+7Hgi6/xKdjY1BUPQPW2PByO7A=
+2026-05-11 10:27:57.122 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: pdusObENDU7eq/xfddpVpg==
+2026-05-11 10:27:57.122 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-11 10:28:27.437 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? AutoCommit t?t - S? d?ng manual commit
+2026-05-11 10:28:27.438 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_dung...
+2026-05-11 10:28:27.438 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_dung ?� t?o
+2026-05-11 10:28:27.440 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?? C?t salt ?� t?n t?i (kh�ng c?n migration)
+2026-05-11 10:28:27.440 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng san_pham...
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng san_pham ?� t?o
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng phien_dau_gia...
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng phien_dau_gia ?� t?o
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng giao_dich...
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng giao_dich ?� t?o
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_tra_gia...
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_tra_gia ?� t?o
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Database kh?i t?o th�nh c�ng
+2026-05-11 10:28:27.441 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Commit khoiTao th�nh c�ng
+2026-05-11 10:28:27.443 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-11 10:28:27.444 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
+2026-05-11 10:28:49.019 [pool-1-thread-5] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 10:28:49.019 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: happyboy@gmail.com
+2026-05-11 10:28:49.019 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: abHYfBoKqxostEUj2+7Hgi6/xKdjY1BUPQPW2PByO7A=
+2026-05-11 10:28:49.019 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: pdusObENDU7eq/xfddpVpg==
+2026-05-11 10:28:49.019 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-11 10:29:01.607 [JavaFX Application Thread] INFO  c.m.c.ChangePasswordController - ? ChangePasswordController initialized
+2026-05-11 10:29:22.038 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  T�m th?y user v?i email: happyboy@gmail.com
+2026-05-11 10:29:22.039 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: abHYfBoKqxostEUj2+7Hgi6/xKdjY1BUPQPW2PByO7A=
+2026-05-11 10:29:22.039 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: pdusObENDU7eq/xfddpVpg==
+2026-05-11 10:29:22.039 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nh?p v�o: @Phong2007
+2026-05-11 10:29:22.041 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - C?p nh?t user th�nh c�ng, s? d�ng ?nh h??ng: 1
+2026-05-11 10:29:22.041 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - COMMIT c?p nh?t user: PPPT000005
+2026-05-11 11:07:16.546 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 11:07:16.549 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng nguoi_dung...
+2026-05-11 11:07:16.549 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng nguoi_dung đã tạo
+2026-05-11 11:07:16.552 [main] INFO  com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại (không cần migration)
+2026-05-11 11:07:16.552 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng san_pham...
+2026-05-11 11:07:16.552 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng san_pham đã tạo
+2026-05-11 11:07:16.553 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng phien_dau_gia...
+2026-05-11 11:07:16.553 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng phien_dau_gia đã tạo
+2026-05-11 11:07:16.553 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng giao_dich...
+2026-05-11 11:07:16.553 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng giao_dich đã tạo
+2026-05-11 11:07:16.553 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng nguoi_tra_gia...
+2026-05-11 11:07:16.554 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng nguoi_tra_gia đã tạo
+2026-05-11 11:07:16.554 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Database khởi tạo thành công
+2026-05-11 11:07:16.554 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Commit khoiTao thành công
+2026-05-11 11:07:16.557 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-11 11:07:16.560 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-11 11:07:16.680 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-11 11:07:16.681 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-11 11:07:16.682 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-11 11:07:16.682 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 11:07:16.682 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-11 11:07:24.625 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? AutoCommit t?t - S? d?ng manual commit
+2026-05-11 11:07:24.627 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_dung...
+2026-05-11 11:07:24.628 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_dung ?� t?o
+2026-05-11 11:07:24.630 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?? C?t salt ?� t?n t?i (kh�ng c?n migration)
+2026-05-11 11:07:24.631 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng san_pham...
+2026-05-11 11:07:24.631 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng san_pham ?� t?o
+2026-05-11 11:07:24.631 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng phien_dau_gia...
+2026-05-11 11:07:24.632 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng phien_dau_gia ?� t?o
+2026-05-11 11:07:24.632 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng giao_dich...
+2026-05-11 11:07:24.632 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng giao_dich ?� t?o
+2026-05-11 11:07:24.632 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ?ang t?o b?ng nguoi_tra_gia...
+2026-05-11 11:07:24.633 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - B?ng nguoi_tra_gia ?� t?o
+2026-05-11 11:07:24.633 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Database kh?i t?o th�nh c�ng
+2026-05-11 11:07:24.633 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Commit khoiTao th�nh c�ng
+2026-05-11 11:07:24.634 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-11 11:07:24.637 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
+2026-05-11 11:12:27.400 [pool-1-thread-1] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 11:12:27.404 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: b@test.com
+2026-05-11 11:12:27.405 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: tKoEau9uuhOIcvIN7tru14sehvC/1BHejKygu++sH38=
+2026-05-11 11:12:27.405 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: IRfFAMEP0ucKOiyFSzswbg==
+2026-05-11 11:12:27.405 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: 123456
+2026-05-11 11:12:58.635 [pool-1-thread-2] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 11:12:58.635 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: b@test.com
+2026-05-11 11:12:58.635 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: tKoEau9uuhOIcvIN7tru14sehvC/1BHejKygu++sH38=
+2026-05-11 11:12:58.635 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: IRfFAMEP0ucKOiyFSzswbg==
+2026-05-11 11:12:58.636 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: 123456
+2026-05-11 11:13:22.784 [pool-1-thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 11:13:22.784 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: b@test.com
+2026-05-11 11:13:22.784 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: tKoEau9uuhOIcvIN7tru14sehvC/1BHejKygu++sH38=
+2026-05-11 11:13:22.784 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: IRfFAMEP0ucKOiyFSzswbg==
+2026-05-11 11:13:22.784 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: 123456
+2026-05-11 11:14:27.330 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ AutoCommit tắt - Sử dụng manual commit
+2026-05-11 11:14:27.332 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng nguoi_dung...
+2026-05-11 11:14:27.332 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng nguoi_dung đã tạo
+2026-05-11 11:14:27.335 [main] INFO  com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại (không cần migration)
+2026-05-11 11:14:27.335 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng san_pham...
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng san_pham đã tạo
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng phien_dau_gia...
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng phien_dau_gia đã tạo
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng giao_dich...
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng giao_dich đã tạo
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - Đang tạo bảng nguoi_tra_gia...
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - Bảng nguoi_tra_gia đã tạo
+2026-05-11 11:14:27.337 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Database khởi tạo thành công
+2026-05-11 11:14:27.338 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Commit khoiTao thành công
+2026-05-11 11:14:27.339 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-11 11:14:27.343 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-11 11:14:27.454 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 11:14:27.454 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-11 11:14:27.454 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-11 11:14:27.455 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-11 11:14:27.456 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-11 11:14:27.456 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-11 11:14:27.456 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-11 11:14:27.456 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-11 11:14:27.456 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
