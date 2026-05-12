@@ -1,0 +1,2 @@
+2026-05-12 15:47:21.969 [WebSocketWorker-23] ERROR c.m.s.w.AuctionWebSocketServer - ❌ Error processing message: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
+2026-05-12 15:47:27.973 [WebSocketWorker-23] ERROR c.m.s.w.AuctionWebSocketServer - ❌ Error handling bid: Cannot invoke "com.mycompany.models.PhienDauGia.getGiaHienTai()" because "phienHienTai" is null
