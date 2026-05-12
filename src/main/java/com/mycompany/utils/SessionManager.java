@@ -26,7 +26,7 @@ import java.util.Map;
 public class SessionManager {
 
     // Singleton instance - đảm bảo chỉ có 1 SessionManager
-    private static SessionManager instance;
+    private static volatile SessionManager instance;
 
     // Người dùng hiện tại đang đăng nhập
     // null = chưa đăng nhập
@@ -54,11 +54,16 @@ public class SessionManager {
      * @return Instance duy nhất
      */
     public static SessionManager getInstance() {
-        if (instance == null) {
-            instance = new SessionManager();
+        if (instance == null) {                        // Lần 1: không lock → nhanh
+            synchronized (SessionManager.class) {
+                if (instance == null) {                // Lần 2: có lock → an toàn
+                    instance = new SessionManager();
+                }
+            }
         }
         return instance;
     }
+
 
     /**
      * PHƯƠNG THỨC: setSession(NguoiDung user, String token)

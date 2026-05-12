@@ -90,8 +90,7 @@ public class UserController {
 
         // Đăng nhập thành công → tạo token + lấy họ tên
         String token = "USER_" + req.getEmail() + "_" + System.currentTimeMillis();
-        Map<String, NguoiDung> danhSach = khoNguoiDung.layTatCa();
-        NguoiDung nguoiDung = danhSach.get(req.getEmail());
+        NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(req.getEmail());
         String hoTen = (nguoiDung != null) ? nguoiDung.layHoTen() : "";
 
         guiPhanHoi(exchange, 200,

@@ -241,43 +241,48 @@ public class AuctionWebSocketServer extends WebSocketServer {
     private void handleBid(WebSocket conn, JsonObject json) {
         try {
             String phienId = json.get("phienId").getAsString();
-            String email = json.get("email").getAsString();
-            double giaRa = json.get("giaRa").getAsDouble();
+            String email   = json.get("email").getAsString();
+            double giaRa   = json.get("giaRa").getAsDouble();
 
-            logger.info("💰 User " + email + " bids " + giaRa + " on phien " + phienId);
-
-            // 🔹 STEP 1: Gọi service để xử lý bid
-            // PhienDauGiaService.datGia() phải:
-            // - Validate giá
-            // - Check phiên có đang diễn ra không
-            // - Update database (trong transaction)
-            // - Return kết quả
             PhienDauGia phienHienTai = QuanLyCacPhienService.getInstance().tim(phienId);
-            String giaTruocBid = String.valueOf(phienHienTai.getGiaHienTai());
-            boolean bidIsCompleted = phienService.datGia(phienHienTai, khoLuuTruNguoiDungSQLite.layTatCa().get(email), giaRa);
 
-            // 🔹 STEP 2: Broadcast kết quả cho phòng
+            // FIX: Null check thay vì NPE
+            if (phienHienTai == null) {
+                JsonObject err = new JsonObject();
+                err.addProperty("event", "BID_RESULT");
+                err.addProperty("status", "FAILED");
+                err.addProperty("message", "Phiên không tồn tại hoặc đã kết thúc");
+                conn.send(gson.toJson(err));
+                return;
+            }
+
+            // FIX: Lấy giá SAU khi datGia thành công, không phải trước
+            boolean bidIsCompleted = phienService.datGia(
+                    phienHienTai,
+                    khoLuuTruNguoiDungSQLite.layTatCa().get(email),
+                    giaRa
+            );
+
             JsonObject response = new JsonObject();
             response.addProperty("event", "BID_RESULT");
             response.addProperty("email", email);
             response.addProperty("giaRa", giaRa);
             response.addProperty("timestamp", System.currentTimeMillis());
 
-            // Nếu bidResult là Map/Object → thêm vào response
             if (bidIsCompleted) {
                 khoPhienDauGia.capNhatPhienDauGia(phienHienTai);
                 response.addProperty("status", "SUCCESS");
-                response.addProperty("currentPrice", giaTruocBid);
+                // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
+                response.addProperty("currentPrice", phienHienTai.getGiaHienTai());
             } else {
                 response.addProperty("status", "FAILED");
-                response.addProperty("message", "Unknown error");
+                response.addProperty("message", "Giá không hợp lệ hoặc phiên đã kết thúc");
             }
 
             broadcastToRoom(phienId, gson.toJson(response));
 
         } catch (Exception e) {
-            logger.error("❌ Error handling bid: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Lỗi xử lý bid: " + e.getMessage());
         }
     }
 

@@ -4,279 +4,204 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-
-/// Moi luong mot Connection RIENG -> khong ai tranh chap ai
-/// Connection la mot interface nhu duong dan giua code java va du lieu SQLite
-/// -> khong can bat ky mot LOCK nao o tang Java
-/// Concurrency do SQLite WAL xu ly o tang file
-/// Khi bat WAL thi se xuat hien 3 file
-/// 1. hipiti.db (du lieu goc)-
-/// 2. hipiti.db-wal (nhat ky ghi nhap)
-/// 3. hipiti.db-shm (File chi muc chia se - Shared Memory)
-/// + Khi doc (nhieu Connection cung doc) -> cac Connection doc lay du lieu goc tu file .db
-/// -> nhin vao file .db-shm de xem co du lieu nao moi nam trong file .db-wal khong. Neu co se update du lieu moi
-/// + Khi Ghi (mot Connection ghi) -> Cap nhat vao file .db-wal -> cap nhat chi muc vao .shm bao cho Connection khac
-/// -> Khi 2 Connection ghi -> neu co 1 Connection ghi thi Connection khac se khong the ghi du lieu
-/// Nhieu Connection doc cung luc
-/// 1 Connection ghi va nhieu Connection doc
-/// 2 Connection cung ghi -> 1 cai phai cho
+/**
+ * Lớp quản lý kết nối CSDL SQLite sử dụng ThreadLocal để tối ưu đa luồng.
+ * Tích hợp cơ chế WAL và Shutdown Hook để bảo vệ dữ liệu.
+ */
 public class KetNoiCSDL {
     private static final Logger logger = LoggerFactory.getLogger(KetNoiCSDL.class);
-    /// URL Ket noi JDBC voi SQLite
-    /// jdbc:sqlite:hipiti.db -> tao ra file hipiti.db trong thu muc chay app
     private static final String URL = "jdbc:sqlite:hipiti.db";
-    /// ThreadLocal Connection
-    /// ThreadLocal<Connection> -> moi luong mot Connection rieng biet
-    /// Cach ThreadLocal hoat dong ben trong JVM:
-    /// Moi Thread co 1 Map noi bo (ThreadLocalMap):
-    /// + key : doi tuong ThreadLocal nay
-    /// + value : Connection cua luong do
-    /// Thread A goi get() -> JVM tim trong map cua A -> tra ve connA
-    /// Thread B goi get() -> JVM tim trong map cua B -> tra ve connB
-    /// -> cung goi get() tren mot ThreadLocal nhung nhan 2 gia tri khac nhau
 
-    /// withInitial(supplier)  : cong thuc khoi tao gia tri mac dinh
-    ///  lan dau luong goi get() -> JVM goi supplier de tao Connection
-    ///  tu lan 2 : tim thay trong Map -> tra ve luong khong goi supplier nua
-    /// withInitial() nhan vao tham so la mot Supplier<T>
-    /// + co the Lazy Initialization : khoi lenh ben trong withInitial() khong chay ngay lap tuc ma cho luong A lan dau goi
-    /// threadLocalConn.get() sau lan goi dau tien no se tra ra kqua luon va withInitial() khong bi goi lai nua doi voi luong A
-    /// * Supplier<T> la mot interface co dung 1 phuong thuc la T get() // nha cung cap
-    /// * cai dac biet cua Supplier la su tri hoan da nhac toi o tren
-    /// Boc RuntimeException
-    /// + khi goi DriverManager.getConnection(URL) co kha nang gay ra loi -> throw SQLException
-    /// + SQLException thuoc  nhom CheckedException
-    /// -> 1 la phai try - cacth tai cho
-    /// -> 2 la ham chua no phai throws SQLException
-    /// tuy nhien khoi lenh Lamda() -> {} thu chat dang trien khai implement (ham get()) ma interface Supplier<T> khong THROWS
-    /// -> throw ra RuntimeException ve RuntimeException thuoc nhom Unchecked Exception -> xuyen qua duoc gioi han cua Supplier de bay ra ngoai
+    // ThreadLocal giúp mỗi luồng sở hữu 1 Connection riêng, tránh tranh chấp.
     private static final ThreadLocal<Connection> CONNECTION =
-        ThreadLocal.withInitial( ()-> {
-                try{
+            ThreadLocal.withInitial(() -> {
+                try {
                     Connection conn = DriverManager.getConnection(URL);
                     caiDatPragma(conn);
                     return conn;
-
                 } catch (SQLException e) {
-                    /// boc thanh RuntimeException
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Không thể khởi tạo Connection cho luồng: " + Thread.currentThread().getName(), e);
                 }
-            }
-        );
+            });
 
-    /// ket noi
-    /// tra ve Connection cua luong hien tai -> khong phai Lock vi no lay connection cua chinh no
-    /// xuly RuntimeException tu initialValue()
-    /// khi threadLocalConn.get() -> co the nem ra RuntimeException nhu da boc o tren(Cause = SQLException)
-    /// -> throws SQLException
-    /// 1. bat RuntimeException tu get()
-    /// 2. kiem tra cause co phai la vi SQLException khong
-    /// -> neu co -> upwrap va nem lai dung SQLException
-    /// -> neu khong -> nem lai RuntimeException goc
+    // Tập hợp lưu trữ tất cả Connection để đóng khi tắt ứng dụng
+    private static final Set<Connection> tatCaConnection =
+            Collections.newSetFromMap(new ConcurrentHashMap<>());
+
+    // Flag để đảm bảo Shutdown Hook chỉ đăng ký 1 lần
+    private static boolean isHookRegistered = false;
+
+    /**
+     * Lấy kết nối của luồng hiện tại.
+     */
     public static Connection layKetNoi() throws SQLException {
-        try{
+        try {
             Connection conn = CONNECTION.get();
-            /// tao lai neu Connection da dong
-            if(conn == null || conn.isClosed()){
+
+            // Kiểm tra nếu connection bị đóng bất ngờ thì tạo mới
+            if (conn == null || conn.isClosed()) {
                 CONNECTION.remove();
                 conn = CONNECTION.get();
             }
+
+            // Đăng ký vào Set để theo dõi toàn cục
+            tatCaConnection.add(conn);
             return conn;
         } catch (RuntimeException e) {
-            if(e.getCause() instanceof SQLException){
+            if (e.getCause() instanceof SQLException) {
                 throw (SQLException) e.getCause();
             }
-            else throw e;
+            throw e;
         }
     }
-    /// cai dat PRAGMA cho Connection vua tao
-    /// goi 1 lan duy nhat trong InitialValue() cua ThreadLocal
-    /// -> Connection vua tao chua co PRAGMA -> cai dat PRAGMA
-    /// -> Connection vua tao da co PRAGMA -> do nothing
+
+    /**
+     * Cấu hình SQLite để chạy tối ưu (WAL mode, Busy Timeout, Foreign Keys).
+     */
     private static void caiDatPragma(Connection conn) throws SQLException {
-        /// conn la con duong noi tu java den SQL
-        /// Statement la chiec xe cho hang
-        /// ⚠️ QUAN TRỌNG: Phải execute PRAGMA TRƯỚC khi setAutoCommit(false)
-        /// Lý do: PRAGMA statements không thể thực thi bên trong transaction
-        /// - Nếu setAutoCommit(false) trước → transaction bắt đầu
-        /// - Sau đó execute PRAGMA → ERROR: "Safety level may not be changed inside a transaction"
-        try(Statement stmt = conn.createStatement()) {
-            /// WAL = Write - Ahead Logging
-            /// che do mac dinh (DELETE journal):
-            /// Writer lock toan bo .db -> read phai cho
-            /// che do WAL :
-            /// Write ghi vao file .db-wal rieng
-            /// Read doc tu file .db va nhin vao file .db-shm de xem co du lieu nao moi nam trong file .db-wal khong. Neu co se update du lieu moi
-            stmt.execute("PRAGMA journal_mode=WAL");
-            /// busy_timeout = 5000ms
-            /// WAL chi cho duy nhat mot luong ghi tai 1 thoi diem(file-level write lock)
-            /// -> khi 2 Connection cung muon ghi
-            /// + neu khong co timeout -> Connection thu 2 that bai ngay lap tuc
-            /// + new co timeout -> thu lai lien tuc trong 5s truoc khi bao loi
-            /// trong thuc te write cho mat vai ms
-            /// -> Connection thuong thanh con trong lan thu dau
+        try (Statement stmt = conn.createStatement()) {
+            // WAL mode: Cho phép nhiều luồng đọc trong khi 1 luồng đang ghi
+            stmt.execute("PRAGMA journal_mode=WAL;");
+            // Đợi tối đa 5s nếu file DB đang bị khóa ghi
             stmt.execute("PRAGMA busy_timeout=5000;");
-            /// foreign_keys  = ON
-            /// SQLite mac dinh OFF enforcement cua foreign key
-            /// neu tat thi se khong the tao duoc cac moi quan he giua cac bang -> mat tinh lien ket, dong bo, an toan cho du lieu
+            // Bật ràng buộc khóa ngoại
             stmt.execute("PRAGMA foreign_keys=ON;");
-            /// synchronous = NORMAL
-            /// lenh ep ghi du lieu ngay lap tuc : fsync
-            /// FULL : fsync sau moi lan ghi -> an toan nhat nhung cham nhat
-            /// NORMAL : fsync goi o cac checkpoints -> can bang : khuyen nghi dung voi WAL
-            /// OFF : -> khong fsync -> nhanh nhat nhung co the mat du lieu nhung giao pho het cho he dieu hanh tu quyet.
+            // Normal giúp cân bằng giữa tốc độ và an toàn dữ liệu khi dùng WAL
             stmt.execute("PRAGMA synchronous=NORMAL;");
         }
 
-        /// FIX QUAN TRỌNG (AutoCommit Issue):
-        /// - SQLite JDBC driver chạy ở auto-commit mode mặc định
-        /// - Khi auto-commit = true, gọi commit() sẽ throw "database in auto-commit mode"
-        /// - Giải pháp: Tắt auto-commit để có thể gọi commit() thủ công (MỘT KHI PRAGMA đã xong)
-        /// - Lợi ích: Kiểm soát transaction, đảm bảo data consistency
+        // Tắt AutoCommit để kiểm soát Transaction thủ công
         conn.setAutoCommit(false);
-        logger.info("✅ AutoCommit tắt - Sử dụng manual commit");
+        logger.debug("✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection");
     }
 
-    /// khoi tao bang
-    /// tao mot bang can thiet neu chua ton tai
-    /// goi 1 lan trong app.java truoc khi load FXML
-    ///
-    /// THAY ĐỔI QUAN TRỌNG (SQLite Migration):
-    /// 1. Thêm cột 'salt TEXT NOT NULL' vào bảng nguoi_dung
-    ///    - Lý do: Cần thiết cho password hashing với salt
-    ///    - Trước đây: Password chỉ hash đơn giản → dễ bị rainbow table attack
-    ///    - Bây giờ: Password + salt → mỗi user có hash khác nhau
-    ///
-    /// 2. Thêm logic ALTER TABLE để migration database cũ
-    ///    - Kiểm tra và thêm cột salt nếu chưa có
-    ///    - Cho phép migrate từ phiên bản JSON sang SQLite
-    ///
-    /// 3. Cập nhật các bảng khác với default values
-    ///    - giao_dich: thêm trang_thai và thoi_gian_tao
-    ///    - Đảm bảo backward compatibility
+    /**
+     * Khởi tạo các bảng dữ liệu và thực hiện migration nếu cần.
+     * Cần được gọi 1 lần khi khởi động App.
+     */
     public static void khoiTao() {
+        // Đăng ký Shutdown Hook để đóng kết nối sạch sẽ khi đóng App (JVM tắt)
+        dangKyShutdownHook();
 
         String sqlNguoiDung = "CREATE TABLE IF NOT EXISTS nguoi_dung (" +
-            "ma_nguoi_dung TEXT PRIMARY KEY, " +
-            "ho_ten TEXT NOT NULL, " +
-            "thu_dien_tu TEXT UNIQUE NOT NULL, " +
-            "mat_khau TEXT NOT NULL, " +
-            "salt TEXT NOT NULL, " +  // THAY ĐỔI: Thêm cột salt cho password hashing
-            "ngay_sinh TEXT, " +
-            "dia_chi TEXT, " +
-            "so_dien_thoai TEXT, " +
-            "so_du_kha_dung REAL DEFAULT 0);";
+                "ma_nguoi_dung TEXT PRIMARY KEY, " +
+                "ho_ten TEXT NOT NULL, " +
+                "thu_dien_tu TEXT UNIQUE NOT NULL, " +
+                "mat_khau TEXT NOT NULL, " +
+                "salt TEXT NOT NULL, " + // Cột salt cho bảo mật
+                "ngay_sinh TEXT, " +
+                "dia_chi TEXT, " +
+                "so_dien_thoai TEXT, " +
+                "so_du_kha_dung REAL DEFAULT 0);";
 
         String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
-            "ma_san_pham TEXT PRIMARY KEY, " +
-            "ten_san_pham TEXT NOT NULL);";
+                "ma_san_pham TEXT PRIMARY KEY, " +
+                "ten_san_pham TEXT NOT NULL);";
 
         String sqlPhien = "CREATE TABLE IF NOT EXISTS phien_dau_gia (" +
-            "ma_phien TEXT PRIMARY KEY, " +
-            "ten_phien TEXT NOT NULL, " +
-            "gia_hien_tai REAL NOT NULL, " +
-            "buoc_gia REAL DEFAULT 0, " +
-            "thoi_gian_bat_dau TEXT, " +
-            "thoi_gian_ket_thuc TEXT, " +
-            "trang_thai TEXT NOT NULL, " +
-            "ma_nguoi_ban TEXT, " +
-            "ma_nguoi_thang_cuoc TEXT, " +
-            "ma_san_pham TEXT, " +
-            "is_closed INTEGER DEFAULT 0, " +
-            "FOREIGN KEY (ma_nguoi_ban) REFERENCES nguoi_dung(ma_nguoi_dung), " +
-            "FOREIGN KEY (ma_nguoi_thang_cuoc) REFERENCES nguoi_dung(ma_nguoi_dung), " +
-            "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
+                "ma_phien TEXT PRIMARY KEY, " +
+                "ten_phien TEXT NOT NULL, " +
+                "gia_hien_tai REAL NOT NULL, " +
+                "buoc_gia REAL DEFAULT 0, " +
+                "thoi_gian_bat_dau TEXT, " +
+                "thoi_gian_ket_thuc TEXT, " +
+                "trang_thai TEXT NOT NULL, " +
+                "ma_nguoi_ban TEXT, " +
+                "ma_nguoi_thang_cuoc TEXT, " +
+                "ma_san_pham TEXT, " +
+                "is_closed INTEGER DEFAULT 0, " +
+                "FOREIGN KEY (ma_nguoi_ban) REFERENCES nguoi_dung(ma_nguoi_dung), " +
+                "FOREIGN KEY (ma_nguoi_thang_cuoc) REFERENCES nguoi_dung(ma_nguoi_dung), " +
+                "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
 
         String sqlGiaoDich = "CREATE TABLE IF NOT EXISTS giao_dich (" +
-            "ma_giao_dich TEXT PRIMARY KEY, " +  // ← đúng với INSERT
-            "ma_phien TEXT NOT NULL, " +
-            "trang_thai TEXT NOT NULL, " +
-            "thoi_gian_tao TEXT NOT NULL, " +
-            "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
+                "ma_giao_dich TEXT PRIMARY KEY, " +
+                "ma_phien TEXT NOT NULL, " +
+                "trang_thai TEXT NOT NULL, " +
+                "thoi_gian_tao TEXT NOT NULL, " +
+                "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
 
         String sqlNguoiTraGia = "CREATE TABLE IF NOT EXISTS nguoi_tra_gia (" +
-            "ma_phien TEXT, " +
-            "ma_nguoi_dung TEXT, " +
-            "gia_tra REAL, " +
-            "thoi_gian TEXT, " +
-            "PRIMARY KEY (ma_phien, ma_nguoi_dung, thoi_gian), " +
-            "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien), " +
-            "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
+                "ma_phien TEXT, " +
+                "ma_nguoi_dung TEXT, " +
+                "gia_tra REAL, " +
+                "thoi_gian TEXT, " +
+                "PRIMARY KEY (ma_phien, ma_nguoi_dung, thoi_gian), " +
+                "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien), " +
+                "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
 
-        try (Statement stmt = layKetNoi().createStatement()) {
-            logger.info("Đang tạo bảng nguoi_dung...");
+        try (Connection conn = layKetNoi();
+             Statement stmt = conn.createStatement()) {
+
             stmt.execute(sqlNguoiDung);
-            logger.info("Bảng nguoi_dung đã tạo");
 
-            // THAY ĐỔI QUAN TRỌNG: Migration logic cho database cũ
-            // Lý do: Khi migrate từ JSON sang SQLite, database cũ không có cột salt
-            // Giải pháp: Tự động thêm cột salt vào database hiện có
-            // Cách hoạt động:
-            // 1. Thử ALTER TABLE để thêm cột salt
-            // 2. Nếu thành công → database cũ, đã thêm cột
-            // 3. Nếu lỗi (cột đã tồn tại) → database mới, bỏ qua
-            // 4. Kết quả: Tất cả database đều có cột salt
+            // Logic Migration: Thêm cột salt nếu database cũ chưa có
             try {
                 stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN salt TEXT;");
-                logger.info("✅ Đã thêm cột salt vào bảng nguoi_dung (migration thành công)");
+                logger.info("✅ Migration: Đã thêm cột salt vào bảng nguoi_dung");
             } catch (SQLException e) {
-                // THAY ĐỔI: Xử lý lỗi graceful thay vì crash
-                // Trước: Lỗi ALTER TABLE → crash app
-                // Sau: Lỗi ALTER TABLE → log và tiếp tục (cột đã tồn tại)
-                logger.info("ℹ️ Cột salt đã tồn tại (không cần migration)");
+                // Lỗi này thường là do cột đã tồn tại, có thể bỏ qua
+                logger.debug("ℹ️ Cột salt đã tồn tại.");
             }
 
-            logger.info("Đang tạo bảng san_pham...");
             stmt.execute(sqlSanPham);
-            logger.info("Bảng san_pham đã tạo");
-
-            logger.info("Đang tạo bảng phien_dau_gia...");
             stmt.execute(sqlPhien);
-            logger.info("Bảng phien_dau_gia đã tạo");
-
-            logger.info("Đang tạo bảng giao_dich...");
             stmt.execute(sqlGiaoDich);
-            logger.info("Bảng giao_dich đã tạo");
-
-            logger.info("Đang tạo bảng nguoi_tra_gia...");
             stmt.execute(sqlNguoiTraGia);
-            logger.info("Bảng nguoi_tra_gia đã tạo");
 
-            logger.info("✅ Database khởi tạo thành công");
-            // FIX: Commit transaction sau khi tạo bảng.
-            // setAutoCommit(false) nên mọi DDL (CREATE TABLE, ALTER TABLE) cũng nằm trong transaction.
-            // Nếu không commit, transaction treo trên main thread → block các HTTP worker thread khi ghi.
-            layKetNoi().commit();
-            logger.info("✅ Commit khoiTao thành công");
+            conn.commit(); // Quan trọng: Phải commit vì auto-commit đã tắt
+            logger.info("✅ Khởi tạo Database thành công.");
         } catch (SQLException e) {
             logger.error("❌ Lỗi khởi tạo DB: " + e.getMessage());
-            e.printStackTrace();
         }
     }
-    /// Dong ket noi
-    /// Chi dong neu Connection da ton tai trong ThreadLocal hien tai
-    /// tranh tao moi Connection chi de dong ngay lap tuc
-    public static void dongKetNoiHienTai(){
-        Connection conn = null;
-        try{
-            // Dung get() co kha nang tao moi connection, nen kiem tra truoc
-            // Tuy nhien, vi ThreadLocal.withInitial() luon tao moi,
-            // chung ta phai accept rang co the tao moi connection khi dong
-            conn = CONNECTION.get();
-            if(!conn.isClosed()){
+
+    /**
+     * Đóng tất cả kết nối đã được mở bởi ứng dụng.
+     */
+    public static void dongTatCaKetNoi() {
+        logger.info("Đang đóng tất cả database connections...");
+        for (Connection conn : tatCaConnection) {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                logger.error("Lỗi khi đóng connection: " + e.getMessage());
+            }
+        }
+        tatCaConnection.clear();
+        logger.info("✅ Đã giải phóng toàn bộ tài nguyên Database.");
+    }
+
+    /**
+     * Đóng kết nối của luồng hiện tại và giải phóng khỏi ThreadLocal.
+     */
+    public static void dongKetNoiHienTai() {
+        try {
+            Connection conn = CONNECTION.get();
+            if (conn != null && !conn.isClosed()) {
                 conn.close();
+                tatCaConnection.remove(conn);
             }
         } catch (SQLException e) {
-            logger.error("Lỗi đóng Connection: " + e.getMessage());
-        } catch (RuntimeException e) {
-            // Neu khong the tao connection (vi du: database ko co)
-            // thi chi log error va tiep tuc cleanup
-            logger.error("Lỗi khi truy cap Connection: " + e.getMessage());
-        }
-        finally {
+            logger.error("Lỗi đóng kết nối luồng hiện tại: " + e.getMessage());
+        } finally {
             CONNECTION.remove();
         }
     }
 
+    private static synchronized void dangKyShutdownHook() {
+        if (!isHookRegistered) {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                dongTatCaKetNoi();
+            }));
+            isHookRegistered = true;
+            logger.debug("✅ Đã đăng ký Shutdown Hook.");
+        }
+    }
 }

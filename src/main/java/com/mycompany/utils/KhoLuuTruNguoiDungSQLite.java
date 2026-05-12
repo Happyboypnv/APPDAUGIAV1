@@ -393,7 +393,33 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
             return "PPTT000001";
         }
     }
-
+    public NguoiDung layTheoEmail(String email) {
+        String sql = "SELECT * FROM nguoi_dung WHERE thu_dien_tu = ?";
+        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    NguoiDung nd = new NguoiDung(
+                            rs.getString("ho_ten"),
+                            rs.getString("thu_dien_tu"),
+                            rs.getString("mat_khau"),
+                            rs.getString("ngay_sinh")
+                    );
+                    nd.setMaNguoiDung(rs.getString("ma_nguoi_dung"));
+                    nd.setDiaChi(rs.getString("dia_chi"));
+                    nd.setSoDienThoai(rs.getString("so_dien_thoai"));
+                    nd.setSoDuKhaDung(rs.getDouble("so_du_kha_dung"));
+                    nd.setSalt(rs.getString("salt"));
+                    nd.setSoTaiKhoan(rs.getString("so_tai_khoan")); // nếu có cột này
+                    nd.setNganHang(rs.getString("ngan_hang"));       // nếu có cột này
+                    return nd;
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Lỗi layTheoEmail: " + e.getMessage());
+        }
+        return null;
+    }
     /**
      * METHOD: migratePlainTextPasswords()
      * Mục đích: Migrate mật khẩu plain text (từ JSON) sang hashed passwords
