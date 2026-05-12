@@ -61,8 +61,8 @@ public class BiddingRoomController implements Initializable {
     private String currentPhienId;
 
     // --- CÁC BIẾN LOGIC ---
-    private long currentPrice = 135000000; // Giá cao nhất hiện tại
-    private long stepPrice = 5000000; // Bước giá (mỗi lần +/- 5 triệu)
+    private double currentPrice = 135000000; // Giá cao nhất hiện tại
+    private double stepPrice = 5000000; // Bước giá (mỗi lần +/- 5 triệu)
     private DecimalFormat formatter = new DecimalFormat("#,###"); // Định dạng tiền tệ kiểu 135,000,000
     private ObservableList<String> bidHistoryList = FXCollections.observableArrayList();
 
@@ -85,12 +85,14 @@ public class BiddingRoomController implements Initializable {
         // 2. Kết nối WebSocket trên thread riêng (không block JavaFX thread)
         new Thread(() -> {
             try {
+                // Thêm delay nhỏ để đảm bảo server sẵn sàng
+                Thread.sleep(1000);
+
                 wsClient = AuctionWebSocketClient.getInstance();
                 adapter = new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
                 wsClient.setListener(adapter);
-                wsClient.connect();
+                wsClient.connectToServer();
 
-                // Gửi JOIN sau khi connect xong
                 String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
                 wsClient.sendJoin(currentPhienId, email);
             } catch (Exception e) {
@@ -103,7 +105,7 @@ public class BiddingRoomController implements Initializable {
     private void setupButtonActions() {
         // Nút Giảm giá
         decreaseBidButton.setOnAction(event -> {
-            long currentInput = parseBidAmount(bidAmountField.getText());
+            double currentInput = parseBidAmount(bidAmountField.getText());
             if (currentInput - stepPrice > currentPrice) {
                 updateBidAmountField(currentInput - stepPrice);
             } else {
@@ -113,7 +115,7 @@ public class BiddingRoomController implements Initializable {
 
         // Nút Tăng giá
         increaseBidButton.setOnAction(event -> {
-            long currentInput = parseBidAmount(bidAmountField.getText());
+            double currentInput = parseBidAmount(bidAmountField.getText());
             updateBidAmountField(currentInput + stepPrice);
         });
 
@@ -132,7 +134,7 @@ public class BiddingRoomController implements Initializable {
 
     // --- LOGIC ĐẶT GIÁ ---
     private void handlePlaceBid() {
-        long myBid = parseBidAmount(bidAmountField.getText());
+        double myBid = parseBidAmount(bidAmountField.getText());
         if (myBid <= currentPrice) {
             showAlert("Lỗi đặt giá", "Giá phải lớn hơn giá hiện tại!");
             return;
@@ -167,11 +169,11 @@ public class BiddingRoomController implements Initializable {
     }
 
     // --- CÁC HÀM TIỆN ÍCH CHUẨN HOÁ DỮ LIỆU ---
-    private void updateBidAmountField(long amount) {
+    private void updateBidAmountField(double amount) {
         bidAmountField.setText(formatter.format(amount));
     }
 
-    private long parseBidAmount(String text) {
+    private double parseBidAmount(String text) {
         try {
             // Xóa dấu phẩy trước khi parse số (Ví dụ: "140,000,000" -> "140000000")
             return Long.parseLong(text.replace(",", "").trim());

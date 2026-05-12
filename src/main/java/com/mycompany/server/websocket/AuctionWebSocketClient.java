@@ -100,13 +100,12 @@ public class AuctionWebSocketClient extends WebSocketClient {
      *
      * @return Singleton AuctionWebSocketClient instance
      */
-    public static synchronized AuctionWebSocketClient getInstance() {
+    public static AuctionWebSocketClient getInstance() {
         synchronized (INSTANCE_LOCK) {
             if (instance == null) {
                 try {
                     instance = new AuctionWebSocketClient(new URI("ws://localhost:8081"));
                 } catch (URISyntaxException e) {
-                    System.err.println("❌ Invalid WebSocket URI: " + e.getMessage());
                     throw new RuntimeException(e);
                 }
             }
@@ -115,7 +114,8 @@ public class AuctionWebSocketClient extends WebSocketClient {
     }
 
     /**
-     * PHƯƠNG THỨC: connect()
+     * PHƯƠNG THỨC: connectToServer()
+     * (Đã đổi tên từ connect() để tránh đụng độ với hàm connect() của class cha)
      * Kết nối tới server và block cho đến khi successfully connected
      *
      * THREAD-SAFETY & BEHAVIOR:
@@ -127,7 +127,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
      *
      * @throws InterruptedException nếu timeout hoặc thread interrupt
      */
-    public void connect(){
+    public void connectToServer(){
         try {
             System.out.println("🔗 Connecting to WebSocket server...");
 
@@ -149,7 +149,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
             }
         } catch (InterruptedException e) {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi kết nối", "Không thể kết nối đến server!");
-            logger.warn("connect() method in AuctionWebSocketClient throw error");
+            logger.warn("connectToServer() method in AuctionWebSocketClient throw error");
         }
     }
 
@@ -165,10 +165,10 @@ public class AuctionWebSocketClient extends WebSocketClient {
      *
      * MESSAGE FORMAT (JSON):
      * {
-     *   "action": "BID",
-     *   "phienId": "auction session ID",
-     *   "userId": "current user ID",
-     *   "giaRa": 100000.0
+     * "action": "BID",
+     * "phienId": "auction session ID",
+     * "userId": "current user ID",
+     * "giaRa": 100000.0
      * }
      *
      * @param phienId  Auction session ID (ví dụ: "PHIEN001")
@@ -270,7 +270,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
         System.out.println("✅ WebSocket connection opened");
         isConnected = true;
 
-        // Countdown latch → unblock connect() method
+        // Countdown latch → unblock connectToServer() method
         connectionLatch.countDown();
 
         // Notify listener (switch to JavaFX thread)
@@ -418,4 +418,3 @@ public class AuctionWebSocketClient extends WebSocketClient {
         return isConnected;
     }
 }
-
