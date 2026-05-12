@@ -35,7 +35,7 @@ public class SessionManager {
     // JWT token của người dùng hiện tại
     // Token chứa toàn bộ thông tin người dùng đã mã hóa Base64
     private String currentToken;
-
+    private String currentPhienId;
     /**
      * Constructor private - ngăn tạo instance trực tiếp
      * Phải dùng getInstance() để lấy singleton instance
@@ -107,7 +107,12 @@ public class SessionManager {
     public String getCurrentToken() {
         return currentToken;
     }
-
+    public String getCurrentPhienId() {
+        return currentPhienId;
+    }
+    public void setCurrentPhienId(String currentPhienId) {
+        this.currentPhienId = currentPhienId;
+    }
     /**
      * PHƯƠNG THỨC: getCurrentUserInfo()
      * MỤC ĐÍCH: Lấy thông tin người dùng dưới dạng Map từ token

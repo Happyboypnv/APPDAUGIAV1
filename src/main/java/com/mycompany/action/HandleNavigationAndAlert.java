@@ -1,6 +1,7 @@
 package com.mycompany.action;
 
 import com.mycompany.models.NguoiDung;
+import com.sun.javafx.stage.EmbeddedWindow;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader; // Quan trọng
@@ -8,6 +9,7 @@ import javafx.scene.Node; // Quan trọng
 import javafx.scene.Parent; // Quan trọng
 import javafx.scene.Scene; // Quan trọng
 import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
@@ -164,6 +166,14 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         Scene changeScene = new Scene(changeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(changeScene);
+        window.show();
+    }
+    public void goToBiddingRoom(javafx.scene.input.MouseEvent event) throws IOException {
+        javafx.scene.layout.StackPane root = FXMLLoader.load(
+                getClass().getResource("/view/BiddingRoom.fxml"));
+        Scene scene = new Scene(root);
+        Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
         window.show();
     }
 
