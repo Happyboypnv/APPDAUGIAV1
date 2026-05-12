@@ -169,19 +169,13 @@ public class BidController {
                     giaToiThieu, phien.getGiaHienTai(), phien.getBuocGia())));
             return;
         }
-
-        // Bước 7: Gọi PhienDauGiaService.datGia() — tái sử dụng logic đã có
-        // datGia() xử lý: cập nhật giaHienTai, thêm vào danhSachNguoiTraGia, gia hạn nếu cần
-        double giaLucDau = phien.getGiaHienTai();
-        phienDauGiaService.datGia(phien, nguoiDat, req.getGia());
-
         // Bước 8: Kiểm tra datGia có thực sự thành công không
         // (service silently return nếu fail — ta so sánh giaHienTai trước/sau)
-        if (phien.getGiaHienTai() == giaLucDau) {
+        boolean success = phienDauGiaService.datGia(phien, nguoiDat, req.getGia());
+        if (!success) {
             guiPhanHoi(exchange, 400, loi("Đặt giá thất bại. Vui lòng kiểm tra lại giá hoặc trạng thái phiên."));
             return;
         }
-
         // Bước 9: Lưu trạng thái phiên đã cập nhật vào SQLite
         khoPhien.capNhatPhienDauGia(phien);
 

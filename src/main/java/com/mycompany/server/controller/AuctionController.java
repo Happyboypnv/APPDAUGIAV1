@@ -128,14 +128,19 @@ public class AuctionController {
    * ]
    */
   private void handleLayTatCa(HttpExchange exchange) throws IOException {
-    Map<String, PhienDauGia> tatCaPhien = khoPhien.layTatCaPhienDauGia();
+    try{
+      Map<String, PhienDauGia> tatCaPhien = khoPhien.layTatCaPhienDauGia();
 
-    List<TomTatPhien> danhSach = new ArrayList<>();
-    for (PhienDauGia phien : tatCaPhien.values()) {
-      danhSach.add(new TomTatPhien(phien));
+      List<TomTatPhien> danhSach = new ArrayList<>();
+      for (PhienDauGia phien : tatCaPhien.values()) {
+        danhSach.add(new TomTatPhien(phien));
+      }
+
+      guiPhanHoi(exchange, 200, gson.toJson(danhSach));
     }
-
-    guiPhanHoi(exchange, 200, gson.toJson(danhSach));
+    catch (Exception e){
+      guiPhanHoi(exchange, 500, loi("Lỗi server: " + e.getMessage()));
+    }
   }
 
   // =========================================================

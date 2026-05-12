@@ -37,7 +37,6 @@ import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
  * - Thread-safe: Sử dụng Lock để đồng bộ hóa
  */
 public class HomeAction {
-    private static HomeAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
     private final Lock lock = new ReentrantLock();
     private HomeAction() {};
@@ -48,11 +47,14 @@ public class HomeAction {
      *
      * @return Instance duy nhất của HomeAction
      */
+    private static volatile HomeAction instance;
     public static HomeAction getInstance() {
-        if (instance==null) {
-            instance = new HomeAction();
+        if (instance == null) {
+            synchronized (HomeAction.class) {
+                if (instance == null) instance = new HomeAction();
+            }
         }
-        return instance; // Chi nen co 1 doi tuong dam nhan viec xu ly thao tac o man hinh chinh
+        return instance;
     }
 
     /**

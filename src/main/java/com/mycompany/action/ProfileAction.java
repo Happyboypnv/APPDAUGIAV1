@@ -30,7 +30,6 @@ import javafx.scene.control.TextField;
  * - Business Logic Layer: Tách logic validation ra khỏi UI
  */
 public class ProfileAction {
-    private static ProfileAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
 
     private ProfileAction() {}
@@ -41,11 +40,14 @@ public class ProfileAction {
      *
      * @return Instance duy nhất của ProfileAction
      */
+    private static volatile ProfileAction instance;
     public static ProfileAction getInstance() {
         if (instance == null) {
-            instance = new ProfileAction();
+            synchronized (ProfileAction.class) {
+                if (instance == null) instance = new ProfileAction();
+            }
         }
-        return instance; // Chi nen co 1 doi tuong dam nhan viec xu ly thao tac o trang ca nhan
+        return instance;
     }
 
     /**

@@ -13,7 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import javafx.scene.control.PasswordField;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -50,9 +50,9 @@ import java.util.ResourceBundle;
 public class ChangePasswordController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(ChangePasswordController.class);
     // @FXML FIELDS - Các thành phần UI được inject từ FXML
-    @FXML private TextField olderPasswordField;    // Trường nhập mật khẩu cũ (fx:id="nameField")
-    @FXML private TextField newPasswordField;      // Trường nhập mật khẩu mới (fx:id="nameField1")
-    @FXML private TextField confirmPasswordField;  // Trường xác nhận mật khẩu (fx:id="nameField11")
+    @FXML private PasswordField olderPasswordField;    // Trường nhập mật khẩu cũ (fx:id="nameField")
+    @FXML private PasswordField newPasswordField;      // Trường nhập mật khẩu mới (fx:id="nameField1")
+    @FXML private PasswordField confirmPasswordField;  // Trường xác nhận mật khẩu (fx:id="nameField11")
     @FXML private Button saveButton;               // Nút lưu thay đổi
 
     /**

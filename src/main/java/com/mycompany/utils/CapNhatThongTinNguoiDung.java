@@ -24,7 +24,6 @@ import java.util.prefs.Preferences; // save thong tin sau khi app dong
 public class CapNhatThongTinNguoiDung {
 
     // Singleton instance - đảm bảo chỉ có một CapNhatThongTinNguoiDung trong suốt ứng dụng
-    private static CapNhatThongTinNguoiDung instance;
 
     // Preferences là Java API để lưu trữ cài đặt ứng dụng an toàn (dùng registry trên Windows)
     // Lưu trữ auth_token để khôi phục session sau khi app đóng
@@ -52,12 +51,15 @@ public class CapNhatThongTinNguoiDung {
      *
      * @return Instance duy nhất của CapNhatThongTinNguoiDung
      */
+    private static volatile CapNhatThongTinNguoiDung instance;
     public static CapNhatThongTinNguoiDung getInstance() {
-        if (instance==null){
-            instance = new CapNhatThongTinNguoiDung();
+        if (instance == null) {
+            synchronized (CapNhatThongTinNguoiDung.class) {
+                if (instance == null) instance = new CapNhatThongTinNguoiDung();
+            }
         }
         return instance;
-    } // singleton
+    }
 
     /**
      * PHƯƠNG THỨC: updateUser(Map<String, String> updates)

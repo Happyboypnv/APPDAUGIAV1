@@ -378,35 +378,19 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
      */
     private String sinhMaMoi() {
         synchronized (ID_GENERATION_LOCK) {
-            // COUNT(*) = đếm số dòng trong bảng (số người dùng hiện có)
-            String sql = "SELECT COUNT(*) FROM nguoi_dung";
-            // try-with-resources: tự động đóng Statement và ResultSet
+            String sql = "SELECT MAX(CAST(SUBSTR(ma_nguoi_dung, 5) AS INTEGER)) " +
+                    "FROM nguoi_dung";
             try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
                  ResultSet rs   = stmt.executeQuery(sql)) {
-
-                // COUNT(*) luôn trả về đúng 1 dòng (không bao giờ rỗng)
                 if (rs.next()) {
-                    // rs.getInt(1) = lấy giá trị cột đầu tiên (cột 1) dưới dạng int
-                    // Cột 1 = kết quả của COUNT(*)
-                    int soHienCo = rs.getInt(1);
-
-                    // ===== BƯỚC 4: Tạo mã mới =====
-                    // String.format("PPTT%06d", soHienCo + 1)
-                    //   PPPT = tiền tố cố định
-                    //   %06d = định dạng số nguyên, tối thiểu 6 chữ số
-                    //          nếu không đủ → thêm số 0 ở đầu
-                    //   soHienCo + 1 = con số cần format
-                    // Ví dụ: soHienCo=5 → "PPPT000006"
-                    return String.format("PPPT%06d", soHienCo + 1);
+                    int maxVal = rs.getInt(1); // getInt trả 0 nếu MAX = NULL (bảng rỗng)
+                    return String.format("PPTT%06d", maxVal + 1);
                 }
-            } catch (SQLException e) {
-                // Nếu có lỗi kết nối hoặc SQL → in lỗi
-                logger.error("Lỗi sinh mã: " + e.getMessage());
             }
-
-            // Fallback: Nếu có lỗi bất ngờ → return mã mặc định
-            // Dùng mã này cho người dùng đầu tiên (khi DB rỗng hoặc lỗi)
-            return "PPPT000001";
+            catch (SQLException e) {
+                logger.error("Lỗi sinh mã người dùng mới: " + e.getMessage());
+            }
+            return "PPTT000001";
         }
     }
 

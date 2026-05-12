@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.Collections;
 
 public class PhienDauGia {
     private String maPhien;
@@ -14,7 +15,7 @@ public class PhienDauGia {
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
     private int thoiGian;
-    private List<NguoiDung> danhSachNguoiTraGia = new ArrayList<>();
+    private final List<NguoiDung> danhSachNguoiTraGia = Collections.synchronizedList(new ArrayList<>());
     private NguoiDung nguoiBan;
     private NguoiDung nguoiThangCuoc;
     private SanPham sanPhamDauGia;
@@ -36,6 +37,11 @@ public class PhienDauGia {
     // Overloaded constructor for use with database (without thoiGian)
     public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhamDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {
         this(maPhien, tenPhien, sanPhamDauGia, giaKhoiDiem, nguoiBan, 0);
+    }
+    public void addNguoiTraGia(NguoiDung nguoiTraGia) {
+        synchronized (danhSachNguoiTraGia) {
+            danhSachNguoiTraGia.add(nguoiTraGia);
+        }
     }
 
     //Setters
@@ -125,7 +131,9 @@ public class PhienDauGia {
     }
 
     public List<NguoiDung> getDanhSachNguoiTraGia() {
-        return danhSachNguoiTraGia;
+        synchronized (danhSachNguoiTraGia) {
+            return new ArrayList<>(danhSachNguoiTraGia);
+        }
     }
 
     public int getThoiGian() {

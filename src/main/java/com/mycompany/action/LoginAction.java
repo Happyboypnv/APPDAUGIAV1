@@ -43,7 +43,6 @@ import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
  * - Exception handling: Custom exceptions cho từng loại lỗi
  */
 public class LoginAction {
-    private static LoginAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
     private final Lock lock = new ReentrantLock();
     private LoginAction() {};
@@ -54,11 +53,14 @@ public class LoginAction {
      *
      * @return Instance duy nhất của LoginAction
      */
+    private static volatile LoginAction instance;
     public static LoginAction getInstance() {
-        if (instance==null) {
-            instance = new LoginAction();
+        if (instance == null) {
+            synchronized (LoginAction.class) {
+                if (instance == null) instance = new LoginAction();
+            }
         }
-        return instance; // Chi nen co 1 doi tuong dam nhan viec dang ky va dang nhap cho do ton tai nguyen, tranh xung dot
+        return instance;
     }
 
     /**

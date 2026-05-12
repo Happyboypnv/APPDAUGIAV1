@@ -30,12 +30,12 @@ public class SessionManager {
 
     // Người dùng hiện tại đang đăng nhập
     // null = chưa đăng nhập
-    private NguoiDung currentUser;
+    private volatile NguoiDung currentUser;
 
     // JWT token của người dùng hiện tại
     // Token chứa toàn bộ thông tin người dùng đã mã hóa Base64
-    private String currentToken;
-    private String currentPhienId;
+    private volatile String currentToken;
+    private volatile String currentPhienId;
     /**
      * Constructor private - ngăn tạo instance trực tiếp
      * Phải dùng getInstance() để lấy singleton instance

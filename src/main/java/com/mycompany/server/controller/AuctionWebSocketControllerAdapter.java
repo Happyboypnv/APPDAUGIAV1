@@ -8,6 +8,7 @@ import com.mycompany.server.websocket.AuctionWebSocketClient;
 import com.mycompany.websocket.AuctionWebSocketListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import org.slf4j.Logger;
 
 /**
  * AuctionWebSocketControllerAdapter - Adapter để integrate WebSocket vào BiddingRoomController
@@ -41,7 +42,7 @@ import javafx.scene.control.Label;
  *
  *             // Connect to server (block until connected)
  *             wsClient.connect();
- *             System.out.println("✅ Connected to WebSocket server");
+ *             logger.info("✅ Connected to WebSocket server");
  *
  *             // Join auction room
  *             String phienId = "PHIEN001";  // Get from current auction session
@@ -81,7 +82,7 @@ import javafx.scene.control.Label;
  *         try {
  *             wsClient.disconnect();
  *         } catch (InterruptedException e) {
- *             System.err.println("Error disconnecting: " + e.getMessage());
+ *             logger.error("Error disconnecting: " + e.getMessage());
  *         }
  *     }
  * }
@@ -91,7 +92,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
     // Reference to UI components
     private final BiddingRoomController controller;
     private final Label priceLabel;
-
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AuctionWebSocketControllerAdapter.class);
     /**
      * Constructor
      *
@@ -123,46 +124,20 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      *
      * @param message JSON message from server
      */
+
     @Override
     public void onBidResult(JsonObject message) {
+        if (priceLabel == null) return;
         try {
             String status = message.get("status").getAsString();
-            double giaRa = message.get("giaRa").getAsDouble();
-
             if ("SUCCESS".equalsIgnoreCase(status)) {
-                // ✅ Bid successful
                 double currentPrice = message.get("currentPrice").getAsDouble();
-                String userId = message.get("userId").getAsString();
-
-                // Update UI
-                priceLabel.setText(String.format("Giá hiện tại: %,.0f VNĐ", currentPrice));
-                priceLabel.setStyle("-fx-text-fill: #4CAF50;");  // Green color
-
-                // Show notification
-                HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.INFORMATION,
-                    "Đặt giá thành công",
-                    "Bạn đã đặt giá: " + String.format("%,.0f", giaRa) + " VNĐ"
-                );
-
-            } else {
-                // ❌ Bid failed
-                String errorMessage = message.has("message")
-                    ? message.get("message").getAsString()
-                    : "Unknown error";
-
-                priceLabel.setStyle("-fx-text-fill: #F44336;");  // Red color
-
-                HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.WARNING,
-                    "Đặt giá thất bại",
-                    "Lý do: " + errorMessage
-                );
+                priceLabel.setText(
+                        String.format("Giá hiện tại: %,.0f VNĐ", currentPrice));
+                priceLabel.setStyle("-fx-text-fill: #4CAF50;");
             }
-
         } catch (Exception e) {
-            System.err.println("❌ Error processing bid result: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error processing bid result: " + e.getMessage());
         }
     }
 
@@ -179,7 +154,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
         try {
             String userId = message.get("userId").getAsString();
 
-            System.out.println("👤 User joined: " + userId);
+           logger.info("👤 User joined: " + userId);
 
             // Update UI: increment online user count if you have such display
             // Example: onlineCountLabel.setText("Online: 5");
@@ -192,7 +167,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             // );
 
         } catch (Exception e) {
-            System.err.println("❌ Error processing user joined: " + e.getMessage());
+            logger.error("❌ Error processing user joined: " + e.getMessage());
         }
     }
 
@@ -207,13 +182,13 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
     @Override
     public void onUserLeft(JsonObject message) {
         try {
-            System.out.println("👤 User left room");
+            logger.info("👤 User left room");
 
             // Update UI: decrement online user count
             // Example: onlineCountLabel.setText("Online: 4");
 
         } catch (Exception e) {
-            System.err.println("❌ Error processing user left: " + e.getMessage());
+            logger.error("❌ Error processing user left: " + e.getMessage());
         }
     }
 
@@ -230,15 +205,8 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      */
     @Override
     public void onConnected() {
-        // Enable UI components
-        if (controller != null) {
-            // Example: controller.getBidButton().setDisable(false);
-            // Example: controller.getStatusLabel().setText("Kết nối: ✅");
-        }
-
-        System.out.println("✅ WebSocket connected - Auction ready");
-
-        priceLabel.setStyle("-fx-text-fill: #2196F3;");  // Blue color
+        if (priceLabel == null) return; // guard clause
+        priceLabel.setStyle("-fx-text-fill: #2196F3;");
         priceLabel.setText("Giá hiện tại: Đang cập nhật...");
     }
 
@@ -253,17 +221,11 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      * - Show "Disconnected" status
      * - Prevent further bid attempts
      */
+
     @Override
     public void onDisconnected() {
-        // Disable UI components
-        if (controller != null) {
-            // Example: controller.getBidButton().setDisable(true);
-            // Example: controller.getStatusLabel().setText("Kết nối: ❌");
-        }
-
-        System.out.println("🚪 WebSocket disconnected");
-
-        priceLabel.setStyle("-fx-text-fill: #757575;");  // Gray color
+        if (priceLabel == null) return;
+        priceLabel.setStyle("-fx-text-fill: #757575;");
         priceLabel.setText("Mất kết nối đến server...");
     }
 
@@ -282,16 +244,9 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      */
     @Override
     public void onError(String errorMessage) {
-        System.err.println("❌ WebSocket error: " + errorMessage);
-
-        priceLabel.setStyle("-fx-text-fill: #F44336;");  // Red color
+        if (priceLabel == null) return;
+        priceLabel.setStyle("-fx-text-fill: #F44336;");
         priceLabel.setText("Lỗi kết nối: " + errorMessage);
-
-        HandleNavigationAndAlert.getInstance().showAlert(
-            Alert.AlertType.ERROR,
-            "Lỗi kết nối",
-            "Có lỗi xảy ra: " + errorMessage + "\n\nVui lòng thử lại sau."
-        );
     }
 
     /**
@@ -320,10 +275,10 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             // Send bid (non-blocking)
             client.sendBid(phienId, email, giaRa);
 
-            System.out.println("💰 Sent bid: " + giaRa);
+            logger.info("💰 Sent bid: " + giaRa);
 
         } catch (Exception e) {
-            System.err.println("❌ Error sending bid: " + e.getMessage());
+            logger.error("❌ Error sending bid: " + e.getMessage());
             e.printStackTrace();
         }
     }

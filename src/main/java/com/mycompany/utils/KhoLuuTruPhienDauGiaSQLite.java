@@ -29,22 +29,19 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
      */
     private String sinhMaPhienDauGia(){
         synchronized (AUCTION_ID_GENERATION_LOCK) {
-            /// 1. dem so luong phien da co
-            String sql = "SELECT COUNT(*) FROM phien_dau_gia";
-            /// try_with_resources : tu dong dong
-            try(Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
-                ResultSet rs = stmt.executeQuery(sql)){
-                /// COUNT(*) tra ve 1 dung mot dong (khong rong)
-                /// vd: 3
-                if(rs.next()){
-                    int soHienCo = rs.getInt(1);
-                    return String.format("PH%06d", soHienCo + 1);
+            String sql = "SELECT MAX(CAST(SUBSTR(ma_phien, 3) AS INTEGER)) " +
+                    "FROM phien_dau_gia";
+            try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
+                 ResultSet rs   = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    int maxVal = rs.getInt(1); // getInt trả 0 nếu MAX = NULL (bảng rỗng)
+                    return String.format("PH%06d", maxVal + 1);
                 }
             }
             catch (SQLException e) {
                 logger.error("[ERROR] Lỗi khi sinh mã phiên đấu giá: " + e.getMessage());
             }
-            return String.format("PH%06d", 1); // Trường hợp không có phiên nào, bắt đầu từ PH000001
+            return "PH000001";
         }
     }
     /**
@@ -123,7 +120,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
      * -Map<String, PhienDauGia> : key = maPhien, value = PhienDauGia
      */
     @Override
-    public Map<String, PhienDauGia> layTatCaPhienDauGia() {
+    public Map<String, PhienDauGia> layTatCaPhienDauGia()throws SQLException {
         Map<String, PhienDauGia> result = new HashMap<>();
         String sql = "SELECT p.*, " +
             "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
@@ -181,6 +178,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         } catch (SQLException e) {
             logger.error("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
         }
+        KetNoiCSDL.layKetNoi().commit();
         return result;
     }
 
