@@ -807,3 +807,99 @@
 2026-05-12 15:47:27.973 [WebSocketWorker-23] ERROR c.m.s.w.AuctionWebSocketServer - ❌ Error handling bid: Cannot invoke "com.mycompany.models.PhienDauGia.getGiaHienTai()" because "phienHienTai" is null
 2026-05-12 15:47:46.873 [JavaFX Application Thread] INFO  c.m.c.ChangePasswordController - ? ChangePasswordController initialized
 2026-05-12 15:54:31.004 [WebSocketConnectReadThread-27] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket closed: 
+2026-05-12 19:18:45.382 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-12 19:18:45.745 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-12 19:18:45.749 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-12 19:18:45.749 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-12 19:18:45.792 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-12 19:18:45.795 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-12 19:18:45.799 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-12 19:18:46.051 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-12 19:18:46.053 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-12 19:18:46.053 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-12 19:18:46.053 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-12 19:18:46.054 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-12 19:18:46.055 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-12 19:18:46.055 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-12 19:18:46.057 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-12 19:19:14.895 [JavaFX Application Thread] INFO  com.mycompany.App - ?? ?ang kh?i t?o database...
+2026-05-12 19:19:14.899 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ? ?� ??ng k� Shutdown Hook.
+2026-05-12 19:19:15.193 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ? ?� c�i ??t PRAGMA v� t?t AutoCommit cho Connection
+2026-05-12 19:19:15.194 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ?? C?t salt ?� t?n t?i.
+2026-05-12 19:19:15.195 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Kh?i t?o Database th�nh c�ng.
+2026-05-12 19:19:15.196 [JavaFX Application Thread] INFO  com.mycompany.App - ? Database ?� s?n s�ng!
+2026-05-12 19:19:15.196 [JavaFX Application Thread] INFO  com.mycompany.App - ? ?ang ki?m tra migration passwords...
+2026-05-12 19:19:15.197 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-12 19:19:15.199 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ? ?� c�i ??t PRAGMA v� t?t AutoCommit cho Connection
+2026-05-12 19:19:15.200 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
+2026-05-12 19:19:15.202 [JavaFX Application Thread] INFO  com.mycompany.App - ? Migration ho�n th�nh!
+2026-05-12 19:19:33.149 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-12 19:19:33.154 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-12 19:19:33.154 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
+2026-05-12 19:19:33.155 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
+2026-05-12 19:19:33.155 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @{hong2007
+2026-05-12 19:19:42.721 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-12 19:19:42.721 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-12 19:19:42.721 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
+2026-05-12 19:19:42.721 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
+2026-05-12 19:19:42.721 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-12 19:19:42.727 [pool-1-thread-3] ERROR c.m.utils.KhoLuuTruNguoiDungSQLite - Lỗi layTheoEmail: no such column: 'so_tai_khoan'
+2026-05-12 19:19:42.751 [JavaFX Application Thread] ERROR c.m.utils.KhoLuuTruNguoiDungSQLite - L?i layTheoEmail: no such column: 'so_tai_khoan'
+2026-05-12 19:20:19.826 [pool-1-thread-5] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-12 19:20:19.827 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-12 19:20:19.828 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
+2026-05-12 19:20:19.828 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
+2026-05-12 19:20:19.828 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-12 19:20:19.829 [pool-1-thread-5] ERROR c.m.utils.KhoLuuTruNguoiDungSQLite - Lỗi layTheoEmail: no such column: 'so_tai_khoan'
+2026-05-12 19:20:19.831 [JavaFX Application Thread] ERROR c.m.utils.KhoLuuTruNguoiDungSQLite - L?i layTheoEmail: no such column: 'so_tai_khoan'
+2026-05-12 19:21:56.013 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ?ang ?�ng t?t c? database connections...
+2026-05-12 19:21:56.016 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ? ?� gi?i ph�ng to�n b? t�i nguy�n Database.
+2026-05-12 19:21:57.483 [JavaFX Application Thread] INFO  com.mycompany.App - ?? ?ang kh?i t?o database...
+2026-05-12 19:21:57.492 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ? ?� ??ng k� Shutdown Hook.
+2026-05-12 19:21:57.836 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ? ?� c�i ??t PRAGMA v� t?t AutoCommit cho Connection
+2026-05-12 19:21:57.839 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ?? C?t salt ?� t?n t?i.
+2026-05-12 19:21:57.839 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ? Kh?i t?o Database th�nh c�ng.
+2026-05-12 19:21:57.840 [JavaFX Application Thread] INFO  com.mycompany.App - ? Database ?� s?n s�ng!
+2026-05-12 19:21:57.840 [JavaFX Application Thread] INFO  com.mycompany.App - ? ?ang ki?m tra migration passwords...
+2026-05-12 19:21:57.854 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-12 19:21:57.855 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ? ?� c�i ??t PRAGMA v� t?t AutoCommit cho Connection
+2026-05-12 19:21:57.858 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
+2026-05-12 19:21:57.859 [JavaFX Application Thread] INFO  com.mycompany.App - ? Migration ho�n th�nh!
+2026-05-12 19:22:12.620 [pool-1-thread-7] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-12 19:22:12.622 [pool-1-thread-7] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-12 19:22:12.622 [pool-1-thread-7] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
+2026-05-12 19:22:12.622 [pool-1-thread-7] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
+2026-05-12 19:22:12.622 [pool-1-thread-7] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-12 19:22:12.622 [pool-1-thread-7] ERROR c.m.utils.KhoLuuTruNguoiDungSQLite - Lỗi layTheoEmail: no such column: 'so_tai_khoan'
+2026-05-12 19:22:13.982 [pool-1-thread-9] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-12 19:22:17.041 [Thread-5] INFO  c.m.s.w.AuctionWebSocketClient - ? AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-12 19:22:17.054 [WebSocketWorker-24] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:56206
+2026-05-12 19:22:17.057 [WebSocketConnectReadThread-28] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket connection opened
+2026-05-12 19:22:17.060 [WebSocketConnectReadThread-28] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: CONNECTED
+2026-05-12 19:22:17.060 [Thread-5] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent JOIN: {"action":"JOIN","phienId":"PH000002","email":"phong@gmail.com"}
+2026-05-12 19:22:17.060 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ?? Unknown event: CONNECTED
+2026-05-12 19:22:17.062 [WebSocketWorker-24] ERROR c.m.s.w.AuctionWebSocketServer - ❌ Error processing message: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
+2026-05-12 19:22:19.766 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000002","email":"phong@gmail.com","giaRa":1.4E8}
+2026-05-12 19:22:19.767 [WebSocketConnectReadThread-28] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-12 19:22:37.390 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000002","email":"phong@gmail.com","giaRa":1.5E8}
+2026-05-12 19:22:37.391 [WebSocketConnectReadThread-28] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-12 19:22:45.742 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Disconnecting from WebSocket server...
+2026-05-12 19:22:45.746 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:56206
+2026-05-12 19:22:45.746 [WebSocketConnectReadThread-28] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket closed: 
+2026-05-12 19:23:09.976 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ?ang ?�ng t?t c? database connections...
+2026-05-12 19:23:09.977 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ? ?� gi?i ph�ng to�n b? t�i nguy�n Database.

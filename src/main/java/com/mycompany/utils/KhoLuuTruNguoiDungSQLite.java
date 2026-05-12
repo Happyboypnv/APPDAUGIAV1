@@ -410,8 +410,6 @@ public class KhoLuuTruNguoiDungSQLite implements IKhoLuuTruNguoiDung {
                     nd.setSoDienThoai(rs.getString("so_dien_thoai"));
                     nd.setSoDuKhaDung(rs.getDouble("so_du_kha_dung"));
                     nd.setSalt(rs.getString("salt"));
-                    nd.setSoTaiKhoan(rs.getString("so_tai_khoan")); // nếu có cột này
-                    nd.setNganHang(rs.getString("ngan_hang"));       // nếu có cột này
                     return nd;
                 }
             }
