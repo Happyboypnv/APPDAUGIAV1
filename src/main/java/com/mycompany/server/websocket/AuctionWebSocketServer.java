@@ -7,6 +7,7 @@ import com.mycompany.action.QuanLyCacPhienService;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -40,6 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AuctionWebSocketServer extends WebSocketServer {
     private final KhoLuuTruNguoiDungSQLite khoLuuTruNguoiDungSQLite = new KhoLuuTruNguoiDungSQLite();
+    private final KhoLuuTruPhienDauGiaSQLite khoPhienDauGia = new KhoLuuTruPhienDauGiaSQLite();
     // ===== THREAD-SAFE DATA STRUCTURES =====
 
     // rooms: Map<phienId, Set<WebSocket clients>>
@@ -260,6 +262,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
 
             // Nếu bidResult là Map/Object → thêm vào response
             if (bidIsCompleted) {
+                khoPhienDauGia.capNhatPhienDauGia(phienHienTai);
                 response.addProperty("status", "SUCCESS");
                 response.addProperty("currentPrice", giaTruocBid);
             } else {

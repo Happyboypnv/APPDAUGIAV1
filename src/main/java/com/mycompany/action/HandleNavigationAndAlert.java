@@ -41,7 +41,6 @@ import com.mycompany.utils.SessionManager;
  * - Facade: Cung cấp interface đơn giản cho việc điều hướng phức tạp
  */
 public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ di chuyển đến các trang khác nhau + in thông báo
-    private static HandleNavigationAndAlert instance;
 
     private HandleNavigationAndAlert() {};
 
@@ -51,9 +50,12 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      *
      * @return Instance duy nhất của HandleNavigationAndAlert
      */
+    private static volatile HandleNavigationAndAlert instance;
     public static HandleNavigationAndAlert getInstance() {
-        if (instance==null){
-            instance = new HandleNavigationAndAlert();
+        if (instance == null) {
+            synchronized (HandleNavigationAndAlert.class) {
+                if (instance == null) instance = new HandleNavigationAndAlert();
+            }
         }
         return instance;
     }
@@ -63,7 +65,7 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      *
      * KẾT NỐI VỚI CONTROLLER:
      * - Được gọi từ NavBarController.returnToHome() khi click home icon
-     * - Được gọi từ LoginAction.dangNhap() sau khi đăng nhập thành công
+     * - Được gọi từ HandleNavigationAndAlert.dangNhap() sau khi đăng nhập thành công
      *
      * QUY TRÌNH:
      * 1. Load Home.fxml bằng FXMLLoader
@@ -87,7 +89,7 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      *
      * KẾT NỐI VỚI CONTROLLER:
      * - Được gọi từ SignUpController khi chuyển sang đăng nhập
-     * - Được gọi từ LoginAction.dangKy() sau khi đăng ký thành công
+     * - Được gọi từ HandleNavigationAndAlert.dangKy() sau khi đăng ký thành công
      *
      * @param event ActionEvent từ button click
      * @throws IOException nếu không load được FXML
@@ -184,7 +186,7 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      * - Được gọi từ tất cả controllers khi cần hiển thị thông báo
      * - FinanceController: thông báo nạp/rút tiền thành công/lỗi
      * - ProfileController: thông báo cập nhật thông tin
-     * - LoginAction: thông báo đăng nhập/đăng ký
+     * - HandleNavigationAndAlert: thông báo đăng nhập/đăng ký
      * - Và nhiều controllers khác...
      *
      * CÁC LOẠI ALERT:

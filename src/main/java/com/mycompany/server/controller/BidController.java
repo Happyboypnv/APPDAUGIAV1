@@ -177,11 +177,11 @@ public class BidController {
 
         // Bước 8: Kiểm tra datGia có thực sự thành công không
         // (service silently return nếu fail — ta so sánh giaHienTai trước/sau)
-        if (phien.getGiaHienTai() == giaLucDau) {
+        boolean success = phienDauGiaService.datGia(phien, nguoiDat, req.getGia());
+        if (!success) {
             guiPhanHoi(exchange, 400, loi("Đặt giá thất bại. Vui lòng kiểm tra lại giá hoặc trạng thái phiên."));
             return;
         }
-
         // Bước 9: Lưu trạng thái phiên đã cập nhật vào SQLite
         khoPhien.capNhatPhienDauGia(phien);
 

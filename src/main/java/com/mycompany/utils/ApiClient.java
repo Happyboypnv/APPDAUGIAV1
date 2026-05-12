@@ -84,7 +84,7 @@ public class ApiClient {
             put("maPhien", maPhien);
             put("gia", gia);
         }});
-        String responseJson = guiPost("/api/auctions/bid", jsonBody, token);
+        String responseJson = guiPost("/api/auctions/bids", jsonBody, token);
         return gson.fromJson(responseJson, DatGiaResponse.class);
     }
     public static List<PhienDauGiaDTO> getAuctions() {

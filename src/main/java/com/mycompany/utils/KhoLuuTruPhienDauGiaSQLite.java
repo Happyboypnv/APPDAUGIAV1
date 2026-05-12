@@ -123,7 +123,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
      * -Map<String, PhienDauGia> : key = maPhien, value = PhienDauGia
      */
     @Override
-    public Map<String, PhienDauGia> layTatCaPhienDauGia() {
+    public Map<String, PhienDauGia> layTatCaPhienDauGia()throws SQLException {
         Map<String, PhienDauGia> result = new HashMap<>();
         String sql = "SELECT p.*, " +
             "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
@@ -181,6 +181,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         } catch (SQLException e) {
             logger.error("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
         }
+        KetNoiCSDL.layKetNoi().commit();
         return result;
     }
 
