@@ -29,22 +29,19 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
      */
     private String sinhMaPhienDauGia(){
         synchronized (AUCTION_ID_GENERATION_LOCK) {
-            /// 1. dem so luong phien da co
-            String sql = "SELECT COUNT(*) FROM phien_dau_gia";
-            /// try_with_resources : tu dong dong
-            try(Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
-                ResultSet rs = stmt.executeQuery(sql)){
-                /// COUNT(*) tra ve 1 dung mot dong (khong rong)
-                /// vd: 3
-                if(rs.next()){
-                    int soHienCo = rs.getInt(1);
-                    return String.format("PH%06d", soHienCo + 1);
+            String sql = "SELECT MAX(CAST(SUBSTR(ma_phien, 3) AS INTEGER)) " +
+                    "FROM phien_dau_gia";
+            try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
+                 ResultSet rs   = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    int maxVal = rs.getInt(1); // getInt trả 0 nếu MAX = NULL (bảng rỗng)
+                    return String.format("PH%06d", maxVal + 1);
                 }
             }
             catch (SQLException e) {
                 logger.error("[ERROR] Lỗi khi sinh mã phiên đấu giá: " + e.getMessage());
             }
-            return String.format("PH%06d", 1); // Trường hợp không có phiên nào, bắt đầu từ PH000001
+            return "PH000001";
         }
     }
     /**

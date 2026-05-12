@@ -35,17 +35,19 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
      */
     private String sinhMaGiaoDich() {
         synchronized (TRANSACTION_ID_GENERATION_LOCK) {
-            String sql = "SELECT COUNT(*) FROM giao_dich";
+            String sql = "SELECT MAX(CAST(SUBSTR(ma_giao_dich, 3) AS INTEGER)) " +
+                    "FROM giao_dich";
             try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
-                 ResultSet rs = stmt.executeQuery(sql)) {
+                 ResultSet rs   = stmt.executeQuery(sql)) {
                 if (rs.next()) {
-                    int soHienCo = rs.getInt(1);
-                    return String.format("GD%06d", soHienCo + 1);
+                    int maxVal = rs.getInt(1); // getInt trả 0 nếu MAX = NULL (bảng rỗng)
+                    return String.format("GD%06d", maxVal + 1);
                 }
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 logger.error("[ERROR] Lỗi sinh mã giao dịch: " + e.getMessage());
             }
-            return String.format("GD%06d", 1);
+            return "GD000001";
         }
     }
 

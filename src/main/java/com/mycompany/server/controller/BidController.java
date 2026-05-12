@@ -169,12 +169,6 @@ public class BidController {
                     giaToiThieu, phien.getGiaHienTai(), phien.getBuocGia())));
             return;
         }
-
-        // Bước 7: Gọi PhienDauGiaService.datGia() — tái sử dụng logic đã có
-        // datGia() xử lý: cập nhật giaHienTai, thêm vào danhSachNguoiTraGia, gia hạn nếu cần
-        double giaLucDau = phien.getGiaHienTai();
-        phienDauGiaService.datGia(phien, nguoiDat, req.getGia());
-
         // Bước 8: Kiểm tra datGia có thực sự thành công không
         // (service silently return nếu fail — ta so sánh giaHienTai trước/sau)
         boolean success = phienDauGiaService.datGia(phien, nguoiDat, req.getGia());

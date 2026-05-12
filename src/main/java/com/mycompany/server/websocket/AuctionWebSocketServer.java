@@ -11,6 +11,8 @@ import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.*;
@@ -42,6 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuctionWebSocketServer extends WebSocketServer {
     private final KhoLuuTruNguoiDungSQLite khoLuuTruNguoiDungSQLite = new KhoLuuTruNguoiDungSQLite();
     private final KhoLuuTruPhienDauGiaSQLite khoPhienDauGia = new KhoLuuTruPhienDauGiaSQLite();
+    private final static Logger logger = LoggerFactory.getLogger(AuctionWebSocketServer.class);
     // ===== THREAD-SAFE DATA STRUCTURES =====
 
     // rooms: Map<phienId, Set<WebSocket clients>>
@@ -66,7 +69,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
      */
     public AuctionWebSocketServer(int port) {
         super(new InetSocketAddress(port));
-        System.out.println("🎯 AuctionWebSocketServer initialized on port " + port);
+        logger.info("🎯 AuctionWebSocketServer initialized on port " + port);
     }
 
     /**
@@ -96,7 +99,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             // ignore - best-effort logging
         }
 
-        System.out.println("✅ Client connected: " + addr);
+        logger.info("✅ Client connected: " + addr);
 
         // Set a reasonable connection lost timeout so dead connections are cleaned up
         try {
@@ -114,7 +117,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             conn.send(gson.toJson(welcome));
         } catch (Exception e) {
             // If sending fails, log and continue; do not close the connection here
-            System.err.println("⚠️ Failed to send welcome message to " + addr + ": " + e.getMessage());
+            logger.error("⚠️ Failed to send welcome message to " + addr + ": " + e.getMessage());
         }
     }
 
@@ -160,10 +163,10 @@ public class AuctionWebSocketServer extends WebSocketServer {
                     handleBid(conn, json);
                     break;
                 default:
-                    System.err.println("❌ Unknown action: " + action);
+                    logger.error("❌ Unknown action: " + action);
             }
         } catch (Exception e) {
-            System.err.println("❌ Error processing message: " + e.getMessage());
+            logger.error("❌ Error processing message: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -191,7 +194,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
         String phienId = json.get("phienId").getAsString();
         String userId = json.get("userId").getAsString();
 
-        System.out.println("🚪 User " + userId + " joining room: " + phienId);
+        logger.info("🚪 User " + userId + " joining room: " + phienId);
 
         // 🔹 STEP 1: Ensure room exists (thread-safe)
         // computeIfAbsent: nếu phòng chưa tồn tại → tạo mới với ConcurrentHashMap.newSetFromMap()
@@ -241,7 +244,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             String email = json.get("email").getAsString();
             double giaRa = json.get("giaRa").getAsDouble();
 
-            System.out.println("💰 User " + email + " bids " + giaRa + " on phien " + phienId);
+            logger.info("💰 User " + email + " bids " + giaRa + " on phien " + phienId);
 
             // 🔹 STEP 1: Gọi service để xử lý bid
             // PhienDauGiaService.datGia() phải:
@@ -273,7 +276,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             broadcastToRoom(phienId, gson.toJson(response));
 
         } catch (Exception e) {
-            System.err.println("❌ Error handling bid: " + e.getMessage());
+            logger.error("❌ Error handling bid: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -297,7 +300,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
 
         // 🔹 STEP 2: Check room tồn tại
         if (room == null || room.isEmpty()) {
-            System.out.println("⚠️ No clients in room: " + phienId);
+            logger.info("⚠️ No clients in room: " + phienId);
             return;
         }
 
@@ -309,7 +312,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
                         client.send(message);
                     }
                 } catch (Exception e) {
-                    System.err.println("❌ Error sending to client: " + e.getMessage());
+                    logger.error("❌ Error sending to client: " + e.getMessage());
                 }
             }
         }
@@ -349,7 +352,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
                     // 🔹 STEP 3: Nếu phòng trống → xóa phòng
                     if (room.isEmpty()) {
                         rooms.remove(phienId);
-                        System.out.println("🗑️ Room cleaned up: " + phienId);
+                        logger.info("🗑️ Room cleaned up: " + phienId);
                     }
                 }
             }
@@ -361,7 +364,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             broadcastToRoom(phienId, gson.toJson(response));
         }
 
-        System.out.println("🚪 Client disconnected: " + conn.getRemoteSocketAddress());
+        logger.info("🚪 Client disconnected: " + conn.getRemoteSocketAddress());
     }
 
     /**
@@ -373,7 +376,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
      */
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        System.err.println("❌ WebSocket error: " + ex.getMessage());
+        logger.error("❌ WebSocket error: " + ex.getMessage());
         ex.printStackTrace();
     }
 
@@ -383,7 +386,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
      */
     @Override
     public void onStart() {
-        System.out.println("🚀 AuctionWebSocketServer started on port " + this.getPort());
+        logger.info("🚀 AuctionWebSocketServer started on port " + this.getPort());
     }
 }
 

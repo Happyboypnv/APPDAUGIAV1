@@ -114,7 +114,7 @@ public class PhienDauGiaService {
                 lichDongPhien.lenLichDongPhien(phien);
             }
             phien.setGiaHienTai(gia);
-            phien.getDanhSachNguoiTraGia().add(nguoiMua);
+            phien.addNguoiTraGia(nguoiMua);
             return true;
         }
     }

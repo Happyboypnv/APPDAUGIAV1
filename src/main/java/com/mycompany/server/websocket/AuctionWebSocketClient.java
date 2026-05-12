@@ -55,8 +55,9 @@ public class AuctionWebSocketClient extends WebSocketClient {
 
     // ===== THREAD-SAFE FIELDS =====
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HandleNavigationAndAlert.class);
     // Singleton instance
-    private static AuctionWebSocketClient instance;
+    private static volatile AuctionWebSocketClient instance;
 
     private final static Logger logger = LoggerFactory.getLogger(AuctionWebSocketClient.class);
 
@@ -72,7 +73,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
 
     // Latch để block cho đến khi connected successfully
     // CountDownLatch: thread-safe counter, khi count = 0 → all waiting threads wake up
-    private final CountDownLatch connectionLatch = new CountDownLatch(1);
+    private  CountDownLatch connectionLatch = new CountDownLatch(1);
 
     // Connection status
     // volatile: ensure visibility across threads
@@ -86,7 +87,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
      */
     public AuctionWebSocketClient(URI uri) throws URISyntaxException {
         super(uri);
-        System.out.println("🎯 AuctionWebSocketClient initialized for: " + uri);
+        logger.info("🎯 AuctionWebSocketClient initialized for: " + uri);
     }
 
     /**
@@ -102,9 +103,10 @@ public class AuctionWebSocketClient extends WebSocketClient {
      */
     public static AuctionWebSocketClient getInstance() {
         synchronized (INSTANCE_LOCK) {
-            if (instance == null) {
+            if (instance == null || instance.isClosed()) {
                 try {
-                    instance = new AuctionWebSocketClient(new URI("ws://localhost:8081"));
+                    instance = new AuctionWebSocketClient(
+                            new URI("ws://localhost:8081"));
                 } catch (URISyntaxException e) {
                     throw new RuntimeException(e);
                 }
@@ -112,7 +114,9 @@ public class AuctionWebSocketClient extends WebSocketClient {
             return instance;
         }
     }
-
+    public static void resetInstance() {
+        synchronized (INSTANCE_LOCK) { instance = null; }
+    }
     /**
      * PHƯƠNG THỨC: connectToServer()
      * (Đã đổi tên từ connect() để tránh đụng độ với hàm connect() của class cha)
@@ -127,29 +131,18 @@ public class AuctionWebSocketClient extends WebSocketClient {
      *
      * @throws InterruptedException nếu timeout hoặc thread interrupt
      */
-    public void connectToServer(){
+    public void connectToServer() {
+        connectionLatch = new CountDownLatch(1); // reset
         try {
-            System.out.println("🔗 Connecting to WebSocket server...");
-
-            // connectBlocking(): blocks current thread cho đến khi connected
-            // Timeout 5s: nếu server không respond → InterruptedException
             boolean connected = this.connectBlocking(5, TimeUnit.SECONDS);
-
             if (connected) {
-                System.out.println("✅ WebSocket connected successfully");
                 isConnected = true;
-
-                // Wait for onOpen() to be called
-                // onOpen() sẽ gọi connectionLatch.countDown()
-                // Nếu không countdown trong 5s → timeout
                 connectionLatch.await(5, TimeUnit.SECONDS);
             } else {
-                System.err.println("❌ Failed to connect to WebSocket");
                 isConnected = false;
             }
         } catch (InterruptedException e) {
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi kết nối", "Không thể kết nối đến server!");
-            logger.warn("connectToServer() method in AuctionWebSocketClient throw error");
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -178,7 +171,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
     public void sendBid(String phienId, String email, double giaRa) {
         // 🔹 STEP 1: Validate connection
         if (!isConnected) {
-            System.err.println("❌ WebSocket not connected");
+            logger.error("❌ WebSocket not connected");
             return;
         }
 
@@ -195,10 +188,10 @@ public class AuctionWebSocketClient extends WebSocketClient {
             String jsonString = gson.toJson(bidMessage);
             this.send(jsonString);
 
-            System.out.println("💬 Sent BID: " + jsonString);
+            logger.info("💬 Sent BID: " + jsonString);
 
         } catch (Exception e) {
-            System.err.println("❌ Error sending bid: " + e.getMessage());
+            logger.error("❌ Error sending bid: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -217,7 +210,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
      */
     public void sendJoin(String phienId, String email) {
         if (!isConnected) {
-            System.err.println("❌ WebSocket not connected");
+            logger.error("❌ WebSocket not connected");
             return;
         }
 
@@ -230,10 +223,10 @@ public class AuctionWebSocketClient extends WebSocketClient {
             String jsonString = gson.toJson(joinMessage);
             this.send(jsonString);
 
-            System.out.println("💬 Sent JOIN: " + jsonString);
+            logger.info("💬 Sent JOIN: " + jsonString);
 
         } catch (Exception e) {
-            System.err.println("❌ Error sending join: " + e.getMessage());
+            logger.error("❌ Error sending join: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -267,7 +260,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
      */
     @Override
     public void onOpen(ServerHandshake handshake) {
-        System.out.println("✅ WebSocket connection opened");
+        logger.info("✅ WebSocket connection opened");
         isConnected = true;
 
         // Countdown latch → unblock connectToServer() method
@@ -311,7 +304,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
             JsonObject json = gson.fromJson(message, JsonObject.class);
             String event = json.get("event").getAsString();
 
-            System.out.println("📩 Received message: " + event);
+            logger.info("📩 Received message: " + event);
 
             // 🔹 STEP 2: Switch to JavaFX thread before UI update
             // Platform.runLater(): schedule code to run on JavaFX thread
@@ -339,16 +332,16 @@ public class AuctionWebSocketClient extends WebSocketClient {
                             break;
 
                         default:
-                            System.out.println("⚠️ Unknown event: " + event);
+                            logger.info("⚠️ Unknown event: " + event);
                     }
                 } catch (Exception e) {
-                    System.err.println("❌ Error in UI callback: " + e.getMessage());
+                    logger.error("❌ Error in UI callback: " + e.getMessage());
                     e.printStackTrace();
                 }
             });
 
         } catch (Exception e) {
-            System.err.println("❌ Error parsing message: " + e.getMessage());
+            logger.error("❌ Error parsing message: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -365,7 +358,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
      */
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("🚪 WebSocket closed: " + reason);
+        logger.info("🚪 WebSocket closed: " + reason);
         isConnected = false;
 
         if (listener != null) {
@@ -383,7 +376,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
      */
     @Override
     public void onError(Exception ex) {
-        System.err.println("❌ WebSocket error: " + ex.getMessage());
+        logger.error("❌ WebSocket error: " + ex.getMessage());
         ex.printStackTrace();
 
         if (listener != null) {
@@ -403,7 +396,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
      * @throws InterruptedException nếu thread interrupt
      */
     public void disconnect() throws InterruptedException {
-        System.out.println("🔌 Disconnecting from WebSocket server...");
+        logger.info("🔌 Disconnecting from WebSocket server...");
         this.closeBlocking();
         isConnected = false;
     }

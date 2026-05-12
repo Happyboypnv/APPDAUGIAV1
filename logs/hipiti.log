@@ -806,3 +806,4 @@
 2026-05-12 15:47:27.972 [WebSocketWorker-23] INFO  c.m.s.w.AuctionWebSocketServer - 💰 User phong@gmail.com bids 1.5E8 on phien PH000002
 2026-05-12 15:47:27.973 [WebSocketWorker-23] ERROR c.m.s.w.AuctionWebSocketServer - ❌ Error handling bid: Cannot invoke "com.mycompany.models.PhienDauGia.getGiaHienTai()" because "phienHienTai" is null
 2026-05-12 15:47:46.873 [JavaFX Application Thread] INFO  c.m.c.ChangePasswordController - ? ChangePasswordController initialized
+2026-05-12 15:54:31.004 [WebSocketConnectReadThread-27] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket closed: 
