@@ -135,7 +135,8 @@ public class ServerApp {
 
         // ===== KHỞI ĐỘNG SERVER =====
         server.start();
-
+        com.mycompany.websocket.AuctionWebSocketServerStarter.startServer();
+        logger.info("  WS   ws://localhost:8081 (WebSocket real-time)");
         logger.info("========================================");
         logger.info("  SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!");
         logger.info("  Địa chỉ: http://localhost:" + PORT);

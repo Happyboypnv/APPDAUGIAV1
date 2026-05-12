@@ -55,6 +55,11 @@ public class BiddingRoomController implements Initializable {
     @FXML
     private Button placeBidButton; // Nút ĐẶT GIÁ NGAY
 
+    // --- WEBSOCKET FIELDS ---
+    private AuctionWebSocketClient wsClient;
+    private AuctionWebSocketControllerAdapter adapter;
+    private String currentPhienId;
+
     // --- CÁC BIẾN LOGIC ---
     private long currentPrice = 135000000; // Giá cao nhất hiện tại
     private long stepPrice = 5000000; // Bước giá (mỗi lần +/- 5 triệu)
@@ -64,66 +69,37 @@ public class BiddingRoomController implements Initializable {
     /**
      * Hàm này tự động chạy khi giao diện FXML được load
      */
-    // Thêm vào BiddingRoomController.java
-
-    private AuctionWebSocketClient wsClient;
-    private String currentPhienId = "PH000001"; // nhận từ màn hình trước
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         startClock();
         loadDummyBidHistory();
         setupButtonActions();
         updateBidAmountField(currentPrice + stepPrice);
-        connectWebSocket(); // THÊM
-    }
 
-    private void connectWebSocket() {
-        try {
-            wsClient = AuctionWebSocketClient.getInstance();
+        // 1. Lấy phienId từ session
+        currentPhienId = SessionManager.getInstance().getCurrentPhienId();
+        if (currentPhienId != null && auctionNameLabel != null) {
+            auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + currentPhienId);
+        }
 
-            // Tạo adapter để nhận events
-            AuctionWebSocketControllerAdapter adapter =
-                    new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
-            wsClient.setListener(adapter);
-
-            // Kết nối (chạy trên background thread để không block UI)
-            new Thread(() -> {
+        // 2. Kết nối WebSocket trên thread riêng (không block JavaFX thread)
+        new Thread(() -> {
+            try {
+                wsClient = AuctionWebSocketClient.getInstance();
+                adapter = new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
+                wsClient.setListener(adapter);
                 wsClient.connect();
-                // Join phòng sau khi connected
-                String email = SessionManager.getInstance()
-                        .getCurrentUser().layThuDienTu();
+
+                // Gửi JOIN sau khi connect xong
+                String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
                 wsClient.sendJoin(currentPhienId, email);
-            }).start();
-
-        } catch (Exception e) {
-            System.err.println("Lỗi kết nối WebSocket: " + e.getMessage());
-        }
+            } catch (Exception e) {
+                System.err.println("❌ Lỗi kết nối WebSocket: " + e.getMessage());
+            }
+        }).start();
     }
 
-    // Sửa handlePlaceBid() để gửi qua WebSocket thay vì local
-    private void handlePlaceBid() {
-        long myBid = parseBidAmount(bidAmountField.getText());
-        if (myBid <= currentPrice) {
-            showAlert("Lỗi đặt giá", "Giá phải lớn hơn giá hiện tại!");
-            return;
-        }
-
-        // Gửi qua WebSocket thay vì cập nhật local
-        if (wsClient != null && wsClient.isConnected()) {
-            String email = SessionManager.getInstance()
-                    .getCurrentUser().layThuDienTu();
-            wsClient.sendBid(currentPhienId, email, myBid);
-        } else {
-            // Fallback: gọi REST API
-            String token = SessionManager.getInstance().getCurrentToken();
-            ApiClient.createBid(currentPhienId, myBid, token);
-        }
-    }
-
-    // Getter để AuctionWebSocketControllerAdapter có thể access
-    public Label getCurrentPriceLabel() { return currentPriceLabel; }
-
+    // --- XỬ LÝ SỰ KIỆN NÚT BẤM ---
     private void setupButtonActions() {
         // Nút Giảm giá
         decreaseBidButton.setOnAction(event -> {
@@ -148,22 +124,49 @@ public class BiddingRoomController implements Initializable {
 
         // Nút Đóng cửa sổ
         closeButton.setOnAction(event -> {
-            // Logic đóng cửa sổ ở đây (Ví dụ: return home)
+            onClose(); // Đóng kết nối WebSocket trước khi thoát
             System.out.println("Đóng phòng đấu giá...");
+            // Thêm logic chuyển màn hình về Home ở đây
         });
     }
 
-    // --- CÁC HÀM TIỆN ÍCH CHUẨN HOÁ DỮ LIỆU ---
+    // --- LOGIC ĐẶT GIÁ ---
+    private void handlePlaceBid() {
+        long myBid = parseBidAmount(bidAmountField.getText());
+        if (myBid <= currentPrice) {
+            showAlert("Lỗi đặt giá", "Giá phải lớn hơn giá hiện tại!");
+            return;
+        }
 
-    /**
-     * Dùng để nhận dữ liệu từ màn hình khác truyền sang
-     */
-    public void setAuctionData(Object modelPhiênĐấuGiá) {
-        // Giả sử lấy tên từ model của bạn
-        // String name = modelPhiênĐấuGiá.getName();
-        // auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + name.toUpperCase());
+        // Gửi qua WebSocket thay vì cập nhật local
+        if (wsClient != null && wsClient.isConnected() && currentPhienId != null) {
+            String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+            wsClient.sendBid(currentPhienId, email, myBid);
+        } else {
+            // Fallback: gọi REST API nếu mất kết nối
+            System.out.println("WebSocket chưa kết nối, sử dụng API Fallback...");
+            String token = SessionManager.getInstance().getCurrentToken();
+            ApiClient.createBid(currentPhienId, myBid, token);
+        }
     }
 
+    // --- HÀM ĐÓNG KẾT NỐI WEBSOCKET KHI THOÁT PHÒNG ---
+    public void onClose() {
+        if (wsClient != null && wsClient.isConnected()) {
+            try {
+                wsClient.disconnect();
+            } catch (Exception e) {
+                // Ignore exception khi đóng
+            }
+        }
+    }
+
+    // Getter để AuctionWebSocketControllerAdapter có thể access
+    public Label getCurrentPriceLabel() {
+        return currentPriceLabel;
+    }
+
+    // --- CÁC HÀM TIỆN ÍCH CHUẨN HOÁ DỮ LIỆU ---
     private void updateBidAmountField(long amount) {
         bidAmountField.setText(formatter.format(amount));
     }

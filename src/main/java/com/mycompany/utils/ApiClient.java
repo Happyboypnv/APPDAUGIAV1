@@ -1,10 +1,7 @@
 package com.mycompany.utils;
 
 import com.google.gson.Gson;
-import com.mycompany.server.dto.DatGiaResponse;
-import com.mycompany.server.dto.LoginRequest;
-import com.mycompany.server.dto.LoginResponse;
-import com.mycompany.server.dto.RegisterRequest;
+import com.mycompany.server.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +10,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 /**
  * Hiện tại JavaFX đang gọi thẳng vào database:
  * [SignInController] → [LoginAction] → [KhoLuuTruNguoiDungSQLite] → [SQLite]
@@ -88,6 +86,18 @@ public class ApiClient {
         }});
         String responseJson = guiPost("/api/auctions/bid", jsonBody, token);
         return gson.fromJson(responseJson, DatGiaResponse.class);
+    }
+    public static List<PhienDauGiaDTO> getAuctions() {
+        String responseJson = guiGet("/api/auctions", null);
+        if (responseJson == null) return new java.util.ArrayList<>();
+        java.lang.reflect.Type listType =
+                new com.google.gson.reflect.TypeToken<List<PhienDauGiaDTO>>(){}.getType();
+        try {
+            return gson.fromJson(responseJson, listType);
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse auctions: " + e.getMessage());
+            return new java.util.ArrayList<>();
+        }
     }
     /**
      * goi api get all auctions
