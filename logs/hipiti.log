@@ -47,3 +47,69 @@
 2026-05-13 12:01:25.547 [pool-2-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Không tìm thấy user với email: khongtontai_xyz@gmail.com
 2026-05-13 12:01:25.648 [Thread-17] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
 2026-05-13 12:01:25.658 [Thread-17] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-13 15:08:22.722 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-13 15:08:23.240 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:08:23.243 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-13 15:08:23.243 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-13 15:08:23.261 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-13 15:08:23.263 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:08:23.265 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-13 15:08:23.505 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-13 15:08:23.506 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-13 15:08:23.506 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-13 15:08:23.506 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-13 15:08:23.506 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-13 15:08:23.506 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-13 15:08:23.506 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-13 15:08:23.506 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-13 15:08:23.508 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-13 15:08:23.511 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-13 15:08:32.749 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-13 15:08:32.753 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-13 15:08:33.002 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:08:33.005 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-13 15:08:33.005 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-13 15:08:33.006 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-13 15:08:33.006 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-13 15:08:33.008 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-13 15:08:33.009 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:08:33.012 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-13 15:08:33.012 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-13 15:09:00.507 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:09:00.512 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-13 15:09:00.512 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
+2026-05-13 15:09:00.513 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
+2026-05-13 15:09:00.513 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-13 15:09:02.300 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:09:07.777 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🎯 AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-13 15:09:07.791 [WebSocketWorker-24] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:58292
+2026-05-13 15:09:07.793 [WebSocketConnectReadThread-33] INFO  c.m.s.w.AuctionWebSocketClient - ✅ WebSocket connection opened
+2026-05-13 15:09:07.797 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent JOIN: {"action":"JOIN","phienId":"PH000002","email":"phong@gmail.com"}
+2026-05-13 15:09:07.797 [WebSocketConnectReadThread-33] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: CONNECTED
+2026-05-13 15:09:07.798 [WebSocketWorker-24] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email phong@gmail.com joining room: PH000002
+2026-05-13 15:09:07.800 [WebSocketConnectReadThread-33] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: USER_JOINED
+2026-05-13 15:09:07.801 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ⚠️ Unknown event: CONNECTED
+2026-05-13 15:09:07.801 [JavaFX Application Thread] ERROR c.m.s.c.AuctionWebSocketControllerAdapter - ❌ Error processing user joined: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
+2026-05-13 15:09:09.401 [pool-1-thread-5] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:09:16.550 [JavaFX Application Thread] INFO  c.m.c.ChangePasswordController - ✅ ChangePasswordController initialized
+2026-05-13 15:09:21.433 [pool-1-thread-7] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 15:09:34.271 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🔌 Disconnecting from WebSocket server...
+2026-05-13 15:09:34.273 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000002
+2026-05-13 15:09:34.273 [WebSocketConnectReadThread-33] INFO  c.m.s.w.AuctionWebSocketClient - 🚪 WebSocket closed: 
+2026-05-13 15:09:34.273 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000002
+2026-05-13 15:09:34.274 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:58292
+2026-05-13 15:09:38.098 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-13 15:09:38.099 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
