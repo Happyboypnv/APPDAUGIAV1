@@ -1,52 +1,35 @@
+# Maven
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-.kotlin
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.restore
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+# Cấu hình IDE
 .idea/
-*.iws
 *.iml
+*.iws
 *.ipr
-
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
-# Logs
-logs/
-*.log
+.classpath
+.project
+.settings/
+.nb-gradle/
 
-# Database runtime
-hipiti.db
-hipiti.db-wal
-hipiti.db-shm
-
-### Mac OS ###
-.DS_Store*.db
+# Database (Dữ liệu runtime không nên push lên)
+*.db
 *.db-shm
 *.db-wal
 
-.postman/
+# Hệ điều hành
+.DS_Store
+Thumbs.db
+
+# Log
+*.log
+logs/
