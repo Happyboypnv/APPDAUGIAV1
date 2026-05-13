@@ -1,5 +1,6 @@
 package com.mycompany;
 
+import com.mycompany.action.PhienDauGiaScheduler;
 import com.mycompany.utils.KetNoiCSDL;
 import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import javafx.application.Application;
@@ -9,16 +10,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class App extends Application {
-
+    private static final Logger logger = LoggerFactory.getLogger(App.class);
+    public void stop() throws Exception {
+        super.stop();
+        PhienDauGiaScheduler.getInstance().shutdown();
+    }
     @Override
     public void start(Stage primaryStage) {
         try {
             // Khởi tạo database trước khi load giao diện
-            System.out.println("🗄️ Đang khởi tạo database...");
+            logger.info("🗄️ Đang khởi tạo database...");
             KetNoiCSDL.khoiTao();
-            System.out.println("✅ Database đã sẵn sàng!");
+            logger.info("✅ Database đã sẵn sàng!");
 
             // THAY ĐỔI QUAN TRỌNG (SQLite Migration):
             // Lý do thêm: Migrate users cũ từ JSON sang SQLite
@@ -34,10 +41,10 @@ public class App extends Application {
             // 4. Thread-safe vì chạy trước UI load
             //
             // Kết quả: Tất cả users đều có password hashed + salt
-            System.out.println("🔄 Đang kiểm tra migration passwords...");
+            logger.info("🔄 Đang kiểm tra migration passwords...");
             KhoLuuTruNguoiDungSQLite userStorage = new KhoLuuTruNguoiDungSQLite();
             userStorage.migratePlainTextPasswords();
-            System.out.println("✅ Migration hoàn thành!");
+            logger.info("✅ Migration hoàn thành!");
 
             // 1. Tải file giao diện đăng ký (SignUp.fxml)
             // Đảm bảo tên file khớp chính xác (phân biệt hoa thường)
@@ -58,9 +65,8 @@ public class App extends Application {
             primaryStage.setScene(scene);
             primaryStage.setResizable(false); // Giữ nguyên form đẹp như thiết kế
             primaryStage.show();
-
         } catch (Exception e) {
-            System.err.println("Không thể khởi động ứng dụng: " + e.getMessage());
+            logger.error("Không thể khởi động ứng dụng: " + e.getMessage());
             e.printStackTrace();
         }
     }

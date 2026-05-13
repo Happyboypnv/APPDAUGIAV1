@@ -4,17 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.Collections;
 
 public class PhienDauGia {
     private String maPhien;
     private String tenPhien;
     private double giaHienTai;
     private double buocGia;
-    private final double doLechGiaMin = 0.06;
+    private final double DOLECHGIAMIN = 0.06;
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
     private int thoiGian;
-    private List<NguoiDung> danhSachNguoiTraGia = new ArrayList<>();
+    private final List<NguoiDung> danhSachNguoiTraGia = Collections.synchronizedList(new ArrayList<>());
     private NguoiDung nguoiBan;
     private NguoiDung nguoiThangCuoc;
     private SanPham sanPhamDauGia;
@@ -32,10 +33,23 @@ public class PhienDauGia {
         buocGia = 0.0;
         this.trangThai = TrangThaiPhien.DANG_CHO;
     }
+    public PhienDauGia(String tenPhien, SanPham sanPhamDauGia, double giaKhoiDiem, NguoiDung nguoiBan, LocalDateTime thoiGianBatDau, LocalDateTime thoiGianKetThuc) {
+        this.tenPhien = tenPhien;
+        this.sanPhamDauGia = sanPhamDauGia;
+        this.giaHienTai = giaKhoiDiem;
+        this.nguoiBan = nguoiBan;
+        this.thoiGianBatDau = thoiGianBatDau;
+        this.thoiGianKetThuc = thoiGianKetThuc;
+    }
 
     // Overloaded constructor for use with database (without thoiGian)
     public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhamDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {
         this(maPhien, tenPhien, sanPhamDauGia, giaKhoiDiem, nguoiBan, 0);
+    }
+    public void addNguoiTraGia(NguoiDung nguoiTraGia) {
+        synchronized (danhSachNguoiTraGia) {
+            danhSachNguoiTraGia.add(nguoiTraGia);
+        }
     }
 
     //Setters
@@ -121,11 +135,13 @@ public class PhienDauGia {
     }
 
     public double getDoLechGiaMin() {
-        return doLechGiaMin;
+        return  DOLECHGIAMIN;
     }
 
     public List<NguoiDung> getDanhSachNguoiTraGia() {
-        return danhSachNguoiTraGia;
+        synchronized (danhSachNguoiTraGia) {
+            return new ArrayList<>(danhSachNguoiTraGia);
+        }
     }
 
     public int getThoiGian() {

@@ -1,7 +1,7 @@
 package com.mycompany.action;
 
-import com.mycompany.exception.Login.*;
 import com.mycompany.models.NguoiDung;
+import com.sun.javafx.stage.EmbeddedWindow;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader; // Quan trọng
@@ -9,10 +9,11 @@ import javafx.scene.Node; // Quan trọng
 import javafx.scene.Parent; // Quan trọng
 import javafx.scene.Scene; // Quan trọng
 import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
-import java.time.*;
+
 import com.mycompany.utils.SessionManager;
 
 /**
@@ -40,7 +41,6 @@ import com.mycompany.utils.SessionManager;
  * - Facade: Cung cấp interface đơn giản cho việc điều hướng phức tạp
  */
 public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ di chuyển đến các trang khác nhau + in thông báo
-    private static HandleNavigationAndAlert instance;
 
     private HandleNavigationAndAlert() {};
 
@@ -50,9 +50,12 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      *
      * @return Instance duy nhất của HandleNavigationAndAlert
      */
+    private static volatile HandleNavigationAndAlert instance;
     public static HandleNavigationAndAlert getInstance() {
-        if (instance==null){
-            instance = new HandleNavigationAndAlert();
+        if (instance == null) {
+            synchronized (HandleNavigationAndAlert.class) {
+                if (instance == null) instance = new HandleNavigationAndAlert();
+            }
         }
         return instance;
     }
@@ -62,7 +65,7 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      *
      * KẾT NỐI VỚI CONTROLLER:
      * - Được gọi từ NavBarController.returnToHome() khi click home icon
-     * - Được gọi từ LoginAction.dangNhap() sau khi đăng nhập thành công
+     * - Được gọi từ HandleNavigationAndAlert.dangNhap() sau khi đăng nhập thành công
      *
      * QUY TRÌNH:
      * 1. Load Home.fxml bằng FXMLLoader
@@ -86,7 +89,7 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      *
      * KẾT NỐI VỚI CONTROLLER:
      * - Được gọi từ SignUpController khi chuyển sang đăng nhập
-     * - Được gọi từ LoginAction.dangKy() sau khi đăng ký thành công
+     * - Được gọi từ HandleNavigationAndAlert.dangKy() sau khi đăng ký thành công
      *
      * @param event ActionEvent từ button click
      * @throws IOException nếu không load được FXML
@@ -113,6 +116,24 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         Scene signUpScene = new Scene(signUpRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(signUpScene);
+        window.show();
+    }
+
+    /**
+     * goToCreateAuction(Event event) - Điều hướng đến form Tạo Phiên Đấu Giá
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Gọi từ NavBarController.navigateToCreateAuction() khi click "Tạo phiên đấu giá"
+     *
+     * @param event Event từ UI (MouseEvent hoặc ActionEvent)
+     * @throws IOException nếu không load được FXML
+     */
+    public void goToCreateAuction(Event event) throws IOException {
+        javafx.scene.layout.StackPane root =
+                FXMLLoader.load(getClass().getResource("/view/CreateAuction.fxml"));
+        Scene scene = new Scene(root);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
         window.show();
     }
 
@@ -160,6 +181,22 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         window.show();
     }
 
+    public void goToChangePassword(Event event) throws IOException {
+        StackPane changeRoot = FXMLLoader.load(getClass().getResource("/view/ChangePassword.fxml"));
+        Scene changeScene = new Scene(changeRoot);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(changeScene);
+        window.show();
+    }
+    public void goToBiddingRoom(javafx.scene.input.MouseEvent event) throws IOException {
+        javafx.scene.layout.StackPane root = FXMLLoader.load(
+                getClass().getResource("/view/BiddingRoom.fxml"));
+        Scene scene = new Scene(root);
+        Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.show();
+    }
+
     /**
      * showAlert(Alert.AlertType alertType, String title, String message) - Hiển thị hộp thoại thông báo
      *
@@ -167,7 +204,7 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      * - Được gọi từ tất cả controllers khi cần hiển thị thông báo
      * - FinanceController: thông báo nạp/rút tiền thành công/lỗi
      * - ProfileController: thông báo cập nhật thông tin
-     * - LoginAction: thông báo đăng nhập/đăng ký
+     * - HandleNavigationAndAlert: thông báo đăng nhập/đăng ký
      * - Và nhiều controllers khác...
      *
      * CÁC LOẠI ALERT:

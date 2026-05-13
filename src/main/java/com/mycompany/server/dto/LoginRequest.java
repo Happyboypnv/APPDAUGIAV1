@@ -21,7 +21,10 @@ public class LoginRequest {
 
     /** Constructor rỗng bắt buộc để Gson có thể deserialize */
     public LoginRequest() {}
-
+    public LoginRequest(String email, String matKhau) {
+        this.email = email;
+        this.matKhau = matKhau;
+    }
     public String getEmail()   { return email; }
     public String getMatKhau() { return matKhau; }
 }

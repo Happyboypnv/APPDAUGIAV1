@@ -47,7 +47,7 @@ public class GiaoDich {
         this.id = id;
         this.phienDauGia = phienDauGia;
         // Giao dịch mới tạo ra luôn ở trạng thái CHỜ THANH TOÁN
-        this.trangThai = trangThai.CHO_THANH_TOAN;
+        this.trangThai = TrangThaiGiaoDich.CHO_THANH_TOAN;
         // Ghi nhận thời điểm tạo giao dịch
         this.thoiGianTao = LocalDateTime.now();
     }

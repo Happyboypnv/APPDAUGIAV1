@@ -56,4 +56,7 @@ public class PhienDauGiaScheduler {
         phienDauGiaService.dongPhien(phien, TrangThaiPhien.DA_THANH_TOAN);
         scheduledFutures.remove(maPhien);
     }
+    public void shutdown() {
+        executor.shutdown();
+    }
 }

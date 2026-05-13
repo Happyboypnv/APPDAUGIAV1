@@ -37,7 +37,6 @@ import javafx.scene.control.TextField;
  * - Business Logic Layer: Tách logic kinh doanh ra khỏi UI controller
  */
 public class FinanceAction {
-    private static FinanceAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
 
     private FinanceAction() {}
@@ -48,11 +47,14 @@ public class FinanceAction {
      *
      * @return Instance duy nhất của FinanceAction
      */
+    private static volatile FinanceAction instance;
     public static FinanceAction getInstance() {
         if (instance == null) {
-            instance = new FinanceAction();
+            synchronized (FinanceAction.class) {
+                if (instance == null) instance = new FinanceAction();
+            }
         }
-        return instance; // Chi nen co 1 doi tuong dam nhan viec xu ly thao tac o trang ca nhan
+        return instance;
     }
 
     /**
@@ -72,7 +74,9 @@ public class FinanceAction {
     public void editBankAccount(TextField field, boolean editing) {
         field.setEditable(editing);
         field.setOpacity(1.0); // set lại ít mờ hơn
-        if (editing) field.requestFocus(); // tự động focus vào ô khi bắt đầu chỉnh sửa
+        if (editing) {
+            field.requestFocus(); // tự động focus vào ô khi bắt đầu chỉnh sửa
+        }
     }
 
     /**
