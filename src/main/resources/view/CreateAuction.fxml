@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextArea?>
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" stylesheets="@../style/CreateAuction.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.CreateAuctionController">
     <children>
         <HBox prefHeight="800.0" prefWidth="989.0">
@@ -65,7 +66,7 @@
                                         <VBox spacing="5.0">
                                             <children>
                                                 <Label text="Mô tả sản phẩm" textFill="WHITE"><font><Font size="16.0" /></font></Label>
-                                                <TextField fx:id="moTaField" alignment="TOP_LEFT" prefHeight="100.0" />
+                                                <TextArea fx:id="moTaField" prefHeight="100.0" wrapText="true" />
                                             </children>
                                         </VBox>
                                     </children>

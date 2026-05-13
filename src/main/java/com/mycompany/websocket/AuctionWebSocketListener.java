@@ -3,6 +3,7 @@ package com.mycompany.websocket;
 import com.google.gson.JsonObject;
 
 /**
+ * dinh nghia cac su kien co the xu ly tuong ung voi WebSocket client
  * AuctionWebSocketListener - Interface for WebSocket event callbacks
  *
  * MỤC ĐÍCH:

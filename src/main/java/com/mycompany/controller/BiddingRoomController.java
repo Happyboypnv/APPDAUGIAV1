@@ -194,7 +194,17 @@ public class BiddingRoomController implements Initializable {
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
     }
+    public void syncNewPrice(double newPrice, String bidderId) {
+        this.currentPrice = newPrice;  // ← cập nhật state nội bộ
+        currentPriceLabel.setText(formatter.format(newPrice) + " VNĐ");
+        topBidderLabel.setText("Người dẫn đầu: " + bidderId);
+        updateBidAmountField(newPrice + stepPrice); // tự tăng ô nhập
+    }
 
+    public void addBidHistory(String bidderId, double price) {
+        String entry = bidderId + ": " + formatter.format(price) + " VNĐ (vừa xong)";
+        bidHistoryList.add(0, entry); // thêm vào đầu danh sách
+    }
     private void loadDummyBidHistory() {
         bidHistoryList.addAll(
                 "Nguyễn Văn T. : 135,000,000 VND (1 phút trước)",

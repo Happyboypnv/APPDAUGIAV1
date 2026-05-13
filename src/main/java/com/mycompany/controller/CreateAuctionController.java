@@ -56,7 +56,7 @@ public class CreateAuctionController implements Initializable {
     @FXML private TextField       tenPhienField;
     @FXML private TextField       tenSanPhamField;
     @FXML private ComboBox<String> danhMucSanPham;
-    @FXML private TextField       moTaField;
+    @FXML private TextArea       moTaField;
     @FXML private TextField       giaKhoiDiemField;
 
     @FXML private DatePicker         ngayBatDauPicker;
@@ -111,6 +111,7 @@ public class CreateAuctionController implements Initializable {
     private void setupDatePickers() {
         ngayBatDauPicker.setValue(LocalDate.now());
         ngayKetThucPicker.setValue(LocalDate.now().plusDays(1));
+        previewImage.setVisible(false); //
     }
 
     /**
