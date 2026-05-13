@@ -11,7 +11,7 @@ public class PhienDauGia {
     private String tenPhien;
     private double giaHienTai;
     private double buocGia;
-    private final double doLechGiaMin = 0.06;
+    private final double DOLECHGIAMIN = 0.06;
     private LocalDateTime thoiGianBatDau;
     private LocalDateTime thoiGianKetThuc;
     private int thoiGian;
@@ -127,7 +127,7 @@ public class PhienDauGia {
     }
 
     public double getDoLechGiaMin() {
-        return doLechGiaMin;
+        return  DOLECHGIAMIN;
     }
 
     public List<NguoiDung> getDanhSachNguoiTraGia() {
