@@ -203,10 +203,7 @@ public class UserController {
 
         String email = path.substring(prefix.length());
 
-        // Tìm người dùng trong SQLite
-        Map<String, NguoiDung> danhSach = khoNguoiDung.layTatCa();
-        NguoiDung nguoiDung = danhSach.get(email);
-
+       NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(email);
         if (nguoiDung == null) {
             guiPhanHoi(exchange, 404,
                     gson.toJson(new LoginResponse("Không tìm thấy người dùng: " + email)));

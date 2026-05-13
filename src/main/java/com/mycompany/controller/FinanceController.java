@@ -77,22 +77,12 @@ public class FinanceController implements Initializable {
         // 🔹 BƯỚC 1: Thêm danh sách ngân hàng vào ComboBox
         banks.getItems().addAll("MB Bank", "Techcombank", "BIDV", "Agribank", "VP Bank"); // Lựa chọn ngân hàng
 
-        // 🔹 BƯỚC 2: Lấy thông tin người dùng từ JWT token
-        String token = SessionManager.getInstance().getCurrentToken();
-        Map<String, Object> info = TokenUtil.getUserInfoFromToken(token);
-
-        // 🔹 BƯỚC 3: Hiển thị thông tin nếu token hợp lệ
-        if (info != null) {
-            // Hiển thị số dư hiện tại từ token
-            currentBalanceField.setText(String.valueOf(info.get("balance")));
-
-            // Hiển thị số tài khoản ngân hàng nếu đã liên kết
-            bankAccount.setText((String) info.get("bankAccount"));
-
-            // Hiển thị tên ngân hàng đã liên kết nếu có
-            String bankName = (String) info.get("bankName");
-            if (bankName != null) {
-                banks.setValue(bankName); // Set giá trị selected trong ComboBox
+        NguoiDung user = SessionManager.getInstance().getCurrentUser();
+        if (user != null) {
+            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getSoDuKhaDung()));
+            bankAccount.setText(user.getSoTaiKhoan());
+            if (user.getNganHang() != null) {
+                banks.setValue(user.getNganHang());
             }
         }
     }

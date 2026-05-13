@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import java.util.Map;
 
 public class ChangePasswordAction {
-    private static ChangePasswordAction instance;
+    private static volatile ChangePasswordAction instance;
     private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ChangePasswordAction.class);
     private ChangePasswordAction() {}
@@ -24,9 +24,11 @@ public class ChangePasswordAction {
      */
     public static ChangePasswordAction getInstance() {
         if (instance == null) {
-            instance = new ChangePasswordAction();
+            synchronized (ChangePasswordAction.class) {
+                if (instance == null) instance = new ChangePasswordAction();
+            }
         }
-        return instance; // Chi nen co 1 doi tuong dam nhan viec xu ly thao tac o trang ca nhan
+        return instance;
     }
 
     public void handlePasswordChange(String olderPassword, String newPassword, String confirmPassword, Button saveButton) {

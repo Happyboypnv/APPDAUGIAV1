@@ -178,7 +178,9 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         } catch (SQLException e) {
             logger.error("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
         }
-        KetNoiCSDL.layKetNoi().commit();
+        finally {
+            KetNoiCSDL.layKetNoi().rollback(); // Đảm bảo rollback sau khi đọc để giải phóng read-lock, tránh SQLITE_BUSY cho writer thread khác
+        }
         return result;
     }
 
