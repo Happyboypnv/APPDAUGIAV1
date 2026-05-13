@@ -47,3 +47,26 @@
 2026-05-13 12:01:25.547 [pool-2-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Không tìm thấy user với email: khongtontai_xyz@gmail.com
 2026-05-13 12:01:25.648 [Thread-17] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
 2026-05-13 12:01:25.658 [Thread-17] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-13 12:04:15.897 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-13 12:04:16.506 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 12:04:16.523 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-13 12:04:16.534 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-13 12:04:16.544 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-13 12:04:16.548 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 12:04:16.553 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-13 12:04:17.609 [pool-2-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 12:04:17.626 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-13 12:04:17.746 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - COMMIT thành công cho user: PPTT000008
+2026-05-13 12:04:17.823 [pool-2-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 12:04:17.850 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test_1778648655235@gmail.com
+2026-05-13 12:04:17.850 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: +3gVf7GU3ikt+mMONV+qotcMyXMFLvhn016iznXCH0s=
+2026-05-13 12:04:17.850 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: WPjdu7uOOlzUvAe7GpqQrw==
+2026-05-13 12:04:17.850 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: Test@1234
+2026-05-13 12:04:17.863 [pool-2-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test_1778648655235@gmail.com
+2026-05-13 12:04:17.863 [pool-2-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: +3gVf7GU3ikt+mMONV+qotcMyXMFLvhn016iznXCH0s=
+2026-05-13 12:04:17.863 [pool-2-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: WPjdu7uOOlzUvAe7GpqQrw==
+2026-05-13 12:04:17.863 [pool-2-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: SaiMatKhau@999
+2026-05-13 12:04:17.879 [pool-2-thread-5] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-13 12:04:17.879 [pool-2-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Không tìm thấy user với email: khongtontai_xyz@gmail.com
+2026-05-13 12:04:18.023 [Thread-17] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-13 12:04:18.031 [Thread-17] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
