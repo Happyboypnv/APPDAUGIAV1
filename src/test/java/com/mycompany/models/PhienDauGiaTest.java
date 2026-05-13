@@ -220,8 +220,8 @@ public class PhienDauGiaTest {
         @Test
         @DisplayName("Should set winner from bidder list (last bidder)")
         void testSetWinnerFromBidderList() {
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua2);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua2);
 
             phienDauGia.setNguoiThangCuoc();
 
@@ -231,11 +231,11 @@ public class PhienDauGiaTest {
         @Test
         @DisplayName("Should update winner when new bidder added")
         void testUpdateWinnerWithNewBidder() {
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
             phienDauGia.setNguoiThangCuoc();
             assertEquals(nguoiMua1, phienDauGia.getNguoiThangCuoc());
 
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua2);
+            phienDauGia.addNguoiTraGia(nguoiMua2);
             phienDauGia.setNguoiThangCuoc();
             assertEquals(nguoiMua2, phienDauGia.getNguoiThangCuoc());
         }
@@ -265,7 +265,7 @@ public class PhienDauGiaTest {
         @Test
         @DisplayName("Should add single bidder")
         void testAddSingleBidder() {
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
             assertEquals(1, phienDauGia.getDanhSachNguoiTraGia().size());
             assertTrue(phienDauGia.getDanhSachNguoiTraGia().contains(nguoiMua1));
         }
@@ -273,8 +273,8 @@ public class PhienDauGiaTest {
         @Test
         @DisplayName("Should add multiple bidders")
         void testAddMultipleBidders() {
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua2);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua2);
 
             assertEquals(2, phienDauGia.getDanhSachNguoiTraGia().size());
             assertTrue(phienDauGia.getDanhSachNguoiTraGia().contains(nguoiMua1));
@@ -296,8 +296,8 @@ public class PhienDauGiaTest {
         @Test
         @DisplayName("Should handle duplicate bidders")
         void testDuplicateBidders() {
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
 
             assertEquals(2, phienDauGia.getDanhSachNguoiTraGia().size());
         }
@@ -378,14 +378,14 @@ public class PhienDauGiaTest {
             assertEquals(TrangThaiPhien.DANG_DIEN_RA, phienDauGia.getTrangThai());
 
             // Add bidders
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
             phienDauGia.setDaCoGia(true);
             phienDauGia.setGiaHienTai(1500.0);
             assertEquals(1500.0, phienDauGia.getGiaHienTai());
             assertTrue(phienDauGia.getdaCoGia());
 
             // More bidding
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua2);
+            phienDauGia.addNguoiTraGia(nguoiMua2);
             phienDauGia.setGiaHienTai(2000.0);
             assertEquals(2, phienDauGia.getDanhSachNguoiTraGia().size());
 
@@ -404,7 +404,7 @@ public class PhienDauGiaTest {
         @DisplayName("Auction cancellation scenario")
         void testAuctionCancellation() {
             phienDauGia.setTrangThai(TrangThaiPhien.DANG_DIEN_RA);
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
 
             // Cancel auction
             phienDauGia.setTrangThai(TrangThaiPhien.DA_HUY);
@@ -423,7 +423,7 @@ public class PhienDauGiaTest {
             for (int i = 0; i < bidCount; i++) {
                 double newPrice = basePrice + (100.0 * (i + 1));
                 phienDauGia.setGiaHienTai(newPrice);
-                phienDauGia.getDanhSachNguoiTraGia().add(new NguoiDung("User" + i, "email" + i + "@gmail.com", "123456", "01/01/2000"));
+                phienDauGia.addNguoiTraGia(new NguoiDung("User" + i, "email" + i + "@gmail.com", "123456", "01/01/2000"));
             }
 
             assertEquals(basePrice + (100.0 * bidCount), phienDauGia.getGiaHienTai());
@@ -434,17 +434,17 @@ public class PhienDauGiaTest {
         @DisplayName("Complete bidding history with winner determination")
         void testCompleteBiddingHistory() {
             // Round 1
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
             phienDauGia.setGiaHienTai(1100.0);
             phienDauGia.setDaCoGia(true);
 
             // Round 2
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua2);
+            phienDauGia.addNguoiTraGia(nguoiMua2);
             phienDauGia.setGiaHienTai(1250.0);
 
             // Round 3
             NguoiDung nguoiMua3 = new NguoiDung("AnhDung", "buyer4@gmail.com", "123456", "25/07/1999");
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua3);
+            phienDauGia.addNguoiTraGia(nguoiMua3);
             phienDauGia.setGiaHienTai(1500.0);
 
             // Determine winner
@@ -484,7 +484,7 @@ public class PhienDauGiaTest {
         @DisplayName("Should handle large bidder lists")
         void testLargeBidderList() {
             for (int i = 0; i < 100; i++) {
-                phienDauGia.getDanhSachNguoiTraGia().add(
+                phienDauGia.addNguoiTraGia(
                     new NguoiDung("Buyer" + i, "buyer" + i + "@gmail.com", "123456", "01/01/2000")
                 );
             }
@@ -503,7 +503,7 @@ public class PhienDauGiaTest {
 
             // Perform multiple operations
             phienDauGia.setGiaHienTai(5000.0);
-            phienDauGia.getDanhSachNguoiTraGia().add(nguoiMua1);
+            phienDauGia.addNguoiTraGia(nguoiMua1);
             phienDauGia.setTrangThai(TrangThaiPhien.DANG_DIEN_RA);
 
             // Verify core data hasn't changed
