@@ -33,6 +33,14 @@ public class PhienDauGia {
         buocGia = 0.0;
         this.trangThai = TrangThaiPhien.DANG_CHO;
     }
+    public PhienDauGia(String tenPhien, SanPham sanPhamDauGia, double giaKhoiDiem, NguoiDung nguoiBan, LocalDateTime thoiGianBatDau, LocalDateTime thoiGianKetThuc) {
+        this.tenPhien = tenPhien;
+        this.sanPhamDauGia = sanPhamDauGia;
+        this.giaHienTai = giaKhoiDiem;
+        this.nguoiBan = nguoiBan;
+        this.thoiGianBatDau = thoiGianBatDau;
+        this.thoiGianKetThuc = thoiGianKetThuc;
+    }
 
     // Overloaded constructor for use with database (without thoiGian)
     public PhienDauGia(String maPhien, String tenPhien, SanPham sanPhamDauGia, double giaKhoiDiem, NguoiDung nguoiBan) {

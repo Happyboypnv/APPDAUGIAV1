@@ -1,0 +1,33 @@
+/* Áp dụng cho TextField, DatePicker và Spinner */
+.text-field, .date-picker, .spinner {
+    -fx-background-color: #131a35; /* Màu nền cực tối, sâu hơn nền chính */
+    -fx-background-radius: 8;      /* Bo góc mềm mại hơn */
+    -fx-border-color: #27305c;     /* Viền màu xanh thẫm, tạo chiều sâu */
+    -fx-border-radius: 8;
+    -fx-text-fill: #ffffff;        /* Chữ trắng tinh khiết */
+    -fx-prompt-text-fill: #5a6a9d; /* Chữ gợi ý màu xanh mờ */
+    -fx-padding: 10 15;            /* Tăng khoảng trống bên trong cho thoáng */
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+}
+
+/* Hiệu ứng khi di chuột qua (Hover) */
+.text-field:hover, .date-picker:hover, .spinner:hover {
+    -fx-border-color: #3d4a8d;     /* Viền sáng nhẹ lên một chút */
+}
+
+/* Hiệu ứng khi đang nhập liệu (Focus) */
+.text-field:focused, .date-picker:focused, .spinner:focused {
+    -fx-background-color: #161e3d;
+    -fx-border-color: #4a90e2;     /* Viền xanh neon nổi bật */
+    -fx-effect: dropshadow(three-pass-box, rgba(74, 144, 226, 0.2), 10, 0, 0, 0);
+}
+
+/* Xử lý riêng cho nút mũi tên của DatePicker và Spinner cho đồng bộ */
+.date-picker > .arrow-button, .spinner > .increment-arrow-button, .spinner > .decrement-arrow-button {
+    -fx-background-color: transparent;
+}
+
+.date-picker .arrow, .spinner .arrow {
+    -fx-background-color: #4a90e2; /* Màu icon xanh dương */
+}

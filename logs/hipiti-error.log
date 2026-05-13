@@ -6,3 +6,4 @@
 2026-05-12 19:20:19.831 [JavaFX Application Thread] ERROR c.m.utils.KhoLuuTruNguoiDungSQLite - L?i layTheoEmail: no such column: 'so_tai_khoan'
 2026-05-12 19:22:12.622 [pool-1-thread-7] ERROR c.m.utils.KhoLuuTruNguoiDungSQLite - Lỗi layTheoEmail: no such column: 'so_tai_khoan'
 2026-05-12 19:22:17.062 [WebSocketWorker-24] ERROR c.m.s.w.AuctionWebSocketServer - ❌ Error processing message: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
+2026-05-13 15:09:07.801 [JavaFX Application Thread] ERROR c.m.s.c.AuctionWebSocketControllerAdapter - ❌ Error processing user joined: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null

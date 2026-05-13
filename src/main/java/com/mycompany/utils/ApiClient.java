@@ -99,6 +99,7 @@ public class ApiClient {
             return new java.util.ArrayList<>();
         }
     }
+
     /**
      * goi api get all auctions
      * @param token
@@ -110,6 +111,43 @@ public class ApiClient {
     // ============================================================
     // LẤY THÔNG TIN USER
     // ============================================================
+    /**
+     * Gọi POST /api/auctions để tạo phiên đấu giá mới.
+     * Yêu cầu token hợp lệ trong header Authorization.
+     *
+     * @param tenPhien      Tên phiên đấu giá
+     * @param tenSanPham    Tên sản phẩm
+     * @param maSanPham     Mã sản phẩm (tự sinh)
+     * @param giaKhoiDiem   Giá khởi điểm (VNĐ)
+     * @param thoiGianGiay  Thời gian phiên tính bằng giây
+     * @param token         Token xác thực người dùng
+     * @return true nếu tạo thành công (HTTP 201), false nếu thất bại
+     */
+    public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
+                                        double giaKhoiDiem, int thoiGianGiay, String token) {
+        // Tạo JSON body theo format AuctionController.TaoPhienRequest
+        String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
+            put("tenPhien",     tenPhien);
+            put("tenSanPham",   tenSanPham);
+            put("maSanPham",    maSanPham);
+            put("giaKhoiDiem",  giaKhoiDiem);
+            put("thoiGianGiay", thoiGianGiay);
+        }});
+
+        String responseJson = guiPost("/api/auctions", jsonBody, token);
+
+        if (responseJson == null) return false;
+
+        // Server trả 201 khi thành công — responseJson chứa maPhien
+        // Nếu không null thì coi như thành công
+        try {
+            com.google.gson.JsonObject obj = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
+            return obj.has("maPhien"); // Có maPhien = tạo thành công
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse createAuction response: " + e.getMessage());
+            return false;
+        }
+    }
 
     /**
      * Gọi GET /api/users/{email}
