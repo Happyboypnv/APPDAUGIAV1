@@ -1,0 +1,28 @@
+/* Nút Tạo phiên (Màu xanh dương chủ đạo) */
+.button-create {
+    -fx-background-color: #3498db;      /* Màu xanh dương */
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;         /* Bo tròn tối đa tạo hình viên thuốc */
+    -fx-padding: 10 30;                /* Tăng chiều ngang cho nút */
+    -fx-cursor: hand;                  /* Hiệu ứng bàn tay khi di chuột */
+}
+
+.button-create:hover {
+    -fx-background-color: #2980b9;      /* Màu đậm hơn khi di chuột qua */
+}
+
+/* Nút Hủy (Màu xám/bạc) */
+.button-cancel {
+    -fx-background-color: #7f8c8d;      /* Màu xám trung tính */
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-background-radius: 25;         /* Bo tròn y hệt nút Tạo phiên */
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+}
+
+.button-cancel:hover {
+    -fx-background-color: #95a5a6;      /* Sáng hơn một chút khi di chuột qua */
+}

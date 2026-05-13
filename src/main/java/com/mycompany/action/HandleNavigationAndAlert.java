@@ -120,6 +120,24 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
     }
 
     /**
+     * goToCreateAuction(Event event) - Điều hướng đến form Tạo Phiên Đấu Giá
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Gọi từ NavBarController.navigateToCreateAuction() khi click "Tạo phiên đấu giá"
+     *
+     * @param event Event từ UI (MouseEvent hoặc ActionEvent)
+     * @throws IOException nếu không load được FXML
+     */
+    public void goToCreateAuction(Event event) throws IOException {
+        javafx.scene.layout.StackPane root =
+                FXMLLoader.load(getClass().getResource("/view/CreateAuction.fxml"));
+        Scene scene = new Scene(root);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.show();
+    }
+
+    /**
      * goToProfile(Stage stage) - Điều hướng về trang Profile
      *
      * KẾT NỐI VỚI CONTROLLER:
