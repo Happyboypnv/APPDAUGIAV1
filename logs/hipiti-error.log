@@ -21,3 +21,9 @@
 }
 2026-05-14 11:17:02.656 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
 2026-05-14 11:53:32.446 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-14 14:16:59.501 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-14 14:17:28.260 [JavaFX Application Thread] ERROR c.m.s.c.AuctionWebSocketControllerAdapter - ❌ Error processing user joined: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
+2026-05-14 14:24:50.015 [JavaFX Application Thread] ERROR c.m.s.c.AuctionWebSocketControllerAdapter - ❌ Error processing user joined: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
+2026-05-14 14:38:41.761 [JavaFX Application Thread] ERROR c.m.s.c.AuctionWebSocketControllerAdapter - ❌ Error processing user joined: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
