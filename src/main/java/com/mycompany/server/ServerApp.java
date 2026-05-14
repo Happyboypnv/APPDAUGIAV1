@@ -135,10 +135,41 @@ public class ServerApp {
 
         // ===== KHỞI ĐỘNG SERVER =====
         server.start();
+
+        // ===== KHỞI ĐỘNG WEBSOCKET SERVER WITH VERIFICATION =====
         com.mycompany.websocket.AuctionWebSocketServerStarter.startServer();
-        logger.info("  WS   ws://localhost:8081 (WebSocket real-time)");
+
+        // Wait a moment for WebSocket startup (async startup on separate thread)
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // Check WebSocket startup status and warn if failed
+        String wsError = com.mycompany.websocket.AuctionWebSocketServerStarter.getStartupError();
+        boolean wsSuccess = com.mycompany.websocket.AuctionWebSocketServerStarter.isStartupSuccessful();
+
         logger.info("========================================");
-        logger.info("  SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!");
+        logger.info("  🚨 SERVER STARTUP REPORT");
+        logger.info("========================================");
+        logger.info("  HTTP  http://localhost:" + PORT + " (REST API)");
+
+        if (wsSuccess) {
+            logger.info("  WS    ws://localhost:8081 (WebSocket real-time)");
+            logger.info("========================================");
+            logger.info("  ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!");
+        } else {
+            logger.error("  ❌ WEBSOCKET SERVER FAILED TO START!");
+            if (wsError != null) {
+                logger.error("  Error: " + wsError);
+            }
+            logger.error("========================================");
+            logger.error("  ⚠️  HTTP server is running but WebSocket is NOT available");
+            logger.error("  ⚠️  Real-time auction features will NOT work!");
+            logger.error("========================================");
+        }
+
         logger.info("  Địa chỉ: http://localhost:" + PORT);
         logger.info("========================================");
         logger.info("  USERS:");
@@ -157,6 +188,7 @@ public class ServerApp {
         logger.info("  GET  http://localhost:" + PORT + "/api/bids/{phienId}");
         logger.info("========================================");
         logger.info("  Nhấn Ctrl+C để dừng server");
+        logger.info("========================================");
     }
 
     /**

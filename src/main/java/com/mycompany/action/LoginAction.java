@@ -142,114 +142,338 @@ public class LoginAction {
     }
 
     /**
-     * dangKy(ActionEvent event, String name, String email, String password, LocalDate birthdate) - Xử lý đăng ký
+     * dangKy(ActionEvent event, String name, String email, String password, LocalDate birthdate) - Xử lý đăng ký (Client-Server)
      *
-     * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
-     * - Trước: NguoiDung nguoiDung = new NguoiDung(name, email, password, birthdate.toString())
-     *          → Lưu password plain text
-     * - Sau: Tạo salt + hash password trước khi tạo NguoiDung object
+     * ARCHITECTURE: Client-Server for Registration
+     * ====================================================
+     * SAU (Client-Server):
+     * - User fills form on Computer A
+     * - Data sent to Server (HTTP POST /api/users/register)
+     * - Server creates account + hashes password + saves to server DB
+     * - Computer A saves locally for offline access
+     * - Same user on Computer B → Server has account → Can login
+     * - Both computers sync from server, local DB is backup only
      *
-     * Quy trình mới:
-     * 1. Validate thông tin đăng ký (name, email, password, birthdate)
-     * 2. Tạo salt ngẫu nhiên (16 bytes Base64)
-     * 3. Hash password với salt (SHA-256)
-     * 4. Tạo NguoiDung object với password đã hash + salt
-     * 5. Lưu vào database
-     * 6. Thông báo thành công + chuyển sang trang đăng nhập
+     * QUY TRÌNH:
+     * 1. Validate input (name, email, password, birthdate on client side)
+     * 2. GỌI SERVER: ApiClient.register() → POST /api/users/register
+     * 3. Server xử lý:
+     *    - Check email không trùng
+     *    - Hash password + create salt
+     *    - Save user to server database
+     *    - Return LoginResponse {token, thongBao}
+     * 4. Nếu server return thành công → Save locally as backup
+     * 5. Thông báo thành công + chuyển sang đăng nhập
      *
-     * Bảo mật được cải thiện:
-     * - Rainbow table attack: Không thể vì mỗi user có salt khác nhau
-     * - Brute force: Phải crack từng hash riêng biệt
-     * - Dictionary attack: Salt làm cho dictionary attack kém hiệu quả
+     * THREAD-SAFE:
+     * - tryLock(500ms) để tránh concurrent signup race condition
+     * - unlock() trong finally block
      *
-     * @param event ActionEvent từ button click
+     * XỬ LÝ LỖI:
+     * - Validation errors → Custom exceptions
+     * - Email already exists → Server trả lỗi
+     * - Network error → "Không kết nối được server"
+     * - Lock timeout → "Hệ thống đang bận"
+     *
+     * @param event ActionEvent từ Sign Up button
      * @param name Họ tên
-     * @param email Email
-     * @param password Mật khẩu (plain text từ form)
+     * @param email Email (sẽ được server check duplicate)
+     * @param password Mật khẩu plain text
      * @param birthdate Ngày sinh
      */
     @FXML
     public void dangKy(ActionEvent event, String name, String email, String password, LocalDate birthdate) {
         try {
-            if (lock.tryLock(500, TimeUnit.MILLISECONDS)) { // Thử lấy lock trong 0.5s, nếu không được sẽ trả về false và không thực hiện đăng ký
-                try {
-                    checkSignUp(name, email, password, birthdate); // check thông tin đky
+            // 🔹 BƯỚC 1: Thử lấy lock để tránh race condition
+            if (!lock.tryLock(500, TimeUnit.MILLISECONDS)) {
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.ERROR, "Lỗi hệ thống",
+                        "Hệ thống đang bận, vui lòng thử lại sau!");
+                return;
+            }
 
-                    // THAY ĐỔI QUAN TRỌNG: Hash password với salt trước khi lưu
-                    // Lý do: Bảo mật - không lưu plain text password
-                    // Cách hoạt động:
-                    // 1. BoMaHoaMatKhau.taoSalt() → tạo 16 bytes random, encode Base64
-                    // 2. BoMaHoaMatKhau.maHoaMatKhau(password, salt) → SHA-256 hash
-                    // 3. Tạo NguoiDung với password đã hash và salt
+            try {
+                // 🔹 BƯỚC 2: Validate thông tin đăng ký (client-side validation)
+                checkSignUp(name, email, password, birthdate);
+
+                // 🔹 BƯỚC 3: GỌI SERVER để tạo account (Client-Server Architecture)
+                // ApiClient.register() sẽ:
+                // - POST name, email, password, birthdate đến /api/users/register trên server
+                // - Server validate email không trùng
+                // - Server hash password + tạo salt
+                // - Server save user vào server database (SQLite)
+                // - Server return LoginResponse {token, thongBao}
+                //
+                // QUAN TRỌNG: Nếu success → User có thể login từ bất kỳ computer nào
+                System.out.println("[LoginAction] 📤 Sending signup request to server...");
+                LoginResponse response = ApiClient.register(
+                        name.trim(),
+                        email.trim(),
+                        password,
+                        birthdate.toString()  // Format: YYYY-MM-DD
+                );
+
+                // 🔹 BƯỚC 4: Kiểm tra response từ server
+                if (response == null) {
+                    // Lỗi kết nối mạng (ApiClient đã log chi tiết)
+                    throw new UserException("Không thể kết nối đến server. Kiểm tra IP/Port server.");
+                }
+
+                // 🔹 BƯỚC 5: Kiểm tra xem server accept signup hay không
+                String thongBao = response.getThongBao();
+                if (thongBao == null || thongBao.isEmpty()) {
+                    thongBao = "Lỗi từ server: Không có phản hồi";
+                }
+
+                // Nếu server trả lỗi (email đã tồn tại, password không hợp lệ, etc)
+                // → thongBao sẽ chứa chi tiết lỗi
+                boolean isSuccess = response.getToken() != null && !response.getToken().trim().isEmpty();
+
+                if (!isSuccess) {
+                    // Server từ chối đăng ký - hiển thị lỗi từ server
+                    System.err.println("[LoginAction] ❌ Server rejected signup: " + thongBao);
+                    throw new UserException(thongBao);
+                }
+
+                System.out.println("[LoginAction] ✅ Server accepted signup successfully");
+
+                // 🔹 BƯỚC 6: Signup thành công trên server
+                // Giờ lưu local copy để offline access (optional nhưng tốt cho UX)
+                // Password sẽ lưu dưới dạng hash (không plain text)
+                try {
                     String salt = BoMaHoaMatKhau.taoSalt();
                     String hashedPassword = BoMaHoaMatKhau.maHoaMatKhau(password, salt);
-                    NguoiDung nguoiDung = new NguoiDung(name, email, hashedPassword, birthdate.toString());
-                    nguoiDung.setSalt(salt);  // THAY ĐỔI: Set salt vào NguoiDung object
-
-                    khoLuuTruNguoiDung.luu(nguoiDung); // lưu người dùng (sau lưu vào db)
-                    HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đăng ký thành công tài khoản!");
-                    try {
-                        HandleNavigationAndAlert.getInstance().handleGoToSignIn(event); // chuyển sang sign In
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (UserNameException | EmailException | PasswordException | DateException e) {
-                    HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING, "Lỗi đăng ký", e.getMessage());
-                } finally {
-                    lock.unlock(); // Đảm bảo luôn giải phóng lock sau khi hoàn thành công việc
+                    NguoiDung localUser = new NguoiDung(name.trim(), email.trim(), hashedPassword, birthdate.toString());
+                    localUser.setSalt(salt);
+                    khoLuuTruNguoiDung.luu(localUser);
+                    System.out.println("[LoginAction] 💾 Account also saved to local DB for offline access");
+                } catch (Exception e) {
+                    // Local save failed but server save succeeded
+                    // This is OK - user can still login, just won't have offline access
+                    System.err.println("[LoginAction] ⚠️ Local save failed (not critical): " + e.getMessage());
                 }
-            } else {
-                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi hệ thống", "Hệ thống đang bận, vui lòng thử lại sau!");
+
+                // 🔹 BƯỚC 7: Hiển thị thông báo thành công
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.INFORMATION, "Thành công",
+                        "Đăng ký thành công! Tài khoản có thể dùng trên bất kỳ thiết bị nào.");
+
+                // 🔹 BƯỚC 8: Chuyển hướng sang trang đăng nhập
+                try {
+                    HandleNavigationAndAlert.getInstance().handleGoToSignIn(event);
+                } catch (IOException e) {
+                    System.err.println("[LoginAction] ❌ Navigation error: " + e.getMessage());
+                    e.printStackTrace();
+                    HandleNavigationAndAlert.getInstance().showAlert(
+                            Alert.AlertType.ERROR, "Lỗi giao diện",
+                            "Không thể chuyển sang trang đăng nhập. Vui lòng thử lại.");
+                }
+
+            } catch (UserNameException e) {
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.WARNING, "Lỗi tên", e.getMessage());
+
+            } catch (EmailException e) {
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.WARNING, "Lỗi email", e.getMessage());
+
+            } catch (PasswordException e) {
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.WARNING, "Lỗi mật khẩu", e.getMessage());
+
+            } catch (DateException e) {
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.WARNING, "Lỗi ngày sinh", e.getMessage());
+
+            } catch (UserException e) {
+                // Server error hoặc network error
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.WARNING, "Lỗi đăng ký", e.getMessage());
+
+            } catch (Exception e) {
+                System.err.println("[LoginAction] ❌ Signup error: " + e.getMessage());
+                e.printStackTrace();
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.ERROR, "Lỗi không xác định",
+                        "Đã xảy ra lỗi: " + e.getMessage());
+
+            } finally {
+                // Luôn giải phóng lock
+                lock.unlock();
             }
-        } catch (InterruptedException e)  {
+
+        } catch (InterruptedException e) {
+            // Lock bị interrupt
+            System.err.println("[LoginAction] ❌ Signup interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi hệ thống", "Đăng ký bị gián đoạn, vui lòng thử lại!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi không xác định", "Đã xảy ra lỗi không xác định, vui lòng thử lại!");
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi hệ thống",
+                    "Đăng ký bị gián đoạn. Vui lòng thử lại.");
         }
     }
 
     /**
-     * dangNhap(ActionEvent event, String email, String password) - Xử lý đăng nhập
+     * dangNhap(ActionEvent event, String email, String password) - Xử lý đăng nhập (Client-Server)
      *
-     * KẾT NỐI VỚI CONTROLLER:
-     * - Được gọi từ SignInController khi submit form đăng nhập
+     * ARCHITECTURE: Client-Server Model
+     * - Client (JavaFX): Gửi email/password → nhận token
+     * - Server (HTTP): Xác thực credentials → trả token + user info
+     * - Client không bao giờ trực tiếp truy cập DB (tất cả qua server)
      *
      * QUY TRÌNH:
-     * 1. Thử lấy lock trong 500ms (thread-safe)
-     * 2. Validate thông tin đăng nhập
-     * 3. Lấy thông tin user từ database
-     * 4. Tạo JWT token
-     * 5. Set session trong SessionManager
-     * 6. Thông báo thành công + log
-     * 7. Chuyển sang trang Home
+     * 1. Validate input (email/password không null/empty)
+     * 2. Gọi ApiClient.login() → Server xác thực credentials
+     * 3. Server trả LoginResponse với:
+     *    - token: JWT token để dùng cho các request sau
+     *    - thongBao: Thông báo lỗi nếu fail
+     * 4. Nếu token != null → Đăng nhập thành công
+     * 5. Lấy user info từ server (hoặc từ response)
+     * 6. Lưu token + user vào SessionManager
+     * 7. Chuyển hướng sang Home
      *
      * THREAD-SAFE:
-     * - Sử dụng tryLock() để tránh block
-     * - Unlock trong finally block
+     * - tryLock(500ms) để tránh concurrent login race condition
+     * - unlock() trong finally block
      *
      * XỬ LÝ LỖI:
-     * - Validation errors → Custom exceptions → Alert warnings
-     * - Lock timeout → Alert system busy
-     * - InterruptedException → Thread interrupt + alert
-     * - IOException khi navigation → Print stack trace + alert
-     * - Other exceptions → Generic error alert
+     * - Null input → throw EmailException/PasswordException
+     * - Server error → thongBao từ response
+     * - Network error → "Không kết nối được server"
+     * - Lock timeout → "Hệ thống đang bận"
+     * - Navigation error → catch IOException
      *
-     * @param event ActionEvent từ button click
-     * @param email Email đăng nhập
-     * @param password Mật khẩu
+     * @param event ActionEvent từ Login button
+     * @param email Email person
+     * @param password Mật khẩu plain text (sẽ được server hash)
      */
+//    @FXML
+//    public void dangNhap(ActionEvent event, String email, String password) {
+//        try {
+//            // 🔹 BƯỚC 1: Thử lấy lock để tránh race condition (timeout 500ms)
+//            if (!lock.tryLock(500, TimeUnit.MILLISECONDS)) {
+//                HandleNavigationAndAlert.getInstance().showAlert(
+//                        Alert.AlertType.ERROR, "Lỗi hệ thống",
+//                        "Hệ thống đang bận, vui lòng thử lại sau!");
+//                return;
+//            }
+//
+//            try {
+//                // 🔹 BƯỚC 2: Validate input (basic null/empty check)
+//                if (email == null || email.trim().isEmpty()) {
+//                    throw new EmailException("Email đang bỏ trống!");
+//                }
+//                if (password == null || password.trim().isEmpty()) {
+//                    throw new PasswordException("Mật khẩu đang bỏ trống!");
+//                }
+//
+//                // 🔹 BƯỚC 3: GỌISERVER để xác thực (Client-Server Architecture)
+//                // ApiClient.login() sẽ:
+//                // - POST email + password đến /api/users/login trên server
+//                // - Server xác thực credentials (so sánh hash password)
+//                // - Server trả LoginResponse chứa token (nếu thành công)
+//                LoginResponse response = ApiClient.login(email.trim(), password);
+//
+//                // 🔹 BƯỚC 4: Kiểm tra response từ server
+//                if (response == null) {
+//                    // Lỗi kết nối mạng (ApiClient đã log chi tiết)
+//                    throw new UserException("Không thể kết nối đến server. Kiểm tra IP/Port server.");
+//                }
+//
+//                // 🔹 BƯỚC 5: Kiểm tra token (token != null = đăng nhập thành công)
+//                String token = response.getToken();
+//                if (token == null || token.trim().isEmpty()) {
+//                    // Đăng nhập thất bại - lỗi từ server
+//                    String errorMsg = response.getThongBao();
+//                    if (errorMsg == null || errorMsg.isEmpty()) {
+//                        errorMsg = "Sai email hoặc mật khẩu. Vui lòng thử lại.";
+//                    }
+//                    throw new UserException(errorMsg);
+//                }
+//
+//                // 🔹 BƯỚC 6: Đăng nhập thành công - Lấy thông tin user
+//                // Có 2 cách:
+//                // Cách A: Lấy user info từ response server (nếu server trả)
+//                // Cách B: Gọi ApiClient.getUser(email, token) để lấy đầy đủ info
+//                // Để đơn giản, tạm thời lấy từ local DB (user đã được sync trước)
+//                // Nếu cần info mới nhất, dùng ApiClient.getUser()
+//
+//                NguoiDung user = khoLuuTruNguoiDung.layTheoEmail(email.trim());
+//
+//                // Nếu user chưa có trong local DB (user mới từ server),
+//                // có thể tạo object NguoiDung từ response hoặc tạo default
+//                if (user == null) {
+//                    // User mới - tạo object từ thông tin có sẵn
+//                    // (Lý tưởng: server trả kèm full user info trong response)
+//                    user = new NguoiDung("Unknown", email.trim(), password, "1990-01-01");
+//                    System.err.println("[LoginAction] ⚠️ User not found locally, using minimal info");
+//                }
+//
+//                // 🔹 BƯỚC 7: Lưu session (token + user)
+//                // SessionManager sẽ:
+//                // - Lưu NguoiDung object để dùng trong app
+//                // - Lưu token để dùng cho subsequent API calls (Profile, Finance, etc)
+//                SessionManager.getInstance().setSession(user, token);
+//
+//                // 🔹 BƯỚC 8: Hiển thị thông báo thành công
+//                HandleNavigationAndAlert.getInstance().showAlert(
+//                        Alert.AlertType.INFORMATION, "Thành công",
+//                        "Đăng nhập thành công! Chào mừng " + user.layHoTen() + ".");
+//
+//                // 🔹 BƯỚC 9: Chuyển hướng sang trang Home
+//                try {
+//                    HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+//                } catch (IOException e) {
+//                    System.err.println("[LoginAction] ❌ Lỗi khi chuyển sang Home: " + e.getMessage());
+//                    e.printStackTrace();
+//                    HandleNavigationAndAlert.getInstance().showAlert(
+//                            Alert.AlertType.ERROR, "Lỗi giao diện",
+//                            "Không thể tải trang Home. Vui lòng thử lại.");
+//                }
+//
+//            } catch (UserException e) {
+//                // Lỗi authentication từ server (email/password sai, account disabled, etc)
+//                HandleNavigationAndAlert.getInstance().showAlert(
+//                        Alert.AlertType.WARNING, "Lỗi đăng nhập", e.getMessage());
+//
+//            } catch (EmailException e) {
+//                // Email validation error
+//                HandleNavigationAndAlert.getInstance().showAlert(
+//                        Alert.AlertType.WARNING, "Lỗi email", e.getMessage());
+//
+//            } catch (PasswordException e) {
+//                // Password validation error
+//                HandleNavigationAndAlert.getInstance().showAlert(
+//                        Alert.AlertType.WARNING, "Lỗi mật khẩu", e.getMessage());
+//
+//            } catch (Exception e) {
+//                // Lỗi không xác định
+//                System.err.println("[LoginAction] ❌ Lỗi đăng nhập không xác định: " + e.getMessage());
+//                e.printStackTrace();
+//                HandleNavigationAndAlert.getInstance().showAlert(
+//                        Alert.AlertType.ERROR, "Lỗi không xác định",
+//                        "Đã xảy ra lỗi: " + e.getMessage());
+//
+//            } finally {
+//                // Luôn giải phóng lock dù thành công hay thất bại
+//                lock.unlock();
+//            }
+//
+//        } catch (InterruptedException e) {
+//            // Lock bị interrupt
+//            System.err.println("[LoginAction] ❌ Đăng nhập bị gián đoạn: " + e.getMessage());
+//            Thread.currentThread().interrupt();
+//            HandleNavigationAndAlert.getInstance().showAlert(
+//                    Alert.AlertType.ERROR, "Lỗi hệ thống",
+//                    "Đăng nhập bị gián đoạn. Vui lòng thử lại.");
+//        }
+//    }
+
     @FXML
     public void dangNhap(ActionEvent event, String email, String password) {
         try {
             if (lock.tryLock(500, TimeUnit.MILLISECONDS)) {
                 try {
-                    // Kiểm tra null/empty trước
-                    if (email == null || email.isEmpty())
-                        throw new EmailException("Email đang bỏ trống!");
-                    if (password == null || password.isEmpty())
-                        throw new PasswordException("Mật khẩu đang bỏ trống!");
+                    checkSignIn(email, password); // check thông tin đăng nhập
 
                     // ĐỔI MỚI: Gọi server qua ApiClient thay vì DB trực tiếp
                     LoginResponse response = ApiClient.login(email, password);
@@ -297,5 +521,4 @@ public class LoginAction {
             Thread.currentThread().interrupt();
         }
     }
-
 }
