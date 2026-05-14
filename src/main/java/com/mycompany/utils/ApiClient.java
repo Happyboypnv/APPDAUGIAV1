@@ -123,26 +123,33 @@ public class ApiClient {
      * @param token         Token xác thực người dùng
      * @return true nếu tạo thành công (HTTP 201), false nếu thất bại
      */
+    // Thêm 2 tham số moTa và danhMuc
     public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
+                                        String danhMuc, String moTa,         // ← thêm 2 dòng này
                                         double giaKhoiDiem, int thoiGianGiay, String token) {
-        // Tạo JSON body theo format AuctionController.TaoPhienRequest
         String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
             put("tenPhien",     tenPhien);
             put("tenSanPham",   tenSanPham);
             put("maSanPham",    maSanPham);
+            put("danhMuc",      danhMuc);    // ← thêm
+            put("moTa",         moTa);       // ← thêm
             put("giaKhoiDiem",  giaKhoiDiem);
             put("thoiGianGiay", thoiGianGiay);
         }});
-
+        logger.info("[createAuction] JSON gửi lên: " + jsonBody);
+        logger.info("[createAuction] Token: " + token);
         String responseJson = guiPost("/api/auctions", jsonBody, token);
 
         if (responseJson == null) return false;
-
-        // Server trả 201 khi thành công — responseJson chứa maPhien
-        // Nếu không null thì coi như thành công
+        logger.info("[createAuction] Server trả về: " + responseJson);
         try {
             com.google.gson.JsonObject obj = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
-            return obj.has("maPhien"); // Có maPhien = tạo thành công
+            if (!obj.has("maPhien")) {
+                // Log ra lỗi thật sự từ server thay vì im lặng
+                logger.error("[ApiClient] Server từ chối tạo phiên: " + responseJson);
+                return false;
+            }
+            return true;
         } catch (Exception e) {
             logger.error("[ApiClient] Lỗi parse createAuction response: " + e.getMessage());
             return false;

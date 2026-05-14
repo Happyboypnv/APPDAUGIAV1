@@ -1,10 +1,28 @@
-### Đăng nhập
-POST http://localhost:8080/api/users/login
+### Tạo phiên đấu giá
+POST http://localhost:8080/api/auctions
 Content-Type: application/json
 Authorization: Bearer USER_b@test.com_1778342581304
 
 {
-  "email": "b@test.com",
-  "matKhau": "123456",
-  "ngaySinh": "2000-01-01"
+  "tenPhien": "Đấu giá đồng hồ Rolex",
+  "tenSanPham": "Rolex Submariner",
+  "maSanPham": "SP_1778342581304",
+  "danhMuc": "Đồng hồ",
+  "moTa": "Đồng hồ chính hãng",
+  "giaKhoiDiem": 135000000,
+  "thoiGianGiay": 86400
+}
+
+### Lấy danh sách phiên
+GET http://localhost:8080/api/auctions
+Authorization: Bearer USER_b@test.com_1778342581304
+
+### Đặt giá
+POST http://localhost:8080/api/auctions/bids
+Content-Type: application/json
+Authorization: Bearer USER_b@test.com_1778342581304
+
+{
+  "maPhien": "PHIEN_001",
+  "gia": 140000000
 }

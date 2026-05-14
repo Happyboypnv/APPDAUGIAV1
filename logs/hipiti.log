@@ -299,3 +299,200 @@
 2026-05-14 00:48:57.604 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
 2026-05-14 00:48:57.610 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
 2026-05-14 00:48:57.612 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-14 08:02:03.193 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-14 08:02:03.779 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:02:03.782 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-14 08:02:03.783 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-14 08:02:03.839 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-14 08:02:03.843 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:02:03.846 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-14 08:02:04.202 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-14 08:02:04.205 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-14 08:02:04.206 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-14 08:02:04.207 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-14 08:02:04.207 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 08:02:04.207 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-14 08:02:04.207 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-14 08:02:04.207 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-14 08:02:04.207 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 08:02:04.208 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-14 08:02:04.214 [WebSocketSelector-28] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-14 08:02:12.005 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:02:12.199 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP_1778342581304
+2026-05-14 08:02:12.201 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-14 08:02:12.201 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000005
+2026-05-14 08:02:24.174 [pool-1-thread-2] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:02:24.179 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP_1778342581304
+2026-05-14 08:02:24.180 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-14 08:02:24.180 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000006
+2026-05-14 08:02:41.269 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-14 08:02:41.275 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-14 08:02:41.715 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:02:41.720 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-14 08:02:41.722 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-14 08:02:41.723 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-14 08:02:41.723 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-14 08:02:41.726 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-14 08:02:41.730 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:02:41.733 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-14 08:02:41.735 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-14 08:02:59.473 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:02:59.474 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-14 08:02:59.475 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
+2026-05-14 08:02:59.475 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
+2026-05-14 08:02:59.475 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-14 08:03:01.205 [pool-1-thread-5] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:03:26.421 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-14 08:03:46.079 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-14 08:05:27.840 [Thread-8] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-14 08:05:37.965 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-14 08:05:37.966 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-14 08:06:37.349 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-14 08:06:37.374 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-14 08:07:33.889 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-14 08:07:34.468 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:07:34.472 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-14 08:07:34.473 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-14 08:07:34.477 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-14 08:07:34.481 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:07:34.485 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-14 08:07:34.660 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-14 08:07:34.663 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-14 08:07:34.663 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 08:07:34.664 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-14 08:07:34.664 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-14 08:07:34.664 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 08:07:34.664 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-14 08:07:34.664 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-14 08:07:34.664 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-14 08:07:34.664 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-14 08:07:34.665 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 08:07:34.665 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-14 08:07:34.665 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-14 08:07:34.665 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-14 08:07:34.665 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-14 08:07:34.665 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-14 08:07:34.665 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 08:07:34.666 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-14 08:07:34.666 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-14 08:07:34.666 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-14 08:07:34.666 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 08:07:34.666 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-14 08:07:34.674 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-14 08:07:42.828 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-14 08:07:42.838 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-14 08:07:43.277 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:07:43.281 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-14 08:07:43.282 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-14 08:07:43.283 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-14 08:07:43.284 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-14 08:07:43.286 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-14 08:07:43.288 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:07:43.292 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-14 08:07:43.292 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-14 08:07:57.124 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:07:57.138 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-14 08:07:57.139 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
+2026-05-14 08:07:57.140 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
+2026-05-14 08:07:57.141 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-14 08:07:58.790 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 08:08:20.736 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: null
+2026-05-14 08:08:20.736 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: UFBQVDAwMDAwMXxwaG9uZ0BnbWFpbC5jb218bmd1eWVudmFucGhvbmd8MTk5OS0wNS0wN3x8fDEuMEUxMnx8fDE3Nzg3MjA4NzcyMzE=.1622537031
+2026-05-14 08:08:20.749 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-14 08:08:20.752 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-14 08:13:14.431 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-14 08:13:14.432 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-14 10:04:46.423 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-14 10:04:46.890 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 10:04:46.893 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-14 10:04:46.894 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-14 10:04:46.920 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-14 10:04:46.922 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 10:04:46.924 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-14 10:04:47.220 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-14 10:04:47.222 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-14 10:04:47.223 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 10:04:47.223 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-14 10:04:47.224 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-14 10:04:47.225 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-14 10:04:47.225 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 10:04:47.225 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-14 10:04:47.225 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-14 10:04:47.225 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-14 10:04:47.225 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 10:04:47.225 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-14 10:04:47.230 [WebSocketSelector-28] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-14 10:04:52.395 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 10:04:52.519 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP_1778342581304
+2026-05-14 10:04:52.521 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-14 10:04:52.526 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000007
+2026-05-14 10:05:07.953 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-14 10:05:07.959 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-14 10:06:59.234 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-14 10:06:59.569 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 10:06:59.574 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-14 10:06:59.574 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-14 10:06:59.578 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-14 10:06:59.581 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 10:06:59.589 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-14 10:06:59.716 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-14 10:06:59.718 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-14 10:06:59.718 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 10:06:59.718 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-14 10:06:59.718 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-14 10:06:59.718 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 10:06:59.718 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-14 10:06:59.718 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-14 10:06:59.719 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-14 10:06:59.720 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-14 10:06:59.720 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-14 10:06:59.720 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-14 10:06:59.725 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-14 10:07:09.983 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-14 10:07:10.005 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP_1778342581304
+2026-05-14 10:07:10.006 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-14 10:07:10.024 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000008
+2026-05-14 10:07:18.209 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-14 10:07:18.229 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.

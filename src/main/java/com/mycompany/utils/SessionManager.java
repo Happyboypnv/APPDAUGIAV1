@@ -183,5 +183,6 @@ public class SessionManager {
     public void logout() {
         this.currentUser = null;
         this.currentToken = null;
+        this.currentPhienId = null;
     }
 }
