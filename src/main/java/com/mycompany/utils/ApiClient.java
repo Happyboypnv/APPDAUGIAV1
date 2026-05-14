@@ -186,6 +186,10 @@ public class ApiClient {
             URL url = new URL(BASE_URL + path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
+            // Set connection timeout to detect unreachable server sooner
+            conn.setConnectTimeout(5000);  // 5 second timeout
+            conn.setReadTimeout(5000);
+
             // 2. Cấu hình: method POST, có body, nhận JSON
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -217,8 +221,30 @@ public class ApiClient {
             conn.disconnect();
             return response;
 
+        } catch (java.net.ConnectException ce) {
+            // Connection refused - server not responding
+            String errorMsg = "[ApiClient] ❌ Cannot connect to server at " + BASE_URL +
+                            " (Connection refused). Make sure the server is running on port 8080.";
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
+        } catch (java.net.SocketTimeoutException ste) {
+            // Server not responding in time
+            String errorMsg = "[ApiClient] ❌ Server timeout at " + BASE_URL +
+                            " (no response). Server might be overloaded or unresponsive.";
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
+        } catch (java.net.UnknownHostException uhe) {
+            // DNS resolution failed
+            String errorMsg = "[ApiClient] ❌ Cannot resolve hostname: " + BASE_URL;
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
         } catch (Exception e) {
-            System.err.println("[ApiClient] Lỗi POST " + path + ": " + e.getMessage());
+            String errorMsg = "[ApiClient] ❌ Error POST " + path + ": " + e.getClass().getSimpleName() + " - " + e.getMessage();
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
             return null;
         }
     }
@@ -234,6 +260,10 @@ public class ApiClient {
         try {
             URL url = new URL(BASE_URL + path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            // Set connection timeout to detect unreachable server sooner
+            conn.setConnectTimeout(5000);  // 5 second timeout
+            conn.setReadTimeout(5000);
 
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -253,8 +283,30 @@ public class ApiClient {
             conn.disconnect();
             return response;
 
+        } catch (java.net.ConnectException ce) {
+            // Connection refused - server not responding
+            String errorMsg = "[ApiClient] ❌ Cannot connect to server at " + BASE_URL +
+                            " (Connection refused). Make sure the server is running on port 8080.";
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
+        } catch (java.net.SocketTimeoutException ste) {
+            // Server not responding in time
+            String errorMsg = "[ApiClient] ❌ Server timeout at " + BASE_URL +
+                            " (no response). Server might be overloaded or unresponsive.";
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
+        } catch (java.net.UnknownHostException uhe) {
+            // DNS resolution failed
+            String errorMsg = "[ApiClient] ❌ Cannot resolve hostname: " + BASE_URL;
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
         } catch (Exception e) {
-            logger.error("[ApiClient] Lỗi GET " + path + ": " + e.getMessage());
+            String errorMsg = "[ApiClient] ❌ Error GET " + path + ": " + e.getClass().getSimpleName() + " - " + e.getMessage();
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
             return null;
         }
     }

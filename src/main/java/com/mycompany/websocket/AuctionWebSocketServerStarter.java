@@ -22,21 +22,28 @@ public class AuctionWebSocketServerStarter {
 
     private static AuctionWebSocketServer wsServer;
     private static Thread wsThread;
+    private static boolean wsStartupSuccess = false;
+    private static String wsStartupError = null;
+    private static final int WS_PORT = 8081;
+    private static final int MAX_STARTUP_ATTEMPTS = 3;
 
     /**
      * PHƯƠNG THỨC (STATIC): startServer()
-     * Khởi động WebSocket server trên port 8081
+     * Khởi động WebSocket server trên port 8081 với retry logic
      *
-     * THREAD-SAFETY:
-     * - Runs on separate daemon thread
-     * - Synchronized to prevent multiple starts
-     * - wsServer instance is reusable
+     * IMPROVEMENTS:
+     * - Retry logic: nếu port bị occupied, chờ rồi retry
+     * - Creates NEW server instance on each retry (can't reuse same instance)
+     * - Better error reporting: ghi lại error message
+     * - Thread safety: synchronization + flag tracking
+     * - Startup verification: flag wsStartupSuccess
      *
      * BEHAVIOR:
      * 1. Check server not already running
-     * 2. Create AuctionWebSocketServer instance (port 8081)
-     * 3. Start in separate daemon thread
-     * 4. Return immediately (non-blocking)
+     * 2. Start in separate thread with retry logic
+     * 3. On each attempt: Create NEW AuctionWebSocketServer instance
+     * 4. Try to start(), if BindException → wait and retry with new instance
+     * 5. Track startup status for caller to verify
      */
     public static synchronized void startServer() {
         if (wsServer != null) {
@@ -44,42 +51,108 @@ public class AuctionWebSocketServerStarter {
             return;
         }
 
-        try {
-            // 🔹 STEP 1: Create server instance
-            wsServer = new AuctionWebSocketServer(8081);
-
-            // 🔹 STEP 2: Create and start server in separate thread
-            wsThread = new Thread(() -> {
+        // 🔹 STEP 1: Create and start server in separate thread with retry
+        wsThread = new Thread(() -> {
+            int attempt = 0;
+            while (attempt < MAX_STARTUP_ATTEMPTS) {
+                attempt++;
                 try {
+                    System.out.println("🔄 WebSocket server startup attempt " + attempt + "/" + MAX_STARTUP_ATTEMPTS);
+
+                    // Create NEW server instance on each attempt (can't reuse same instance)
+                    AuctionWebSocketServer serverInstance = new AuctionWebSocketServer(WS_PORT);
+
                     // setReuseAddr: allow reuse of port after shutdown
-                    wsServer.setReuseAddr(true);
-                    wsServer.start();
+                    serverInstance.setReuseAddr(true);
+                    serverInstance.start();
 
-                    System.out.println("✅ WebSocket server started successfully");
+                    // Startup successful - store reference and mark success
+                    wsServer = serverInstance;
+                    wsStartupSuccess = true;
+                    System.out.println("✅ WebSocket server started successfully on port " + WS_PORT);
 
-                    // Block forever (server running)
+                    // Block forever (server running) - never returns
                     Thread.currentThread().join();
+                    return; // Exit on success (unreachable in normal operation)
+
+                } catch (InterruptedException ie) {
+                    // Thread was interrupted during join()
+                    wsStartupError = "WebSocket server startup interrupted: " + ie.getMessage();
+                    System.err.println("❌ " + wsStartupError);
+                    wsStartupSuccess = false;
+                    Thread.currentThread().interrupt();
+                    break;
 
                 } catch (Exception e) {
-                    System.err.println("❌ Error starting WebSocket server: " + e.getMessage());
+                    // Other exceptions (creation failed, etc.)
+                    wsStartupError = "Error starting WebSocket server (attempt " + attempt + "): " + e.getClass().getSimpleName() + ": " + e.getMessage();
+                    System.err.println("❌ " + wsStartupError);
                     e.printStackTrace();
+
+                    if (attempt < MAX_STARTUP_ATTEMPTS) {
+                        try {
+                            long waitTime = 1000L * attempt;
+                            System.out.println("⏳ Waiting " + waitTime + "ms before retry...");
+                            Thread.sleep(waitTime);
+                            continue;  // Retry with new server instance
+                        } catch (InterruptedException ie) {
+                            wsStartupError = "WebSocket startup interrupted during wait";
+                            System.err.println("❌ " + wsStartupError);
+                            Thread.currentThread().interrupt();
+                            wsStartupSuccess = false;
+                            break;
+                        }
+                    } else {
+                        wsStartupSuccess = false;
+                        break;
+                    }
                 }
-            });
+            }
 
-            // Set as daemon thread: JVM can exit even while thread running
-            // (For graceful shutdown when host process exits)
-            wsThread.setDaemon(false);
-            wsThread.setName("WebSocket-Server-Thread");
+            // After all retry attempts failed
+            if (!wsStartupSuccess) {
+                System.err.println("❌ WebSocket server failed to start after " + MAX_STARTUP_ATTEMPTS + " attempts");
+                System.err.println("   Error: " + wsStartupError);
+            }
+        });
 
-            // 🔹 STEP 3: Start thread
-            wsThread.start();
+        // Set as daemon thread: JVM can exit even while thread running
+        // (For graceful shutdown when host process exits)
+        wsThread.setDaemon(false);
+        wsThread.setName("WebSocket-Server-Thread");
 
-            System.out.println("🚀 WebSocket server thread started");
+        // 🔹 STEP 3: Start thread
+        wsThread.start();
 
-        } catch (Exception e) {
-            System.err.println("❌ Failed to create WebSocket server: " + e.getMessage());
-            e.printStackTrace();
+        System.out.println("🚀 WebSocket server thread started (port " + WS_PORT + ")");
+    }
+
+    /**
+     * Check if WebSocket server started successfully
+     * (useful for the HTTP server to verify before logging "server running")
+     *
+     * @return true if startup succeeded
+     */
+    public static boolean isStartupSuccessful() {
+        // Give server a moment to start (async startup)
+        if (wsThread != null && !wsStartupSuccess && wsStartupError == null) {
+            // Still starting, wait a bit
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
+        return wsStartupSuccess;
+    }
+
+    /**
+     * Get startup error message if startup failed
+     *
+     * @return error message or null if no error
+     */
+    public static String getStartupError() {
+        return wsStartupError;
     }
 
     /**
@@ -88,7 +161,6 @@ public class AuctionWebSocketServerStarter {
      *
      * THREAD-SAFETY:
      * - Synchronized to prevent race conditions
-     * - waitForServerStop(): wait for graceful shutdown
      * - Timeout 10s: prevent hanging
      */
     public static synchronized void stopServer() {
@@ -111,6 +183,7 @@ public class AuctionWebSocketServerStarter {
 
             System.out.println("✅ WebSocket server stopped");
             wsServer = null;
+            wsStartupSuccess = false;
 
         } catch (Exception e) {
             System.err.println("❌ Error stopping WebSocket server: " + e.getMessage());
@@ -125,7 +198,7 @@ public class AuctionWebSocketServerStarter {
      * @return true if server is running
      */
     public static boolean isRunning() {
-        return wsServer != null && wsThread!=null && wsThread.isAlive();
+        return wsServer != null && wsThread != null && wsThread.isAlive();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.mycompany.controller;
 
+import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.server.controller.AuctionWebSocketControllerAdapter;
 import com.mycompany.server.websocket.AuctionWebSocketClient;
 import com.mycompany.utils.ApiClient;
@@ -9,6 +10,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -19,6 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalTime;
@@ -134,7 +138,11 @@ public class BiddingRoomController implements Initializable {
         closeButton.setOnAction(event -> {
             onClose(); // Đóng kết nối WebSocket trước khi thoát
             System.out.println("Đóng phòng đấu giá...");
-            // Thêm logic chuyển màn hình về Home ở đây
+            try {
+                HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+            } catch (IOException e) {
+                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Không thể tải giao diên");
+            }
         });
     }
 
@@ -219,6 +227,6 @@ public class BiddingRoomController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
-        alert.showAndWait();
+        alert.showAndWait(); // Có ở HandleNavigationAndAlert rồi
     }
 }

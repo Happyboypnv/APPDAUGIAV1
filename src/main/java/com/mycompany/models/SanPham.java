@@ -18,5 +18,4 @@ public class SanPham implements Serializable {
     public String layMaSanPham() {
         return this.maSanPham;
     }
-
 }
