@@ -50,7 +50,7 @@ import java.util.Map;
  *    HACKER NHẬP:  email = "' OR '1'='1"
  *    MÀ DATABASE NHẬN:
  *      - SQL template:  SELECT * FROM nguoi_dung WHERE email = ?
- *      - Dữ liệu:       ' OR '1'='1  (coi như string thường, không phải SQL)
+ *      - Dữ liệu:       ' OR '1'='1  (coi như string thường, khan phải SQL)
  *    ✅ KẾT QUẢ: Chỉ tìm email = "' OR '1'='1" (chuỗi ký tự thông thường)
  *                Không có hàng nào khớp → trả về rỗng
  *                Hacker không thể tấn công! 🛡️

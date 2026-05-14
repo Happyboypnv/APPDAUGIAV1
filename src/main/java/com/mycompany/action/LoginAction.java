@@ -245,11 +245,7 @@ public class LoginAction {
         try {
             if (lock.tryLock(500, TimeUnit.MILLISECONDS)) {
                 try {
-                    // Kiểm tra null/empty trước
-                    if (email == null || email.isEmpty())
-                        throw new EmailException("Email đang bỏ trống!");
-                    if (password == null || password.isEmpty())
-                        throw new PasswordException("Mật khẩu đang bỏ trống!");
+                    checkSignIn(email, password); // check thông tin đăng nhập
 
                     // ĐỔI MỚI: Gọi server qua ApiClient thay vì DB trực tiếp
                     LoginResponse response = ApiClient.login(email, password);
