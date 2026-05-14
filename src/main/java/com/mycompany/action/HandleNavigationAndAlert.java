@@ -170,9 +170,28 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         window.setScene(changeScene);
         window.show();
     }
+
     public void goToBiddingRoom(javafx.scene.input.MouseEvent event) throws IOException {
         javafx.scene.layout.StackPane root = FXMLLoader.load(
                 getClass().getResource("/view/BiddingRoom.fxml"));
+        Scene scene = new Scene(root);
+        Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.show();
+    }
+
+    /**
+     * goToCreatePhienDauGia(Event event) - Điều hướng đến trang tạo phiên đấu giá
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Được gọi từ NavBarController.goToCreatePhienDauGia() khi click menu
+     *
+     * @param event Event từ UI
+     * @throws IOException nếu không load được FXML
+     */
+    public void goToCreatePhienDauGia(Event event) throws IOException {
+        javafx.scene.layout.StackPane root = FXMLLoader.load(
+                getClass().getResource("/view/CreatePhienDauGia.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);

@@ -216,4 +216,24 @@ public class NavBarController implements Initializable { // Controller chung cho
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện quản lý tài chính không thành công!");
         }
     }
+
+    /**
+     * PHƯƠNG THỨC: goToCreatePhienDauGia(MouseEvent event)
+     * MỤC ĐÍCH: Điều hướng đến trang tạo phiên đấu giá
+     *
+     * GIẢI THÍCH CHI TIẾT:
+     * 1. Gọi HandleNavigationAndAlert.goToCreatePhienDauGia()
+     * 2. Hiển thị alert nếu có lỗi
+     *
+     * @param event MouseEvent từ label click
+     */
+    @FXML
+    public void goToCreatePhienDauGia(MouseEvent event) {
+        try {
+            HandleNavigationAndAlert.getInstance().goToCreatePhienDauGia(event);
+        } catch (IOException e) {
+            e.printStackTrace();
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện tạo phiên đấu giá không thành công!");
+        }
+    }
 }

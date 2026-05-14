@@ -27,7 +27,7 @@ public class PhienDauGia {
         this.maPhien = maPhien;
         this.tenPhien = tenPhien;
         this.sanPhamDauGia = sanPhamDauGia;
-        this.giaHienTai = giaKhoiDiem;
+        this.giaHienTai = sanPhamDauGia.layGiaKhoiDiem();
         this.nguoiBan = nguoiBan;
         this.thoiGian = thoiGian;
         buocGia = 0.0;
