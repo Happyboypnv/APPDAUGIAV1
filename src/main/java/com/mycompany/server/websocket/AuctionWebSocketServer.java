@@ -75,18 +75,18 @@ public class AuctionWebSocketServer extends WebSocketServer {
     /**
      * PHƯƠNG THỨC: onOpen()
      * Gọi khi client connect thành công
-     *
+     * <p>
      * Mục đích:
      * - Nhận biết kết nối mới, ghi log, và thực hiện các thao tác khởi tạo nhẹ (ví dụ: set timeout)
-//     * - KHÔNG thêm client vào phòng ở giai đoạn này (chờ message JOIN từ client)
+     * //     * - KHÔNG thêm client vào phòng ở giai đoạn này (chờ message JOIN từ client)
      * - Có thể gửi một message chào mừng / ACK để client biết kết nối đã thành công
-     *
+     * <p>
      * Lưu ý thread-safety:
      * - Không thực hiện các thao tác nặng hoặc block trong onOpen()
      * - Việc cập nhật `clientRooms` chỉ nên thực hiện khi nhận được JOIN
      *
-     * @param conn       WebSocket connection object (connection vừa mở)
-     * @param handshake  Client handshake request
+     * @param conn      WebSocket connection object (connection vừa mở)
+     * @param handshake Client handshake request
      */
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
@@ -124,28 +124,28 @@ public class AuctionWebSocketServer extends WebSocketServer {
     /**
      * PHƯƠNG THỨC: onMessage()
      * Gọi khi receive message từ client
-     *
+     * <p>
      * MESSAGE FORMAT (JSON):
      * {
-     *   "action": "JOIN"|"BID",
-     *   "phienId": "string",
-     *   "userId": "string",
-     *   "giaRa": number  // chỉ dùng cho BID
+     * "action": "JOIN"|"BID",
+     * "phienId": "string",
+     * "userId": "string",
+     * "giaRa": number  // chỉ dùng cho BID
      * }
-     *
+     * <p>
      * LUỒNG XỬ LÝ:
      * 1. Parse JSON
      * 2. Check action type
      * 3. JOIN: thêm client vào phòng
      * 4. BID: gọi service, broadcast kết quả
-     *
+     * <p>
      * Thread-safety:
      * - Parse message từ từng client (mỗi client có thread riêng)
      * - Synchronized when updating shared rooms map
      * - All broadcasts are atomic operations
      *
-     * @param conn  WebSocket connection
-     * @param message  Message từ client (dạng JSON string)
+     * @param conn    WebSocket connection
+     * @param message Message từ client (dạng JSON string)
      */
     @Override
     public void onMessage(WebSocket conn, String message) {
@@ -174,14 +174,14 @@ public class AuctionWebSocketServer extends WebSocketServer {
     /**
      * PHƯƠNG THỨC (PRIVATE): handleJoin()
      * Xử lý client JOIN vào phòng đấu giá
-     *
+     * <p>
      * LOGIC:
      * 1. Lấy phienId từ message
      * 2. Thêm client vào rooms.get(phienId)
      * 3. Nếu phòng chưa tồn tại → tạo mới
      * 4. Ghi nhớ client đang ở phòng nào (clientRooms)
      * 5. Broadcast "USER_JOINED" cho tất cả client trong phòng
-     *
+     * <p>
      * Thread-safety:
      * - rooms.computeIfAbsent(): atomic operation, tự động tạo phòng nếu chưa có
      * - Set.add() trong synchronized block để tránh race condition
@@ -192,9 +192,9 @@ public class AuctionWebSocketServer extends WebSocketServer {
      */
     private void handleJoin(WebSocket conn, JsonObject json) {
         String phienId = json.get("phienId").getAsString();
-        String userId = json.get("userId").getAsString();
+        String email = json.get("email").getAsString();
 
-        logger.info("🚪 User " + userId + " joining room: " + phienId);
+        logger.info("🚪 Email " + email + " joining room: " + phienId);
 
         // 🔹 STEP 1: Ensure room exists (thread-safe)
         // computeIfAbsent: nếu phòng chưa tồn tại → tạo mới với ConcurrentHashMap.newSetFromMap()
@@ -213,7 +213,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
         // 🔹 STEP 3: Broadcast "USER_JOINED" to all clients in room
         JsonObject response = new JsonObject();
         response.addProperty("event", "USER_JOINED");
-        response.addProperty("userId", userId);
+        response.addProperty("email", email);
         response.addProperty("timestamp", System.currentTimeMillis());
 
         broadcastToRoom(phienId, gson.toJson(response));
@@ -222,14 +222,14 @@ public class AuctionWebSocketServer extends WebSocketServer {
     /**
      * PHƯƠNG THỨC (PRIVATE): handleBid()
      * Xử lý client đặt giá vào đấu giá
-     *
+     * <p>
      * LOGIC:
      * 1. Lấy phienId, userId, giaRa từ message
      * 2. Gọi PhienDauGiaService.datGia(phienId, userId, giaRa)
-     *    - Service sẽ validate và save vào DB
-     *    - Trả về object kết quả (thành công/lỗi)
+     * - Service sẽ validate và save vào DB
+     * - Trả về object kết quả (thành công/lỗi)
      * 3. Broadcast kết quả cho toàn phòng
-     *
+     * <p>
      * Thread-safety:
      * - PhienDauGiaService.datGia() phải thread-safe (sử dụng transaction)
      * - Broadcast là atomic operation
@@ -244,47 +244,53 @@ public class AuctionWebSocketServer extends WebSocketServer {
             String email = json.get("email").getAsString();
             double giaRa = json.get("giaRa").getAsDouble();
 
-            logger.info("💰 User " + email + " bids " + giaRa + " on phien " + phienId);
-
-            // 🔹 STEP 1: Gọi service để xử lý bid
-            // PhienDauGiaService.datGia() phải:
-            // - Validate giá
-            // - Check phiên có đang diễn ra không
-            // - Update database (trong transaction)
-            // - Return kết quả
             PhienDauGia phienHienTai = QuanLyCacPhienService.getInstance().tim(phienId);
-            String giaTruocBid = String.valueOf(phienHienTai.getGiaHienTai());
-            boolean bidIsCompleted = phienService.datGia(phienHienTai, khoLuuTruNguoiDungSQLite.layTatCa().get(email), giaRa);
 
-            // 🔹 STEP 2: Broadcast kết quả cho phòng
+            // FIX: Null check thay vì NPE
+            if (phienHienTai == null) {
+                sendError(conn, "Phiên đấu giá không tồn tại");
+                return;
+            }
+
+            // FIX: Lấy giá SAU khi datGia thành công, không phải trước
+            NguoiDung nguoiMua = khoLuuTruNguoiDungSQLite.layTheoEmail(email);
+            if (nguoiMua == null) {
+                sendError(conn, "Người dùng không tồn tại");
+                return;
+            }
+            boolean bidIsCompleted = phienService.datGia(
+                    phienHienTai,
+                    khoLuuTruNguoiDungSQLite.layTheoEmail(email),
+                    giaRa
+            );
+
             JsonObject response = new JsonObject();
             response.addProperty("event", "BID_RESULT");
             response.addProperty("email", email);
             response.addProperty("giaRa", giaRa);
             response.addProperty("timestamp", System.currentTimeMillis());
 
-            // Nếu bidResult là Map/Object → thêm vào response
             if (bidIsCompleted) {
                 khoPhienDauGia.capNhatPhienDauGia(phienHienTai);
                 response.addProperty("status", "SUCCESS");
-                response.addProperty("currentPrice", giaTruocBid);
+                // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
+                response.addProperty("currentPrice", phienHienTai.getGiaHienTai());
             } else {
                 response.addProperty("status", "FAILED");
-                response.addProperty("message", "Unknown error");
+                response.addProperty("message", "Giá không hợp lệ hoặc phiên đã kết thúc");
             }
 
             broadcastToRoom(phienId, gson.toJson(response));
 
         } catch (Exception e) {
-            logger.error("❌ Error handling bid: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Lỗi xử lý bid: " + e.getMessage());
         }
     }
 
     /**
      * PHƯƠNG THỨC (PRIVATE): broadcastToRoom()
      * Gửi message cho tất cả client trong một phòng
-     *
+     * <p>
      * Thread-safety:
      * - Lấy room reference (ConcurrentHashMap thread-safe)
      * - Lặp qua tất cả client trong Set
@@ -321,21 +327,21 @@ public class AuctionWebSocketServer extends WebSocketServer {
     /**
      * PHƯƠNG THỨC: onClose()
      * Gọi khi client disconnect
-     *
+     * <p>
      * LOGIC:
      * 1. Lấy phienId từ clientRooms
      * 2. Remove client khỏi phòng
      * 3. Nếu phòng trống → xóa phòng
      * 4. Remove từ clientRooms
      * 5. Broadcast "USER_LEFT" cho phòng
-     *
+     * <p>
      * Thread-safety:
      * - ConcurrentHashMap.remove() là thread-safe
      * - Set.remove() + synchronized để tránh race condition
      *
-     * @param code    Close code
-     * @param reason  Close reason
-     * @param remote  True nếu client disconnect, False nếu server close
+     * @param code   Close code
+     * @param reason Close reason
+     * @param remote True nếu client disconnect, False nếu server close
      */
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
@@ -387,6 +393,16 @@ public class AuctionWebSocketServer extends WebSocketServer {
     @Override
     public void onStart() {
         logger.info("🚀 AuctionWebSocketServer started on port " + this.getPort());
+    }
+
+    private void sendError(WebSocket conn, String message) {
+        JsonObject err = new JsonObject();
+        err.addProperty("event", "BID_RESULT");
+        err.addProperty("status", "FAILED");
+        err.addProperty("message", message);
+        conn.send(gson.toJson(err));
+
+
     }
 }
 

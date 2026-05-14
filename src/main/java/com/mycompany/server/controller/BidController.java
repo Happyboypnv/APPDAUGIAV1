@@ -286,8 +286,7 @@ public class BidController {
 
         String email = phan.substring(0, lastUnderscore);
 
-        Map<String, NguoiDung> danhSach = khoNguoiDung.layTatCa();
-        NguoiDung nguoiDung = danhSach.get(email);
+        NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(email);
 
         if (nguoiDung == null) {
             guiPhanHoi(exchange, 401, loi("Token không hợp lệ hoặc tài khoản không tồn tại"));

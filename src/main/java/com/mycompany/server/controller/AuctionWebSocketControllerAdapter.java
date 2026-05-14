@@ -131,10 +131,12 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
         try {
             String status = message.get("status").getAsString();
             if ("SUCCESS".equalsIgnoreCase(status)) {
-                double currentPrice = message.get("currentPrice").getAsDouble();
-                priceLabel.setText(
-                        String.format("Giá hiện tại: %,.0f VNĐ", currentPrice));
-                priceLabel.setStyle("-fx-text-fill: #4CAF50;");
+                double newPrice = message.get("currentPrice").getAsDouble();
+                String bidder = message.get("userId").getAsString();
+
+                // ← gọi method mới thay vì tự set label
+                controller.syncNewPrice(newPrice, bidder);
+                controller.addBidHistory(bidder, newPrice);
             }
         } catch (Exception e) {
             logger.error("Error processing bid result: " + e.getMessage());

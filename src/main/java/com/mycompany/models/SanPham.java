@@ -5,11 +5,9 @@ import java.io.Serializable;
 public class SanPham implements Serializable {
     private String tenSanPham;
     private String maSanPham;
-    private double giaKhoiDiem;
-    public SanPham(String tenSanPham, String maSanPham, double giaKhoiDiem) {
+    public SanPham(String tenSanPham, String maSanPham) {
         this.tenSanPham = tenSanPham;
         this.maSanPham = maSanPham;
-        this.giaKhoiDiem = giaKhoiDiem;
     }
     public String layTenSanPham() {
         return this.tenSanPham;
@@ -19,9 +17,5 @@ public class SanPham implements Serializable {
     }
     public String layMaSanPham() {
         return this.maSanPham;
-    }
-
-    public double layGiaKhoiDiem() {
-        return giaKhoiDiem;
     }
 }

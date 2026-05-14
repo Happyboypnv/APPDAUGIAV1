@@ -1,5 +1,6 @@
 package com.mycompany;
 
+import com.mycompany.action.PhienDauGiaScheduler;
 import com.mycompany.utils.KetNoiCSDL;
 import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
 import javafx.application.Application;
@@ -14,6 +15,10 @@ import org.slf4j.LoggerFactory;
 
 public class App extends Application {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
+    public void stop() throws Exception {
+        super.stop();
+        PhienDauGiaScheduler.getInstance().shutdown();
+    }
     @Override
     public void start(Stage primaryStage) {
         try {

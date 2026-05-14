@@ -1,0 +1,55 @@
+/* Tổng thể các ô nhập liệu (TextField, TextArea, ComboBox) */
+.text-field, .text-area, .combo-box {
+    -fx-background-color: #2c3e50; /* Màu nền tối nhẹ hơn nền chính */
+    -fx-text-fill: white;
+    -fx-background-radius: 8;      /* Bo góc */
+    -fx-border-radius: 8;
+    -fx-border-color: #34495e;
+    -fx-padding: 8 12;             /* Tạo không gian bên trong ô */
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #95a5a6; /* Màu chữ gợi ý */
+}
+
+/* Hiệu ứng khi người dùng nhấn chọn ô (Focus) */
+.text-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #3498db;     /* Đổi sang màu xanh dương khi chọn */
+    -fx-background-color: #34495e;
+    -fx-effect: dropshadow(three-pass-box, rgba(52, 152, 219, 0.4), 10, 0, 0, 0);
+}
+
+/* Làm đẹp riêng cho ComboBox */
+.combo-box .list-view {
+    -fx-background-color: #2c3e50;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: white;
+    -fx-padding: 10;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #3498db;
+}
+
+/* Nút bấm Tạo phiên (Màu xanh dương nổi bật) */
+.button-primary {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-padding: 10 25;
+}
+
+.button-primary:hover {
+    -fx-background-color: #2980b9;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 5, 0, 0, 2);
+}
+
+/* Nút Hủy (Màu xám trung tính) */
+.button-secondary {
+    -fx-background-color: #7f8c8d;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 10 25;
+}

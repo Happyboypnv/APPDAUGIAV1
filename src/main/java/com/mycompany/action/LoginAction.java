@@ -263,7 +263,7 @@ public class LoginAction {
 
                     // Đăng nhập thành công — lấy thông tin user từ DB local
                     // (vẫn cần object NguoiDung cho SessionManager)
-                    NguoiDung user = khoLuuTruNguoiDung.layTatCa().get(email);
+                    NguoiDung user = khoLuuTruNguoiDung.layTheoEmail(email);
 
                     // Tạo token theo format TokenUtil để các trang Profile/Finance đọc được
                     String token = TokenUtil.generateToken(user);

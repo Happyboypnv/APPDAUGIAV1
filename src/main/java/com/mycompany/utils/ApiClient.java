@@ -99,6 +99,7 @@ public class ApiClient {
             return new java.util.ArrayList<>();
         }
     }
+
     /**
      * goi api get all auctions
      * @param token
@@ -110,6 +111,50 @@ public class ApiClient {
     // ============================================================
     // LẤY THÔNG TIN USER
     // ============================================================
+    /**
+     * Gọi POST /api/auctions để tạo phiên đấu giá mới.
+     * Yêu cầu token hợp lệ trong header Authorization.
+     *
+     * @param tenPhien      Tên phiên đấu giá
+     * @param tenSanPham    Tên sản phẩm
+     * @param maSanPham     Mã sản phẩm (tự sinh)
+     * @param giaKhoiDiem   Giá khởi điểm (VNĐ)
+     * @param thoiGianGiay  Thời gian phiên tính bằng giây
+     * @param token         Token xác thực người dùng
+     * @return true nếu tạo thành công (HTTP 201), false nếu thất bại
+     */
+    // Thêm 2 tham số moTa và danhMuc
+    public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
+                                        String danhMuc, String moTa,         // ← thêm 2 dòng này
+                                        double giaKhoiDiem, int thoiGianGiay, String token) {
+        String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
+            put("tenPhien",     tenPhien);
+            put("tenSanPham",   tenSanPham);
+            put("maSanPham",    maSanPham);
+            put("danhMuc",      danhMuc);    // ← thêm
+            put("moTa",         moTa);       // ← thêm
+            put("giaKhoiDiem",  giaKhoiDiem);
+            put("thoiGianGiay", thoiGianGiay);
+        }});
+        logger.info("[createAuction] JSON gửi lên: " + jsonBody);
+        logger.info("[createAuction] Token: " + token);
+        String responseJson = guiPost("/api/auctions", jsonBody, token);
+
+        if (responseJson == null) return false;
+        logger.info("[createAuction] Server trả về: " + responseJson);
+        try {
+            com.google.gson.JsonObject obj = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
+            if (!obj.has("maPhien")) {
+                // Log ra lỗi thật sự từ server thay vì im lặng
+                logger.error("[ApiClient] Server từ chối tạo phiên: " + responseJson);
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse createAuction response: " + e.getMessage());
+            return false;
+        }
+    }
 
     /**
      * Gọi GET /api/users/{email}

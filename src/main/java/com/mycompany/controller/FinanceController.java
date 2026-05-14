@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import com.mycompany.action.FinanceAction;
 import com.mycompany.action.HandleNavigationAndAlert;
+import com.mycompany.models.NguoiDung;
 import com.mycompany.utils.CapNhatThongTinNguoiDung;
 import com.mycompany.utils.SessionManager;
 import com.mycompany.utils.TokenUtil;
@@ -76,22 +77,12 @@ public class FinanceController implements Initializable {
         // 🔹 BƯỚC 1: Thêm danh sách ngân hàng vào ComboBox
         banks.getItems().addAll("MB Bank", "Techcombank", "BIDV", "Agribank", "VP Bank"); // Lựa chọn ngân hàng
 
-        // 🔹 BƯỚC 2: Lấy thông tin người dùng từ JWT token
-        String token = SessionManager.getInstance().getCurrentToken();
-        Map<String, Object> info = TokenUtil.getUserInfoFromToken(token);
-
-        // 🔹 BƯỚC 3: Hiển thị thông tin nếu token hợp lệ
-        if (info != null) {
-            // Hiển thị số dư hiện tại từ token
-            currentBalanceField.setText(String.valueOf(info.get("balance")));
-
-            // Hiển thị số tài khoản ngân hàng nếu đã liên kết
-            bankAccount.setText((String) info.get("bankAccount"));
-
-            // Hiển thị tên ngân hàng đã liên kết nếu có
-            String bankName = (String) info.get("bankName");
-            if (bankName != null) {
-                banks.setValue(bankName); // Set giá trị selected trong ComboBox
+        NguoiDung user = SessionManager.getInstance().getCurrentUser();
+        if (user != null) {
+            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getSoDuKhaDung()));
+            bankAccount.setText(user.getSoTaiKhoan());
+            if (user.getNganHang() != null) {
+                banks.setValue(user.getNganHang());
             }
         }
     }
@@ -128,8 +119,10 @@ public class FinanceController implements Initializable {
         String bankAcc = bankAccount.getText().trim();
 
         // Kiểm tra format số tài khoản
-        if (!bankAcc.matches(bankAccountRegex) || bankAcc.isEmpty() || bankAcc == null) {
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", "Số tài khoản ngân hàng không hợp lệ! Vui lòng nhập lại (10-15 chữ số).");
+        if (bankAcc == null || bankAcc.isEmpty() || !bankAcc.matches(bankAccountRegex)) {
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi thông tin",
+                    "Số tài khoản ngân hàng không hợp lệ (10-15 chữ số).");
             return;
         }
 
@@ -168,28 +161,23 @@ public class FinanceController implements Initializable {
      */
     @FXML
     public void onClickedDeposit() {
-        // 🔹 BƯỚC 1: Lấy và validate số tiền
         String amountStr = depositField.getText().trim();
         try {
-            // Chuyển string thành double, nếu lỗi → NumberFormatException
             double amount = Double.parseDouble(amountStr);
-
-            // 🔹 BƯỚC 2: Gọi FinanceAction để xử lý nạp tiền
             FinanceAction.getInstance().deposit(amount);
-
         } catch (NumberFormatException e) {
-            // Hiển thị lỗi nếu input không phải số
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền nạp không hợp lệ! Vui lòng nhập lại.");
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền không hợp lệ.");
         }
-
-        // 🔹 BƯỚC 3: Clear input field sau khi nạp
         depositField.clear();
+        refreshBalance(); // Tách ra hàm riêng
+    }
 
-        // 🔹 BƯỚC 4: Refresh số dư hiển thị
-        String token = SessionManager.getInstance().getCurrentToken();
-        Map<String, Object> info = TokenUtil.getUserInfoFromToken(token);
-        if (info != null) {
-            currentBalanceField.setText(String.valueOf(info.get("balance")));
+    // Thêm hàm helper — dùng chung cho deposit và withdraw
+    private void refreshBalance() {
+        NguoiDung user = SessionManager.getInstance().getCurrentUser();
+        if (user != null) {
+            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getSoDuKhaDung()));
         }
     }
 
@@ -206,29 +194,16 @@ public class FinanceController implements Initializable {
      */
     @FXML
     public void onClickedWithdraw() {
-        // 🔹 BƯỚC 1: Lấy và validate số tiền
         String amountStr = withdrawField.getText().trim();
         try {
-            // Chuyển string thành double, nếu lỗi → NumberFormatException
             double amount = Double.parseDouble(amountStr);
-
-            // 🔹 BƯỚC 2: Gọi FinanceAction để xử lý rút tiền
             FinanceAction.getInstance().withdraw(amount);
-
         } catch (NumberFormatException e) {
-            // Hiển thị lỗi nếu input không phải số
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền rút không hợp lệ! Vui lòng nhập lại.");
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền không hợp lệ.");
         }
-
-        // 🔹 BƯỚC 3: Clear input field sau khi rút
         withdrawField.clear();
-
-        // 🔹 BƯỚC 4: Refresh số dư hiển thị
-        String token = SessionManager.getInstance().getCurrentToken();
-        Map<String, Object> info = TokenUtil.getUserInfoFromToken(token);
-        if (info != null) {
-            currentBalanceField.setText(String.valueOf(info.get("balance")));
-        }
+        refreshBalance(); // Dùng lại
     }
 }
 

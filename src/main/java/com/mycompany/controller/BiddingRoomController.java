@@ -63,6 +63,8 @@ public class BiddingRoomController implements Initializable {
     private AuctionWebSocketClient wsClient;
     private AuctionWebSocketControllerAdapter adapter;
     private String currentPhienId;
+    private Thread wsThread;
+    private volatile boolean isDestroyed = false; // Biến trạng thái kết nối WebSocket
 
     // --- CÁC BIẾN LOGIC ---
     private double currentPrice = 135000000; // Giá cao nhất hiện tại
@@ -87,10 +89,11 @@ public class BiddingRoomController implements Initializable {
         }
 
         // 2. Kết nối WebSocket trên thread riêng (không block JavaFX thread)
-        new Thread(() -> {
+        wsThread = new Thread(() -> {
             try {
                 // Thêm delay nhỏ để đảm bảo server sẵn sàng
                 Thread.sleep(1000);
+                if(isDestroyed) return;
 
                 wsClient = AuctionWebSocketClient.getInstance();
                 adapter = new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
@@ -102,7 +105,10 @@ public class BiddingRoomController implements Initializable {
             } catch (Exception e) {
                 System.err.println("❌ Lỗi kết nối WebSocket: " + e.getMessage());
             }
-        }).start();
+        });
+        wsThread.setDaemon(true); // Đảm bảo thread sẽ tự động dừng khi ứng dụng đóng
+        wsThread.setName("BiddingRoom-WebSocket-Thread");
+        wsThread.start();
     }
 
     // --- XỬ LÝ SỰ KIỆN NÚT BẤM ---
@@ -162,12 +168,10 @@ public class BiddingRoomController implements Initializable {
 
     // --- HÀM ĐÓNG KẾT NỐI WEBSOCKET KHI THOÁT PHÒNG ---
     public void onClose() {
+        isDestroyed = true;
+        if (wsThread != null) wsThread.interrupt();
         if (wsClient != null && wsClient.isConnected()) {
-            try {
-                wsClient.disconnect();
-            } catch (Exception e) {
-                // Ignore exception khi đóng
-            }
+            try { wsClient.disconnect(); } catch (Exception ignored) {}
         }
     }
 
@@ -198,7 +202,17 @@ public class BiddingRoomController implements Initializable {
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
     }
+    public void syncNewPrice(double newPrice, String bidderId) {
+        this.currentPrice = newPrice;  // ← cập nhật state nội bộ
+        currentPriceLabel.setText(formatter.format(newPrice) + " VNĐ");
+        topBidderLabel.setText("Người dẫn đầu: " + bidderId);
+        updateBidAmountField(newPrice + stepPrice); // tự tăng ô nhập
+    }
 
+    public void addBidHistory(String bidderId, double price) {
+        String entry = bidderId + ": " + formatter.format(price) + " VNĐ (vừa xong)";
+        bidHistoryList.add(0, entry); // thêm vào đầu danh sách
+    }
     private void loadDummyBidHistory() {
         bidHistoryList.addAll(
                 "Nguyễn Văn T. : 135,000,000 VND (1 phút trước)",

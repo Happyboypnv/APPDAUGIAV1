@@ -152,7 +152,22 @@ public class NavBarController implements Initializable { // Controller chung cho
         // Side.TOP giúp menu hiện lên trên, sát mép phải của ảnh
         contextMenu.show(avatarImage, Side.TOP, 0, 0);
     }
-
+    /**
+     * navigateToCreateAuction(MouseEvent event)
+     * Điều hướng đến trang Tạo Phiên Đấu Giá khi click vào label trong sidebar.
+     */
+    @FXML
+    public void navigateToCreateAuction(MouseEvent event) {
+        try {
+            HandleNavigationAndAlert.getInstance().goToCreateAuction(event);
+        } catch (IOException e) {
+            e.printStackTrace();
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi giao diện",
+                    "Không thể mở trang tạo phiên đấu giá!"
+            );
+        }
+    }
     /**
      * PHƯƠNG THỨC: logOut(ActionEvent event)
      * MỤC ĐÍCH: Xử lý đăng xuất người dùng

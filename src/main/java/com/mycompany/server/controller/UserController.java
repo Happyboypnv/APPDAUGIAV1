@@ -90,8 +90,7 @@ public class UserController {
 
         // Đăng nhập thành công → tạo token + lấy họ tên
         String token = "USER_" + req.getEmail() + "_" + System.currentTimeMillis();
-        Map<String, NguoiDung> danhSach = khoNguoiDung.layTatCa();
-        NguoiDung nguoiDung = danhSach.get(req.getEmail());
+        NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(req.getEmail());
         String hoTen = (nguoiDung != null) ? nguoiDung.layHoTen() : "";
 
         guiPhanHoi(exchange, 200,
@@ -204,10 +203,7 @@ public class UserController {
 
         String email = path.substring(prefix.length());
 
-        // Tìm người dùng trong SQLite
-        Map<String, NguoiDung> danhSach = khoNguoiDung.layTatCa();
-        NguoiDung nguoiDung = danhSach.get(email);
-
+       NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(email);
         if (nguoiDung == null) {
             guiPhanHoi(exchange, 404,
                     gson.toJson(new LoginResponse("Không tìm thấy người dùng: " + email)));

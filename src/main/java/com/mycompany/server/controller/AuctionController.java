@@ -3,6 +3,7 @@ package com.mycompany.server.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycompany.action.PhienDauGiaService;
+import com.mycompany.action.QuanLyCacPhienService;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.SanPham;
@@ -194,40 +195,30 @@ public class AuctionController {
    * Response 401: { "loi": "Cần đăng nhập trước" }
    */
   private void handleTaoPhien(HttpExchange exchange) throws IOException {
-    // Xác thực token
     NguoiDung nguoiBan = xacThucToken(exchange);
-    if (nguoiBan == null) return; // xacThucToken đã gửi response lỗi
+    if (nguoiBan == null) return;
 
-    // Đọc và parse body
     String body = docBody(exchange);
     TaoPhienRequest req = gson.fromJson(body, TaoPhienRequest.class);
 
-    // Validate dữ liệu đầu vào
     if (req == null || req.tenPhien == null || req.tenSanPham == null
-        || req.maSanPham == null || req.giaKhoiDiem <= 0 || req.thoiGianGiay <= 0) {
-      guiPhanHoi(exchange, 400, loi(
-          "Thiếu hoặc sai thông tin bắt buộc: tenPhien, tenSanPham, maSanPham, giaKhoiDiem (>0), thoiGianGiay (>0)"));
+            || req.maSanPham == null || req.giaKhoiDiem <= 0 || req.thoiGianGiay <= 0) {
+      guiPhanHoi(exchange, 400, loi("Thiếu hoặc sai thông tin bắt buộc"));
       return;
     }
 
-    // Tạo SanPham và PhienDauGia — tái sử dụng model đã có
     SanPham sanPham = new SanPham(req.tenSanPham, req.maSanPham);
     PhienDauGia phienMoi = new PhienDauGia(
-        null,           // maPhien = null → KhoLuuTru sẽ tự sinh
-        req.tenPhien,
-        sanPham,
-        req.giaKhoiDiem,
-        nguoiBan,
-        req.thoiGianGiay
-    );
+            null, req.tenPhien, sanPham, req.giaKhoiDiem, nguoiBan, req.thoiGianGiay);
 
-    // Lưu vào SQLite — KhoLuuTruPhienDauGiaSQLite tự sinh mã phiên
     khoPhien.luuPhienDauGia(phienMoi);
 
-    // Lấy lại mã phiên vừa được sinh (đã setMaPhien bên trong luuPhienDauGia)
-    String maPhienDaSinh = phienMoi.getMaPhienDauGia();
+    // FIX: Đồng bộ vào in-memory store để WebSocket tìm thấy
+    QuanLyCacPhienService.getInstance().them(phienMoi);
 
-    guiPhanHoi(exchange, 201, gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
+    String maPhienDaSinh = phienMoi.getMaPhienDauGia();
+    guiPhanHoi(exchange, 201,
+            gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
   }
 
   // =========================================================
@@ -246,40 +237,30 @@ public class AuctionController {
    * Response 404: { "loi": "Không tìm thấy phiên: PH999999" }
    */
   private void handleBatDauPhien(HttpExchange exchange, String maPhien) throws IOException {
-    // Xác thực token
     NguoiDung nguoiYeuCau = xacThucToken(exchange);
     if (nguoiYeuCau == null) return;
 
-    if (maPhien == null || maPhien.isBlank()) {
-      guiPhanHoi(exchange, 400, loi("Thiếu mã phiên trong URL"));
-      return;
-    }
-
-    // Lấy phiên từ DB
     PhienDauGia phien = khoPhien.layPhienDauGia(maPhien);
     if (phien == null) {
       guiPhanHoi(exchange, 404, loi("Không tìm thấy phiên: " + maPhien));
       return;
     }
 
-    // Kiểm tra quyền: chỉ người tạo phiên mới được bắt đầu
     if (!phien.getNguoiBan().layMaNguoiDung().equals(nguoiYeuCau.layMaNguoiDung())) {
       guiPhanHoi(exchange, 403, loi("Bạn không phải người tạo phiên này"));
       return;
     }
 
-    // Kiểm tra trạng thái
     if (phien.getTrangThai() != TrangThaiPhien.DANG_CHO) {
-      guiPhanHoi(exchange, 400, loi(
-          "Phiên không ở trạng thái DANG_CHO. Trạng thái hiện tại: " + phien.getTrangThai().name()));
+      guiPhanHoi(exchange, 400, loi("Phiên không ở trạng thái DANG_CHO"));
       return;
     }
 
-    // Tái sử dụng PhienDauGiaService.batDauPhien() — đã có sẵn
     phienDauGiaService.batDauPhien(phien);
-
-    // Cập nhật lại vào SQLite (batDauPhien chỉ cập nhật object trong memory)
     khoPhien.capNhatPhienDauGia(phien);
+
+    // FIX: Đảm bảo phiên đang hoạt động được đăng ký để WebSocket tìm thấy
+    QuanLyCacPhienService.getInstance().them(phien);
 
     guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("Phiên " + maPhien + " đã bắt đầu")));
   }
@@ -322,8 +303,7 @@ public class AuctionController {
     String email = phần.substring(0, viTriDauGachDuoiCuoi);
 
     // Tra cứu người dùng trong DB
-    Map<String, NguoiDung> danhSach = khoNguoiDung.layTatCa();
-    NguoiDung nguoiDung = danhSach.get(email);
+    NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(email);
 
     if (nguoiDung == null) {
       guiPhanHoi(exchange, 401, loi("Token không hợp lệ hoặc tài khoản không tồn tại"));
