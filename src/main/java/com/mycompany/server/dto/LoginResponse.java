@@ -32,6 +32,26 @@ public class LoginResponse {
     /** Thông báo kết quả: thành công hoặc lý do thất bại */
     private String thongBao;
 
+    /**
+     * NEW: Session status for multi-device detection
+     * Values: "SUCCESS", "ALREADY_IN_USE", "SESSION_CONFLICT"
+     * - "SUCCESS": Login successful, session created
+     * - "ALREADY_IN_USE": User already logged in on another device (login blocked)
+     * - "SESSION_CONFLICT": Session conflict detected (requires user action)
+     */
+    private String sessionStatus;
+
+    /**
+     * NEW: Device ID of existing session (if user already logged in)
+     * Used to show user which device they're currently logged in on
+     */
+    private String existingDeviceId;
+
+    /**
+     * NEW: Existing session's IP address (if user already logged in)
+     */
+    private String existingIpAddress;
+
     /** Constructor rỗng để Gson serialize */
     public LoginResponse() {}
 
@@ -64,4 +84,16 @@ public class LoginResponse {
     public String getEmail()    { return email; }
     public String getHoTen()    { return hoTen; }
     public String getThongBao() { return thongBao; }
+    public String getSessionStatus() { return sessionStatus; }
+    public String getExistingDeviceId() { return existingDeviceId; }
+    public String getExistingIpAddress() { return existingIpAddress; }
+    
+    // Setters
+    public void setSessionStatus(String sessionStatus) { this.sessionStatus = sessionStatus; }
+    public void setExistingDeviceId(String deviceId) { this.existingDeviceId = deviceId; }
+    public void setExistingIpAddress(String ipAddress) { this.existingIpAddress = ipAddress; }
+
+    public void setThongBao(String thongBao) {
+        this.thongBao = thongBao;
+    }
 }

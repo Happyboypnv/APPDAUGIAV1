@@ -35,6 +35,8 @@ public class SessionManager {
     // JWT token của người dùng hiện tại
     // Token chứa toàn bộ thông tin người dùng đã mã hóa Base64
     private volatile String currentToken;
+    // Token do server cấp (dùng cho các request API như logout)
+    private volatile String currentServerToken;
     private volatile String currentPhienId;
     /**
      * Constructor private - ngăn tạo instance trực tiếp
@@ -80,6 +82,22 @@ public class SessionManager {
     public void setSession(NguoiDung user, String token) {
         this.currentUser = user;
         this.currentToken = token;
+    }
+
+    /**
+     * Lưu token do server cấp (dùng cho các request tới REST API)
+     * @param serverToken token nhận từ server (ví dụ: "USER_email_timestamp")
+     */
+    public void setCurrentServerToken(String serverToken) {
+        this.currentServerToken = serverToken;
+    }
+
+    /**
+     * Lấy token do server cấp
+     * @return server token hoặc null
+     */
+    public String getCurrentServerToken() {
+        return currentServerToken;
     }
 
     /**
@@ -183,6 +201,7 @@ public class SessionManager {
     public void logout() {
         this.currentUser = null;
         this.currentToken = null;
+        this.currentServerToken = null;
         this.currentPhienId = null;
     }
 }

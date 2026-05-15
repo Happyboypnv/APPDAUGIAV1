@@ -33,15 +33,57 @@ public class ApiClient {
     private static final Gson gson = new Gson();
 
     // ============================================================
+    // ĐĂNG XUẤT
+    // ============================================================
+
+    /**
+     * Gọi POST /api/users/logout
+     *
+     * MULTI-DEVICE SESSION HANDLING:
+     *   - Notifies server to remove user from online users list
+     *   - Marks session as LOGGED_OUT
+     *   - Broadcasts logout event (optional, via WebSocket)
+     *   - Allows other devices to login to same account
+     *
+     * @param token JWT token của user hiện tại
+     * @return LoginResponse chứa kết quả logout
+     */
+    public static LoginResponse logout(String token) {
+        // Bước 1: Gửi POST request với token
+        String responseJson = guiPost("/api/users/logout", "{}", token);
+
+        // Bước 2: Parse response
+        if (responseJson == null) {
+            logger.warn("[ApiClient] ⚠️ Logout request failed (no response from server)");
+            return new LoginResponse("Không kết nối được server");
+        }
+
+        try {
+            LoginResponse response = gson.fromJson(responseJson, LoginResponse.class);
+            logger.info("[ApiClient] ✅ Logout successful");
+            return response;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Error parsing logout response: " + e.getMessage());
+            return new LoginResponse("Lỗi xử lý phản hồi từ server");
+        }
+    }
+
+    // ============================================================
     // ĐĂNG NHẬP
     // ============================================================
 
     /**
      * Gọi POST /api/users/login
      *
+     * MULTI-DEVICE SESSION HANDLING:
+     *   - Server checks if user already logged in on another device
+     *   - If yes: Returns response with sessionStatus="ALREADY_IN_USE"
+     *   - If no: Returns response with sessionStatus="SUCCESS" + token
+     *   - Client must check sessionStatus before accepting login
+     *
      * @param email    email người dùng
      * @param matKhau  mật khẩu plain text
-     * @return LoginResponse chứa token nếu thành công, thongBao nếu thất bại
+     * @return LoginResponse chứa token (SUCCESS) hoặc conflict info (ALREADY_IN_USE)
      */
     public static LoginResponse login(String email, String matKhau) {
         // Bước 1: Tạo object request rồi chuyển thành JSON
@@ -53,7 +95,25 @@ public class ApiClient {
 
         // Bước 3: Chuyển JSON response thành object Java
         if (responseJson == null) return new LoginResponse("Không kết nối được server");
-        return gson.fromJson(responseJson, LoginResponse.class);
+
+        try {
+            LoginResponse response = gson.fromJson(responseJson, LoginResponse.class);
+
+            // Log session status if present
+            if (response != null && response.getSessionStatus() != null) {
+                logger.info("[ApiClient] Login response status: {}", response.getSessionStatus());
+
+                if (response.getSessionStatus().equals("ALREADY_IN_USE")) {
+                    logger.warn("[ApiClient] ⚠️ User already logged in on another device: {}",
+                            response.getExistingDeviceId());
+                }
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Error parsing login response: " + e.getMessage());
+            return new LoginResponse("Lỗi xử lý phản hồi từ server");
+        }
     }
 
     // ============================================================
@@ -168,6 +228,8 @@ public class ApiClient {
     public static String getUser(String email, String token) {
         return guiGet("/api/users/" + email, token);
     }
+
+
 
     // ============================================================
     // PHƯƠNG THỨC HỖ TRỢ (private)

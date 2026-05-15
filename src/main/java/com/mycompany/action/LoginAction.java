@@ -493,8 +493,10 @@ public class LoginAction {
                     String token = TokenUtil.generateToken(user);
 
                     // Lưu cả 2: token server (để gọi API) và token local (để đọc thông tin)
-                    // Tạm thời dùng token local cho SessionManager
+                    // Tạm thời dùng token local cho view/session info
                     SessionManager.getInstance().setSession(user, token);
+                    // Lưu token do server cấp để gọi các API cần Authorization (logout, protected endpoints)
+                    SessionManager.getInstance().setCurrentServerToken(response.getToken());
 
                     HandleNavigationAndAlert.getInstance()
                             .showAlert(Alert.AlertType.INFORMATION, "Thành công",
