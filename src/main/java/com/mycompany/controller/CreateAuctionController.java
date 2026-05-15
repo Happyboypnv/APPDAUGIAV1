@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
@@ -27,12 +26,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
-/**
- * CreateAuctionController - Quản lý form tạo phiên đấu giá với xử lý Multi-threading
- */
 public class CreateAuctionController implements Initializable {
 
-    // ===== @FXML FIELDS =====
     @FXML private TextField tenPhienField;
     @FXML private TextField tenSanPhamField;
     @FXML private ComboBox<String> danhMucSanPham;
@@ -50,7 +45,6 @@ public class CreateAuctionController implements Initializable {
 
     private File selectedImageFile = null;
 
-    // ===== INITIALIZE =====
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupDanhMuc();
@@ -99,7 +93,6 @@ public class CreateAuctionController implements Initializable {
         });
     }
 
-    // ===== IMAGE HANDLING =====
     @FXML
     public void handleSelectImage() {
         FileChooser fileChooser = new FileChooser();
@@ -107,7 +100,6 @@ public class CreateAuctionController implements Initializable {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Ảnh", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
         );
-
         Stage stage = (Stage) dropArea.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
@@ -127,10 +119,8 @@ public class CreateAuctionController implements Initializable {
         }
     }
 
-    // ===== MAIN HANDLER: TẠO PHIÊN (FIXED WITH TASK) =====
     @FXML
     public void handleTaoPhien(ActionEvent event) {
-        // 1. Thu thập và chuẩn bị dữ liệu
         String tenPhien = tenPhienField.getText().trim();
         String tenSanPham = tenSanPhamField.getText().trim();
         String danhMuc = danhMucSanPham.getValue();
@@ -142,39 +132,51 @@ public class CreateAuctionController implements Initializable {
         int gioBD = gioBatDauSpinner.getValue();
         int gioKT = gioKetThucSpinner.getValue();
 
-        // 2. Validate
         String error = validateForm(tenPhien, tenSanPham, danhMuc, giaStr, ngayBD, ngayKT, gioBD, gioKT);
         if (error != null) {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING, "Thông báo", error);
             return;
         }
 
-        // 3. Chuẩn bị tham số gọi API
         double giaKhoiDiem = Double.parseDouble(giaStr);
         LocalDateTime thoiGianBD = LocalDateTime.of(ngayBD, LocalTime.of(gioBD, 0));
         LocalDateTime thoiGianKT = LocalDateTime.of(ngayKT, LocalTime.of(gioKT, 0));
         long thoiGianGiay = Duration.between(thoiGianBD, thoiGianKT).getSeconds();
-        String token = SessionManager.getInstance().getCurrentToken();
         String maSanPham = "SP_" + System.currentTimeMillis();
 
+        // *** FIX QUAN TRỌNG: Dùng serverToken (USER_...) thay vì localToken (Base64) ***
+        String token = SessionManager.getInstance().getServerToken();
+
         if (token == null) {
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng đăng nhập lại!");
-            return;
+            // Fallback: thử tạo token thủ công từ email nếu chưa có serverToken
+            // (trường hợp user chưa đăng xuất từ phiên cũ)
+            if (SessionManager.getInstance().getCurrentUser() != null) {
+                String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+                token = "USER_" + email + "_" + System.currentTimeMillis();
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.WARNING, "Cảnh báo",
+                        "Phiên đăng nhập có thể đã hết hạn. Vui lòng đăng xuất và đăng nhập lại nếu gặp lỗi.");
+            } else {
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.ERROR, "Lỗi", "Vui lòng đăng nhập lại!");
+                return;
+            }
         }
 
-        // 4. Thực thi Task đa luồng
         Button btn = (Button) event.getSource();
         btn.setDisable(true);
         btn.setText("Đang tạo...");
 
+        // Tạo bản sao final để dùng trong lambda
+        final String finalToken = token;
+
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() {
-                // Gọi API ở luồng nền
                 return ApiClient.createAuction(
                         tenPhien, tenSanPham, maSanPham,
                         danhMuc, moTa,
-                        giaKhoiDiem, (int) thoiGianGiay, token
+                        giaKhoiDiem, (int) thoiGianGiay, finalToken
                 );
             }
         };
@@ -187,10 +189,13 @@ public class CreateAuctionController implements Initializable {
                         Alert.AlertType.INFORMATION, "Thành công", "Đã tạo phiên đấu giá thành công!");
                 try {
                     HandleNavigationAndAlert.getInstance().handleGoToHome(event);
-                } catch (IOException ex) { ex.printStackTrace(); }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             } else {
                 HandleNavigationAndAlert.getInstance().showAlert(
-                        Alert.AlertType.ERROR, "Lỗi", "Server từ chối yêu cầu!");
+                        Alert.AlertType.ERROR, "Lỗi",
+                        "Server từ chối yêu cầu. Kiểm tra server đã chạy chưa (port 8080).");
             }
         });
 
@@ -198,7 +203,8 @@ public class CreateAuctionController implements Initializable {
             btn.setDisable(false);
             btn.setText("Tạo phiên");
             HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.ERROR, "Lỗi kết nối", "Không thể kết nối tới Server!");
+                    Alert.AlertType.ERROR, "Lỗi kết nối",
+                    "Không thể kết nối tới Server (localhost:8080). Hãy chắc chắn ServerApp đang chạy!");
         });
 
         new Thread(task).start();
@@ -213,11 +219,11 @@ public class CreateAuctionController implements Initializable {
         }
     }
 
-    // ===== VALIDATION LOGIC =====
     private String validateForm(String tenPhien, String tenSanPham, String danhMuc,
                                 String giaStr, LocalDate ngayBD, LocalDate ngayKT,
                                 int gioBD, int gioKT) {
-        if (tenPhien.isEmpty() || tenSanPham.isEmpty()) return "Tên phiên và tên sản phẩm không được để trống!";
+        if (tenPhien.isEmpty() || tenSanPham.isEmpty())
+            return "Tên phiên và tên sản phẩm không được để trống!";
         if (danhMuc == null) return "Vui lòng chọn danh mục!";
 
         try {
@@ -227,7 +233,8 @@ public class CreateAuctionController implements Initializable {
             return "Giá khởi điểm phải là số!";
         }
 
-        if (ngayBD == null || ngayKT == null) return "Vui lòng chọn đầy đủ ngày bắt đầu/kết thúc!";
+        if (ngayBD == null || ngayKT == null)
+            return "Vui lòng chọn đầy đủ ngày bắt đầu/kết thúc!";
 
         LocalDateTime start = LocalDateTime.of(ngayBD, LocalTime.of(gioBD, 0));
         LocalDateTime end = LocalDateTime.of(ngayKT, LocalTime.of(gioKT, 0));

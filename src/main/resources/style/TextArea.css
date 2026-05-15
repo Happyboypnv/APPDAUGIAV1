@@ -1,0 +1,38 @@
+/* Ghi đè class tùy chỉnh hoặc dùng mặc định .text-area */
+.text-area-custom {
+    -fx-background-color: #2b3544; /* Màu nền viền */
+    -fx-background-radius: 5;
+    -fx-padding: 1; /* Tạo khoảng cách nhỏ cho viền */
+}
+
+/* Lớp nội dung bên trong - Đây là chỗ bị trắng trước đó */
+.text-area-custom .content {
+    -fx-background-color: #2b3544 !important;
+    -fx-text-fill: white !important;
+    -fx-background-radius: 5;
+}
+
+/* Màu của con trỏ nhấp nháy */
+.text-area-custom .content .text {
+    -fx-fill: white !important;
+}
+
+/* Màu chữ gợi ý (Prompt text) */
+.text-area-custom .placeholder {
+    -fx-text-fill: #6b7280;
+    -fx-font-style: italic;
+}
+
+/* Khi nhấn vào ô để nhập (Focus) */
+.text-area-custom:focused {
+    -fx-background-color: #3498db; /* Viền xanh sáng khi chọn */
+}
+
+.text-area-custom:focused .content {
+    -fx-background-color: #2b3544 !important; /* Giữ nền tối khi focus */
+}
+
+/* Ẩn thanh cuộn nếu muốn mượt hơn hoặc tùy chỉnh màu thanh cuộn */
+.text-area-custom .scroll-pane {
+    -fx-background-color: transparent;
+}
