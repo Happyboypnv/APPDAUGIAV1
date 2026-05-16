@@ -1,11 +1,13 @@
 package com.mycompany.models;
 
 class Art extends Items {
-    public Art(String ten, String maSanPhan, String moTa) {
-        super(ten, maSanPhan, moTa, "Art");
+
+    public Art(String name, String productCode, String description) {
+        super(name, productCode, description, "Art");
     }
+
     @Override
     public String getDisplayInfo() {
-        return "[Nghệ thuật] " + this.layTenSanPham() + " - " + moTa;
+        return "[Art] " + this.getProductName() + " - " + description;
     }
 }

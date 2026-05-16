@@ -1,15 +1,14 @@
 package com.mycompany.models;
 
-import com.mycompany.models.SanPham;
+abstract class Items extends Product {
 
-abstract class Items extends SanPham {
-    protected String moTa;
-    protected String danhMuc;
+    protected String description;
+    protected String category;
 
-    public Items(String tenSanPham, String maSanPhan, String moTa, String danhMuc) {
-        super(tenSanPham, maSanPhan);
-        this.moTa = moTa;
-        this.danhMuc = danhMuc;
+    public Items(String productName, String productCode, String description, String category) {
+        super(productName, productCode);
+        this.description = description;
+        this.category = category;
     }
 
     public abstract String getDisplayInfo();

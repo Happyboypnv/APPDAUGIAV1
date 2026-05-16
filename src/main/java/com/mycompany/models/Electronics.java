@@ -1,11 +1,13 @@
 package com.mycompany.models;
 
 class Electronics extends Items {
-    public Electronics(String ten, String maSanPhan, String moTa) {
-        super(ten, maSanPhan, moTa, "Electronics");
+
+    public Electronics(String name, String productCode, String description) {
+        super(name, productCode, description, "Electronics");
     }
+
     @Override
     public String getDisplayInfo() {
-        return "[Điện tử] " + this.layTenSanPham() + " - " + moTa;
+        return "[Electronics] " + this.getProductName() + " - " + description;
     }
 }
