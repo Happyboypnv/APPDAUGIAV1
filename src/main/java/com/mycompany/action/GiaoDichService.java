@@ -5,7 +5,7 @@ import com.mycompany.models.TrangThaiGiaoDich;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.TrangThaiPhien;
-import com.mycompany.utils.IKhoLuuTruGiaoDich;
+import com.mycompany.utils.ITransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +13,9 @@ import java.util.List;
 
 public class GiaoDichService {
     private static final Logger logger = LoggerFactory.getLogger(GiaoDichService.class);
-    private final IKhoLuuTruGiaoDich kho;
+    private final ITransactionRepository kho;
 
-    public GiaoDichService(IKhoLuuTruGiaoDich kho) {
+    public GiaoDichService(ITransactionRepository kho) {
         this.kho = kho;
     }
 

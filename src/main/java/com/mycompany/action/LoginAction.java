@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
 
 public class LoginAction {
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
     private final Lock lock = new ReentrantLock();
 
     private LoginAction() {}

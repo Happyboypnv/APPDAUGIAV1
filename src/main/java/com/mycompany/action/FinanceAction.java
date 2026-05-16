@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.mycompany.models.NguoiDung;
 import com.mycompany.utils.CapNhatThongTinNguoiDung;
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.UserRepositorySQLite;
 import com.mycompany.utils.SessionManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -37,7 +37,7 @@ import javafx.scene.control.TextField;
  * - Business Logic Layer: Tách logic kinh doanh ra khỏi UI controller
  */
 public class FinanceAction {
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
 
     private FinanceAction() {}
 

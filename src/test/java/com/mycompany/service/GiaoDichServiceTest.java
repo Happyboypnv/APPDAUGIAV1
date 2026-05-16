@@ -2,7 +2,7 @@ package com.mycompany.service;
 
 import com.mycompany.action.GiaoDichService;
 import com.mycompany.models.*;
-import com.mycompany.utils.IKhoLuuTruGiaoDich;
+import com.mycompany.utils.ITransactionRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -33,7 +33,7 @@ class GiaoDichServiceTest {
     // ===== MOCK & SUT =====
 
     @Mock
-    private IKhoLuuTruGiaoDich mockKho;
+    private ITransactionRepository mockKho;
 
     private GiaoDichService service;
 

@@ -19,7 +19,7 @@ import java.util.List;
  * - Dễ thay đổi: Nếu muốn đổi database, chỉ cần tạo class mới implement interface này
  * - Dễ test: Có thể tạo mock implementation để test
  */
-public interface    IKhoLuuTruGiaoDich {
+public interface ITransactionRepository {
 
     /**
      * Lưu một giao dịch mới

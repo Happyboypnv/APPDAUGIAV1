@@ -1,8 +1,8 @@
 package com.mycompany;
 
 import com.mycompany.action.PhienDauGiaScheduler;
-import com.mycompany.utils.KetNoiCSDL;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.DatabaseConnection;
+import com.mycompany.utils.UserRepositorySQLite;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,7 +24,7 @@ public class App extends Application {
         try {
             // Khởi tạo database trước khi load giao diện
             logger.info("🗄️ Đang khởi tạo database...");
-            KetNoiCSDL.khoiTao();
+            DatabaseConnection.initialize();
             logger.info("✅ Database đã sẵn sàng!");
 
             // THAY ĐỔI QUAN TRỌNG (SQLite Migration):
@@ -42,8 +42,8 @@ public class App extends Application {
             //
             // Kết quả: Tất cả users đều có password hashed + salt
             logger.info("🔄 Đang kiểm tra migration passwords...");
-            KhoLuuTruNguoiDungSQLite userStorage = new KhoLuuTruNguoiDungSQLite();
-            userStorage.migratePlainTextPasswords();
+            UserRepositorySQLite userStorage = new UserRepositorySQLite();
+            userStorage.migrateLegacyPasswords();
             logger.info("✅ Migration hoàn thành!");
 
             // 1. Tải file giao diện đăng ký (SignUp.fxml)

@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Lớp quản lý kết nối CSDL SQLite sử dụng ThreadLocal để tối ưu đa luồng.
  * Tích hợp cơ chế WAL và Shutdown Hook để bảo vệ dữ liệu.
  */
-public class KetNoiCSDL {
-    private static final Logger logger = LoggerFactory.getLogger(KetNoiCSDL.class);
+public class DatabaseConnection {
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
     private static final String URL = "jdbc:sqlite:hipiti.db";
 
     // ThreadLocal giúp mỗi luồng sở hữu 1 Connection riêng, tránh tranh chấp.
@@ -21,7 +21,7 @@ public class KetNoiCSDL {
             ThreadLocal.withInitial(() -> {
                 try {
                     Connection conn = DriverManager.getConnection(URL);
-                    caiDatPragma(conn);
+                    setPragma(conn);
                     return conn;
                 } catch (SQLException e) {
                     throw new RuntimeException("Không thể khởi tạo Connection cho luồng: " + Thread.currentThread().getName(), e);
@@ -38,7 +38,7 @@ public class KetNoiCSDL {
     /**
      * Lấy kết nối của luồng hiện tại.
      */
-    public static Connection layKetNoi() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         try {
             Connection conn = CONNECTION.get();
 
@@ -62,7 +62,7 @@ public class KetNoiCSDL {
     /**
      * Cấu hình SQLite để chạy tối ưu (WAL mode, Busy Timeout, Foreign Keys).
      */
-    private static void caiDatPragma(Connection conn) throws SQLException {
+    private static void setPragma(Connection conn) throws SQLException {
         try (Statement stmt = conn.createStatement()) {
             // WAL mode: Cho phép nhiều luồng đọc trong khi 1 luồng đang ghi
             stmt.execute("PRAGMA journal_mode=WAL;");
@@ -83,9 +83,9 @@ public class KetNoiCSDL {
      * Khởi tạo các bảng dữ liệu và thực hiện migration nếu cần.
      * Cần được gọi 1 lần khi khởi động App.
      */
-    public static void khoiTao() {
+    public static void initialize() {
         // Đăng ký Shutdown Hook để đóng kết nối sạch sẽ khi đóng App (JVM tắt)
-        dangKyShutdownHook();
+        registerShutdownHook();
 
         String sqlNguoiDung = "CREATE TABLE IF NOT EXISTS nguoi_dung (" +
                 "ma_nguoi_dung TEXT PRIMARY KEY, " +
@@ -134,7 +134,7 @@ public class KetNoiCSDL {
                 "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien), " +
                 "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
 
-        try (Connection conn = layKetNoi();
+        try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(sqlNguoiDung);
@@ -163,7 +163,7 @@ public class KetNoiCSDL {
     /**
      * Đóng tất cả kết nối đã được mở bởi ứng dụng.
      */
-    public static void dongTatCaKetNoi() {
+    public static void closeAll() {
         logger.info("Đang đóng tất cả database connections...");
         for (Connection conn : tatCaConnection) {
             try {
@@ -181,7 +181,7 @@ public class KetNoiCSDL {
     /**
      * Đóng kết nối của luồng hiện tại và giải phóng khỏi ThreadLocal.
      */
-    public static void dongKetNoiHienTai() {
+    public static void closeCurrent() {
         try {
             Connection conn = CONNECTION.get();
             if (conn != null && !conn.isClosed()) {
@@ -195,10 +195,10 @@ public class KetNoiCSDL {
         }
     }
 
-    private static synchronized void dangKyShutdownHook() {
+    private static synchronized void registerShutdownHook() {
         if (!isHookRegistered) {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                dongTatCaKetNoi();
+                closeAll();
             }));
             isHookRegistered = true;
             logger.debug("✅ Đã đăng ký Shutdown Hook.");

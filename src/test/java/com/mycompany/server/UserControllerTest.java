@@ -2,8 +2,8 @@ package com.mycompany.server;
 
 import com.google.gson.Gson;
 import com.mycompany.server.dto.LoginResponse;
-import com.mycompany.utils.KetNoiCSDL;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.DatabaseConnection;
+import com.mycompany.utils.UserRepositorySQLite;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -41,8 +41,8 @@ public class UserControllerTest {
     @BeforeAll
     static void khoiDongServer() throws Exception {
         // Bước 1: Khởi tạo database
-        KetNoiCSDL.khoiTao();
-        new KhoLuuTruNguoiDungSQLite().migratePlainTextPasswords();
+        DatabaseConnection.initialize();
+        new UserRepositorySQLite().migrateLegacyPasswords();
 
         // Bước 2: Chạy server trên port 8081 trong background thread
         // setDaemon(true) = tự tắt khi test xong, không cần dừng thủ công

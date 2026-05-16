@@ -31,7 +31,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         synchronized (AUCTION_ID_GENERATION_LOCK) {
             String sql = "SELECT MAX(CAST(SUBSTR(ma_phien, 3) AS INTEGER)) " +
                     "FROM phien_dau_gia";
-            try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
+            try (Statement stmt = DatabaseConnection.getConnection().createStatement();
                  ResultSet rs   = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     int maxVal = rs.getInt(1); // getInt trả 0 nếu MAX = NULL (bảng rỗng)
@@ -61,7 +61,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         // Nếu không commit ngay, SQLite giữ read-lock → block writer thread khác → SQLITE_BUSY.
         // Phải commit (hoặc rollback) trước khi bắt đầu INSERT để giải phóng lock.
         try {
-            KetNoiCSDL.layKetNoi().commit();
+            DatabaseConnection.getConnection().commit();
         } catch (SQLException e) {
             logger.error("[WARN] Không thể commit sau kiemTra: " + e.getMessage());
         }
@@ -73,7 +73,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         // Trước đây không có chỗ nào INSERT vào san_pham → SQLITE_CONSTRAINT_FOREIGNKEY.
         // Dùng INSERT OR IGNORE để an toàn: nếu maSanPham đã tồn tại thì bỏ qua, không lỗi.
         String sqlSanPham = "INSERT OR IGNORE INTO san_pham (ma_san_pham, ten_san_pham) VALUES (?, ?)";
-        try (PreparedStatement psSp = KetNoiCSDL.layKetNoi().prepareStatement(sqlSanPham)) {
+        try (PreparedStatement psSp = DatabaseConnection.getConnection().prepareStatement(sqlSanPham)) {
             psSp.setString(1, phienDauGia.getSanPham().layMaSanPham());
             psSp.setString(2, phienDauGia.getSanPham().layTenSanPham());
             psSp.executeUpdate();
@@ -87,7 +87,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
         /// insert vao database
         String sql = "INSERT INTO phien_dau_gia " + "(ma_phien, ten_phien, gia_hien_tai, buoc_gia, thoi_gian_bat_dau, thoi_gian_ket_thuc, trang_thai, ma_nguoi_ban, ma_san_pham, ma_nguoi_thang_cuoc, is_closed) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try(PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)){
+        try(PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)){
             ps.setString(1, phienDauGia.getMaPhienDauGia());
             ps.setString(2, phienDauGia.getTenPhienDauGia());
             ps.setDouble(3, phienDauGia.getGiaHienTai());
@@ -137,7 +137,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
          * con SELECT p.* lay tu du tự do bằng * voiws bảng phien_dau_gia còn với các bảng JOIN khác thì chỉ lấy những cột cần thiết và đặt alias để tránh trùng tên cột giữa các bảng
          * vì phiên có thể chưa co người thang cuoc nen dung LEFT JOIN de lay du lieu tu bang nguoi_dung (ntc) neu co, neu khong co thi se tra ve null thay vi bi loai bo phien do
          */
-        try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
+        try (Statement stmt = DatabaseConnection.getConnection().createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 // Create NguoiBan
@@ -179,7 +179,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
             logger.error("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
         }
         finally {
-            KetNoiCSDL.layKetNoi().rollback(); // Đảm bảo rollback sau khi đọc để giải phóng read-lock, tránh SQLITE_BUSY cho writer thread khác
+            DatabaseConnection.getConnection().rollback(); // Đảm bảo rollback sau khi đọc để giải phóng read-lock, tránh SQLITE_BUSY cho writer thread khác
         }
         return result;
     }
@@ -195,7 +195,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
             "LEFT JOIN san_pham sp ON p.ma_san_pham = sp.ma_san_pham " +
             "LEFT JOIN nguoi_dung ntc ON p.ma_nguoi_thang_cuoc = ntc.ma_nguoi_dung " +
             "WHERE p.ma_phien = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maPhien);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -244,7 +244,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
     @Override
     public boolean capNhatPhienDauGia(PhienDauGia phienDauGia) {
         String sql = "UPDATE phien_dau_gia SET ten_phien = ?, gia_hien_tai = ?, buoc_gia = ?, thoi_gian_bat_dau = ?, thoi_gian_ket_thuc = ?, trang_thai = ?, ma_nguoi_ban = ?, ma_san_pham = ?, ma_nguoi_thang_cuoc = ?, is_closed = ? WHERE ma_phien = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, phienDauGia.getTenPhienDauGia());
             ps.setDouble(2, phienDauGia.getGiaHienTai());
             ps.setDouble(3, phienDauGia.getBuocGia()); // FIX: buocGia bị thiếu trước đây
@@ -268,7 +268,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
     @Override
     public boolean xoaPhienDauGia(String maPhien) {
         String sql = "DELETE FROM phien_dau_gia WHERE ma_phien = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maPhien);
             int rows = ps.executeUpdate();
             ps.getConnection().commit();
@@ -282,7 +282,7 @@ public class KhoLuuTruPhienDauGiaSQLite implements IKhoLuuTruPhienDauGia {
     @Override
     public boolean kiemTraPhienTonTai(String maPhien) {
         String sql = "SELECT COUNT(*) FROM phien_dau_gia WHERE ma_phien = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maPhien);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

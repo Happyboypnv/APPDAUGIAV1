@@ -32,7 +32,7 @@ public class CapNhatThongTinNguoiDung {
 
     // Interface để lưu trữ dữ liệu người dùng - hiện tại dùng JSON
     // Có thể thay thế bằng database trong tương lai (design pattern: Strategy)
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
 
     /**
      * Constructor private để ngăn tạo instance trực tiếp

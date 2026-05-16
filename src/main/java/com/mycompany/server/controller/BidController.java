@@ -6,9 +6,9 @@ import com.mycompany.action.PhienDauGiaService;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.TrangThaiPhien;
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
+import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.IKhoLuuTruPhienDauGia;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.UserRepositorySQLite;
 import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
 import com.sun.net.httpserver.HttpExchange;
 import com.mycompany.server.dto.DatGiaRequest;
@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * BidController — Xử lý các HTTP request liên quan đến đặt giá (bid).
@@ -59,7 +58,7 @@ public class BidController {
     private final IKhoLuuTruPhienDauGia khoPhien = new KhoLuuTruPhienDauGiaSQLite();
 
     /** Kho người dùng — để tra cứu người đặt giá từ token */
-    private final IKhoLuuTruNguoiDung khoNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoNguoiDung = new UserRepositorySQLite();
 
     /** Service đấu giá — tái sử dụng singleton đã có, KHÔNG tạo mới */
     private final PhienDauGiaService phienDauGiaService = PhienDauGiaService.getInstance();

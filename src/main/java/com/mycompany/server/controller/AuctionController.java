@@ -8,9 +8,9 @@ import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
 import com.mycompany.models.SanPham;
 import com.mycompany.models.TrangThaiPhien;
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
+import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.IKhoLuuTruPhienDauGia;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.UserRepositorySQLite;
 import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -53,7 +53,7 @@ public class AuctionController {
   private final IKhoLuuTruPhienDauGia khoPhien = new KhoLuuTruPhienDauGiaSQLite();
 
   /** Kho lưu trữ người dùng — để tra cứu người bán theo email từ token */
-  private final IKhoLuuTruNguoiDung khoNguoiDung = new KhoLuuTruNguoiDungSQLite();
+  private final IUserRepository khoNguoiDung = new UserRepositorySQLite();
 
   /** Service xử lý logic đấu giá — tái sử dụng singleton đã có */
   private final PhienDauGiaService phienDauGiaService = PhienDauGiaService.getInstance();

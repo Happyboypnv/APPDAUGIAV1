@@ -6,7 +6,7 @@ import com.mycompany.action.PhienDauGiaService;
 import com.mycompany.action.QuanLyCacPhienService;
 import com.mycompany.models.NguoiDung;
 import com.mycompany.models.PhienDauGia;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.UserRepositorySQLite;
 import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - PhienDauGiaService.datGia() phải thread-safe
  */
 public class AuctionWebSocketServer extends WebSocketServer {
-    private final KhoLuuTruNguoiDungSQLite khoLuuTruNguoiDungSQLite = new KhoLuuTruNguoiDungSQLite();
+    private final UserRepositorySQLite khoLuuTruNguoiDungSQLite = new UserRepositorySQLite();
     private final KhoLuuTruPhienDauGiaSQLite khoPhienDauGia = new KhoLuuTruPhienDauGiaSQLite();
     private final static Logger logger = LoggerFactory.getLogger(AuctionWebSocketServer.class);
     // ===== THREAD-SAFE DATA STRUCTURES =====

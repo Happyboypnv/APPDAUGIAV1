@@ -6,15 +6,14 @@ import com.mycompany.server.dto.LoginRequest;
 import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.server.dto.RegisterRequest;
 import com.mycompany.utils.BoMaHoaMatKhau;
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.UserRepositorySQLite;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 /**
  * UserController — Xử lý các HTTP request liên quan đến người dùng.
@@ -40,7 +39,7 @@ public class UserController {
      * Kho lưu trữ người dùng dùng SQLite.
      * Dùng cùng database với phần JavaFX → dữ liệu đồng bộ hoàn toàn.
      */
-    private final IKhoLuuTruNguoiDung khoNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoNguoiDung = new UserRepositorySQLite();
 
     // =========================================================
     // API 1: POST /api/users/login  →  trả về token
@@ -107,7 +106,7 @@ public class UserController {
      * Request:
      *   Method : POST
      *   URL    : /api/users/register
-     *   Body   : { "hoTen": "...", "email": "...", "matKhau": "...", "ngaySinh": "2000-01-15" }
+     *   Body   : +
      *
      * Quy trình:
      *  1. Kiểm tra các trường bắt buộc

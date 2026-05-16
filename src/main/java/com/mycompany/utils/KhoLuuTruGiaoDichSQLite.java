@@ -4,7 +4,6 @@ import com.mycompany.models.*;
 import org.slf4j.Logger;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,7 +21,7 @@ import java.util.List;
  * - Sử dụng synchronized cho ID generation
  * - Sử dụng ThreadLocal connections từ KetNoiCSDL
  */
-public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
+public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(KhoLuuTruGiaoDichSQLite.class);
     // Lock để đồng bộ hóa việc sinh mã giao dịch trong môi trường đa luồng
     private static final Object TRANSACTION_ID_GENERATION_LOCK = new Object();
@@ -37,7 +36,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
         synchronized (TRANSACTION_ID_GENERATION_LOCK) {
             String sql = "SELECT MAX(CAST(SUBSTR(ma_giao_dich, 3) AS INTEGER)) " +
                     "FROM giao_dich";
-            try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
+            try (Statement stmt = DatabaseConnection.getConnection().createStatement();
                  ResultSet rs   = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     int maxVal = rs.getInt(1); // getInt trả 0 nếu MAX = NULL (bảng rỗng)
@@ -65,7 +64,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                 "(ma_giao_dich, ma_phien, trang_thai, thoi_gian_tao) " +
                 "VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, giaoDich.getId());
             ps.setString(2, giaoDich.getPhienDauGia().getMaPhienDauGia());
             ps.setString(3, giaoDich.getTrangThai().name());
@@ -88,7 +87,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
         String sql = "SELECT gd.*, pd.* FROM giao_dich gd " +
                 "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien";
 
-        try (Statement stmt = KetNoiCSDL.layKetNoi().createStatement();
+        try (Statement stmt = DatabaseConnection.getConnection().createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 String maGiaoDich = rs.getString("ma_giao_dich");
@@ -115,7 +114,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
     @Override
     public GiaoDich timGiaoDichTheoMa(String maGiaoDich) {
         String sql = "SELECT * FROM giao_dich WHERE ma_giao_dich = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maGiaoDich);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -140,7 +139,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
     @Override
     public boolean xoaGiaoDich(String maGiaoDich) {
         String sql = "DELETE FROM giao_dich WHERE ma_giao_dich = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maGiaoDich);
             int rows = ps.executeUpdate();
             ps.getConnection().commit();
@@ -157,7 +156,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
     @Override
     public boolean kiemTraGiaoDichTonTai(String maGiaoDich) {
         String sql = "SELECT COUNT(*) FROM giao_dich WHERE ma_giao_dich = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maGiaoDich);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -176,7 +175,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
     @Override
     public boolean capNhatGiaoDich(GiaoDich giaoDich) {
         String sql = "UPDATE giao_dich SET trang_thai = ? WHERE ma_giao_dich = ?";
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, giaoDich.getTrangThai().name());
             ps.setString(2, giaoDich.getId());
             int rows = ps.executeUpdate();
@@ -199,7 +198,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
                 "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien " +
                 "WHERE pd.ma_nguoi_ban = ? OR pd.ma_nguoi_thang_cuoc = ?";
 
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maNguoiDung);
             ps.setString(2, maNguoiDung);
             try (ResultSet rs = ps.executeQuery()) {
@@ -225,7 +224,7 @@ public class KhoLuuTruGiaoDichSQLite implements IKhoLuuTruGiaoDich {
         List<GiaoDich> result = new ArrayList<>();
         String sql = "SELECT * FROM giao_dich WHERE trang_thai = ?";
 
-        try (PreparedStatement ps = KetNoiCSDL.layKetNoi().prepareStatement(sql)) {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, trangThai.name());
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

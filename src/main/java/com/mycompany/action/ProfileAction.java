@@ -1,8 +1,8 @@
 package com.mycompany.action;
 
 import com.mycompany.exception.Login.*;
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.UserRepositorySQLite;
 import javafx.scene.control.TextField;
 
 /**
@@ -30,7 +30,7 @@ import javafx.scene.control.TextField;
  * - Business Logic Layer: Tách logic validation ra khỏi UI
  */
 public class ProfileAction {
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
 
     private ProfileAction() {}
 

@@ -3,15 +3,13 @@ package com.mycompany.server;
 import com.mycompany.server.controller.AuctionController;
 import com.mycompany.server.controller.BidController;
 import com.mycompany.server.controller.UserController;
-import com.mycompany.utils.KetNoiCSDL;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.DatabaseConnection;
+import com.mycompany.utils.UserRepositorySQLite;
 import com.sun.net.httpserver.HttpServer;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Executors;
 
 /**
@@ -39,9 +37,9 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
 
         // ===== KHỞI TẠO DATABASE =====
-        KetNoiCSDL.khoiTao();
-        KhoLuuTruNguoiDungSQLite userStorage = new KhoLuuTruNguoiDungSQLite();
-        userStorage.migratePlainTextPasswords();
+        DatabaseConnection.initialize();
+        UserRepositorySQLite userStorage = new UserRepositorySQLite();
+        userStorage.migrateLegacyPasswords();
 
         // ===== KHỞI TẠO SERVER =====
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);

@@ -1,6 +1,6 @@
 package com.mycompany.action;
 
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.UserRepositorySQLite;
 import javafx.fxml.FXML; // Quan trọng
 import javafx.fxml.FXMLLoader; // Quan trọng
 import javafx.scene.Parent; // Quan trọng
@@ -9,7 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
 
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
+import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.SessionManager;
 
 import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
@@ -37,7 +37,7 @@ import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
  * - Thread-safe: Sử dụng Lock để đồng bộ hóa
  */
 public class HomeAction {
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
     private final Lock lock = new ReentrantLock();
     private HomeAction() {};
 
