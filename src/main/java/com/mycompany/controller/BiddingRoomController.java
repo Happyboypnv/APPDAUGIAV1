@@ -100,7 +100,7 @@ public class BiddingRoomController implements Initializable {
                 wsClient.setListener(adapter);
                 wsClient.connectToServer();
 
-                String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+                String email = SessionManager.getInstance().getCurrentUser().getEmail();
                 wsClient.sendJoin(currentPhienId, email);
             } catch (Exception e) {
                 System.err.println("❌ Lỗi kết nối WebSocket: " + e.getMessage());
@@ -156,7 +156,7 @@ public class BiddingRoomController implements Initializable {
 
         // Gửi qua WebSocket thay vì cập nhật local
         if (wsClient != null && wsClient.isConnected() && currentPhienId != null) {
-            String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+            String email = SessionManager.getInstance().getCurrentUser().getEmail();
             wsClient.sendBid(currentPhienId, email, myBid);
         } else {
             // Fallback: gọi REST API nếu mất kết nối

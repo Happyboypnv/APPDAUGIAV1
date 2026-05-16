@@ -151,7 +151,7 @@ public class CreateAuctionController implements Initializable {
             // Fallback: thử tạo token thủ công từ email nếu chưa có serverToken
             // (trường hợp user chưa đăng xuất từ phiên cũ)
             if (SessionManager.getInstance().getCurrentUser() != null) {
-                String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+                String email = SessionManager.getInstance().getCurrentUser().getEmail();
                 token = "USER_" + email + "_" + System.currentTimeMillis();
                 HandleNavigationAndAlert.getInstance().showAlert(
                         Alert.AlertType.WARNING, "Cảnh báo",

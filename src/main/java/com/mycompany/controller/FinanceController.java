@@ -7,10 +7,9 @@ import java.util.ResourceBundle;
 
 import com.mycompany.action.FinanceAction;
 import com.mycompany.action.HandleNavigationAndAlert;
-import com.mycompany.models.NguoiDung;
-import com.mycompany.utils.CapNhatThongTinNguoiDung;
+import com.mycompany.models.User;
+import com.mycompany.utils.UserProfileUpdater;
 import com.mycompany.utils.SessionManager;
-import com.mycompany.utils.TokenUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -77,12 +76,12 @@ public class FinanceController implements Initializable {
         // 🔹 BƯỚC 1: Thêm danh sách ngân hàng vào ComboBox
         banks.getItems().addAll("MB Bank", "Techcombank", "BIDV", "Agribank", "VP Bank"); // Lựa chọn ngân hàng
 
-        NguoiDung user = SessionManager.getInstance().getCurrentUser();
+        User user = SessionManager.getInstance().getCurrentUser();
         if (user != null) {
-            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getSoDuKhaDung()));
-            bankAccount.setText(user.getSoTaiKhoan());
-            if (user.getNganHang() != null) {
-                banks.setValue(user.getNganHang());
+            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getAvailableBalance()));
+            bankAccount.setText(user.getBankAccountNumber());
+            if (user.getBankName() != null) {
+                banks.setValue(user.getBankName());
             }
         }
     }
@@ -142,7 +141,7 @@ public class FinanceController implements Initializable {
         newBankAcc.put("bankName", customBoxBankName);
 
         // Lưu vào JSON file và cập nhật session
-        CapNhatThongTinNguoiDung.getInstance().updateUser(newBankAcc);
+        UserProfileUpdater.getInstance().updateUser(newBankAcc);
 
         // 🔹 BƯỚC 4: Thông báo thành công
         HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Liên kết tài khoản ngân hàng thành công!");
@@ -175,9 +174,9 @@ public class FinanceController implements Initializable {
 
     // Thêm hàm helper — dùng chung cho deposit và withdraw
     private void refreshBalance() {
-        NguoiDung user = SessionManager.getInstance().getCurrentUser();
+        User user = SessionManager.getInstance().getCurrentUser();
         if (user != null) {
-            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getSoDuKhaDung()));
+            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getAvailableBalance()));
         }
     }
 

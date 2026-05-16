@@ -33,7 +33,7 @@ public class HomeController implements Initializable {
         // Hiển thị chào mừng
         if (labelWelcome != null && SessionManager.getInstance().getCurrentUser() != null) {
             labelWelcome.setText("Xin chào, " +
-                    SessionManager.getInstance().getCurrentUser().layHoTen() + "!");
+                    SessionManager.getInstance().getCurrentUser().getFullName() + "!");
         }
 
         // Load danh sách phiên từ server (chạy trên thread riêng, không block UI)

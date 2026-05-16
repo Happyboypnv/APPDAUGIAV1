@@ -1,6 +1,8 @@
 package com.mycompany.utils;
 
-import com.mycompany.models.*;
+import com.mycompany.models.AuctionSession;
+import com.mycompany.models.Transaction;
+import com.mycompany.models.TransactionStatus;
 import org.slf4j.Logger;
 
 import java.sql.*;
@@ -10,7 +12,7 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * KhoLuuTruGiaoDichSQLite - Implementation của IKhoLuuTruGiaoDich sử dụng SQLite.
+ * KhoLuuTrutransactionSQLite - Implementation của IKhoLuuTrutransaction sử dụng SQLite.
  *
  * MỤC ĐÍCH:
  * - Quản lý lưu trữ tất cả giao dịch (transactions) trong database
@@ -21,18 +23,18 @@ import java.util.List;
  * - Sử dụng synchronized cho ID generation
  * - Sử dụng ThreadLocal connections từ KetNoiCSDL
  */
-public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(KhoLuuTruGiaoDichSQLite.class);
+public class TransactionRepositorySQLite implements ITransactionRepository {
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(TransactionRepositorySQLite.class);
     // Lock để đồng bộ hóa việc sinh mã giao dịch trong môi trường đa luồng
     private static final Object TRANSACTION_ID_GENERATION_LOCK = new Object();
 
     // Reference đến storage phiên đấu giá để lồng dữ liệu
-    private final IKhoLuuTruPhienDauGia khoLuuTruPhienDauGia = new KhoLuuTruPhienDauGiaSQLite();
+    private final IAuctionRepository auctionRepository = new AuctionRepositorySQLite();
 
     /**
      * Sinh mã giao dịch mới theo mẫu: GD000001, GD000002, ...
      */
-    private String sinhMaGiaoDich() {
+    private String RandNewTransactionId() {
         synchronized (TRANSACTION_ID_GENERATION_LOCK) {
             String sql = "SELECT MAX(CAST(SUBSTR(ma_giao_dich, 3) AS INTEGER)) " +
                     "FROM giao_dich";
@@ -54,9 +56,9 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Lưu một giao dịch mới vào database
      */
     @Override
-    public void luuGiaoDich(GiaoDich giaoDich) {
-        if (kiemTraGiaoDichTonTai(giaoDich.getId())) {
-           logger.info("[WARN] Giao dịch đã tồn tại: " + giaoDich.getId());
+    public void save(Transaction transaction) {
+        if (isTransactionAvailable(transaction.getId())) {
+           logger.info("[WARN] Giao dịch đã tồn tại: " + transaction.getId());
             return;
         }
 
@@ -65,14 +67,14 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
                 "VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, giaoDich.getId());
-            ps.setString(2, giaoDich.getPhienDauGia().getMaPhienDauGia());
-            ps.setString(3, giaoDich.getTrangThai().name());
-            ps.setString(4, giaoDich.getThoiGianTao().toString());
+            ps.setString(1, transaction.getId());
+            ps.setString(2, transaction.getAuctionSession().getAuctionSessionId());
+            ps.setString(3, transaction.getStatus().name());
+            ps.setString(4, transaction.getCreatedAt().toString());
 
             int rowsAffected = ps.executeUpdate();
             ps.getConnection().commit();
-           logger.info("[SUCCESS] Lưu giao dịch thành công: " + giaoDich.getId());
+           logger.info("[SUCCESS] Lưu giao dịch thành công: " + transaction.getId());
         } catch (SQLException e) {
             logger.error("[ERROR] Lỗi lưu giao dịch: " + e.getMessage());
         }
@@ -82,24 +84,24 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Lấy tất cả giao dịch từ database
      */
     @Override
-    public Map<String, GiaoDich> layTatCaGiaoDich() {
-        Map<String, GiaoDich> result = new HashMap<>();
+    public Map<String, Transaction> findAll() {
+        Map<String, Transaction> result = new HashMap<>();
         String sql = "SELECT gd.*, pd.* FROM giao_dich gd " +
                 "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien";
 
         try (Statement stmt = DatabaseConnection.getConnection().createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                String maGiaoDich = rs.getString("ma_giao_dich");
-                String maPhien = rs.getString("ma_phien");
+                String transactionID = rs.getString("ma_giao_dich");
+                String auctionID = rs.getString("ma_phien");
 
                 // Lấy phiên đấu giá đầy đủ thông tin
-                PhienDauGia phien = khoLuuTruPhienDauGia.layPhienDauGia(maPhien);
+                AuctionSession phien = auctionRepository.findById(auctionID);
 
                 if (phien != null) {
-                    GiaoDich giaoDich = new GiaoDich(maGiaoDich, phien);
-                    giaoDich.setTrangThai(TrangThaiGiaoDich.valueOf(rs.getString("trang_thai")));
-                    result.put(maGiaoDich, giaoDich);
+                    Transaction transaction = new Transaction(transactionID, phien);
+                    transaction.setStatus(TransactionStatus.valueOf(rs.getString("trang_thai")));
+                    result.put(transactionID, transaction);
                 }
             }
         } catch (SQLException e) {
@@ -112,18 +114,18 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Lấy giao dịch theo mã
      */
     @Override
-    public GiaoDich timGiaoDichTheoMa(String maGiaoDich) {
+    public Transaction findById(String transactionID) {
         String sql = "SELECT * FROM giao_dich WHERE ma_giao_dich = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, maGiaoDich);
+            ps.setString(1, transactionID);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    String maPhien = rs.getString("ma_phien");
-                    PhienDauGia phien = khoLuuTruPhienDauGia.layPhienDauGia(maPhien);
+                    String auctionID = rs.getString("ma_phien");
+                    AuctionSession phien = auctionRepository.findById(auctionID);
                     if (phien != null) {
-                        GiaoDich giaoDich = new GiaoDich(maGiaoDich, phien);
-                        giaoDich.setTrangThai(TrangThaiGiaoDich.valueOf(rs.getString("trang_thai")));
-                        return giaoDich;
+                        Transaction transaction = new Transaction(transactionID, phien);
+                        transaction.setStatus(TransactionStatus.valueOf(rs.getString("trang_thai")));
+                        return transaction;
                     }
                 }
             }
@@ -137,10 +139,10 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Xóa giao dịch theo mã
      */
     @Override
-    public boolean xoaGiaoDich(String maGiaoDich) {
+    public boolean delete(String transactionID) {
         String sql = "DELETE FROM giao_dich WHERE ma_giao_dich = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, maGiaoDich);
+            ps.setString(1, transactionID);
             int rows = ps.executeUpdate();
             ps.getConnection().commit();
             return rows > 0;
@@ -154,10 +156,10 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Kiểm tra giao dịch có tồn tại hay không
      */
     @Override
-    public boolean kiemTraGiaoDichTonTai(String maGiaoDich) {
+    public boolean isTransactionAvailable(String transactionID) {
         String sql = "SELECT COUNT(*) FROM giao_dich WHERE ma_giao_dich = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, maGiaoDich);
+            ps.setString(1, transactionID);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
@@ -173,11 +175,11 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Cập nhật giao dịch (chủ yếu cập nhật trạng thái)
      */
     @Override
-    public boolean capNhatGiaoDich(GiaoDich giaoDich) {
+    public boolean update(Transaction transaction) {
         String sql = "UPDATE giao_dich SET trang_thai = ? WHERE ma_giao_dich = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, giaoDich.getTrangThai().name());
-            ps.setString(2, giaoDich.getId());
+            ps.setString(1, transaction.getStatus().name());
+            ps.setString(2, transaction.getId());
             int rows = ps.executeUpdate();
             ps.getConnection().commit();
             return rows > 0;
@@ -191,8 +193,8 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Lấy danh sách giao dịch của một người dùng (bán hoặc mua)
      */
     @Override
-    public List<GiaoDich> layGiaoDichTheoNguoiDung(String maNguoiDung) {
-        List<GiaoDich> result = new ArrayList<>();
+    public List<Transaction> findByUserId(String maNguoiDung) {
+        List<Transaction> result = new ArrayList<>();
         // Lấy giao dịch nơi người dùng là người bán hoặc người mua
         String sql = "SELECT DISTINCT gd.* FROM giao_dich gd " +
                 "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien " +
@@ -203,10 +205,10 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
             ps.setString(2, maNguoiDung);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    String maGiaoDich = rs.getString("ma_giao_dich");
-                    GiaoDich giaoDich = timGiaoDichTheoMa(maGiaoDich);
-                    if (giaoDich != null) {
-                        result.add(giaoDich);
+                    String transactionID = rs.getString("ma_giao_dich");
+                    Transaction transaction = findById(transactionID);
+                    if (transaction != null) {
+                        result.add(transaction);
                     }
                 }
             }
@@ -220,18 +222,18 @@ public class KhoLuuTruGiaoDichSQLite implements ITransactionRepository {
      * Lấy danh sách giao dịch theo trạng thái
      */
     @Override
-    public List<GiaoDich> layGiaoDichTheoTrangThai(TrangThaiGiaoDich trangThai) {
-        List<GiaoDich> result = new ArrayList<>();
+    public List<Transaction> findByStatus(TransactionStatus trangThai) {
+        List<Transaction> result = new ArrayList<>();
         String sql = "SELECT * FROM giao_dich WHERE trang_thai = ?";
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, trangThai.name());
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    String maGiaoDich = rs.getString("ma_giao_dich");
-                    GiaoDich giaoDich = timGiaoDichTheoMa(maGiaoDich);
-                    if (giaoDich != null) {
-                        result.add(giaoDich);
+                    String transactionID = rs.getString("ma_giao_dich");
+                    Transaction transaction = findById(transactionID);
+                    if (transaction != null) {
+                        result.add(transaction);
                     }
                 }
             }

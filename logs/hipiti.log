@@ -1,597 +1,167 @@
-2026-05-15 13:15:54.777 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:15:55.166 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:15:55.170 [main] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:15:55.171 [main] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:15:55.176 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:15:55.179 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:15:55.182 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:15:55.502 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-15 13:15:55.508 [WebSocketSelector-34] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-15 13:15:56.976 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:17:38.558 [pool-2-thread-1] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:17:38.591 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP_1778342581304
-2026-05-15 13:17:38.592 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
-2026-05-15 13:17:38.597 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000010
-2026-05-15 13:17:46.809 [pool-2-thread-2] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:17:46.810 [pool-2-thread-2] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP_1778342581304
-2026-05-15 13:17:46.812 [pool-2-thread-2] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
-2026-05-15 13:17:46.812 [pool-2-thread-2] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000011
-2026-05-15 13:17:59.590 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-15 13:17:59.594 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:17:59.909 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:17:59.912 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:17:59.913 [JavaFX Application Thread] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:17:59.913 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-15 13:17:59.914 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-15 13:17:59.916 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:17:59.918 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:17:59.921 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:17:59.922 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-15 13:18:36.235 [pool-2-thread-3] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:19:22.975 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:19:22.976 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 13:19:59.872 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-15 13:19:59.880 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:20:00.333 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:20:00.339 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:20:00.341 [JavaFX Application Thread] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:20:00.343 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-15 13:20:00.344 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-15 13:20:00.346 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:20:00.351 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:20:00.359 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:20:00.361 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-15 13:22:35.785 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:22:35.785 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 13:22:43.701 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-15 13:22:43.706 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:22:44.016 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:22:44.021 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:22:44.021 [JavaFX Application Thread] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:22:44.022 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-15 13:22:44.022 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-15 13:22:44.023 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:22:44.027 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:22:44.030 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:22:44.031 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-15 13:23:16.257 [pool-2-thread-5] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:23:25.807 [pool-2-thread-7] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:23:25.813 [pool-2-thread-7] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
-2026-05-15 13:23:25.814 [pool-2-thread-7] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - COMMIT thành công cho user: PPTT000012
-2026-05-15 13:23:43.124 [pool-2-thread-9] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:23:43.126 [pool-2-thread-9] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-15 13:23:43.126 [pool-2-thread-9] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
-2026-05-15 13:23:43.126 [pool-2-thread-9] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
-2026-05-15 13:23:43.126 [pool-2-thread-9] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
-2026-05-15 13:24:16.552 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: null
-2026-05-15 13:24:16.552 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_phong@gmail.com_1778826223126
-2026-05-15 13:24:16.565 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:24:16.566 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:24:50.972 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:24:50.974 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 13:24:58.739 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:24:58.758 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 13:30:49.513 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:30:49.900 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:30:49.903 [main] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:30:49.904 [main] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:30:49.909 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:30:49.912 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:30:49.916 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:30:50.231 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-15 13:30:50.238 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-15 13:30:51.700 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-15 13:30:51.701 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-15 13:30:51.702 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:30:51.702 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-15 13:30:51.702 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:30:55.486 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-15 13:30:55.491 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:30:55.789 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:30:55.791 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:30:55.792 [JavaFX Application Thread] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:30:55.792 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-15 13:30:55.792 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-15 13:30:55.793 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:30:55.794 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:30:55.798 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:30:55.798 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-15 13:31:13.752 [pool-1-thread-1] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:31:13.760 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-15 13:31:13.762 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
-2026-05-15 13:31:13.762 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
-2026-05-15 13:31:13.762 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
-2026-05-15 13:31:15.035 [pool-1-thread-3] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:31:54.467 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: null
-2026-05-15 13:31:54.468 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_phong@gmail.com_1778826673764
-2026-05-15 13:31:54.472 [pool-1-thread-5] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:31:54.480 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:31:54.483 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:32:08.035 [Thread-6] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: null
-2026-05-15 13:32:08.035 [Thread-6] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_phong@gmail.com_1778826673764
-2026-05-15 13:32:08.040 [pool-1-thread-7] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:32:08.043 [Thread-6] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:32:08.043 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:37:23.295 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:37:23.296 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 13:37:23.302 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:37:23.303 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 13:38:12.840 [main] INFO  c.mycompany.action.GiaoDichService - ==========================================
-2026-05-15 13:38:12.843 [main] INFO  c.mycompany.action.GiaoDichService -          LỊCH SỬ GIAO DỊCH               
-2026-05-15 13:38:12.843 [main] INFO  c.mycompany.action.GiaoDichService - ==========================================
-2026-05-15 13:38:12.843 [main] INFO  c.mycompany.action.GiaoDichService -   Người dùng : ND002
-2026-05-15 13:38:12.844 [main] INFO  c.mycompany.action.GiaoDichService -   Trang 1 / 2  |  Tổng: 5 giao dịch
-2026-05-15 13:38:12.844 [main] INFO  c.mycompany.action.GiaoDichService - ------------------------------------------
-2026-05-15 13:38:12.844 [main] INFO  c.mycompany.action.GiaoDichService -   [1] Mã GD     : GD000001
-2026-05-15 13:38:12.844 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.823331700
-2026-05-15 13:38:12.845 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.845 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.845 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -   [2] Mã GD     : GD000002
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.823331700
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.847 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -   [3] Mã GD     : GD000003
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.823331700
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.848 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.866 [main] INFO  c.mycompany.action.GiaoDichService - ==========================================
-2026-05-15 13:38:12.866 [main] INFO  c.mycompany.action.GiaoDichService -          LỊCH SỬ GIAO DỊCH               
-2026-05-15 13:38:12.866 [main] INFO  c.mycompany.action.GiaoDichService - ==========================================
-2026-05-15 13:38:12.866 [main] INFO  c.mycompany.action.GiaoDichService -   Người dùng : ND002
-2026-05-15 13:38:12.868 [main] INFO  c.mycompany.action.GiaoDichService -   Trang 2 / 2  |  Tổng: 5 giao dịch
-2026-05-15 13:38:12.868 [main] INFO  c.mycompany.action.GiaoDichService - ------------------------------------------
-2026-05-15 13:38:12.868 [main] INFO  c.mycompany.action.GiaoDichService -   [4] Mã GD     : GD000004
-2026-05-15 13:38:12.868 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.865792700
-2026-05-15 13:38:12.868 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.868 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.868 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -   [5] Mã GD     : GD000005
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.866839500
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.869 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.870 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.870 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.870 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.874 [main] INFO  c.mycompany.action.GiaoDichService - [xemLichSu] Không có dữ liệu ở trang 99 (tổng 1 trang).
-2026-05-15 13:38:12.881 [main] INFO  c.mycompany.action.GiaoDichService - [xemLichSu] Người dùng [ND002] chưa có giao dịch nào.
-2026-05-15 13:38:12.894 [main] INFO  c.mycompany.action.GiaoDichService - [xemLichSu] Người dùng [ND999] chưa có giao dịch nào.
-2026-05-15 13:38:12.898 [main] INFO  c.mycompany.action.GiaoDichService - ==========================================
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -          LỊCH SỬ GIAO DỊCH               
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService - ==========================================
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -   Người dùng : ND002
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -   Trang 1 / 1  |  Tổng: 4 giao dịch
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService - ------------------------------------------
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -   [1] Mã GD     : GD000001
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.898602300
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.900 [main] INFO  c.mycompany.action.GiaoDichService -   [2] Mã GD     : GD000002
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.898602300
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -   [3] Mã GD     : GD000003
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.898602300
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.901 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -   [4] Mã GD     : GD000004
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Ngày tạo  : 2026-05-15T13:38:12.898602300
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Người bán : Nguyen Van Ban
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Người mua : Tran Thi Mua
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -       Trạng thái: CHO_THANH_TOAN
-2026-05-15 13:38:12.902 [main] INFO  c.mycompany.action.GiaoDichService -   ------------------------------------------
-2026-05-15 13:38:12.912 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.913 [main] INFO  c.mycompany.action.GiaoDichService - [hoanTien] Hoàn tiền thành công!
-2026-05-15 13:38:12.913 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch       : GD000001
-2026-05-15 13:38:12.913 [main] INFO  c.mycompany.action.GiaoDichService -   Người nhận hoàn : Tran Thi Mua
-2026-05-15 13:38:12.913 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền hoàn    : 150,000,000 VNĐ
-2026-05-15 13:38:12.913 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư sau hoàn  : 650,000,000 VNĐ
-2026-05-15 13:38:12.913 [main] INFO  c.mycompany.action.GiaoDichService -   Lý do           : Sản phẩm lỗi
-2026-05-15 13:38:12.913 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.918 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.918 [main] INFO  c.mycompany.action.GiaoDichService - [hoanTien] Hoàn tiền thành công!
-2026-05-15 13:38:12.918 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch       : GD000001
-2026-05-15 13:38:12.918 [main] INFO  c.mycompany.action.GiaoDichService -   Người nhận hoàn : Tran Thi Mua
-2026-05-15 13:38:12.919 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền hoàn    : 150,000,000 VNĐ
-2026-05-15 13:38:12.919 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư sau hoàn  : 650,000,000 VNĐ
-2026-05-15 13:38:12.919 [main] INFO  c.mycompany.action.GiaoDichService -   Lý do           : Người mua hủy đơn
-2026-05-15 13:38:12.919 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.923 [main] INFO  c.mycompany.action.GiaoDichService - [hoanTien] Giao dịch đã được hoàn tiền trước đó.
-2026-05-15 13:38:12.928 [main] INFO  c.mycompany.action.GiaoDichService - [hoanTien] Giao dịch không tồn tại.
-2026-05-15 13:38:12.933 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.933 [main] INFO  c.mycompany.action.GiaoDichService - [hoanTien] Hoàn tiền thành công!
-2026-05-15 13:38:12.934 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch       : GD000001
-2026-05-15 13:38:12.934 [main] INFO  c.mycompany.action.GiaoDichService -   Người nhận hoàn : Tran Thi Mua
-2026-05-15 13:38:12.934 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền hoàn    : 150,000,000 VNĐ
-2026-05-15 13:38:12.934 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư sau hoàn  : 650,000,000 VNĐ
-2026-05-15 13:38:12.934 [main] INFO  c.mycompany.action.GiaoDichService -   Lý do           : Lý do test
-2026-05-15 13:38:12.934 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.938 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.939 [main] INFO  c.mycompany.action.GiaoDichService - [hoanTien] Hoàn tiền thành công!
-2026-05-15 13:38:12.939 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch       : GD000001
-2026-05-15 13:38:12.939 [main] INFO  c.mycompany.action.GiaoDichService -   Người nhận hoàn : Tran Thi Mua
-2026-05-15 13:38:12.939 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền hoàn    : 150,000,000 VNĐ
-2026-05-15 13:38:12.940 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư sau hoàn  : 650,000,000 VNĐ
-2026-05-15 13:38:12.940 [main] INFO  c.mycompany.action.GiaoDichService -   Lý do           : Test hoàn tiền
-2026-05-15 13:38:12.940 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.945 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.946 [main] INFO  c.mycompany.action.GiaoDichService - [hoanTien] Hoàn tiền thành công!
-2026-05-15 13:38:12.946 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch       : GD000001
-2026-05-15 13:38:12.946 [main] INFO  c.mycompany.action.GiaoDichService -   Người nhận hoàn : Tran Thi Mua
-2026-05-15 13:38:12.946 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền hoàn    : 150,000,000 VNĐ
-2026-05-15 13:38:12.947 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư sau hoàn  : 650,000,000 VNĐ
-2026-05-15 13:38:12.947 [main] INFO  c.mycompany.action.GiaoDichService -   Lý do           : Lý do test
-2026-05-15 13:38:12.947 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.955 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Giao dịch không tồn tại.
-2026-05-15 13:38:12.961 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.962 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Thanh toán thành công!
-2026-05-15 13:38:12.962 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch : GD000001
-2026-05-15 13:38:12.962 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.962 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua | Số dư còn: 350,000,000 VNĐ
-2026-05-15 13:38:12.963 [main] INFO  c.mycompany.action.GiaoDichService -   [Thông báo -> Nguyen Van Ban]: Bạn vừa nhận thanh toán cho giao dịch GD000001
-2026-05-15 13:38:12.963 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư người bán: 150,000,000 VNĐ
-2026-05-15 13:38:12.963 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.966 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Trạng thái không hợp lệ: DA_THANH_TOAN
-2026-05-15 13:38:12.970 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.970 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Thanh toán thành công!
-2026-05-15 13:38:12.970 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch : GD000001
-2026-05-15 13:38:12.970 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.971 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua | Số dư còn: 350,000,000 VNĐ
-2026-05-15 13:38:12.971 [main] INFO  c.mycompany.action.GiaoDichService -   [Thông báo -> Nguyen Van Ban]: Bạn vừa nhận thanh toán cho giao dịch GD000001
-2026-05-15 13:38:12.971 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư người bán: 150,000,000 VNĐ
-2026-05-15 13:38:12.971 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.976 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Số dư không đủ. Cần: 150,000,000 | Có: 10,000 VNĐ
-2026-05-15 13:38:12.982 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.982 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Thanh toán thành công!
-2026-05-15 13:38:12.982 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch : GD000001
-2026-05-15 13:38:12.983 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:12.983 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua | Số dư còn: 350,000,000 VNĐ
-2026-05-15 13:38:12.983 [main] INFO  c.mycompany.action.GiaoDichService -   [Thông báo -> Nguyen Van Ban]: Bạn vừa nhận thanh toán cho giao dịch GD000001
-2026-05-15 13:38:12.984 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư người bán: 150,000,000 VNĐ
-2026-05-15 13:38:12.984 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:12.989 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Số dư không đủ. Cần: 150,000,000 | Có: 10,000 VNĐ
-2026-05-15 13:38:12.997 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Trạng thái không hợp lệ: DA_HOAN_TIEN
-2026-05-15 13:38:13.001 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.001 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Thanh toán thành công!
-2026-05-15 13:38:13.001 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch : GD000001
-2026-05-15 13:38:13.002 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:13.002 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua | Số dư còn: 350,000,000 VNĐ
-2026-05-15 13:38:13.003 [main] INFO  c.mycompany.action.GiaoDichService -   [Thông báo -> Nguyen Van Ban]: Bạn vừa nhận thanh toán cho giao dịch GD000001
-2026-05-15 13:38:13.003 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư người bán: 150,000,000 VNĐ
-2026-05-15 13:38:13.003 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.008 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.008 [main] INFO  c.mycompany.action.GiaoDichService - [xacNhanThanhToan] Thanh toán thành công!
-2026-05-15 13:38:13.008 [main] INFO  c.mycompany.action.GiaoDichService -   Giao dịch : GD000001
-2026-05-15 13:38:13.009 [main] INFO  c.mycompany.action.GiaoDichService -   Số tiền   : 150,000,000 VNĐ
-2026-05-15 13:38:13.009 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua | Số dư còn: 350,000,000 VNĐ
-2026-05-15 13:38:13.009 [main] INFO  c.mycompany.action.GiaoDichService -   [Thông báo -> Nguyen Van Ban]: Bạn vừa nhận thanh toán cho giao dịch GD000001
-2026-05-15 13:38:13.010 [main] INFO  c.mycompany.action.GiaoDichService -   Số dư người bán: 150,000,000 VNĐ
-2026-05-15 13:38:13.010 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.021 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.021 [main] INFO  c.mycompany.action.GiaoDichService - [taoGiaoDich] Giao dịch tạo thành công!
-2026-05-15 13:38:13.021 [main] INFO  c.mycompany.action.GiaoDichService -   Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:13.021 [main] INFO  c.mycompany.action.GiaoDichService -   Người bán : Nguyen Van Ban
-2026-05-15 13:38:13.022 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua
-2026-05-15 13:38:13.022 [main] INFO  c.mycompany.action.GiaoDichService -   Giá chốt  : 150,000,000 VNĐ
-2026-05-15 13:38:13.022 [main] INFO  c.mycompany.action.GiaoDichService -   Trạng thái: CHỜ THANH TOÁN
-2026-05-15 13:38:13.022 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.027 [main] INFO  c.mycompany.action.GiaoDichService - [taoGiaoDich] Phiên chưa kết thúc hoặc bị hủy. Trạng thái: DA_HUY
-2026-05-15 13:38:13.033 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.034 [main] INFO  c.mycompany.action.GiaoDichService - [taoGiaoDich] Giao dịch tạo thành công!
-2026-05-15 13:38:13.034 [main] INFO  c.mycompany.action.GiaoDichService -   Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:13.034 [main] INFO  c.mycompany.action.GiaoDichService -   Người bán : Nguyen Van Ban
-2026-05-15 13:38:13.034 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua
-2026-05-15 13:38:13.034 [main] INFO  c.mycompany.action.GiaoDichService -   Giá chốt  : 150,000,000 VNĐ
-2026-05-15 13:38:13.034 [main] INFO  c.mycompany.action.GiaoDichService -   Trạng thái: CHỜ THANH TOÁN
-2026-05-15 13:38:13.034 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.039 [main] INFO  c.mycompany.action.GiaoDichService - [taoGiaoDich] Không thể tạo: không có người đặt giá.
-2026-05-15 13:38:13.043 [main] INFO  c.mycompany.action.GiaoDichService - [taoGiaoDich] Phiên chưa kết thúc hoặc bị hủy. Trạng thái: DANG_DIEN_RA
-2026-05-15 13:38:13.050 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.050 [main] INFO  c.mycompany.action.GiaoDichService - [taoGiaoDich] Giao dịch tạo thành công!
-2026-05-15 13:38:13.050 [main] INFO  c.mycompany.action.GiaoDichService -   Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:13.051 [main] INFO  c.mycompany.action.GiaoDichService -   Người bán : Nguyen Van Ban
-2026-05-15 13:38:13.051 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua
-2026-05-15 13:38:13.051 [main] INFO  c.mycompany.action.GiaoDichService -   Giá chốt  : 150,000,000 VNĐ
-2026-05-15 13:38:13.051 [main] INFO  c.mycompany.action.GiaoDichService -   Trạng thái: CHỜ THANH TOÁN
-2026-05-15 13:38:13.051 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.065 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:38:13.065 [main] INFO  c.mycompany.action.GiaoDichService - [taoGiaoDich] Giao dịch tạo thành công!
-2026-05-15 13:38:13.065 [main] INFO  c.mycompany.action.GiaoDichService -   Sản phẩm  : Đồng hồ Rolex
-2026-05-15 13:38:13.066 [main] INFO  c.mycompany.action.GiaoDichService -   Người bán : Nguyen Van Ban
-2026-05-15 13:38:13.066 [main] INFO  c.mycompany.action.GiaoDichService -   Người mua : Tran Thi Mua
-2026-05-15 13:38:13.066 [main] INFO  c.mycompany.action.GiaoDichService -   Giá chốt  : 150,000,000 VNĐ
-2026-05-15 13:38:13.066 [main] INFO  c.mycompany.action.GiaoDichService -   Trạng thái: CHỜ THANH TOÁN
-2026-05-15 13:38:13.066 [main] INFO  c.mycompany.action.GiaoDichService - ========================================
-2026-05-15 13:42:58.233 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:42:58.599 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:42:58.602 [main] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:42:58.602 [main] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:42:58.608 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:42:58.611 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:42:58.615 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:42:58.738 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-15 13:42:58.745 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-15 13:43:00.239 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-15 13:43:00.240 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 13:43:04.528 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-15 13:43:04.535 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 13:43:04.815 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:43:04.817 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 13:43:04.818 [JavaFX Application Thread] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 13:43:04.819 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-15 13:43:04.819 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-15 13:43:04.820 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 13:43:04.822 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:43:04.826 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 13:43:04.826 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-15 13:43:18.983 [pool-1-thread-1] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:43:18.991 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-15 13:43:18.992 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
-2026-05-15 13:43:18.992 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
-2026-05-15 13:43:18.992 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
-2026-05-15 13:43:19.941 [pool-1-thread-3] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:43:36.224 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: null
-2026-05-15 13:43:36.225 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_phong@gmail.com_1778827398994
-2026-05-15 13:43:36.229 [pool-1-thread-5] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 13:43:36.235 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:43:36.238 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 13:46:01.658 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:46:01.659 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 13:46:01.663 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 13:46:01.665 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 14:00:29.695 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 14:00:30.099 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 14:00:30.102 [main] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 14:00:30.103 [main] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 14:00:30.107 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 14:00:30.111 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 14:00:30.113 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 14:00:30.261 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-15 14:00:30.268 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-15 14:00:31.754 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 14:00:31.754 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-15 14:00:31.754 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 14:00:31.755 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-15 14:00:31.755 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-15 14:00:31.755 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 14:00:31.755 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-15 14:00:31.755 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-15 14:00:31.755 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 14:00:31.756 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-15 14:00:31.756 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-15 14:00:31.756 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-15 14:00:31.756 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-15 14:00:31.756 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 14:00:31.757 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-15 14:00:31.757 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-15 14:00:31.757 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-15 14:00:31.757 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-15 14:00:31.758 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-15 14:00:31.758 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 14:00:31.758 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-15 14:00:31.758 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-15 14:00:31.759 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-15 14:00:31.759 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 14:00:31.759 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-15 14:00:31.759 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 14:00:35.458 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-15 14:00:35.465 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 14:00:35.752 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 14:00:35.755 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 14:00:35.755 [JavaFX Application Thread] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 14:00:35.756 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-15 14:00:35.756 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-15 14:00:35.757 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 14:00:35.758 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 14:00:35.760 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 14:00:35.760 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-15 14:00:51.507 [pool-1-thread-1] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 14:00:51.513 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-15 14:00:51.514 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
-2026-05-15 14:00:51.514 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
-2026-05-15 14:00:51.514 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
-2026-05-15 14:00:52.704 [pool-1-thread-3] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 14:01:26.519 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: null
-2026-05-15 14:01:26.520 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_phong@gmail.com_1778828451516
-2026-05-15 14:01:26.525 [pool-1-thread-5] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 14:01:26.532 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 14:01:26.534 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "loi": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-15 14:01:44.910 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 14:01:44.910 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 14:01:44.921 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 14:01:44.924 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 16:53:55.479 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-15 16:53:56.131 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 16:53:56.135 [main] DEBUG com.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-15 16:53:56.136 [main] INFO  com.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-15 16:53:56.181 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-15 16:53:56.185 [main] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 16:53:56.189 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-15 16:53:56.597 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-15 16:53:56.609 [WebSocketSelector-28] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-15 16:53:58.061 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 16:53:58.061 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-15 16:53:58.062 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-15 16:53:58.063 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-15 16:53:58.063 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-15 16:53:58.063 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-15 16:53:58.063 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-15 16:53:58.063 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-15 16:53:58.063 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-15 16:53:58.063 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-15 16:53:58.064 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 16:53:58.065 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-15 16:53:58.065 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-15 16:55:22.520 [pool-1-thread-2] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 16:55:22.520 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-15 16:55:22.520 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
-2026-05-15 16:55:22.520 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
-2026-05-15 16:55:22.520 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
-2026-05-15 16:56:27.738 [pool-1-thread-4] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 16:56:48.902 [pool-1-thread-5] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 16:57:51.141 [pool-1-thread-7] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 16:57:51.171 [pool-1-thread-7] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP001
-2026-05-15 16:57:51.173 [pool-1-thread-7] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
-2026-05-15 16:57:51.175 [pool-1-thread-7] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000012
-2026-05-15 16:58:05.711 [pool-1-thread-8] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 17:00:06.044 [pool-1-thread-1] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 17:00:06.044 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
-2026-05-15 17:00:06.044 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - COMMIT thành công cho user: PPTT000013
-2026-05-15 17:00:16.939 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Không tìm thấy user với email: tuan@gmail.com
-2026-05-15 17:00:31.610 [pool-1-thread-3] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 17:00:31.610 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: tuan@gmail.com
-2026-05-15 17:00:31.610 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: D/uzMM6WiXn+3F7O8fB3XM5YGPpEzwNzSFW5mdFjsVA=
-2026-05-15 17:00:31.610 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: AAmK9oUE+68NCF4SGnjuRQ==
-2026-05-15 17:00:31.610 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Tuan2007
-2026-05-15 17:04:43.592 [JavaFX Application Thread] INFO  com.mycompany.App - ?? ?ang kh?i t?o database...
-2026-05-15 17:04:43.604 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ? ?� ??ng k� Shutdown Hook.
-2026-05-15 17:04:44.289 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ? ?� c�i ??t PRAGMA v� t?t AutoCommit cho Connection
-2026-05-15 17:04:44.293 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ?? C?t salt ?� t?n t?i.
-2026-05-15 17:04:44.294 [JavaFX Application Thread] INFO  com.mycompany.utils.DatabaseConnection - ? Kh?i t?o Database th�nh c�ng.
-2026-05-15 17:04:44.295 [JavaFX Application Thread] INFO  com.mycompany.App - ? Database ?� s?n s�ng!
-2026-05-15 17:04:44.297 [JavaFX Application Thread] INFO  com.mycompany.App - ? ?ang ki?m tra migration passwords...
-2026-05-15 17:04:44.346 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? B?t ??u migrate m?t kh?u plain text...
-2026-05-15 17:04:44.349 [JavaFX Application Thread] DEBUG com.mycompany.utils.DatabaseConnection - ? ?� c�i ??t PRAGMA v� t?t AutoCommit cho Connection
-2026-05-15 17:04:44.353 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - ? Ho�n th�nh migrate 0 users
-2026-05-15 17:04:44.355 [JavaFX Application Thread] INFO  com.mycompany.App - ? Migration ho�n th�nh!
-2026-05-15 17:05:09.163 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-15 17:05:09.165 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: o0aINyt6aerfNOf2mFtfrvHxZmuEIsYh1Upu39giHEA=
-2026-05-15 17:05:09.165 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: nPZWtrm5e+RnVle2dnOi0w==
-2026-05-15 17:05:09.165 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
-2026-05-15 17:05:11.199 [pool-1-thread-6] DEBUG com.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-15 17:15:42.414 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-15 17:15:42.418 [Thread-0] INFO  com.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-15 17:16:10.103 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ?ang ?�ng t?t c? database connections...
-2026-05-15 17:16:10.110 [Thread-3] INFO  com.mycompany.utils.DatabaseConnection - ? ?� gi?i ph�ng to�n b? t�i nguy�n Database.
+2026-05-15 15:03:35.087 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-15 15:03:36.052 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:03:36.055 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-15 15:03:36.056 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-15 15:03:36.058 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-15 15:03:36.061 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:03:36.063 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-15 15:03:36.297 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-15 15:03:36.298 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-15 15:03:36.298 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 15:03:36.298 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-15 15:03:36.298 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 15:03:36.300 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-15 15:03:36.304 [WebSocketSelector-29] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-15 15:03:43.440 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-15 15:03:43.445 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-15 15:03:43.718 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:03:43.720 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-15 15:03:43.721 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-15 15:03:43.721 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-15 15:03:43.721 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-15 15:03:43.722 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-15 15:03:43.723 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:03:43.726 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-15 15:03:43.726 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-15 15:04:16.442 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-15 15:04:16.445 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - COMMIT thành công cho user: PPTT000003
+2026-05-15 15:04:31.087 [pool-2-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:04:31.092 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: hgtrung007@gmail.com
+2026-05-15 15:04:31.093 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: +X1Tzs7ELLMe1+RmP/86FtQyYFihJCEFDqh8Slht7DU=
+2026-05-15 15:04:31.093 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: PlEIX90/8Cxg0JUfV+NqgA==
+2026-05-15 15:04:31.093 [pool-2-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: Trung123123@
+2026-05-15 15:04:32.450 [pool-2-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:06:11.415 [pool-2-thread-7] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:06:16.537 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-15 15:06:16.537 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-15 15:06:16.538 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-15 15:06:16.541 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-15 15:27:06.877 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-15 15:27:07.543 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:27:07.547 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-15 15:27:07.549 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-15 15:27:07.553 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-15 15:27:07.557 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:27:07.561 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-15 15:27:07.787 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-15 15:27:07.790 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-15 15:27:07.791 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 15:27:07.791 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-15 15:27:07.791 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-15 15:27:07.791 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 15:27:07.791 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-15 15:27:07.792 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-15 15:27:07.792 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-15 15:27:07.792 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-15 15:27:07.793 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-15 15:27:07.793 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-15 15:27:07.794 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-15 15:27:07.795 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-15 15:27:07.796 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-15 15:27:07.796 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-15 15:27:07.797 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-15 15:27:07.798 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-15 15:27:07.799 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-15 15:27:07.800 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-15 15:27:07.801 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 15:27:07.801 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-15 15:27:07.816 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-15 15:28:01.151 [pool-1-thread-2] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:28:01.158 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: hgtrung007@gmail.com
+2026-05-15 15:28:01.158 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: +X1Tzs7ELLMe1+RmP/86FtQyYFihJCEFDqh8Slht7DU=
+2026-05-15 15:28:01.158 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: PlEIX90/8Cxg0JUfV+NqgA==
+2026-05-15 15:28:01.158 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: Trung123123@
+2026-05-15 15:30:16.849 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-15 15:30:16.858 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-15 15:30:17.344 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:30:17.349 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-15 15:30:17.350 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-15 15:30:17.351 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-15 15:30:17.352 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-15 15:30:17.356 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-15 15:30:17.358 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:30:17.362 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-15 15:30:17.363 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-15 15:30:37.915 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:30:37.917 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: hgtrung007@gmail.com
+2026-05-15 15:30:37.917 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: +X1Tzs7ELLMe1+RmP/86FtQyYFihJCEFDqh8Slht7DU=
+2026-05-15 15:30:37.917 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: PlEIX90/8Cxg0JUfV+NqgA==
+2026-05-15 15:30:37.917 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: Trung123123@
+2026-05-15 15:30:39.616 [pool-1-thread-5] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 15:31:53.799 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-15 15:31:53.800 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-15 15:31:53.805 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-15 15:31:53.809 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-15 16:33:22.432 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-15 16:33:23.083 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:33:23.088 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-15 16:33:23.089 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-15 16:33:23.094 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-15 16:33:23.098 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:33:23.102 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-15 16:33:23.345 [main] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-15 16:33:23.347 [main] INFO  com.mycompany.server.ServerApp -   WS   ws://localhost:8081 (WebSocket real-time)
+2026-05-15 16:33:23.348 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 16:33:23.349 [main] INFO  com.mycompany.server.ServerApp -   SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-15 16:33:23.350 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-15 16:33:23.350 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 16:33:23.351 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-15 16:33:23.351 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-15 16:33:23.351 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-15 16:33:23.351 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-15 16:33:23.351 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-15 16:33:23.351 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-15 16:33:23.352 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-15 16:33:23.352 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-15 16:33:23.352 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-15 16:33:23.353 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-15 16:33:23.356 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-15 16:33:23.357 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-15 16:33:23.358 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-15 16:33:23.359 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-15 16:33:23.360 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-15 16:33:23.360 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-15 16:33:23.365 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-15 16:34:03.784 [pool-1-thread-2] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:34:52.556 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:34:52.680 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP001
+2026-05-15 16:34:52.682 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-15 16:34:52.683 [pool-1-thread-3] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000001
+2026-05-15 16:34:59.740 [pool-1-thread-5] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:35:11.547 [pool-1-thread-6] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:35:11.550 [pool-1-thread-6] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - ✅ Đã upsert san_pham: SP002
+2026-05-15 16:35:11.551 [pool-1-thread-6] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-15 16:35:11.551 [pool-1-thread-6] INFO  c.m.utils.KhoLuuTruPhienDauGiaSQLite - COMMIT thành công cho Phien: PH000002
+2026-05-15 16:35:17.360 [pool-1-thread-7] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:35:37.633 [pool-1-thread-9] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:35:53.931 [pool-1-thread-10] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:36:03.997 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:39:42.304 [pool-1-thread-9] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Không tìm thấy user với email: phong@gmail.com
+2026-05-15 16:40:47.119 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-15 16:40:47.120 [pool-1-thread-2] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - COMMIT thành công cho user: PPTT000004
+2026-05-15 16:40:53.240 [pool-1-thread-4] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:40:53.240 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-15 16:40:53.241 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: XN5wGvuyhaZ3sZ9gGtBsF5u9Ur3rglhHo8eQ1WOnRp8=
+2026-05-15 16:40:53.241 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: dcBkp6SN5Yt42VsQCztjCQ==
+2026-05-15 16:40:53.241 [pool-1-thread-4] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007
+2026-05-15 16:42:47.563 [pool-1-thread-8] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-15 16:43:23.122 [pool-1-thread-10] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-15 16:43:23.123 [pool-1-thread-10] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: XN5wGvuyhaZ3sZ9gGtBsF5u9Ur3rglhHo8eQ1WOnRp8=
+2026-05-15 16:43:23.123 [pool-1-thread-10] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: dcBkp6SN5Yt42VsQCztjCQ==
+2026-05-15 16:43:23.123 [pool-1-thread-10] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: @Phong2007

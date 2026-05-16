@@ -184,7 +184,7 @@ public class NavBarController implements Initializable { // Controller chung cho
         try {
             // Lấy Stage từ scene của avatarImage
             Stage stage = (Stage) avatarImage.getScene().getWindow();
-            HomeAction.getInstance().dangXuat(stage);
+            HomeAction.getInstance().logOut(stage);
         } catch (IOException e) {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi", "Đăng xuất thất bại!");
         }

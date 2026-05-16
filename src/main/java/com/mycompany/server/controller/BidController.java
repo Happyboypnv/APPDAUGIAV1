@@ -2,14 +2,12 @@ package com.mycompany.server.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycompany.action.PhienDauGiaService;
-import com.mycompany.models.NguoiDung;
-import com.mycompany.models.PhienDauGia;
-import com.mycompany.models.TrangThaiPhien;
+import com.mycompany.action.AuctionSessionService;
+import com.mycompany.models.*;
 import com.mycompany.utils.IUserRepository;
-import com.mycompany.utils.IKhoLuuTruPhienDauGia;
+import com.mycompany.utils.IAuctionRepository;
 import com.mycompany.utils.UserRepositorySQLite;
-import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
+import com.mycompany.utils.AuctionRepositorySQLite;
 import com.sun.net.httpserver.HttpExchange;
 import com.mycompany.server.dto.DatGiaRequest;
 import com.mycompany.server.dto.DatGiaResponse;
@@ -31,11 +29,11 @@ import java.util.List;
  *  GET  /api/bids/{phienId}     → Lịch sử đặt giá của một phiên
  *
  * Tái sử dụng:
- *  - PhienDauGiaService.datGia()   (singleton, có sẵn) — toàn bộ validate + cập nhật state
+ *  - PhienDauGiaService.setPrice()   (singleton, có sẵn) — toàn bộ validate + cập nhật state
  *  - KhoLuuTruPhienDauGiaSQLite    (có sẵn)            — đọc / ghi phiên
  *  - KhoLuuTruNguoiDungSQLite      (có sẵn)            — tra cứu người đặt giá
  *
- * Validate do PhienDauGiaService.datGia() đảm nhiệm:
+ * Validate do PhienDauGiaService.setPrice() đảm nhiệm:
  *  ✔ Phiên phải đang diễn ra (DANG_DIEN_RA)
  *  ✔ Người đặt giá không phải người bán
  *  ✔ Giá mới ≥ giaHienTai + buocGia
@@ -55,13 +53,13 @@ public class BidController {
             .create();
 
     /** Kho phiên đấu giá — tái sử dụng implementation SQLite đã có */
-    private final IKhoLuuTruPhienDauGia khoPhien = new KhoLuuTruPhienDauGiaSQLite();
+    private final IAuctionRepository auctionRepository = new AuctionRepositorySQLite();
 
     /** Kho người dùng — để tra cứu người đặt giá từ token */
-    private final IUserRepository khoNguoiDung = new UserRepositorySQLite();
+    private final IUserRepository userRepository = new UserRepositorySQLite();
 
     /** Service đấu giá — tái sử dụng singleton đã có, KHÔNG tạo mới */
-    private final PhienDauGiaService phienDauGiaService = PhienDauGiaService.getInstance();
+    private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
 
     // =========================================================
     // ROUTING
@@ -84,7 +82,7 @@ public class BidController {
 
         // POST /api/bids → đặt giá
         if (method.equals("POST") && path.equals("/api/bids")) {
-            handleDatGia(exchange);
+            handleSetPrice(exchange);
             return;
         }
 
@@ -95,7 +93,7 @@ public class BidController {
             return;
         }
 
-        guiPhanHoi(exchange, 404, loi("Endpoint không tồn tại: " + method + " " + path));
+        guiPhanHoi(exchange, 404, bug("Endpoint không tồn tại: " + method + " " + path));
     }
 
     // =========================================================
@@ -116,72 +114,72 @@ public class BidController {
      * Quy trình:
      *  1. Xác thực token → lấy NguoiDung người đặt giá
      *  2. Tìm phiên theo maPhien
-     *  3. Gọi PhienDauGiaService.datGia() — validate toàn bộ và cập nhật state
-     *  4. Nếu datGia thành công, lưu lại phiên vào SQLite
+     *  3. Gọi PhienDauGiaService.setPrice() — validate toàn bộ và cập nhật state
+     *  4. Nếu setPrice thành công, lưu lại phiên vào SQLite
      *
      * Response 200: { "thongBao": "Đặt giá thành công", "giaHienTai": 750000 }
-     * Response 400: { "loi": "Giá đặt phải ≥ giaKhoiDiem + buocGia" }
-     * Response 401: { "loi": "Cần đăng nhập trước" }
-     * Response 404: { "loi": "Không tìm thấy phiên: PH999999" }
-     * Response 409: { "loi": "Phiên không ở trạng thái DANG_DIEN_RA" }
+     * Response 400: { "bug": "Giá đặt phải ≥ giaKhoiDiem + buocGia" }
+     * Response 401: { "bug": "Cần đăng nhập trước" }
+     * Response 404: { "bug": "Không tìm thấy phiên: PH999999" }
+     * Response 409: { "bug": "Phiên không ở trạng thái DANG_DIEN_RA" }
      */
-    private void handleDatGia(HttpExchange exchange) throws IOException {
+    private void handleSetPrice(HttpExchange exchange) throws IOException {
         // Bước 1: Xác thực token → lấy người đặt giá
-        NguoiDung nguoiDat = xacThucToken(exchange);
+        User nguoiDat = checkToken(exchange);
         if (nguoiDat == null) return;
 
         // Bước 2: Đọc và parse body
-        String body = docBody(exchange);
+        String body = readBody(exchange);
         DatGiaRequest req = gson.fromJson(body, DatGiaRequest.class);
 
         if (req == null || req.getMaPhien() == null || req.getGia() <= 0) {
-            guiPhanHoi(exchange, 400, loi("Thiếu hoặc sai thông tin: maPhien, gia (>0)"));
+            guiPhanHoi(exchange, 400, bug("Thiếu hoặc sai thông tin: maPhien, gia (>0)"));
             return;
         }
 
         // Bước 3: Tìm phiên
-        PhienDauGia phien = khoPhien.layPhienDauGia(req.getMaPhien());
+        AuctionSession phien = auctionRepository.findById(req.getMaPhien());
         if (phien == null) {
-            guiPhanHoi(exchange, 404, loi("Không tìm thấy phiên: " + req.getMaPhien()));
+            guiPhanHoi(exchange, 404, bug("Không tìm thấy phiên: " + req.getMaPhien()));
             return;
         }
 
         // Bước 4: Kiểm tra nhanh trạng thái trước khi gọi service
         // (service cũng kiểm tra bên trong, nhưng ta cần phân biệt lỗi để trả HTTP code đúng)
-        if (phien.getTrangThai() != TrangThaiPhien.DANG_DIEN_RA) {
-            guiPhanHoi(exchange, 409, loi(
-                    "Phiên không ở trạng thái DANG_DIEN_RA. Trạng thái hiện tại: " + phien.getTrangThai().name()));
+        if (phien.getStatus() != SessionStatus.IN_PROGRESS) {
+            guiPhanHoi(exchange, 409, bug(
+                    "Phiên không ở trạng thái DANG_DIEN_RA. Trạng thái hiện tại: " + phien.getStatus().name()));
             return;
         }
 
         // Bước 5: Kiểm tra người bán tự đặt giá
-        if (nguoiDat.layMaNguoiDung().equals(phien.getNguoiBan().layMaNguoiDung())) {
-            guiPhanHoi(exchange, 400, loi("Người bán không thể tự đặt giá cho phiên của mình"));
+        if (nguoiDat.getUserId().equals(phien.getSeller().getUserId())) {
+            guiPhanHoi(exchange, 400, bug("Người bán không thể tự đặt giá cho phiên của mình"));
             return;
         }
 
         // Bước 6: Kiểm tra giá hợp lệ trước khi gọi service
-        double giaToiThieu = phien.getGiaHienTai() + phien.getBuocGia();
+        double giaToiThieu = phien.getCurrentPrice() + phien.getPriceStep();
         if (req.getGia() < giaToiThieu) {
-            guiPhanHoi(exchange, 400, loi(String.format(
+            guiPhanHoi(exchange, 400, bug(String.format(
                     "Giá đặt phải ≥ %.0f (giaHienTai=%.0f + buocGia=%.0f)",
-                    giaToiThieu, phien.getGiaHienTai(), phien.getBuocGia())));
+                    giaToiThieu, phien.getCurrentPrice(), phien.getPriceStep())));
             return;
         }
-        // Bước 8: Kiểm tra datGia có thực sự thành công không
+        // Bước 8: Kiểm tra setPrice có thực sự thành công không
         // (service silently return nếu fail — ta so sánh giaHienTai trước/sau)
-        boolean success = phienDauGiaService.datGia(phien, nguoiDat, req.getGia());
+        boolean success = auctionSessionService.setPrice(phien, nguoiDat, req.getGia());
         if (!success) {
-            guiPhanHoi(exchange, 400, loi("Đặt giá thất bại. Vui lòng kiểm tra lại giá hoặc trạng thái phiên."));
+            guiPhanHoi(exchange, 400, bug("Đặt giá thất bại. Vui lòng kiểm tra lại giá hoặc trạng thái phiên."));
             return;
         }
         // Bước 9: Lưu trạng thái phiên đã cập nhật vào SQLite
-        khoPhien.capNhatPhienDauGia(phien);
+        auctionRepository.update(phien);
 
         guiPhanHoi(exchange, 200, gson.toJson(new DatGiaResponse(
                 "Đặt giá thành công",
-                phien.getGiaHienTai(),
-                phien.getThoiGianKetThuc() != null ? phien.getThoiGianKetThuc().toString() : null
+                phien.getCurrentPrice(),
+                phien.getEndTime() != null ? phien.getEndTime().toString() : null
         )));
     }
 
@@ -210,38 +208,38 @@ public class BidController {
      *   ]
      * }
      *
-     * Response 404: { "loi": "Không tìm thấy phiên: PH999999" }
+     * Response 404: { "bug": "Không tìm thấy phiên: PH999999" }
      */
     private void handleLayLichSu(HttpExchange exchange, String maPhien) throws IOException {
         if (maPhien == null || maPhien.isBlank()) {
-            guiPhanHoi(exchange, 400, loi("Thiếu mã phiên trong URL"));
+            guiPhanHoi(exchange, 400, bug("Thiếu mã phiên trong URL"));
             return;
         }
 
-        PhienDauGia phien = khoPhien.layPhienDauGia(maPhien);
+        AuctionSession phien = auctionRepository.findById(maPhien);
         if (phien == null) {
-            guiPhanHoi(exchange, 404, loi("Không tìm thấy phiên: " + maPhien));
+            guiPhanHoi(exchange, 404, bug("Không tìm thấy phiên: " + maPhien));
             return;
         }
 
-        List<NguoiDung> danhSach = phien.getDanhSachNguoiTraGia();
+        List<User> danhSach = phien.getBidderList();
 
         // Xây dựng lịch sử — mỗi entry là một lượt đặt giá
         List<LuotDatGia> lichSu = new ArrayList<>();
         for (int i = 0; i < danhSach.size(); i++) {
-            lichSu.add(new LuotDatGia(i + 1, danhSach.get(i).layHoTen(), danhSach.get(i).layMaNguoiDung()));
+            lichSu.add(new LuotDatGia(i + 1, danhSach.get(i).getFullName(), danhSach.get(i).getUserId()));
         }
 
         // Người đang thắng = người cuối trong danh sách
         String tenNguoiDangThang = null;
         if (!danhSach.isEmpty()) {
-            tenNguoiDangThang = danhSach.get(danhSach.size() - 1).layHoTen();
+            tenNguoiDangThang = danhSach.get(danhSach.size() - 1).getFullName();
         }
 
         LichSuDatGiaResponse response = new LichSuDatGiaResponse(
                 maPhien,
-                phien.getGiaHienTai(),
-                phien.getTrangThai().name(),
+                phien.getCurrentPrice(),
+                phien.getStatus().name(),
                 danhSach.size(),
                 tenNguoiDangThang,
                 lichSu
@@ -260,18 +258,18 @@ public class BidController {
      *
      * @return NguoiDung nếu hợp lệ, null nếu không (đã gửi response lỗi)
      */
-    private NguoiDung xacThucToken(HttpExchange exchange) throws IOException {
+    private User checkToken(HttpExchange exchange) throws IOException {
         String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            guiPhanHoi(exchange, 401, loi("Cần đăng nhập trước (Authorization: Bearer <token>)"));
+            guiPhanHoi(exchange, 401, bug("Cần đăng nhập trước (Authorization: Bearer <token>)"));
             return null;
         }
 
         String token = authHeader.substring("Bearer ".length()).trim();
 
         if (!token.startsWith("USER_")) {
-            guiPhanHoi(exchange, 401, loi("Token không hợp lệ"));
+            guiPhanHoi(exchange, 401, bug("Token không hợp lệ"));
             return null;
         }
 
@@ -279,29 +277,29 @@ public class BidController {
         int lastUnderscore = phan.lastIndexOf('_');
 
         if (lastUnderscore < 0) {
-            guiPhanHoi(exchange, 401, loi("Token không hợp lệ"));
+            guiPhanHoi(exchange, 401, bug("Token không hợp lệ"));
             return null;
         }
 
         String email = phan.substring(0, lastUnderscore);
 
-        NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(email);
+        User nguoiDung = userRepository.findByEmail(email);
 
         if (nguoiDung == null) {
-            guiPhanHoi(exchange, 401, loi("Token không hợp lệ hoặc tài khoản không tồn tại"));
+            guiPhanHoi(exchange, 401, bug("Token không hợp lệ hoặc tài khoản không tồn tại"));
             return null;
         }
 
         return nguoiDung;
     }
 
-    private String docBody(HttpExchange exchange) throws IOException {
+    private String readBody(HttpExchange exchange) throws IOException {
         InputStream is = exchange.getRequestBody();
         return new String(is.readAllBytes(), StandardCharsets.UTF_8);
     }
 
-    private String loi(String thongBao) {
-        return gson.toJson(new ThongBaoLoi(thongBao));
+    private String bug(String thongBao) {
+        return gson.toJson(new sendBug(thongBao));
     }
 
     private void guiPhanHoi(HttpExchange exchange, int statusCode, String jsonBody) throws IOException {
@@ -315,8 +313,8 @@ public class BidController {
             os.write(bytes);
         }
     }
-    private static class ThongBaoLoi {
-        String loi;
-        ThongBaoLoi(String loi) { this.loi = loi; }
+    private static class sendBug {
+        String bug;
+        sendBug(String bug) { this.bug = bug; }
     }
 }

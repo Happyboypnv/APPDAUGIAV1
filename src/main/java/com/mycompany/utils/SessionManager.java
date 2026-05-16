@@ -1,12 +1,12 @@
 package com.mycompany.utils;
 
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import java.util.Map;
 
 public class SessionManager {
 
     private static volatile SessionManager instance;
-    private volatile NguoiDung currentUser;
+    private volatile User currentUser;
     private volatile String currentToken;       // Token local (Base64) — dùng để đọc thông tin user
     private volatile String serverToken;        // Token server (USER_...) — dùng để gọi API
     private volatile String currentPhienId;
@@ -25,7 +25,7 @@ public class SessionManager {
     }
 
     /** Gọi sau khi đăng nhập thành công */
-    public void setSession(NguoiDung user, String token) {
+    public void setSession(User user, String token) {
         this.currentUser = user;
         this.currentToken = token;
     }
@@ -43,7 +43,7 @@ public class SessionManager {
         return serverToken;
     }
 
-    public NguoiDung getCurrentUser() {
+    public User getCurrentUser() {
         return currentUser;
     }
 

@@ -128,7 +128,7 @@ public synchronized Object datGia(String phienId, String userId, double giaRa) {
         }
         
     } catch (Exception e) {
-        System.err.println("❌ Error in datGia: " + e.getMessage());
+        System.err.println("❌ Error in setPrice: " + e.getMessage());
         e.printStackTrace();
         return "Lỗi: " + e.getMessage();
     }

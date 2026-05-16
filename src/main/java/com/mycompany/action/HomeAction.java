@@ -37,7 +37,7 @@ import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
  * - Thread-safe: Sử dụng Lock để đồng bộ hóa
  */
 public class HomeAction {
-    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
+    private final IUserRepository userRepository = new UserRepositorySQLite();
     private final Lock lock = new ReentrantLock();
     private HomeAction() {};
 
@@ -83,7 +83,7 @@ public class HomeAction {
      * @throws IOException nếu không load được SignIn.fxml
      */
     @FXML
-    public void dangXuat(Stage stage) throws IOException {
+    public void logOut(Stage stage) throws IOException {
         if (SessionManager.getInstance().isLoggedIn()) {
             SessionManager.getInstance().logout();
             Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));

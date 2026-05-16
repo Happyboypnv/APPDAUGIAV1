@@ -1,7 +1,7 @@
 package com.mycompany.action;
 
 import com.mycompany.exception.Login.*;
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.utils.*;
 import javafx.event.ActionEvent;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
 
 public class LoginAction {
-    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
+    private final IUserRepository userRepository = new UserRepositorySQLite();
     private final Lock lock = new ReentrantLock();
 
     private LoginAction() {}
@@ -159,7 +159,7 @@ public class LoginAction {
                     }
 
                     // Lấy thông tin user từ DB local để tạo object NguoiDung
-                    NguoiDung user = khoLuuTruNguoiDung.layTheoEmail(email);
+                    User user = userRepository.findByEmail(email);
 
                     // Token local (Base64) — dùng để đọc thông tin profile, finance...
                     String localToken = TokenUtil.generateToken(user);
@@ -172,7 +172,7 @@ public class LoginAction {
 
                     HandleNavigationAndAlert.getInstance().showAlert(
                             Alert.AlertType.INFORMATION, "Thành công",
-                            "Đăng nhập thành công! Chào mừng " + user.layHoTen() + ".");
+                            "Đăng nhập thành công! Chào mừng " + user.getFullName() + ".");
 
                     try {
                         HandleNavigationAndAlert.getInstance().handleGoToHome(event);

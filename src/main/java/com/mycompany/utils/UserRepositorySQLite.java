@@ -1,6 +1,6 @@
 package com.mycompany.utils;
 
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,22 +68,22 @@ public class UserRepositorySQLite implements IUserRepository {
      * Mục đích: Lưu một người dùng mới vào database.
      * Quy trình:
      * 1. Tự động sinh mã người dùng dạng: PPPT000001, PPPT000002, ...
-     * 2. Set mã đó vào đối tượng NguoiDung
+     * 2. Set mã đó vào đối tượng User
      * 3. Thực thi câu INSERT để lưu vào database
-     * @param nguoiDung - Đối tượng người dùng cần lưu (chưa có mã)
+     * @param User - Đối tượng người dùng cần lưu (chưa có mã)
      */
     @Override
-    public void save(NguoiDung nguoiDung) {
+    public void save(User User) {
         // Hàm sinhMaMoi() sẽ đếm số người dùng hiện có rồi +1
         // kiemTraEmail() returns true if email DOESN'T exist (safe to register)
         // So we check if it returns FALSE (email DOES exist) → reject
-        if(!isEmailAvailable(nguoiDung.layThuDienTu())) {
-            logger.error("Email đã tồn tại: " + nguoiDung.layThuDienTu());
+        if(!isEmailAvailable(User.getEmail())) {
+            logger.error("Email đã tồn tại: " + User.getEmail());
             return;
         }
         String maMoi = RandomIDGenerator();
         // Gán mã mới vào đối tượng người dùng
-        nguoiDung.setMaNguoiDung(maMoi);
+        User.setUserId(maMoi);
         // Dấu ? là placeholder - để lại chỗ trống cho dữ liệu thực tế
         // Dùng placeholder tránh SQL Injection - an toàn hơn ghép string thô
         String sql = "INSERT INTO nguoi_dung " +
@@ -98,14 +98,14 @@ public class UserRepositorySQLite implements IUserRepository {
             // Điền dữ liệu vào các vị trí ? (đánh số từ 1, không phải 0)
             // ps.setString(vị_trí, giá_trị);
             ps.setString(1, maMoi);                          // Vị trí 1 = ma_nguoi_dung
-            ps.setString(2, nguoiDung.layHoTen());          // Vị trí 2 = ho_ten
-            ps.setString(3, nguoiDung.layThuDienTu());      // Vị trí 3 = thu_dien_tu (email)
-            ps.setString(4, nguoiDung.layMatKhau());        // Vị trí 4 = mat_khau
-            ps.setString(5, nguoiDung.laySalt());           // Vị trí 5 = salt
-            ps.setString(6, nguoiDung.layNgaySinh());       // Vị trí 6 = ngay_sinh
-            ps.setString(7, nguoiDung.getDiaChi());        // Vị trí 7 = dia_chi
-            ps.setString(8, nguoiDung.getSoDienThoai());  // Vị trí 8 = so_dien_thoai
-            ps.setDouble(9, nguoiDung.getSoDuKhaDung()); // Vị trí 9 = so_du_kha_dung
+            ps.setString(2, User.getFullName());          // Vị trí 2 = ho_ten
+            ps.setString(3, User.getEmail());      // Vị trí 3 = thu_dien_tu (email)
+            ps.setString(4, User.getPassword());        // Vị trí 4 = mat_khau
+            ps.setString(5, User.getSalt());           // Vị trí 5 = salt
+            ps.setString(6, User.getDateOfBirth());       // Vị trí 6 = ngay_sinh
+            ps.setString(7, User.getAddress());        // Vị trí 7 = dia_chi
+            ps.setString(8, User.getPhoneNumber());  // Vị trí 8 = so_dien_thoai
+            ps.setDouble(9, User.getAvailableBalance()); // Vị trí 9 = so_du_kha_dung
 
             // Thực thi câu lệnh INSERT
             // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
@@ -125,9 +125,9 @@ public class UserRepositorySQLite implements IUserRepository {
     }
 
     @Override
-    public void update(NguoiDung nguoiDung) {
+    public void update(User User) {
         // Kiểm tra người dùng có tồn tại không
-        if (nguoiDung == null || nguoiDung.layMaNguoiDung() == null) {
+        if (User == null || User.getUserId() == null) {
             logger.error("Không thể cập nhật: Người dùng null hoặc không có mã");
             return;
         }
@@ -138,22 +138,22 @@ public class UserRepositorySQLite implements IUserRepository {
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             // Điền dữ liệu vào các vị trí ?
-            ps.setString(1, nguoiDung.layHoTen());          // ho_ten
-            ps.setString(2, nguoiDung.layThuDienTu());      // thu_dien_tu (email)
-            ps.setString(3, nguoiDung.layMatKhau());        // mat_khau
-            ps.setString(4, nguoiDung.laySalt());           // salt
-            ps.setString(5, nguoiDung.layNgaySinh());       // ngay_sinh
-            ps.setString(6, nguoiDung.getDiaChi());         // dia_chi
-            ps.setString(7, nguoiDung.getSoDienThoai());    // so_dien_thoai
-            ps.setDouble(8, nguoiDung.getSoDuKhaDung());    // so_du_kha_dung
-            ps.setString(9, nguoiDung.layMaNguoiDung());    // WHERE ma_nguoi_dung
+            ps.setString(1, User.getFullName());          // ho_ten
+            ps.setString(2, User.getEmail());      // thu_dien_tu (email)
+            ps.setString(3, User.getPassword());        // mat_khau
+            ps.setString(4, User.getSalt());           // salt
+            ps.setString(5, User.getDateOfBirth());       // ngay_sinh
+            ps.setString(6, User.getAddress());         // dia_chi
+            ps.setString(7, User.getPhoneNumber());    // so_dien_thoai
+            ps.setDouble(8, User.getAvailableBalance());    // so_du_kha_dung
+            ps.setString(9, User.getUserId());    // WHERE ma_nguoi_dung
 
             int rowsAffected = ps.executeUpdate();
             logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
 
             // Commit để đảm bảo data được cập nhật
             ps.getConnection().commit();
-            logger.info("COMMIT cập nhật user: " + nguoiDung.layMaNguoiDung());
+            logger.info("COMMIT cập nhật user: " + User.getUserId());
 
         } catch (SQLException e) {
             logger.error("Lỗi cập nhật người dùng: " + e.getMessage());
@@ -164,19 +164,19 @@ public class UserRepositorySQLite implements IUserRepository {
      * METHOD: layTatCa()
      * Mục đích: Lấy toàn bộ danh sách người dùng từ database.
      * Cấu trúc dữ liệu trả về:
-     * - Map<String, NguoiDung>
-     *   + Key   = email (thu_dien_tu) → tìm kiếm nhanh bằng email
-     *   + Value = đối tượng NguoiDung tương ứng
+     * - Map<String, User>
+     * + Key   = email (thu_dien_tu) → tìm kiếm nhanh bằng email
+     * + Value = đối tượng User tương ứng
      * Lợi ích của Map:
-     *   - Tìm người dùng bằng email: O(1) thay vì O(n)
-     *   - Kiểm tra email tồn tại: if (map.containsKey(email))
+     * - Tìm người dùng bằng email: O(1) thay vì O(n)
+     * - Kiểm tra email tồn tại: if (map.containsKey(email))
      *
-     * @return Map - Key = email, Value = NguoiDung object
+     * @return Map - Key = email, Value = User object
      */
     @Override
-    public Map<String, NguoiDung> findAll() {
+    public Map<String, User> findAll() {
         // HashMap: hiệu suất cao, không đảm bảo thứ tự
-        Map<String, NguoiDung> result = new HashMap<>();
+        Map<String, User> result = new HashMap<>();
 
         // SELECT * = lấy tất cả cột từ bảng nguoi_dung
         String sql = "SELECT * FROM nguoi_dung";
@@ -190,7 +190,7 @@ public class UserRepositorySQLite implements IUserRepository {
             while (rs.next()) {
                 // Lấy dữ liệu từ cột của dòng hiện tại
                 // rs.getString("tên_cột") = lấy giá trị cột theo tên
-                NguoiDung nd = new NguoiDung(
+                User nd = new User(
                         rs.getString("ho_ten"),       // Tên đầy đủ
                         rs.getString("thu_dien_tu"),  // Email
                         rs.getString("mat_khau"),     // Password (đã mã hóa)
@@ -198,11 +198,11 @@ public class UserRepositorySQLite implements IUserRepository {
                 );
 
                 // Set mã người dùng từ DB
-                nd.setMaNguoiDung(rs.getString("ma_nguoi_dung"));
+                nd.setUserId(rs.getString("ma_nguoi_dung"));
                 // Set thêm các field khác
-                nd.setDiaChi(rs.getString("dia_chi"));
-                nd.setSoDienThoai(rs.getString("so_dien_thoai"));
-                nd.setSoDuKhaDung(rs.getDouble("so_du_kha_dung"));
+                nd.setAddress(rs.getString("dia_chi"));
+                nd.setPhoneNumber(rs.getString("so_dien_thoai"));
+                nd.setAvailableBalance(rs.getDouble("so_du_kha_dung"));
 
                 // FIX QUAN TRỌNG (App Restart Issue):
                 // - Trước: Không retrieve/set salt từ database
@@ -211,10 +211,10 @@ public class UserRepositorySQLite implements IUserRepository {
                 // - Vấn đề: Nếu salt = null, login sẽ fail vì BoMaHoaMatKhau.kiemTraMatKhau() cần salt
                 nd.setSalt(rs.getString("salt"));
 
-                // Thêm vào Map: email làm key, NguoiDung làm value
+                // Thêm vào Map: email làm key, User làm value
                 // Nếu email chưa tồn tại → thêm vào
                 // Nếu email đã tồn tại → cập nhật (ghi đè)
-                result.put(nd.layThuDienTu(), nd);
+                result.put(nd.getEmail(), nd);
             }
         } catch (SQLException e) {
             // Nếu có lỗi → in lỗi, nhưng vẫn trả về Map rỗng
@@ -225,32 +225,32 @@ public class UserRepositorySQLite implements IUserRepository {
         return result;
     }
 
-    public void delete(NguoiDung nguoiDung){
+    public void delete(User User){
         // Kiểm tra người dùng có tồn tại không
-        if (nguoiDung == null || nguoiDung.layMaNguoiDung() == null) {
+        if (User == null || User.getUserId() == null) {
             logger.error("Không thể xóa: Người dùng null hoặc không có mã");
             return;
         }
 
-        String maNguoiDung = nguoiDung.layMaNguoiDung();
+        String maUser = User.getUserId();
         String sql = "DELETE FROM nguoi_dung WHERE ma_nguoi_dung = ?";
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, maNguoiDung);
+            ps.setString(1, maUser);
 
             int rowsAffected = ps.executeUpdate();
             logger.info("Xóa user thành công, số dòng ảnh hưởng: " + rowsAffected);
 
             // Commit để đảm bảo data được xóa
             ps.getConnection().commit();
-            logger.info("COMMIT xóa user: " + maNguoiDung);
+            logger.info("COMMIT xóa user: " + maUser);
 
         } catch (SQLException e) {
             logger.error("Lỗi xóa người dùng: " + e.getMessage());
         }
     }
     /**
-     * METHOD: kiemTraNguoiDung()
+     * METHOD: kiemTraUser()
      * Mục đích: Kiểm tra đăng nhập - xác minh email VÀ password có khớp không.
      * THAY ĐỔI QUAN TRỌNG (SQLite Migration):
      * - Trước: return matKhauTrongDB.equals(password) → so sánh plain text
@@ -393,22 +393,22 @@ public class UserRepositorySQLite implements IUserRepository {
             return "PPTT000001";
         }
     }
-    public NguoiDung findByEmail(String email) {
+    public User findByEmail(String email) {
         String sql = "SELECT * FROM nguoi_dung WHERE thu_dien_tu = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    NguoiDung nd = new NguoiDung(
+                    User nd = new User(
                             rs.getString("ho_ten"),
                             rs.getString("thu_dien_tu"),
                             rs.getString("mat_khau"),
                             rs.getString("ngay_sinh")
                     );
-                    nd.setMaNguoiDung(rs.getString("ma_nguoi_dung"));
-                    nd.setDiaChi(rs.getString("dia_chi"));
-                    nd.setSoDienThoai(rs.getString("so_dien_thoai"));
-                    nd.setSoDuKhaDung(rs.getDouble("so_du_kha_dung"));
+                    nd.setUserId(rs.getString("ma_nguoi_dung"));
+                    nd.setAddress(rs.getString("dia_chi"));
+                    nd.setPhoneNumber(rs.getString("so_dien_thoai"));
+                    nd.setAvailableBalance(rs.getDouble("so_du_kha_dung"));
                     nd.setSalt(rs.getString("salt"));
                     return nd;
                 }
@@ -448,7 +448,7 @@ public class UserRepositorySQLite implements IUserRepository {
 
             int migratedCount = 0;
             while (rs.next()) {
-                String maNguoiDung = rs.getString("ma_nguoi_dung");
+                String maUser = rs.getString("ma_nguoi_dung");
                 String plainPassword = rs.getString("mat_khau");
 
                 // THAY ĐỔI: Tạo salt và hash mới cho migration
@@ -463,11 +463,11 @@ public class UserRepositorySQLite implements IUserRepository {
                 try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(updateSql)) {
                     ps.setString(1, hashedPassword);  // Password đã hash
                     ps.setString(2, newSalt);          // Salt mới
-                    ps.setString(3, maNguoiDung);     // WHERE condition
+                    ps.setString(3, maUser);     // WHERE condition
                     ps.executeUpdate();
                     ps.getConnection().commit();      // THAY ĐỔI: Explicit commit cho WAL mode
                     migratedCount++;
-                    logger.info("✅ Migrated user: " + maNguoiDung);
+                    logger.info("✅ Migrated user: " + maUser);
                 }
             }
 

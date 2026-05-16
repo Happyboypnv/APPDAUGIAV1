@@ -7,6 +7,7 @@ import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.server.dto.RegisterRequest;
 import com.mycompany.utils.BoMaHoaMatKhau;
 import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.PasswordEncoder;
 import com.mycompany.utils.UserRepositorySQLite;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -137,15 +138,15 @@ public class UserController {
 
         // Kiểm tra email đã tồn tại chưa
         // kiemTraEmail() trả true nếu email CHƯA có → cho phép đăng ký
-        if (!khoNguoiDung.kiemTraEmail(req.getEmail())) {
+        if (!khoNguoiDung.isEmailAvailable(req.getEmail())) {
             guiPhanHoi(exchange, 400,
                     gson.toJson(new LoginResponse("Email đã tồn tại trong hệ thống")));
             return;
         }
 
         // Tạo salt ngẫu nhiên + hash mật khẩu (giống LoginAction.dangKy() trong JavaFX)
-        String salt           = BoMaHoaMatKhau.taoSalt();
-        String matKhauDaHash  = BoMaHoaMatKhau.maHoaMatKhau(req.getMatKhau(), salt);
+        String salt           = PasswordEncoder.createSalt();
+        String matKhauDaHash  = PasswordEncoder.passwordEncoder(req.getMatKhau(), salt);
 
         // Tạo NguoiDung với mật khẩu đã hash
         NguoiDung nguoiDungMoi = new NguoiDung(

@@ -1,6 +1,6 @@
 package com.mycompany.utils;
 import com.mycompany.action.HandleNavigationAndAlert;
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import javafx.scene.control.Alert;
 
 
@@ -21,24 +21,24 @@ import java.util.prefs.Preferences; // save thong tin sau khi app dong
  * - Cập nhật token JWT sau khi thay đổi thông tin
  * - Hiển thị thông báo lỗi cho người dùng
  */
-public class CapNhatThongTinNguoiDung {
+public class UserProfileUpdater {
 
     // Singleton instance - đảm bảo chỉ có một CapNhatThongTinNguoiDung trong suốt ứng dụng
 
     // Preferences là Java API để lưu trữ cài đặt ứng dụng an toàn (dùng registry trên Windows)
     // Lưu trữ auth_token để khôi phục session sau khi app đóng
     private static final Preferences prefs =
-            Preferences.userNodeForPackage(CapNhatThongTinNguoiDung.class);
+            Preferences.userNodeForPackage(UserProfileUpdater.class);
 
     // Interface để lưu trữ dữ liệu người dùng - hiện tại dùng JSON
     // Có thể thay thế bằng database trong tương lai (design pattern: Strategy)
-    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
+    private final IUserRepository userRepository = new UserRepositorySQLite();
 
     /**
      * Constructor private để ngăn tạo instance trực tiếp
      * Người dùng phải dùng getInstance() để có được instance duy nhất
      */
-    private CapNhatThongTinNguoiDung() {}
+    private UserProfileUpdater() {}
 
     /**
      * PHƯƠNG THỨC: getInstance()
@@ -51,11 +51,11 @@ public class CapNhatThongTinNguoiDung {
      *
      * @return Instance duy nhất của CapNhatThongTinNguoiDung
      */
-    private static volatile CapNhatThongTinNguoiDung instance;
-    public static CapNhatThongTinNguoiDung getInstance() {
+    private static volatile UserProfileUpdater instance;
+    public static UserProfileUpdater getInstance() {
         if (instance == null) {
-            synchronized (CapNhatThongTinNguoiDung.class) {
-                if (instance == null) instance = new CapNhatThongTinNguoiDung();
+            synchronized (UserProfileUpdater.class) {
+                if (instance == null) instance = new UserProfileUpdater();
             }
         }
         return instance;
@@ -89,7 +89,7 @@ public class CapNhatThongTinNguoiDung {
         try {
             // 🔹 BƯỚC 1: Lấy người dùng hiện tại từ session
             // SessionManager lưu trữ thông tin người dùng đã đăng nhập
-            NguoiDung currentUser = SessionManager.getInstance().getCurrentUser();
+            User currentUser = SessionManager.getInstance().getCurrentUser();
 
             // 🔹 BƯỚC 2: Kiểm tra người dùng tồn tại
             // Nếu null = chưa đăng nhập, không thể cập nhật
@@ -102,30 +102,30 @@ public class CapNhatThongTinNguoiDung {
             // Dùng containsKey() để kiểm tra trước khi cập nhật
 
             if (updates.containsKey("name")) {
-                currentUser.setHoTen(updates.get("name"));
+                currentUser.setFullName(updates.get("name"));
             }
             if (updates.containsKey("phone")) {
-                currentUser.setSoDienThoai(updates.get("phone"));
+                currentUser.setPhoneNumber(updates.get("phone"));
             }
             if (updates.containsKey("address")) {
-                currentUser.setDiaChi(updates.get("address"));
+                currentUser.setAddress(updates.get("address"));
             }
             if (updates.containsKey("bankAccount")) {
-                currentUser.setSoTaiKhoan(updates.get("bankAccount"));
+                currentUser.setBankAccountNumber(updates.get("bankAccount"));
             }
             if (updates.containsKey("balance")) {
                 // Chuyển từ String sang Double để lưu số
-                currentUser.setSoDuKhaDung(Double.parseDouble(updates.get("balance")));
+                currentUser.setAvailableBalance(Double.parseDouble(updates.get("balance")));
             }
             if (updates.containsKey("bankName")) {
-                currentUser.setNganHang(updates.get("bankName"));
+                currentUser.setBankName(updates.get("bankName"));
             }
 
             // 🔹 BƯỚC 4: ⭐ LƯU VÀO FILE JSON - QUAN TRỌNG NHẤT!!!
             // Nếu bỏ qua bước này, dữ liệu chỉ thay đổi trong RAM
             // Khi app đóng, tất cả thay đổi sẽ mất vĩnh viễn
             // capNhatNguoiDung() sẽ cập nhật bản ghi cũ (giữ nguyên ID)
-            khoLuuTruNguoiDung.capNhatNguoiDung(currentUser);
+            userRepository.update(currentUser);
 
             // 🔹 BƯỚC 5: Tạo token JWT mới với dữ liệu đã cập nhật
             // Token chứa tất cả thông tin người dùng dưới dạng Base64

@@ -1,6 +1,5 @@
 package com.mycompany.action;
 
-import com.mycompany.models.*;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDateTime;
@@ -18,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Kiểm tra logic đấu giá PhienDauGiaService")
 class PhienDauGiaServiceTest {
 
-    private PhienDauGiaService service;
+    private AuctionSessionService service;
     private NguoiDung nguoiBan;
     private NguoiDung nguoiMua1;
     private NguoiDung nguoiMua2;
 
     @BeforeEach
     void setup() {
-        service = PhienDauGiaService.getInstance();
+        service = AuctionSessionService.getInstance();
 
         // Tạo người bán
         nguoiBan = new NguoiDung("Nguyen Van Ban", "ban@test.com", "hash", "2000-01-01");
@@ -88,7 +87,7 @@ class PhienDauGiaServiceTest {
     }
 
     // ================================================================
-    // 2. datGia() — các trường hợp hợp lệ
+    // 2. setPrice() — các trường hợp hợp lệ
     // ================================================================
 
     @Test
@@ -96,7 +95,7 @@ class PhienDauGiaServiceTest {
     void datGia_hopLe_trueTrue() {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
-        boolean ketQua = service.datGia(phien, nguoiMua1, 10_000_001);
+        boolean ketQua = service.setPrice(phien, nguoiMua1, 10_000_001);
 
         assertTrue(ketQua, "Giá hợp lệ phải được chấp nhận");
     }
@@ -106,7 +105,7 @@ class PhienDauGiaServiceTest {
     void datGia_hopLe_giaHienTaiCapNhat() {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
-        service.datGia(phien, nguoiMua1, 15_000_000);
+        service.setPrice(phien, nguoiMua1, 15_000_000);
 
         assertEquals(15_000_000, phien.getGiaHienTai(), 0.01,
                 "Giá hiện tại phải bằng giá vừa đặt");
@@ -117,7 +116,7 @@ class PhienDauGiaServiceTest {
     void datGia_hopLe_nguoiMuaDuocThem() {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
-        service.datGia(phien, nguoiMua1, 15_000_000);
+        service.setPrice(phien, nguoiMua1, 15_000_000);
 
         assertFalse(phien.getDanhSachNguoiTraGia().isEmpty(),
                 "Danh sách người trả giá phải có ít nhất 1 người sau khi đặt");
@@ -126,7 +125,7 @@ class PhienDauGiaServiceTest {
     }
 
     // ================================================================
-    // 3. datGia() — các trường hợp bị từ chối
+    // 3. setPrice() — các trường hợp bị từ chối
     // ================================================================
 
     @Test
@@ -134,7 +133,7 @@ class PhienDauGiaServiceTest {
     void datGia_giaTuaThap_traFalse() {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
-        boolean ketQua = service.datGia(phien, nguoiMua1, 9_000_000);
+        boolean ketQua = service.setPrice(phien, nguoiMua1, 9_000_000);
 
         assertFalse(ketQua, "Giá thấp hơn giá hiện tại phải bị từ chối");
     }
@@ -144,7 +143,7 @@ class PhienDauGiaServiceTest {
     void datGia_nguoiBanTuDat_traFalse() {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
-        boolean ketQua = service.datGia(phien, nguoiBan, 15_000_000);
+        boolean ketQua = service.setPrice(phien, nguoiBan, 15_000_000);
 
         assertFalse(ketQua, "Người bán không được phép tự đặt giá");
     }
@@ -155,7 +154,7 @@ class PhienDauGiaServiceTest {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
         service.dongPhien(phien, TrangThaiPhien.DA_HUY);
 
-        boolean ketQua = service.datGia(phien, nguoiMua1, 15_000_000);
+        boolean ketQua = service.setPrice(phien, nguoiMua1, 15_000_000);
 
         assertFalse(ketQua, "Không thể đặt giá vào phiên đã đóng");
     }
@@ -166,7 +165,7 @@ class PhienDauGiaServiceTest {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
         // Giá khởi điểm là 10tr, đặt đúng 10tr không được (phải cao hơn)
-        boolean ketQua = service.datGia(phien, nguoiMua1, 10_000_000);
+        boolean ketQua = service.setPrice(phien, nguoiMua1, 10_000_000);
 
         assertTrue(ketQua, "Giá bằng giá khởi điểm phải bị từ chối (phải cao hơn)");
     }
@@ -179,7 +178,7 @@ class PhienDauGiaServiceTest {
     @DisplayName("Sau lần đặt đầu tiên, bước giá phải được thiết lập (6% giá khởi điểm)")
     void datGia_lanDau_buocGiaDuocThietLap() {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
-        service.datGia(phien, nguoiMua1, 10_000_001);
+        service.setPrice(phien, nguoiMua1, 10_000_001);
 
         // Theo logic: buocGia = giaHienTai * 0.06
         double expected = phien.getGiaHienTai() * phien.getDoLechGiaMin();
@@ -193,12 +192,12 @@ class PhienDauGiaServiceTest {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
         // Lần 1
-        service.datGia(phien, nguoiMua1, 10_000_001);
+        service.setPrice(phien, nguoiMua1, 10_000_001);
         double buocGia = phien.getBuocGia();
         double giaHienTai = phien.getGiaHienTai();
 
         // Lần 2: đặt thấp hơn giaHienTai + buocGia → bị từ chối
-        boolean ketQua = service.datGia(phien, nguoiMua2, giaHienTai + buocGia - 1);
+        boolean ketQua = service.setPrice(phien, nguoiMua2, giaHienTai + buocGia - 1);
 
         assertFalse(ketQua,
                 "Giá lần 2 thấp hơn giaHienTai + buocGia phải bị từ chối");
@@ -218,7 +217,7 @@ class PhienDauGiaServiceTest {
         phien.setThoiGianKetThuc(LocalDateTime.now().plusSeconds(30));
         LocalDateTime thoiGianCu = phien.getThoiGianKetThuc();
 
-        service.datGia(phien, nguoiMua1, 10_000_001);
+        service.setPrice(phien, nguoiMua1, 10_000_001);
 
         // Thời gian kết thúc mới phải sau thời gian cũ
         assertTrue(
@@ -233,7 +232,7 @@ class PhienDauGiaServiceTest {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 3600); // 1 tiếng
         LocalDateTime thoiGianKetThucTruoc = phien.getThoiGianKetThuc();
 
-        service.datGia(phien, nguoiMua1, 10_000_001);
+        service.setPrice(phien, nguoiMua1, 10_000_001);
 
         // Cho phép sai lệch 1 giây vì scheduling
         long diff = java.time.Duration.between(
@@ -263,7 +262,7 @@ class PhienDauGiaServiceTest {
             final double gia = 11_000_000 + idx * 1_000_000; // 11tr, 12tr, ... 20tr
             NguoiDung nguoiDat = (idx % 2 == 0) ? nguoiMua1 : nguoiMua2;
             threads[i] = new Thread(() -> {
-                results[idx] = service.datGia(phien, nguoiDat, gia);
+                results[idx] = service.setPrice(phien, nguoiDat, gia);
             });
         }
 
@@ -288,8 +287,8 @@ class PhienDauGiaServiceTest {
         PhienDauGia phien = buildPhienDangDienRa(10_000_000, 300);
 
         // Hai người đặt giá cuối cùng trước khi đóng
-        Thread t1 = new Thread(() -> service.datGia(phien, nguoiMua1, 50_000_000));
-        Thread t2 = new Thread(() -> service.datGia(phien, nguoiMua2, 50_000_000));
+        Thread t1 = new Thread(() -> service.setPrice(phien, nguoiMua1, 50_000_000));
+        Thread t2 = new Thread(() -> service.setPrice(phien, nguoiMua2, 50_000_000));
 
         t1.start();
         t2.start();

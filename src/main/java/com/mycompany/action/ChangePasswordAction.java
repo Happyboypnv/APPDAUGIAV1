@@ -1,6 +1,6 @@
 package com.mycompany.action;
 
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import com.mycompany.utils.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -110,8 +110,8 @@ public class ChangePasswordAction {
         String newSalt = PasswordEncoder.createSalt();
         String hashedNewPassword = PasswordEncoder.passwordEncoder(newPassword, newSalt);
 
-        NguoiDung currentUser = SessionManager.getInstance().getCurrentUser();
-        currentUser.setMatKhau(hashedNewPassword);
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        currentUser.setPassword(hashedNewPassword);
         currentUser.setSalt(newSalt);
 
         userRepository.update(currentUser);

@@ -1,6 +1,6 @@
 package com.mycompany;
 
-import com.mycompany.action.PhienDauGiaScheduler;
+import com.mycompany.action.AuctionScheduler;
 import com.mycompany.utils.DatabaseConnection;
 import com.mycompany.utils.UserRepositorySQLite;
 import javafx.application.Application;
@@ -17,7 +17,7 @@ public class App extends Application {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
     public void stop() throws Exception {
         super.stop();
-        PhienDauGiaScheduler.getInstance().shutdown();
+        AuctionScheduler.getInstance().shutdown();
     }
     @Override
     public void start(Stage primaryStage) {
