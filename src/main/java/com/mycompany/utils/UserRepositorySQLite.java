@@ -87,8 +87,9 @@ public class UserRepositorySQLite implements IUserRepository {
         // Dấu ? là placeholder - để lại chỗ trống cho dữ liệu thực tế
         // Dùng placeholder tránh SQL Injection - an toàn hơn ghép string thô
         String sql = "INSERT INTO nguoi_dung " +
-                "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, dia_chi, so_dien_thoai, so_du_kha_dung) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, " +
+                "dia_chi, so_dien_thoai, so_du_kha_dung, so_tai_khoan_ngan_hang, ten_ngan_hang) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         // AN TOÀN (DÙNG CÁI NÀY):
         // Dùng ? là "chỗ trống", không ghép string
         // Database sẽ xử lý ? như một tham số dữ liệu, không phải SQL code
@@ -106,6 +107,8 @@ public class UserRepositorySQLite implements IUserRepository {
             ps.setString(7, User.getAddress());        // Vị trí 7 = dia_chi
             ps.setString(8, User.getPhoneNumber());  // Vị trí 8 = so_dien_thoai
             ps.setDouble(9, User.getAvailableBalance()); // Vị trí 9 = so_du_kha_dung
+            ps.setString(10, User.getBankAccountNumber()); // ⭐ thêm
+            ps.setString(11, User.getBankName());
 
             // Thực thi câu lệnh INSERT
             // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
@@ -133,7 +136,9 @@ public class UserRepositorySQLite implements IUserRepository {
         }
 
         String sql = "UPDATE nguoi_dung SET " +
-                "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ? " +
+                "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, " +
+                "dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ?, " +
+                "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ? " + // ⭐ thêm
                 "WHERE ma_nguoi_dung = ?";
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
@@ -146,7 +151,9 @@ public class UserRepositorySQLite implements IUserRepository {
             ps.setString(6, User.getAddress());         // dia_chi
             ps.setString(7, User.getPhoneNumber());    // so_dien_thoai
             ps.setDouble(8, User.getAvailableBalance());    // so_du_kha_dung
-            ps.setString(9, User.getUserId());    // WHERE ma_nguoi_dung
+            ps.setString(9, User.getBankAccountNumber());  // ⭐ thêm
+            ps.setString(10, User.getBankName());
+            ps.setString(11, User.getUserId());    // WHERE ma_nguoi_dung
 
             int rowsAffected = ps.executeUpdate();
             logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
@@ -203,6 +210,8 @@ public class UserRepositorySQLite implements IUserRepository {
                 nd.setAddress(rs.getString("dia_chi"));
                 nd.setPhoneNumber(rs.getString("so_dien_thoai"));
                 nd.setAvailableBalance(rs.getDouble("so_du_kha_dung"));
+                nd.setBankAccountNumber(rs.getString("so_tai_khoan_ngan_hang")); // ⭐ thêm
+                nd.setBankName(rs.getString("ten_ngan_hang"));
 
                 // FIX QUAN TRỌNG (App Restart Issue):
                 // - Trước: Không retrieve/set salt từ database
@@ -409,6 +418,8 @@ public class UserRepositorySQLite implements IUserRepository {
                     nd.setAddress(rs.getString("dia_chi"));
                     nd.setPhoneNumber(rs.getString("so_dien_thoai"));
                     nd.setAvailableBalance(rs.getDouble("so_du_kha_dung"));
+                    nd.setBankAccountNumber(rs.getString("so_tai_khoan_ngan_hang")); // ⭐ thêm
+                    nd.setBankName(rs.getString("ten_ngan_hang"));
                     nd.setSalt(rs.getString("salt"));
                     return nd;
                 }

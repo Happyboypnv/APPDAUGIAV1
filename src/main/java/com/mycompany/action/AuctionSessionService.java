@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AuctionSessionService {
     private static volatile AuctionSessionService instance;
-
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuctionSessionService.class);
     // Lock theo từng mã phiên để đảm bảo thread-safe
     private static final Map<String, Object> locks = new ConcurrentHashMap<>();
 
@@ -122,21 +122,39 @@ public class AuctionSessionService {
             auction.addBidder(bidder);
             bidder.setAvailableBalance(bidder.getAvailableBalance() - gia);
 
+            // ✅ SAU - xử lý đúng cả 2 trường hợp
+// Bước 5 trong setPrice():
+
+// Hoàn tiền cho người đứng đầu trước (nếu có và khác người hiện tại)
             List<User> bidders = auction.getBidderList();
-            if (bidders.size() >= 2) {
-                User previousLeader = bidders.get(bidders.size() - 2);
-                // Chỉ hoàn nếu không phải cùng người
+            double oldPrice = auction.getCurrentPrice(); // lưu giá cũ TRƯỚC khi thêm bidder
+
+// Thêm bidder vào danh sách
+            auction.addBidder(bidder);
+
+            if (bidders.size() >= 1) { // size TRƯỚC khi add → người trước đó
+                User previousLeader = bidders.get(bidders.size() - 1);
+
                 if (!previousLeader.getUserId().equals(bidder.getUserId())) {
-                    // Lấy giá thầu cũ = currentPrice trước khi cập nhật
-                    // Đây là giá trước đó — cần refund cho họ
+                    // Người khác đang dẫn đầu → hoàn tiền cho họ
                     previousLeader.setAvailableBalance(
-                            previousLeader.getAvailableBalance() + auction.getCurrentPrice()
+                            previousLeader.getAvailableBalance() + oldPrice
                     );
+                    logger.info("💰 Hoàn " + oldPrice + " cho " + previousLeader.getFullName());
+                } else {
+                    // Cùng người đặt lại: chỉ hoàn phần chênh lệch
+                    // Họ đã bị trừ oldPrice trước đó, giờ đặt gia mới hơn
+                    // Không cần hoàn vì họ đang nâng giá của chính mình
+                    logger.info("ℹ️ Cùng user đặt lại, không hoàn tiền");
                 }
             }
+
+            // Trừ tiền người đặt giá hiện tại
+            bidder.setAvailableBalance(bidder.getAvailableBalance() - gia);
+
+            // Cập nhật giá và bước giá
             auction.setCurrentPrice(gia);
-            double buocGiaMoi = gia * auction.getMinPriceDiffRatio();
-            auction.setPriceStep(buocGiaMoi);
+            auction.setPriceStep(gia * auction.getMinPriceDiffRatio());
             return true;
         }
     }

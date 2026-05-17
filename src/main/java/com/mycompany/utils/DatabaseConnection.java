@@ -92,11 +92,13 @@ public class DatabaseConnection {
                 "ho_ten TEXT NOT NULL, " +
                 "thu_dien_tu TEXT UNIQUE NOT NULL, " +
                 "mat_khau TEXT NOT NULL, " +
-                "salt TEXT NOT NULL, " + // Cột salt cho bảo mật
+                "salt TEXT NOT NULL, " +
                 "ngay_sinh TEXT, " +
                 "dia_chi TEXT, " +
                 "so_dien_thoai TEXT, " +
-                "so_du_kha_dung REAL DEFAULT 0);";
+                "so_du_kha_dung REAL DEFAULT 0, " +
+                "so_tai_khoan_ngan_hang TEXT, " +  // ⭐ thêm
+                "ten_ngan_hang TEXT);";
 
         String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
                 "ma_san_pham TEXT PRIMARY KEY, " +
@@ -146,6 +148,19 @@ public class DatabaseConnection {
             } catch (SQLException e) {
                 // Lỗi này thường là do cột đã tồn tại, có thể bỏ qua
                 logger.debug("ℹ️ Cột salt đã tồn tại.");
+            }
+            try {
+                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN so_tai_khoan_ngan_hang TEXT;");
+                logger.info("✅ Migration: Đã thêm cột so_tai_khoan_ngan_hang");
+            } catch (SQLException e) {
+                logger.debug("ℹ️ Cột so_tai_khoan_ngan_hang đã tồn tại.");
+            }
+
+            try {
+                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN ten_ngan_hang TEXT;");
+                logger.info("✅ Migration: Đã thêm cột ten_ngan_hang");
+            } catch (SQLException e) {
+                logger.debug("ℹ️ Cột ten_ngan_hang đã tồn tại.");
             }
 
             stmt.execute(sqlSanPham);

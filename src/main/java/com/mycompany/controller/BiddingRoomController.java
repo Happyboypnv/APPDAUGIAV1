@@ -78,17 +78,29 @@ public class BiddingRoomController implements Initializable {
      * Hàm này tự động chạy khi giao diện FXML được load
      */
     @Override
+    // ✅ SAU - gán currentPhienId TRƯỚC KHI tạo bất kỳ thread nào để đảm bảo tất cả các thread đều có giá trị currentPhienId hợp lệ, tránh lỗi null pointer khi truy cập currentPhienId trong các thread đó.
     public void initialize(URL location, ResourceBundle resources) {
+        // ⭐ BƯỚC 1: Gán currentPhienId NGAY ĐẦU TIÊN
+        currentPhienId = SessionManager.getInstance().getCurrentPhienId();
+
         startClock();
+        setupButtonActions();
+        bidHistoryListView.setItems(bidHistoryList); // fix Bug 10 luôn
+        Platform.runLater(() -> {
+            if (placeBidButton != null && placeBidButton.getScene() != null) {
+                placeBidButton.getScene().getRoot().setUserData(this);
+            }
+        });
+        // BƯỚC 2: Load thông tin phiên thực tế (currentPhienId đã có giá trị)
         new Thread(() -> {
             PhienDauGiaDTO phien = ApiClient.getAuctionById(
-                    currentPhienId,
+                    currentPhienId,  // ✅ không còn null
                     SessionManager.getInstance().getServerToken()
             );
             if (phien != null) {
                 Platform.runLater(() -> {
-                    currentPrice = phien.giaHienTai;         // ✅ giá thực
-                    stepPrice = currentPrice * 0.06;          // 6% như server
+                    currentPrice = phien.giaHienTai;
+                    stepPrice = currentPrice * 0.06;
                     updateBidAmountField(currentPrice + stepPrice);
                     if (auctionNameLabel != null) {
                         auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + phien.tenPhien);
@@ -99,49 +111,43 @@ public class BiddingRoomController implements Initializable {
                 });
             }
         }).start();
-        setupButtonActions();
-        updateBidAmountField(currentPrice + stepPrice);
 
-        // 1. Lấy phienId từ session
-        currentPhienId = SessionManager.getInstance().getCurrentPhienId();
-        if (currentPhienId != null && auctionNameLabel != null) {
-            auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + currentPhienId);
-        }
-        currentPhienId = SessionManager.getInstance().getCurrentPhienId();
-
-        // Load thông tin phiên thực tế trên background thread
-        new Thread(() -> {
-            try {
-                // Gọi GET /api/auctions/{id}
-                String token = SessionManager.getInstance().getServerToken();
-                // Tái dụng ApiClient — thêm method getAuctionById nếu chưa có
-                String json = ApiClient.getAuctions(token); // hoặc tạo getAuctionById()
-                // Parse và update UI trên JavaFX thread
-                // (xem ví dụ đầy đủ bên dưới)
-            } catch (Exception e) {
-                logger.error("Lỗi load phiên: " + e.getMessage());
-            }
-        }).start();
-
-        // 2. Kết nối WebSocket trên thread riêng (không block JavaFX thread)
+        // BƯỚC 3: Kết nối WebSocket (currentPhienId đã có giá trị)
+        // ✅ SAU
         wsThread = new Thread(() -> {
             try {
-                // Thêm delay nhỏ để đảm bảo server sẵn sàng
                 Thread.sleep(1000);
-                if(isDestroyed) return;
+                if (isDestroyed) return;
 
                 wsClient = AuctionWebSocketClient.getInstance();
                 adapter = new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
                 wsClient.setListener(adapter);
-                wsClient.connectToServer();
 
-                String email = SessionManager.getInstance().getCurrentUser().getEmail();
-                wsClient.sendJoin(currentPhienId, email);
+                // ⭐ Chỉ connect nếu chưa connected
+                if (!wsClient.isConnected()) {
+                    wsClient.connectToServer();
+                }
+
+                // ⭐ Chỉ join nếu connect thành công
+                if (wsClient.isConnected()) {
+                    String email = SessionManager.getInstance().getCurrentUser().getEmail();
+                    wsClient.sendJoin(currentPhienId, email);
+                    logger.info("✅ Đã kết nối và JOIN phòng: " + currentPhienId);
+                } else {
+                    logger.error("❌ Không thể kết nối WebSocket sau timeout");
+                    Platform.runLater(() ->
+                            HandleNavigationAndAlert.getInstance().showAlert(
+                                    Alert.AlertType.WARNING,
+                                    "Cảnh báo",
+                                    "Không thể kết nối real-time. Tính năng đặt giá có thể bị chậm."
+                            )
+                    );
+                }
             } catch (Exception e) {
-                System.err.println("❌ Lỗi kết nối WebSocket: " + e.getMessage());
+                logger.error("❌ Lỗi kết nối WebSocket: " + e.getMessage());
             }
         });
-        wsThread.setDaemon(true); // Đảm bảo thread sẽ tự động dừng khi ứng dụng đóng
+        wsThread.setDaemon(true);
         wsThread.setName("BiddingRoom-WebSocket-Thread");
         wsThread.start();
     }
