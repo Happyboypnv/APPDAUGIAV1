@@ -1,8 +1,12 @@
 package com.mycompany.server;
 
+import com.mycompany.action.AuctionSessionRegistry;
+import com.mycompany.models.AuctionSession;
+import com.mycompany.models.SessionStatus;
 import com.mycompany.server.controller.AuctionController;
 import com.mycompany.server.controller.BidController;
 import com.mycompany.server.controller.UserController;
+import com.mycompany.utils.AuctionRepositorySQLite;
 import com.mycompany.utils.DatabaseConnection;
 import com.mycompany.utils.UserRepositorySQLite;
 import com.sun.net.httpserver.HttpServer;
@@ -10,6 +14,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 /**
@@ -38,6 +43,20 @@ public class ServerApp {
 
         // ===== KHỞI TẠO DATABASE =====
         DatabaseConnection.initialize();
+        AuctionRepositorySQLite auctionRepo = new AuctionRepositorySQLite();
+        try {
+            Map<String, AuctionSession> activeSessions = auctionRepo.findAll();
+            int loadedCount = 0;
+            for (AuctionSession session : activeSessions.values()) {
+                if (session.getStatus() == SessionStatus.IN_PROGRESS) {
+                    AuctionSessionRegistry.getInstance().add(session);
+                    loadedCount++;
+                }
+            }
+            logger.info("✅ Loaded " + loadedCount + " active sessions into registry");
+        } catch (Exception e) {
+            logger.error("❌ Failed to preload sessions: " + e.getMessage());
+        }
         UserRepositorySQLite userStorage = new UserRepositorySQLite();
         userStorage.migrateLegacyPasswords();
 

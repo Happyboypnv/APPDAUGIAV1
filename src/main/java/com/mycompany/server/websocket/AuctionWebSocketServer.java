@@ -258,11 +258,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
                 sendError(conn, "Người dùng không tồn tại");
                 return;
             }
-            boolean bidIsCompleted = auctionSessionService.setPrice(
-                    phienHienTai,
-                    userRepositorySQLite.findByEmail(email),
-                    giaRa
-            );
+            boolean bidIsCompleted = auctionSessionService.setPrice(phienHienTai, bidder, giaRa);
 
             JsonObject response = new JsonObject();
             response.addProperty("event", "BID_RESULT");

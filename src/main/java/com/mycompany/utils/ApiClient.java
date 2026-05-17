@@ -79,12 +79,13 @@ public class ApiClient {
         if (responseJson == null) return new LoginResponse("Không kết nối được server");
         return gson.fromJson(responseJson, LoginResponse.class);
     }
-    public static DatGiaResponse createBid(String maPhien, double gia, String token){
+    public static DatGiaResponse createBid(String maPhien, double gia, String token) {
         String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
             put("maPhien", maPhien);
             put("gia", gia);
         }});
-        String responseJson = guiPost("/api/auctions/bids", jsonBody, token);
+        String responseJson = guiPost("/api/bids", jsonBody, token); // đúng endpoint
+        if (responseJson == null) return null;
         return gson.fromJson(responseJson, DatGiaResponse.class);
     }
     public static List<PhienDauGiaDTO> getAuctions() {
@@ -155,7 +156,16 @@ public class ApiClient {
             return false;
         }
     }
-
+    public static PhienDauGiaDTO getAuctionById(String maPhien, String token) {
+        String responseJson = guiGet("/api/auctions/" + maPhien, token);
+        if (responseJson == null) return null;
+        try {
+            return gson.fromJson(responseJson, PhienDauGiaDTO.class);
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse auction: " + e.getMessage());
+            return null;
+        }
+    }
     /**
      * Gọi GET /api/users/{email}
      * Cần token trong header Authorization

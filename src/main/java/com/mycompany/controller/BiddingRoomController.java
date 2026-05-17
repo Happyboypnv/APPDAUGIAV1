@@ -2,12 +2,14 @@ package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.server.controller.AuctionWebSocketControllerAdapter;
+import com.mycompany.server.dto.PhienDauGiaDTO;
 import com.mycompany.server.websocket.AuctionWebSocketClient;
 import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.SessionManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -65,7 +67,7 @@ public class BiddingRoomController implements Initializable {
     private String currentPhienId;
     private Thread wsThread;
     private volatile boolean isDestroyed = false; // Biến trạng thái kết nối WebSocket
-
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BiddingRoomController.class);
     // --- CÁC BIẾN LOGIC ---
     private double currentPrice = 135000000; // Giá cao nhất hiện tại
     private double stepPrice = 5000000; // Bước giá (mỗi lần +/- 5 triệu)
@@ -78,7 +80,25 @@ public class BiddingRoomController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         startClock();
-        loadDummyBidHistory();
+        new Thread(() -> {
+            PhienDauGiaDTO phien = ApiClient.getAuctionById(
+                    currentPhienId,
+                    SessionManager.getInstance().getServerToken()
+            );
+            if (phien != null) {
+                Platform.runLater(() -> {
+                    currentPrice = phien.giaHienTai;         // ✅ giá thực
+                    stepPrice = currentPrice * 0.06;          // 6% như server
+                    updateBidAmountField(currentPrice + stepPrice);
+                    if (auctionNameLabel != null) {
+                        auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + phien.tenPhien);
+                    }
+                    if (currentPriceLabel != null) {
+                        currentPriceLabel.setText(formatter.format(currentPrice) + " VNĐ");
+                    }
+                });
+            }
+        }).start();
         setupButtonActions();
         updateBidAmountField(currentPrice + stepPrice);
 
@@ -87,6 +107,21 @@ public class BiddingRoomController implements Initializable {
         if (currentPhienId != null && auctionNameLabel != null) {
             auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + currentPhienId);
         }
+        currentPhienId = SessionManager.getInstance().getCurrentPhienId();
+
+        // Load thông tin phiên thực tế trên background thread
+        new Thread(() -> {
+            try {
+                // Gọi GET /api/auctions/{id}
+                String token = SessionManager.getInstance().getServerToken();
+                // Tái dụng ApiClient — thêm method getAuctionById nếu chưa có
+                String json = ApiClient.getAuctions(token); // hoặc tạo getAuctionById()
+                // Parse và update UI trên JavaFX thread
+                // (xem ví dụ đầy đủ bên dưới)
+            } catch (Exception e) {
+                logger.error("Lỗi load phiên: " + e.getMessage());
+            }
+        }).start();
 
         // 2. Kết nối WebSocket trên thread riêng (không block JavaFX thread)
         wsThread = new Thread(() -> {

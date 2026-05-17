@@ -6,6 +6,7 @@ import com.mycompany.models.User;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -73,7 +74,7 @@ public class AuctionSessionService {
         }
     }
 
-    public boolean setPrice(AuctionSession auction, User nguoiMua, double gia) {
+    public boolean setPrice(AuctionSession auction, User bidder, double gia) {
         synchronized (getLock(auction.getSessionId())) {
             // 1. Kiểm tra trạng thái phiên
             if (auction.getStatus() != SessionStatus.IN_PROGRESS) {
@@ -81,7 +82,7 @@ public class AuctionSessionService {
             }
 
             // 2. Chủ phòng không được tự đấu giá
-            if (nguoiMua.equals(auction.getSeller())) {
+            if (bidder.equals(auction.getSeller())) {
                 return false;
             }
 
@@ -97,7 +98,7 @@ public class AuctionSessionService {
             }
 
             // 4. Kiểm tra số dư người mua (giả định có method getSoDu)
-            if (nguoiMua.getAvailableBalance() < gia) {
+            if (bidder.getAvailableBalance() < gia) {
                 return false;
             }
 
@@ -118,14 +119,24 @@ public class AuctionSessionService {
             // Hoàn lại tiền cho người trả giá cao nhất trước đó (nếu có)
             // TODO: Logic refund cho auction.getNguoiTraGiaCaoNhat()
 
-            auction.setCurrentPrice(gia);
+            auction.addBidder(bidder);
+            bidder.setAvailableBalance(bidder.getAvailableBalance() - gia);
 
-            // CẬP NHẬT BƯỚC GIÁ 6% - Fix lỗi Unit Test
+            List<User> bidders = auction.getBidderList();
+            if (bidders.size() >= 2) {
+                User previousLeader = bidders.get(bidders.size() - 2);
+                // Chỉ hoàn nếu không phải cùng người
+                if (!previousLeader.getUserId().equals(bidder.getUserId())) {
+                    // Lấy giá thầu cũ = currentPrice trước khi cập nhật
+                    // Đây là giá trước đó — cần refund cho họ
+                    previousLeader.setAvailableBalance(
+                            previousLeader.getAvailableBalance() + auction.getCurrentPrice()
+                    );
+                }
+            }
+            auction.setCurrentPrice(gia);
             double buocGiaMoi = gia * auction.getMinPriceDiffRatio();
             auction.setPriceStep(buocGiaMoi);
-
-            auction.addBidder(nguoiMua);
-
             return true;
         }
     }

@@ -179,7 +179,11 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
             logger.error("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
         }
         finally {
-            DatabaseConnection.getConnection().rollback(); // Đảm bảo rollback sau khi đọc để giải phóng read-lock, tránh SQLITE_BUSY cho writer thread khác
+            try {
+                DatabaseConnection.getConnection().commit(); // commit empty transaction
+            } catch (SQLException ex) {
+                logger.warn("Could not release read lock: " + ex.getMessage());
+            }
         }
         return result;
     }
