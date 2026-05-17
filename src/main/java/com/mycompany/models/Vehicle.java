@@ -1,11 +1,13 @@
 package com.mycompany.models;
 
 class Vehicle extends Items {
-    public Vehicle(String ten, String maSanPhan, String moTa) {
-        super(ten, maSanPhan, moTa, "Vehicle");
+
+    public Vehicle(String name, String productCode, String description) {
+        super(name, productCode, description, "Vehicle");
     }
+
     @Override
     public String getDisplayInfo() {
-        return "[Xe cộ] " + this.layTenSanPham() + " - " + moTa;
+        return "[Vehicle] " + this.getProductName() + " - " + description;
     }
 }

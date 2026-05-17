@@ -1,6 +1,6 @@
 package com.mycompany.controller;
 
-import com.mycompany.utils.CapNhatThongTinNguoiDung;
+import com.mycompany.utils.UserProfileUpdater;
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.ProfileAction;
 import com.mycompany.utils.SessionManager;
@@ -181,7 +181,7 @@ public class ProfileController implements Initializable {
             updates.put("address", newAddress);
 
             // 🔹 BƯỚC 5: Lưu vào hệ thống
-            CapNhatThongTinNguoiDung.getInstance().updateUser(updates);
+            UserProfileUpdater.getInstance().updateUser(updates);
 
             // 🔹 BƯỚC 6: Thông báo thành công
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thông tin cá nhân đã được cập nhật!");

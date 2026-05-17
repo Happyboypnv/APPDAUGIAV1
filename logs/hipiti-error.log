@@ -19,3 +19,26 @@
 2026-05-14 08:08:20.752 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
   "loi": "Token không hợp lệ"
 }
+2026-05-14 11:17:02.656 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-14 11:53:32.446 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-14 12:43:02.150 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-14 13:38:39.009 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Token không hợp lệ"
+}
+2026-05-15 13:24:16.566 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-15 13:31:54.483 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-15 13:32:08.043 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-15 13:43:36.238 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-15 14:01:26.534 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "loi": "Thiếu hoặc sai thông tin bắt buộc"
+}

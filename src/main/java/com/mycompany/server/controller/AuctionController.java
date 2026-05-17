@@ -2,16 +2,16 @@ package com.mycompany.server.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mycompany.action.PhienDauGiaService;
-import com.mycompany.action.QuanLyCacPhienService;
-import com.mycompany.models.NguoiDung;
-import com.mycompany.models.PhienDauGia;
-import com.mycompany.models.SanPham;
-import com.mycompany.models.TrangThaiPhien;
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.IKhoLuuTruPhienDauGia;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
-import com.mycompany.utils.KhoLuuTruPhienDauGiaSQLite;
+import com.mycompany.action.AuctionSessionService;
+import com.mycompany.action.AuctionSessionRegistry;
+import com.mycompany.models.AuctionSession;
+import com.mycompany.models.Product;
+import com.mycompany.models.SessionStatus;
+import com.mycompany.models.User;
+import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.IAuctionRepository;
+import com.mycompany.utils.UserRepositorySQLite;
+import com.mycompany.utils.AuctionRepositorySQLite;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
@@ -50,13 +50,13 @@ public class AuctionController {
       .create();
 
   /** Kho lưu trữ phiên đấu giá — tái sử dụng KhoLuuTruPhienDauGiaSQLite đã có */
-  private final IKhoLuuTruPhienDauGia khoPhien = new KhoLuuTruPhienDauGiaSQLite();
+  private final IAuctionRepository auctionRepository = new AuctionRepositorySQLite();
 
   /** Kho lưu trữ người dùng — để tra cứu người bán theo email từ token */
-  private final IKhoLuuTruNguoiDung khoNguoiDung = new KhoLuuTruNguoiDungSQLite();
+  private final IUserRepository userRepository = new UserRepositorySQLite();
 
   /** Service xử lý logic đấu giá — tái sử dụng singleton đã có */
-  private final PhienDauGiaService phienDauGiaService = PhienDauGiaService.getInstance();
+  private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
 
   // =========================================================
   // ROUTING — phân phối request đến handler phù hợp
@@ -82,19 +82,19 @@ public class AuctionController {
 
     // GET /api/auctions  → danh sách tất cả
     if (method.equals("GET") && path.equals("/api/auctions")) {
-      handleLayTatCa(exchange);
+      handleFindAll(exchange);
       return;
     }
 
     // GET /api/auctions/{id}  → chi tiết một phiên
     if (method.equals("GET") && path.startsWith("/api/auctions/") && !path.endsWith("/start")) {
-      handleLayMotPhien(exchange, layIdTuPath(path, "/api/auctions/"));
+      handleFindOne(exchange, getIDByPath(path, "/api/auctions/"));
       return;
     }
 
     // POST /api/auctions  → tạo phiên mới
     if (method.equals("POST") && path.equals("/api/auctions")) {
-      handleTaoPhien(exchange);
+      handleCreateAuction(exchange);
       return;
     }
 
@@ -102,11 +102,11 @@ public class AuctionController {
     if (method.equals("PUT") && path.endsWith("/start")) {
       // Trích xuất id từ /api/auctions/{id}/start
       String segment = path.replace("/api/auctions/", "").replace("/start", "");
-      handleBatDauPhien(exchange, segment);
+      handleStartAuction(exchange, segment);
       return;
     }
 
-    guiPhanHoi(exchange, 404, loi("Endpoint không tồn tại: " + method + " " + path));
+    guiPhanHoi(exchange, 404, sendBug("Endpoint không tồn tại: " + method + " " + path));
   }
 
   // =========================================================
@@ -128,19 +128,19 @@ public class AuctionController {
    *   }, ...
    * ]
    */
-  private void handleLayTatCa(HttpExchange exchange) throws IOException {
+  private void handleFindAll(HttpExchange exchange) throws IOException {
     try{
-      Map<String, PhienDauGia> tatCaPhien = khoPhien.layTatCaPhienDauGia();
+      Map<String, AuctionSession> tatCaPhien = auctionRepository.findAll();
 
       List<TomTatPhien> danhSach = new ArrayList<>();
-      for (PhienDauGia phien : tatCaPhien.values()) {
+      for (AuctionSession phien : tatCaPhien.values()) {
         danhSach.add(new TomTatPhien(phien));
       }
 
       guiPhanHoi(exchange, 200, gson.toJson(danhSach));
     }
     catch (Exception e){
-      guiPhanHoi(exchange, 500, loi("Lỗi server: " + e.getMessage()));
+      guiPhanHoi(exchange, 500, sendBug("Lỗi server: " + e.getMessage()));
     }
   }
 
@@ -154,18 +154,18 @@ public class AuctionController {
    * Response 200: { maPhien, tenPhien, giaHienTai, buocGia, trangThai,
    *                 thoiGianBatDau, thoiGianKetThuc, tenNguoiBan,
    *                 tenSanPham, tenNguoiThangCuoc }
-   * Response 404: { "loi": "Không tìm thấy phiên: PH999999" }
+   * Response 404: { "sendBug": "Không tìm thấy phiên: PH999999" }
    */
-  private void handleLayMotPhien(HttpExchange exchange, String maPhien) throws IOException {
+  private void handleFindOne(HttpExchange exchange, String maPhien) throws IOException {
     if (maPhien == null || maPhien.isBlank()) {
-      guiPhanHoi(exchange, 400, loi("Thiếu mã phiên trong URL"));
+      guiPhanHoi(exchange, 400, sendBug("Thiếu mã phiên trong URL"));
       return;
     }
 
-    PhienDauGia phien = khoPhien.layPhienDauGia(maPhien);
+    AuctionSession phien = auctionRepository.findById(maPhien);
 
     if (phien == null) {
-      guiPhanHoi(exchange, 404, loi("Không tìm thấy phiên: " + maPhien));
+      guiPhanHoi(exchange, 404, sendBug("Không tìm thấy phiên: " + maPhien));
       return;
     }
 
@@ -191,32 +191,32 @@ public class AuctionController {
    * }
    *
    * Response 201: { "maPhien": "PH000001", "thongBao": "Tạo phiên thành công" }
-   * Response 400: { "loi": "Thiếu thông tin bắt buộc" }
-   * Response 401: { "loi": "Cần đăng nhập trước" }
+   * Response 400: { "sendBug": "Thiếu thông tin bắt buộc" }
+   * Response 401: { "sendBug": "Cần đăng nhập trước" }
    */
-  private void handleTaoPhien(HttpExchange exchange) throws IOException {
-    NguoiDung nguoiBan = xacThucToken(exchange);
+  private void handleCreateAuction(HttpExchange exchange) throws IOException {
+    User nguoiBan = checkToken(exchange);
     if (nguoiBan == null) return;
 
-    String body = docBody(exchange);
+    String body = readBody(exchange);
     TaoPhienRequest req = gson.fromJson(body, TaoPhienRequest.class);
 
     if (req == null || req.tenPhien == null || req.tenSanPham == null
             || req.maSanPham == null || req.giaKhoiDiem <= 0 || req.thoiGianGiay <= 0) {
-      guiPhanHoi(exchange, 400, loi("Thiếu hoặc sai thông tin bắt buộc"));
+      guiPhanHoi(exchange, 400, sendBug("Thiếu hoặc sai thông tin bắt buộc"));
       return;
     }
 
-    SanPham sanPham = new SanPham(req.tenSanPham, req.maSanPham);
-    PhienDauGia phienMoi = new PhienDauGia(
+    Product sanPham = new Product(req.tenSanPham, req.maSanPham);
+    AuctionSession phienMoi = new AuctionSession(
             null, req.tenPhien, sanPham, req.giaKhoiDiem, nguoiBan, req.thoiGianGiay);
 
-    khoPhien.luuPhienDauGia(phienMoi);
+    auctionRepository.save(phienMoi);
 
     // FIX: Đồng bộ vào in-memory store để WebSocket tìm thấy
-    QuanLyCacPhienService.getInstance().them(phienMoi);
+    AuctionSessionRegistry.getInstance().them(phienMoi);
 
-    String maPhienDaSinh = phienMoi.getMaPhienDauGia();
+    String maPhienDaSinh = phienMoi.getAuctionSessionId();
     guiPhanHoi(exchange, 201,
             gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
   }
@@ -232,35 +232,35 @@ public class AuctionController {
    *          Người gọi phải là người tạo phiên (nguoiBan)
    *
    * Response 200: { "thongBao": "Phiên PH000001 đã bắt đầu" }
-   * Response 400: { "loi": "Phiên không ở trạng thái DANG_CHO" }
-   * Response 403: { "loi": "Bạn không phải người tạo phiên này" }
-   * Response 404: { "loi": "Không tìm thấy phiên: PH999999" }
+   * Response 400: { "sendBug": "Phiên không ở trạng thái DANG_CHO" }
+   * Response 403: { "sendBug": "Bạn không phải người tạo phiên này" }
+   * Response 404: { "sendBug": "Không tìm thấy phiên: PH999999" }
    */
-  private void handleBatDauPhien(HttpExchange exchange, String maPhien) throws IOException {
-    NguoiDung nguoiYeuCau = xacThucToken(exchange);
+  private void handleStartAuction(HttpExchange exchange, String maPhien) throws IOException {
+    User nguoiYeuCau = checkToken(exchange);
     if (nguoiYeuCau == null) return;
 
-    PhienDauGia phien = khoPhien.layPhienDauGia(maPhien);
+    AuctionSession phien = auctionRepository.findById(maPhien);
     if (phien == null) {
-      guiPhanHoi(exchange, 404, loi("Không tìm thấy phiên: " + maPhien));
+      guiPhanHoi(exchange, 404, sendBug("Không tìm thấy phiên: " + maPhien));
       return;
     }
 
-    if (!phien.getNguoiBan().layMaNguoiDung().equals(nguoiYeuCau.layMaNguoiDung())) {
-      guiPhanHoi(exchange, 403, loi("Bạn không phải người tạo phiên này"));
+    if (!phien.getSeller().getUserId().equals(nguoiYeuCau.getUserId())) {
+      guiPhanHoi(exchange, 403, sendBug("Bạn không phải người tạo phiên này"));
       return;
     }
 
-    if (phien.getTrangThai() != TrangThaiPhien.DANG_CHO) {
-      guiPhanHoi(exchange, 400, loi("Phiên không ở trạng thái DANG_CHO"));
+    if (phien.getStatus() != SessionStatus.WAITING) {
+      guiPhanHoi(exchange, 400, sendBug("Phiên không ở trạng thái DANG_CHO"));
       return;
     }
 
-    phienDauGiaService.batDauPhien(phien);
-    khoPhien.capNhatPhienDauGia(phien);
+    auctionSessionService.start(phien);
+    auctionRepository.update(phien);
 
     // FIX: Đảm bảo phiên đang hoạt động được đăng ký để WebSocket tìm thấy
-    QuanLyCacPhienService.getInstance().them(phien);
+    AuctionSessionRegistry.getInstance().them(phien);
 
     guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("Phiên " + maPhien + " đã bắt đầu")));
   }
@@ -275,11 +275,11 @@ public class AuctionController {
    *
    * @return NguoiDung nếu token hợp lệ, null nếu không hợp lệ (đã gửi response lỗi)
    */
-  private NguoiDung xacThucToken(HttpExchange exchange) throws IOException {
+  private User checkToken(HttpExchange exchange) throws IOException {
     String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
 
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      guiPhanHoi(exchange, 401, loi("Cần đăng nhập trước (Authorization: Bearer <token>)"));
+      guiPhanHoi(exchange, 401, sendBug("Cần đăng nhập trước (Authorization: Bearer <token>)"));
       return null;
     }
 
@@ -288,7 +288,7 @@ public class AuctionController {
     // Token format: USER_<email>_<timestamp>
     // Trích xuất email: bỏ "USER_" ở đầu và "_<timestamp>" ở cuối
     if (!token.startsWith("USER_")) {
-      guiPhanHoi(exchange, 401, loi("Token không hợp lệ"));
+      guiPhanHoi(exchange, 401, sendBug("Token không hợp lệ"));
       return null;
     }
 
@@ -296,17 +296,17 @@ public class AuctionController {
     int viTriDauGachDuoiCuoi = phần.lastIndexOf('_');
 
     if (viTriDauGachDuoiCuoi < 0) {
-      guiPhanHoi(exchange, 401, loi("Token không hợp lệ"));
+      guiPhanHoi(exchange, 401, sendBug("Token không hợp lệ"));
       return null;
     }
 
     String email = phần.substring(0, viTriDauGachDuoiCuoi);
 
     // Tra cứu người dùng trong DB
-    NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(email);
+    User nguoiDung = userRepository.findByEmail(email);
 
     if (nguoiDung == null) {
-      guiPhanHoi(exchange, 401, loi("Token không hợp lệ hoặc tài khoản không tồn tại"));
+      guiPhanHoi(exchange, 401, sendBug("Token không hợp lệ hoặc tài khoản không tồn tại"));
       return null;
     }
 
@@ -314,20 +314,20 @@ public class AuctionController {
   }
 
   /** Trích xuất đoạn sau prefix từ URL path */
-  private String layIdTuPath(String path, String prefix) {
+  private String getIDByPath(String path, String prefix) {
     if (!path.startsWith(prefix) || path.length() <= prefix.length()) return null;
     return path.substring(prefix.length());
   }
 
   /** Đọc toàn bộ body từ HTTP request */
-  private String docBody(HttpExchange exchange) throws IOException {
+  private String readBody(HttpExchange exchange) throws IOException {
     InputStream is = exchange.getRequestBody();
     return new String(is.readAllBytes(), StandardCharsets.UTF_8);
   }
 
   /** Tạo JSON lỗi đơn giản */
-  private String loi(String thongBao) {
-    return gson.toJson(new ThongBaoLoi(thongBao));
+  private String sendBug(String thongBao) {
+    return gson.toJson(new ThongBaosendBug(thongBao));
   }
 
   /** Ghi HTTP response với Content-Type: application/json và CORS headers */
@@ -377,15 +377,15 @@ public class AuctionController {
     String thoiGianBatDau;
     String thoiGianKetThuc;
 
-    TomTatPhien(PhienDauGia p) {
-      this.maPhien         = p.getMaPhienDauGia();
-      this.tenPhien        = p.getTenPhienDauGia();
-      this.giaHienTai      = p.getGiaHienTai();
-      this.trangThai       = p.getTrangThai().name();
-      this.tenNguoiBan     = p.getNguoiBan() != null ? p.getNguoiBan().layHoTen() : null;
-      this.tenSanPham      = p.getSanPham()  != null ? p.getSanPham().layTenSanPham() : null;
-      this.thoiGianBatDau  = p.getThoiGianBatDau()  != null ? p.getThoiGianBatDau().toString()  : null;
-      this.thoiGianKetThuc = p.getThoiGianKetThuc() != null ? p.getThoiGianKetThuc().toString() : null;
+    TomTatPhien(AuctionSession p) {
+      this.maPhien         = p.getSessionId();
+      this.tenPhien        = p.getSessionName();
+      this.giaHienTai      = p.getCurrentPrice();
+      this.trangThai       = p.getStatus().name();
+      this.tenNguoiBan     = p.getSeller() != null ? p.getSeller().getFullName() : null;
+      this.tenSanPham      = p.getProduct()  != null ? p.getProduct().getProductName() : null;
+      this.thoiGianBatDau  = p.getStartTime()  != null ? p.getStartTime().toString()  : null;
+      this.thoiGianKetThuc = p.getEndTime() != null ? p.getEndTime().toString() : null;
     }
   }
 
@@ -405,20 +405,20 @@ public class AuctionController {
     String thoiGianKetThuc;
     int    soNguoiTraGia;
 
-    ChiTietPhien(PhienDauGia p) {
-      this.maPhien           = p.getMaPhienDauGia();
-      this.tenPhien          = p.getTenPhienDauGia();
-      this.giaHienTai        = p.getGiaHienTai();
-      this.buocGia           = p.getBuocGia();
-      this.trangThai         = p.getTrangThai().name();
-      this.tenNguoiBan       = p.getNguoiBan()       != null ? p.getNguoiBan().layHoTen()          : null;
-      this.maNguoiBan        = p.getNguoiBan()       != null ? p.getNguoiBan().layMaNguoiDung()     : null;
-      this.tenSanPham        = p.getSanPham()        != null ? p.getSanPham().layTenSanPham()       : null;
-      this.maSanPham         = p.getSanPham()        != null ? p.getSanPham().layMaSanPham()        : null;
-      this.tenNguoiThangCuoc = p.getNguoiThangCuoc() != null ? p.getNguoiThangCuoc().layHoTen()    : null;
-      this.thoiGianBatDau    = p.getThoiGianBatDau()  != null ? p.getThoiGianBatDau().toString()   : null;
-      this.thoiGianKetThuc   = p.getThoiGianKetThuc() != null ? p.getThoiGianKetThuc().toString()  : null;
-      this.soNguoiTraGia     = p.getDanhSachNguoiTraGia() != null ? p.getDanhSachNguoiTraGia().size() : 0;
+    ChiTietPhien(AuctionSession p) {
+      this.maPhien           = p.getSessionId();
+      this.tenPhien          = p.getSessionName();
+      this.giaHienTai        = p.getCurrentPrice();
+      this.buocGia           = p.getPriceStep();
+      this.trangThai         = p.getStatus().name();
+      this.tenNguoiBan       = p.getSeller()       != null ? p.getSeller().getFullName()          : null;
+      this.maNguoiBan        = p.getSeller()       != null ? p.getSeller().getUserId()     : null;
+      this.tenSanPham        = p.getProduct()        != null ? p.getProduct().getProductName()       : null;
+      this.maSanPham         = p.getProduct()        != null ? p.getProduct().getProductCode()        : null;
+      this.tenNguoiThangCuoc = p.getWinner() != null ? p.getWinner().getFullName()    : null;
+      this.thoiGianBatDau    = p.getStartTime()  != null ? p.getStartTime().toString()   : null;
+      this.thoiGianKetThuc   = p.getEndTime() != null ? p.getEndTime().toString()  : null;
+      this.soNguoiTraGia     = p.getBidderList() != null ? p.getBidderList().size() : 0;
     }
   }
 
@@ -429,8 +429,8 @@ public class AuctionController {
   }
 
   /** Wrapper thông báo lỗi */
-  private static class ThongBaoLoi {
-    String loi;
-    ThongBaoLoi(String loi) { this.loi = loi; }
+  private static class ThongBaosendBug {
+    String sendBug;
+    ThongBaosendBug(String sendBug) { this.sendBug = sendBug; }
   }
 }

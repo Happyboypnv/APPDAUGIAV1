@@ -15,7 +15,7 @@ public class SignInController {
 
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField; // nơi nhận vào input của user
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
 
     @FXML
     public void signIn(ActionEvent event) {
