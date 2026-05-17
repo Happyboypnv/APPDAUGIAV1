@@ -21,7 +21,7 @@ public class SignInController {
     public void signIn(ActionEvent event) {
         String email = emailField.getText().trim().toLowerCase(); // email quy về chữ thường hết
         String password = passwordField.getText().trim();
-        LoginAction.getInstance().dangNhap(event, email,password);
+        LoginAction.getInstance().signIn(event, email,password);
     }
 
     @FXML

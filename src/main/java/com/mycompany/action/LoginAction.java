@@ -70,7 +70,7 @@ public class LoginAction {
     // ĐĂNG KÝ — gọi server qua ApiClient
     // ================================================================
     @FXML
-    public void dangKy(ActionEvent event, String name, String email, String password, LocalDate birthdate) {
+    public void signUp(ActionEvent event, String name, String email, String password, LocalDate birthdate) {
         try {
             if (lock.tryLock(500, TimeUnit.MILLISECONDS)) {
                 try {
@@ -139,7 +139,7 @@ public class LoginAction {
     // ĐĂNG NHẬP — gọi server qua ApiClient
     // ================================================================
     @FXML
-    public void dangNhap(ActionEvent event, String email, String password) {
+    public void signIn(ActionEvent event, String email, String password) {
         try {
             if (lock.tryLock(500, TimeUnit.MILLISECONDS)) {
                 try {
@@ -161,8 +161,26 @@ public class LoginAction {
                     // Lấy thông tin user từ DB local để tạo object NguoiDung
                     User user = userRepository.findByEmail(email);
 
-                    // Token local (Base64) — dùng để đọc thông tin profile, finance...
-                    String localToken = TokenUtil.generateToken(user);
+                    if (user == null) {
+                        // User exists on server but not in local DB
+                        // Build a minimal User from the server response
+                        user = new User(
+                                response.getHoTen(),  // full name from server
+                                email,
+                                "",                   // no password needed locally
+                                ""                    // no birthdate needed locally
+                        );
+                        // Save to local DB so next login works offline
+                        userRepository.save(user);
+                        // Re-fetch to get the generated local ID
+                        user = userRepository.findByEmail(email);
+                    }
+
+                    if (user == null) {
+                        throw new UserException("Không thể tạo session người dùng!");
+                    }
+
+                    String localToken = TokenUtil.generateToken(user); // ✅ no longer crashes
 
                     // Lưu session
                     SessionManager.getInstance().setSession(user, localToken);
