@@ -1,11 +1,10 @@
 package com.mycompany.server.controller;
 
 import com.google.gson.Gson;
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import com.mycompany.server.dto.LoginRequest;
 import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.server.dto.RegisterRequest;
-import com.mycompany.utils.BoMaHoaMatKhau;
 import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.PasswordEncoder;
 import com.mycompany.utils.UserRepositorySQLite;
@@ -40,7 +39,7 @@ public class UserController {
      * Kho lưu trữ người dùng dùng SQLite.
      * Dùng cùng database với phần JavaFX → dữ liệu đồng bộ hoàn toàn.
      */
-    private final IUserRepository khoNguoiDung = new UserRepositorySQLite();
+    private final IUserRepository userRepository = new UserRepositorySQLite();
 
     // =========================================================
     // API 1: POST /api/users/login  →  trả về token
@@ -72,7 +71,7 @@ public class UserController {
         }
 
         // Đọc và parse JSON body
-        String body = docBody(exchange);
+        String body = readBody(exchange);
         LoginRequest req = gson.fromJson(body, LoginRequest.class);
 
         if (req == null || req.getEmail() == null || req.getMatKhau() == null) {
@@ -81,7 +80,7 @@ public class UserController {
         }
 
         // kiemTraNguoiDung() tự động hash matKhau với salt rồi so sánh với DB
-        boolean hopLe = khoNguoiDung.kiemTraNguoiDung(req.getEmail(), req.getMatKhau());
+        boolean hopLe = userRepository.verifyCredentials(req.getEmail(), req.getMatKhau());
 
         if (!hopLe) {
             guiPhanHoi(exchange, 401, gson.toJson(new LoginResponse("Sai email hoặc mật khẩu")));
@@ -90,8 +89,8 @@ public class UserController {
 
         // Đăng nhập thành công → tạo token + lấy họ tên
         String token = "USER_" + req.getEmail() + "_" + System.currentTimeMillis();
-        NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(req.getEmail());
-        String hoTen = (nguoiDung != null) ? nguoiDung.layHoTen() : "";
+        User nguoiDung = userRepository.findByEmail(req.getEmail());
+        String hoTen = (nguoiDung != null) ? nguoiDung.getFullName() : "";
 
         guiPhanHoi(exchange, 200,
                 gson.toJson(new LoginResponse(token, req.getEmail(), hoTen, "Đăng nhập thành công")));
@@ -125,7 +124,7 @@ public class UserController {
             return;
         }
 
-        String body = docBody(exchange);
+        String body = readBody(exchange);
         RegisterRequest req = gson.fromJson(body, RegisterRequest.class);
 
         // Kiểm tra các trường bắt buộc
@@ -138,7 +137,7 @@ public class UserController {
 
         // Kiểm tra email đã tồn tại chưa
         // kiemTraEmail() trả true nếu email CHƯA có → cho phép đăng ký
-        if (!khoNguoiDung.isEmailAvailable(req.getEmail())) {
+        if (!userRepository.isEmailAvailable(req.getEmail())) {
             guiPhanHoi(exchange, 400,
                     gson.toJson(new LoginResponse("Email đã tồn tại trong hệ thống")));
             return;
@@ -149,7 +148,7 @@ public class UserController {
         String matKhauDaHash  = PasswordEncoder.passwordEncoder(req.getMatKhau(), salt);
 
         // Tạo NguoiDung với mật khẩu đã hash
-        NguoiDung nguoiDungMoi = new NguoiDung(
+        User nguoiDungMoi = new User(
                 req.getHoTen(),
                 req.getEmail(),
                 matKhauDaHash,   // lưu hash, KHÔNG lưu plain text
@@ -158,7 +157,7 @@ public class UserController {
         // Set salt vào object để KhoLuuTruNguoiDungSQLite lưu vào DB
         nguoiDungMoi.setSalt(salt);
 
-        khoNguoiDung.luu(nguoiDungMoi);
+        userRepository.save(nguoiDungMoi);
 
         guiPhanHoi(exchange, 201, gson.toJson(new LoginResponse("Đăng ký thành công")));
     }
@@ -203,7 +202,7 @@ public class UserController {
 
         String email = path.substring(prefix.length());
 
-       NguoiDung nguoiDung = khoNguoiDung.layTheoEmail(email);
+       User nguoiDung = userRepository.findByEmail(email);
         if (nguoiDung == null) {
             guiPhanHoi(exchange, 404,
                     gson.toJson(new LoginResponse("Không tìm thấy người dùng: " + email)));
@@ -231,14 +230,14 @@ public class UserController {
         String soDienThoai;
         double soDuKhaDung;
 
-        ThongTinNguoiDung(NguoiDung nd) {
-            this.maNguoiDung  = nd.layMaNguoiDung();
-            this.hoTen        = nd.layHoTen();
-            this.email        = nd.layThuDienTu();
-            this.ngaySinh     = nd.layNgaySinh();
-            this.diaChi       = nd.getDiaChi();
-            this.soDienThoai  = nd.getSoDienThoai();
-            this.soDuKhaDung  = nd.getSoDuKhaDung();
+        ThongTinNguoiDung(User nd) {
+            this.maNguoiDung  = nd.getUserId();
+            this.hoTen        = nd.getFullName();
+            this.email        = nd.getEmail();
+            this.ngaySinh     = nd.getDateOfBirth();
+            this.diaChi       = nd.getAddress();
+            this.soDienThoai  = nd.getPhoneNumber();
+            this.soDuKhaDung  = nd.getAvailableBalance();
         }
     }
 
@@ -247,7 +246,7 @@ public class UserController {
     // =========================================================
 
     /** Đọc toàn bộ body từ HTTP request */
-    private String docBody(HttpExchange exchange) throws IOException {
+    private String readBody(HttpExchange exchange) throws IOException {
         InputStream is = exchange.getRequestBody();
         return new String(is.readAllBytes(), StandardCharsets.UTF_8);
     }

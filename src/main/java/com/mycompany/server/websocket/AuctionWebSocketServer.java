@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mycompany.action.AuctionSessionService;
 import com.mycompany.action.AuctionSessionRegistry;
-import com.mycompany.models.NguoiDung;
-import com.mycompany.models.PhienDauGia;
+import com.mycompany.models.AuctionSession;
+import com.mycompany.models.User;
 import com.mycompany.utils.UserRepositorySQLite;
 import com.mycompany.utils.AuctionRepositorySQLite;
 import org.java_websocket.WebSocket;
@@ -42,8 +42,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * - PhienDauGiaService.setPrice() phải thread-safe
  */
 public class AuctionWebSocketServer extends WebSocketServer {
-    private final UserRepositorySQLite khoLuuTruNguoiDungSQLite = new UserRepositorySQLite();
-    private final AuctionRepositorySQLite khoPhienDauGia = new AuctionRepositorySQLite();
+    private final UserRepositorySQLite userRepositorySQLite = new UserRepositorySQLite();
+    private final AuctionRepositorySQLite auctionRepositorySQLite = new AuctionRepositorySQLite();
     private final static Logger logger = LoggerFactory.getLogger(AuctionWebSocketServer.class);
     // ===== THREAD-SAFE DATA STRUCTURES =====
 
@@ -60,7 +60,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
     private final Gson gson = new Gson();
 
     // PhienDauGiaService instance (giả sử là singleton)
-    private final AuctionSessionService phienService = AuctionSessionService.getInstance();
+    private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
 
     /**
      * Constructor: Khởi tạo WebSocket Server ở port 8081
@@ -244,7 +244,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             String email = json.get("email").getAsString();
             double giaRa = json.get("giaRa").getAsDouble();
 
-            PhienDauGia phienHienTai = AuctionSessionRegistry.getInstance().tim(phienId);
+            AuctionSession phienHienTai = AuctionSessionRegistry.getInstance().tim(phienId);
 
             // FIX: Null check thay vì NPE
             if (phienHienTai == null) {
@@ -253,14 +253,14 @@ public class AuctionWebSocketServer extends WebSocketServer {
             }
 
             // FIX: Lấy giá SAU khi setPrice thành công, không phải trước
-            NguoiDung nguoiMua = khoLuuTruNguoiDungSQLite.layTheoEmail(email);
-            if (nguoiMua == null) {
+            User bidder = userRepositorySQLite.findByEmail(email);
+            if (bidder == null) {
                 sendError(conn, "Người dùng không tồn tại");
                 return;
             }
-            boolean bidIsCompleted = phienService.setPrice(
+            boolean bidIsCompleted = auctionSessionService.setPrice(
                     phienHienTai,
-                    khoLuuTruNguoiDungSQLite.layTheoEmail(email),
+                    userRepositorySQLite.findByEmail(email),
                     giaRa
             );
 
@@ -271,10 +271,10 @@ public class AuctionWebSocketServer extends WebSocketServer {
             response.addProperty("timestamp", System.currentTimeMillis());
 
             if (bidIsCompleted) {
-                khoPhienDauGia.capNhatPhienDauGia(phienHienTai);
+                auctionRepositorySQLite.update(phienHienTai);
                 response.addProperty("status", "SUCCESS");
                 // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
-                response.addProperty("currentPrice", phienHienTai.getGiaHienTai());
+                response.addProperty("currentPrice", phienHienTai.getCurrentPrice());
             } else {
                 response.addProperty("status", "FAILED");
                 response.addProperty("message", "Giá không hợp lệ hoặc phiên đã kết thúc");

@@ -262,7 +262,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      */
     public void sendBid(String phienId, double giaRa) {
         try {
-            String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+            String email = SessionManager.getInstance().getCurrentUser().getEmail();
             AuctionWebSocketClient client = AuctionWebSocketClient.getInstance();
 
             if (!client.isConnected()) {
