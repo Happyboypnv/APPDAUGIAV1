@@ -244,7 +244,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             String email = json.get("email").getAsString();
             double giaRa = json.get("giaRa").getAsDouble();
 
-            AuctionSession phienHienTai = AuctionSessionRegistry.getInstance().tim(phienId);
+            AuctionSession phienHienTai = AuctionSessionRegistry.getInstance().find(phienId);
 
             // FIX: Null check thay vì NPE
             if (phienHienTai == null) {

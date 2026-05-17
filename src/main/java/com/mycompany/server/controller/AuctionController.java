@@ -214,7 +214,7 @@ public class AuctionController {
     auctionRepository.save(phienMoi);
 
     // FIX: Đồng bộ vào in-memory store để WebSocket tìm thấy
-    AuctionSessionRegistry.getInstance().them(phienMoi);
+    AuctionSessionRegistry.getInstance().add(phienMoi);
 
     String maPhienDaSinh = phienMoi.getAuctionSessionId();
     guiPhanHoi(exchange, 201,
@@ -260,7 +260,7 @@ public class AuctionController {
     auctionRepository.update(phien);
 
     // FIX: Đảm bảo phiên đang hoạt động được đăng ký để WebSocket tìm thấy
-    AuctionSessionRegistry.getInstance().them(phien);
+    AuctionSessionRegistry.getInstance().add(phien);
 
     guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("Phiên " + maPhien + " đã bắt đầu")));
   }

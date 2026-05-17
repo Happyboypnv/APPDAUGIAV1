@@ -40,8 +40,8 @@ public class AuctionSessionService {
             if (auction.getStatus() != SessionStatus.WAITING) return;
 
             LocalDateTime now = LocalDateTime.now();
-            auction.setEndTime(now);
-            auction.setStartTime(now.plusSeconds(auction.getTime()));
+            auction.setStartTime(now);
+            auction.setEndTime(now.plusSeconds(auction.getDuration()));
             auction.setStatus(SessionStatus.IN_PROGRESS);
 
             auctionScheduler.setTimeCancelAuction(auction);
@@ -68,7 +68,7 @@ public class AuctionSessionService {
                 auctionScheduler.cancel(auction);
             }
 
-            auctionSessionRegistry.xoa(auction);
+            auctionSessionRegistry.delete(auction);
             // Lưu ý: Không xóa lock khỏi Map locks để tránh lỗi đồng bộ
         }
     }

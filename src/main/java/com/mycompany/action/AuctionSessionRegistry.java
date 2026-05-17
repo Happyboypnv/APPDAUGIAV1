@@ -26,19 +26,19 @@ public class AuctionSessionRegistry {
 
     private final Map<String, AuctionSession> listAuction = new ConcurrentHashMap<>();
 
-    public void them(AuctionSession phien) {
+    public void add(AuctionSession phien) {
         listAuction.putIfAbsent(phien.getSessionId(), phien);
     }
 
-    public void xoa(AuctionSession phien) {
+    public void delete(AuctionSession phien) {
         listAuction.remove(phien.getSessionId());
     }
 
-    public void xoa(String maPhien) {
+    public void delete(String maPhien) {
         listAuction.remove(maPhien);
     }
 
-    public AuctionSession tim(String maPhien) {
+    public AuctionSession find(String maPhien) {
         return listAuction.get(maPhien);
     }
 }

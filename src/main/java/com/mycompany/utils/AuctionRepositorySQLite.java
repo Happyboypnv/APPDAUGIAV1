@@ -29,8 +29,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
      */
     private String RandNewAuctionId(){
         synchronized (AUCTION_ID_GENERATION_LOCK) {
-            String sql = "SELECT MAX(CAST(SUBSTR(ma_auction, 3) AS INTEGER)) " +
-                    "FROM auction_dau_gia";
+            String sql = "SELECT MAX(CAST(SUBSTR(ma_phien, 3) AS INTEGER)) " +
+                    "FROM phien_dau_gia";
             try (Statement stmt = DatabaseConnection.getConnection().createStatement();
                  ResultSet rs   = stmt.executeQuery(sql)) {
                 if (rs.next()) {
@@ -69,7 +69,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
         String auctionId = RandNewAuctionId();
         AuctionSession.setSessionId(auctionId);
 
-        // FIX: Bảng san_pham phải có bản ghi trước khi auction_dau_gia tham chiếu đến nó (FOREIGN KEY).
+        // FIX: Bảng san_pham phải có bản ghi trước khi phien_dau_gia tham chiếu đến nó (FOREIGN KEY).
         // Trước đây không có chỗ nào INSERT vào san_pham → SQLITE_CONSTRAINT_FOREIGNKEY.
         // Dùng INSERT OR IGNORE để an toàn: nếu maProduct đã tồn tại thì bỏ qua, không lỗi.
         String sqlProduct = "INSERT OR IGNORE INTO san_pham (ma_san_pham, ten_san_pham) VALUES (?, ?)";
@@ -85,7 +85,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
         }
 
         /// insert vao database
-        String sql = "INSERT INTO auction_dau_gia " + "(ma_auction, ten_auction, gia_hien_tai, buoc_gia, thoi_gian_bat_dau, thoi_gian_ket_thuc, trang_thai, ma_nguoi_ban, ma_san_pham, ma_nguoi_thang_cuoc, is_closed) " +
+        String sql = "INSERT INTO phien_dau_gia " + "(ma_phien, ten_phien, gia_hien_tai, buoc_gia, thoi_gian_bat_dau, thoi_gian_ket_thuc, trang_thai, ma_nguoi_ban, ma_san_pham, ma_nguoi_thang_cuoc, is_closed) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)){
             ps.setString(1, AuctionSession.getAuctionSessionId());
@@ -126,15 +126,15 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
             "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
             "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
             "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
-            "FROM auction_dau_gia p " +
+            "FROM phien_dau_gia p " +
             "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
             "LEFT JOIN san_pham sp ON p.ma_san_pham = sp.ma_san_pham " +
             "LEFT JOIN nguoi_dung ntc ON p.ma_nguoi_thang_cuoc = ntc.ma_nguoi_dung";
         /**
-         * SELECT p.*   /// lay toan bo cot trong bang auction_dau_gia
+         * SELECT p.*   /// lay toan bo cot trong bang phien_dau_gia
          * chu y : SELECT * la lay tat ca cot tu moi bang
          * vd : neu lay nhu logic o cau lenh tren thi se lay ra 2 lan bang nguoi_dung -> khi goi rs.getString("ho_ten") java se khong doan duoc la lay gia tri o bang nao -> bug
-         * con SELECT p.* lay tu du tự do bằng * voiws bảng auction_dau_gia còn với các bảng JOIN khác thì chỉ lấy những cột cần thiết và đặt alias để tránh trùng tên cột giữa các bảng
+         * con SELECT p.* lay tu du tự do bằng * voiws bảng phien_dau_gia còn với các bảng JOIN khác thì chỉ lấy những cột cần thiết và đặt alias để tránh trùng tên cột giữa các bảng
          * vì phiên có thể chưa co người thang cuoc nen dung LEFT JOIN de lay du lieu tu bang nguoi_dung (ntc) neu co, neu khong co thi se tra ve null thay vi bi loai bo auction do
          */
         try (Statement stmt = DatabaseConnection.getConnection().createStatement();
@@ -161,8 +161,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
                 }
                 // Create AuctionSession
                 AuctionSession AuctionSession = new AuctionSession(
-                    rs.getString("ma_auction"),
-                    rs.getString("ten_auction"),
+                    rs.getString("ma_phien"),
+                    rs.getString("ten_phien"),
                     Product,
                     rs.getDouble("gia_hien_tai"),
                     seller
@@ -190,11 +190,11 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
             "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
             "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
             "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
-            "FROM auction_dau_gia p " +
+            "FROM phien_dau_gia p " +
             "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
             "LEFT JOIN san_pham sp ON p.ma_san_pham = sp.ma_san_pham " +
             "LEFT JOIN nguoi_dung ntc ON p.ma_nguoi_thang_cuoc = ntc.ma_nguoi_dung " +
-            "WHERE p.ma_auction = ?";
+            "WHERE p.ma_phien = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, auctionId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -220,8 +220,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
                     }
                     // Create AuctionSession
                     AuctionSession auction = new AuctionSession(
-                        rs.getString("ma_auction"),
-                        rs.getString("ten_auction"),
+                        rs.getString("ma_phien"),
+                        rs.getString("ten_phien"),
                         product,
                         rs.getDouble("gia_hien_tai"),
                         seller
@@ -243,7 +243,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
 
     @Override
     public boolean update(AuctionSession AuctionSession) {
-        String sql = "UPDATE auction_dau_gia SET ten_auction = ?, gia_hien_tai = ?, buoc_gia = ?, thoi_gian_bat_dau = ?, thoi_gian_ket_thuc = ?, trang_thai = ?, ma_nguoi_ban = ?, ma_san_pham = ?, ma_nguoi_thang_cuoc = ?, is_closed = ? WHERE ma_auction = ?";
+        String sql = "UPDATE phien_dau_gia SET ten_phien = ?, gia_hien_tai = ?, buoc_gia = ?, thoi_gian_bat_dau = ?, thoi_gian_ket_thuc = ?, trang_thai = ?, ma_nguoi_ban = ?, ma_san_pham = ?, ma_nguoi_thang_cuoc = ?, is_closed = ? WHERE ma_phien = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, AuctionSession.getSessionName());
             ps.setDouble(2, AuctionSession.getCurrentPrice());
@@ -267,7 +267,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
 
     @Override
     public boolean delete(String auctionId) {
-        String sql = "DELETE FROM auction_dau_gia WHERE ma_auction = ?";
+        String sql = "DELETE FROM phien_dau_gia WHERE ma_phien = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, auctionId);
             int rows = ps.executeUpdate();
@@ -281,7 +281,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
 
     @Override
     public boolean isAuctionAvailable(String auctionId) {
-        String sql = "SELECT COUNT(*) FROM auction_dau_gia WHERE ma_auction = ?";
+        String sql = "SELECT COUNT(*) FROM phien_dau_gia WHERE ma_phien = ?";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, auctionId);
             try (ResultSet rs = ps.executeQuery()) {
