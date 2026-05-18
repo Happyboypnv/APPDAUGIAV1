@@ -348,12 +348,22 @@ public class AuctionController {
   // =========================================================
 
   /** Request body cho POST /api/auctions */
-  private static class TaoPhienRequest {
+  public static class TaoPhienRequest {
     String tenPhien;
     String tenSanPham;
     String maSanPham;
+    String danhMuc;
+    String moTa;
     double giaKhoiDiem;
     int    thoiGianGiay;
+
+    public TaoPhienRequest(String tenPhien, String tenSanPham, String maSanPham, String danhMuc, String moTa, double giaKhoiDiem, int thoiGianGiay) {
+      this.tenPhien = tenPhien;
+      this.tenSanPham = tenSanPham;
+      this.maSanPham = maSanPham;
+      this.giaKhoiDiem = giaKhoiDiem;
+      this.thoiGianGiay = thoiGianGiay;
+    }
   }
 
   /** Response cho POST /api/auctions thành công */

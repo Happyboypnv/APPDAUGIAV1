@@ -1,6 +1,7 @@
 package com.mycompany.utils;
 
 import com.google.gson.Gson;
+import com.mycompany.server.controller.AuctionController;
 import com.mycompany.server.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,13 +141,23 @@ public class ApiClient {
         return gson.fromJson(responseJson, LoginResponse.class);
     }
     public static DatGiaResponse createBid(String maPhien, double gia, String token) {
-        String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
-            put("maPhien", maPhien);
-            put("gia", gia);
-        }});
-        String responseJson = guiPost("/api/bids", jsonBody, token); // đúng endpoint
-        if (responseJson == null) return null;
-        return gson.fromJson(responseJson, DatGiaResponse.class);
+        try {
+            // Build request body explicitly (avoid anonymous initializer issues)
+            DatGiaRequest request = new DatGiaRequest(maPhien,gia);
+            
+            String jsonBody = gson.toJson(request);
+            if (jsonBody == null || jsonBody.equals("null")) {
+                logger.error("[createBid] ❌ JSON serialization failed, got null");
+                return null;
+            }
+            
+            String responseJson = guiPost("/api/bids", jsonBody, token);
+            if (responseJson == null) return null;
+            return gson.fromJson(responseJson, DatGiaResponse.class);
+        } catch (Exception e) {
+            logger.error("[createBid] ❌ Exception in createBid: " + e.getMessage(), e);
+            return null;
+        }
     }
     public static List<PhienDauGiaDTO> getAuctions() {
         String responseJson = guiGet("/api/auctions", null);
@@ -188,31 +199,36 @@ public class ApiClient {
     public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
                                         String danhMuc, String moTa,         // ← thêm 2 dòng này
                                         double giaKhoiDiem, int thoiGianGiay, String token) {
-        String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
-            put("tenPhien",     tenPhien);
-            put("tenSanPham",   tenSanPham);
-            put("maSanPham",    maSanPham);
-            put("danhMuc",      danhMuc);    // ← thêm
-            put("moTa",         moTa);       // ← thêm
-            put("giaKhoiDiem",  giaKhoiDiem);
-            put("thoiGianGiay", thoiGianGiay);
-        }});
-        logger.info("[createAuction] JSON gửi lên: " + jsonBody);
-        logger.info("[createAuction] Token: " + token);
-        String responseJson = guiPost("/api/auctions", jsonBody, token);
-
-        if (responseJson == null) return false;
-        logger.info("[createAuction] Server trả về: " + responseJson);
         try {
-            com.google.gson.JsonObject obj = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
-            if (!obj.has("maPhien")) {
-                // Log ra lỗi thật sự từ server thay vì im lặng
-                logger.error("[ApiClient] Server từ chối tạo phiên: " + responseJson);
+            // Build request body explicitly (avoid anonymous initializer issues)
+            AuctionController.TaoPhienRequest request = new AuctionController.TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,giaKhoiDiem,thoiGianGiay);
+
+            String jsonBody = gson.toJson(request);
+            if (jsonBody == null || jsonBody.equals("null")) {
+                logger.error("[createAuction] ❌ JSON serialization failed, got null");
                 return false;
             }
-            return true;
+
+            logger.info("[createAuction] JSON gửi lên: " + jsonBody);
+            logger.info("[createAuction] Token: " + token);
+            String responseJson = guiPost("/api/auctions", jsonBody, token);
+
+            if (responseJson == null) return false;
+            logger.info("[createAuction] Server trả về: " + responseJson);
+            try {
+                com.google.gson.JsonObject obj = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
+                if (!obj.has("maPhien")) {
+                    // Log ra lỗi thật sự từ server thay vì im lặng
+                    logger.error("[ApiClient] Server từ chối tạo phiên: " + responseJson);
+                    return false;
+                }
+                return true;
+            } catch (Exception e) {
+                logger.error("[ApiClient] Lỗi parse createAuction response: " + e.getMessage());
+                return false;
+            }
         } catch (Exception e) {
-            logger.error("[ApiClient] Lỗi parse createAuction response: " + e.getMessage());
+            logger.error("[createAuction] ❌ Exception in createAuction: " + e.getMessage(), e);
             return false;
         }
     }

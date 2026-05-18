@@ -71,3 +71,6 @@
 2026-05-18 22:34:00.739 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
   "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
 }
+2026-05-18 22:43:10.513 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
+}
