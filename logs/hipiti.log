@@ -235,3 +235,73 @@
 2026-05-18 14:20:24.081 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: WrongPass2!
 2026-05-18 14:20:24.086 [main] INFO  c.m.utils.UserRepositorySQLite -  Không tìm thấy user với email: nonexistent@test.com
 2026-05-18 14:20:24.095 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: test001@test.com
+2026-05-18 15:07:51.963 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
+2026-05-18 15:07:52.403 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 15:07:52.406 [main] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
+2026-05-18 15:07:52.407 [main] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột so_tai_khoan_ngan_hang đã tồn tại.
+2026-05-18 15:07:52.407 [main] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột ten_ngan_hang đã tồn tại.
+2026-05-18 15:07:52.408 [main] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
+2026-05-18 15:07:52.456 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 15:07:52.461 [main] INFO  com.mycompany.server.ServerApp - ✅ Loaded 0 active sessions into registry
+2026-05-18 15:07:52.464 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-18 15:07:52.465 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-18 15:07:52.848 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-18 15:07:52.861 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-18 15:07:54.304 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-18 15:07:54.305 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-18 15:08:04.500 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-18 15:08:04.505 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
+2026-05-18 15:08:04.779 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 15:08:04.781 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
+2026-05-18 15:08:04.782 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột so_tai_khoan_ngan_hang đã tồn tại.
+2026-05-18 15:08:04.782 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột ten_ngan_hang đã tồn tại.
+2026-05-18 15:08:04.782 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
+2026-05-18 15:08:04.783 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-18 15:08:04.783 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-18 15:08:04.785 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-18 15:08:04.787 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 15:08:04.789 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-18 15:08:04.789 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-18 15:08:22.944 [pool-1-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 15:08:22.949 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: phong@gmail.com
+2026-05-18 15:08:22.950 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: NH+DBB4OxHxT77F3gE9UntEKZB0bgxVhxHi3geIfvMM=
+2026-05-18 15:08:22.950 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: gfvWq1hmnHHestLZgT3HxQ==
+2026-05-18 15:08:22.950 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: @Phong2007
+2026-05-18 15:08:24.643 [pool-1-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 15:08:49.353 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: null
+2026-05-18 15:08:49.353 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_phong@gmail.com_1779091702953
+2026-05-18 15:08:49.357 [pool-1-thread-5] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 15:08:49.401 [Thread-5] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
+  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-18 15:08:49.403 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-18 15:10:08.403 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-18 15:10:08.404 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-18 15:10:29.485 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-18 15:10:29.486 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
