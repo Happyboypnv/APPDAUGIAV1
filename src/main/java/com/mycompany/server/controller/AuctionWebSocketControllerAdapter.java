@@ -132,7 +132,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             String status = message.get("status").getAsString();
             if ("SUCCESS".equalsIgnoreCase(status)) {
                 double newPrice = message.get("currentPrice").getAsDouble();
-                String bidder = message.get("userId").getAsString();
+                String bidder = message.get("email").getAsString();
 
                 // ← gọi method mới thay vì tự set label
                 controller.syncNewPrice(newPrice, bidder);

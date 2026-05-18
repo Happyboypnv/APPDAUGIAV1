@@ -118,10 +118,6 @@ public class AuctionSessionService {
 
             // Hoàn lại tiền cho người trả giá cao nhất trước đó (nếu có)
             // TODO: Logic refund cho auction.getNguoiTraGiaCaoNhat()
-
-            auction.addBidder(bidder);
-            bidder.setAvailableBalance(bidder.getAvailableBalance() - gia);
-
             // ✅ SAU - xử lý đúng cả 2 trường hợp
 // Bước 5 trong setPrice():
 
