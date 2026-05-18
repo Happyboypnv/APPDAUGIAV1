@@ -37,7 +37,7 @@ public class AuctionSessionService {
     }
 
     public void start(AuctionSession auction) {
-        synchronized (getLock(auction.getAuctionSessionId())) {
+        synchronized (getLock(auction.getSessionId())) {
             if (auction.getStatus() != SessionStatus.WAITING) return;
 
             LocalDateTime now = LocalDateTime.now();
@@ -117,19 +117,16 @@ public class AuctionSessionService {
             }
 
             // Hoàn lại tiền cho người trả giá cao nhất trước đó (nếu có)
-            // TODO: Logic refund cho auction.getNguoiTraGiaCaoNhat()
-            // ✅ SAU - xử lý đúng cả 2 trường hợp
-// Bước 5 trong setPrice():
-
-// Hoàn tiền cho người đứng đầu trước (nếu có và khác người hiện tại)
-            List<User> bidders = auction.getBidderList();
+            // FIX BUG #4: Use snapshot of bidders list BEFORE adding new bidder
+            // This correctly identifies the previous leader for refund
+            List<User> biddersBeforeAdd = auction.getBidderList();
             double oldPrice = auction.getCurrentPrice(); // lưu giá cũ TRƯỚC khi thêm bidder
 
-// Thêm bidder vào danh sách
+            // Thêm bidder vào danh sách
             auction.addBidder(bidder);
 
-            if (bidders.size() >= 1) { // size TRƯỚC khi add → người trước đó
-                User previousLeader = bidders.get(bidders.size() - 1);
+            if (biddersBeforeAdd.size() >= 1) { // size TRƯỚC khi add → người trước đó
+                User previousLeader = biddersBeforeAdd.get(biddersBeforeAdd.size() - 1);
 
                 if (!previousLeader.getUserId().equals(bidder.getUserId())) {
                     // Người khác đang dẫn đầu → hoàn tiền cho họ

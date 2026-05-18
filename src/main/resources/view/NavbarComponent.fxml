@@ -48,7 +48,7 @@
       </Label>
       <ImageView fx:id="avatarImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#handleAvatarClick" pickOnBounds="true" preserveRatio="true">
          <VBox.margin>
-            <Insets top="360.0" />
+            <Insets top="450.0" />
          </VBox.margin>
          <image>
             <Image url="@../image/default_avatar.jpg" />

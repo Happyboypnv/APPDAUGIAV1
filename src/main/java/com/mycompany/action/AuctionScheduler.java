@@ -33,7 +33,7 @@ public class AuctionScheduler {
     private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
 
     public void setTimeCancelAuction(AuctionSession phien) {
-        String maPhien = phien.getAuctionSessionId();
+        String maPhien = phien.getSessionId();
         long delay = java.time.Duration.between(LocalDateTime.now(), phien.getEndTime()).toSeconds();
         if (delay <= 0) return;
 
@@ -51,7 +51,7 @@ public class AuctionScheduler {
         }
     }
     public void closeAuction(AuctionSession phien) {
-        String maPhien = phien.getAuctionSessionId();
+        String maPhien = phien.getSessionId();
 
         auctionSessionService.closeAuction(phien, SessionStatus.PAID);
         scheduledFutures.remove(maPhien);

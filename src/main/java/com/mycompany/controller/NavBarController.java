@@ -2,6 +2,8 @@ package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.HomeAction;
+import com.mycompany.models.User;
+import com.mycompany.utils.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -93,8 +96,9 @@ public class NavBarController implements Initializable { // Controller chung cho
         // 🔹 BƯỚC 1: Load và set avatar image
         // getClass().getResource() tìm file trong resources folder
         // toExternalForm() chuyển URL thành string path
-        Image avt = new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm());
-        avatarImage.setImage(avt);
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+
+        loadAvatarImage(currentUser);
 
         // 🔹 BƯỚC 2: Tạo hình tròn cho avatar
         // Circle(centerX, centerY, radius) - tâm ở (20,20), bán kính 20
@@ -117,6 +121,45 @@ public class NavBarController implements Initializable { // Controller chung cho
         Image home = new Image(getClass().getResource("/image/square.png").toExternalForm());
         homeIcon.setImage(home);
     }
+    private void loadAvatarImage(User currentUser) {
+        try {
+            String avatarPath;
+            if (currentUser != null && currentUser.getAvatarPath() != null) {
+                avatarPath = currentUser.getAvatarPath();
+            } else {
+                avatarPath = "image/default_avatar.jpg";
+                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING,"Ko tìm thấy đường dẫn", "Không lấy được đường dẫn từ user!");
+            }
+
+            // Trường hợp 1: Nếu là ảnh mặc định ban đầu -> Đọc từ resource tĩnh của bạn
+            if (avatarPath.equals("image/default_avatar.jpg")) {
+                URL resourceUrl = getClass().getResource("/" + avatarPath);
+                if (resourceUrl != null) {
+                    avatarImage.setImage(new Image(resourceUrl.toExternalForm()));
+                }
+            }
+            // Trường hợp 2: Nếu là ảnh do user thay đổi -> Đọc từ thư mục lưu trữ vĩnh viễn trong dự án
+            else {
+                String projectDir = System.getProperty("user.dir");
+                File externalFile = new File(projectDir + File.separator + "user_data" + File.separator + avatarPath);
+
+                if (externalFile.exists()) {
+                    avatarImage.setImage(new Image(externalFile.toURI().toString()));
+                } else {
+                    // Nếu không tìm thấy file, quay về ảnh mặc định trong resource
+                    avatarImage.setImage(new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm()));
+                }
+            }
+        } catch (Exception e) {
+            // If any error, use default avatar
+            try {
+                Image avt = new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm());
+                avatarImage.setImage(avt);
+            } catch (Exception ignored) {}
+            }
+    }
+
+
 
     /**
      * PHƯƠNG THỨC: returnToHome(MouseEvent event)

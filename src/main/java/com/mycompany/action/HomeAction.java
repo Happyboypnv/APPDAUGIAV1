@@ -1,5 +1,6 @@
 package com.mycompany.action;
 
+import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.UserRepositorySQLite;
 import javafx.fxml.FXML; // Quan trọng
 import javafx.fxml.FXMLLoader; // Quan trọng
@@ -84,8 +85,25 @@ public class HomeAction {
      */
     @FXML
     public void logOut(Stage stage) throws IOException {
+        String email = SessionManager.getInstance().getCurrentUser().getEmail();
+
         if (SessionManager.getInstance().isLoggedIn()) {
+            // Get server token BEFORE clearing local session so we can inform server
+            String token = SessionManager.getInstance().getServerToken();
+
+            // Attempt server-side logout if we have a token
+            if (token != null && !token.isEmpty()) {
+                try {
+                    ApiClient.logout(token);
+                } catch (Exception ignored) {
+                    // If server logout fails, proceed to clear local session anyway
+                }
+            }
+
+            // Clear local session (always)
             SessionManager.getInstance().logout();
+
+
             Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
             Scene signUpScene = new Scene(signUpRoot);
             stage.setScene(signUpScene);

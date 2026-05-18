@@ -30,6 +30,12 @@ public class Person implements Serializable {
      */
     private String salt;
 
+    /**
+     * Avatar path field to store user's profile picture.
+     * Default value is the default_avatar.jpg if not set.
+     */
+    private String avatarPath;
+
     @Override
     public String toString() {
         return "userId: " + userId
@@ -92,6 +98,11 @@ public class Person implements Serializable {
         return salt;
     }
 
+    /** Returns the avatar path for the user. */
+    public String getAvatarPath() {
+        return avatarPath != null ? avatarPath : "image/default_avatar.jpg";
+    }
+
     // ===== SETTERS =====
 
     public void setUserId(String userId) {
@@ -117,5 +128,10 @@ public class Person implements Serializable {
     /** Sets the salt for password hashing. Required when migrating legacy users. */
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    /** Sets the avatar path for the user. */
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
     }
 }

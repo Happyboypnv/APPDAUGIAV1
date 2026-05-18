@@ -81,6 +81,7 @@ public class UserProfileUpdater {
      * - "bankAccount": Số tài khoản ngân hàng
      * - "balance": Số dư khả dụng (phải là số)
      * - "bankName": Tên ngân hàng
+     * - "avatar": Đường dẫn hình ảnh avatar
      *
      * @param updates Map chứa cặp key-value của các trường cần cập nhật
      *                Ví dụ: updates.put("name", "Nguyễn Văn A");
@@ -119,6 +120,9 @@ public class UserProfileUpdater {
             }
             if (updates.containsKey("bankName")) {
                 currentUser.setBankName(updates.get("bankName"));
+            }
+            if (updates.containsKey("avatar")) {
+                currentUser.setAvatarPath(updates.get("avatar"));
             }
 
             // 🔹 BƯỚC 4: ⭐ LƯU VÀO FILE JSON - QUAN TRỌNG NHẤT!!!

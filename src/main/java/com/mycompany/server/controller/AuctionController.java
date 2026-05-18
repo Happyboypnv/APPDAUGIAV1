@@ -216,7 +216,7 @@ public class AuctionController {
     // FIX: Đồng bộ vào in-memory store để WebSocket tìm thấy
     AuctionSessionRegistry.getInstance().add(phienMoi);
 
-    String maPhienDaSinh = phienMoi.getAuctionSessionId();
+    String maPhienDaSinh = phienMoi.getSessionId();
     guiPhanHoi(exchange, 201,
             gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
   }
@@ -348,12 +348,22 @@ public class AuctionController {
   // =========================================================
 
   /** Request body cho POST /api/auctions */
-  private static class TaoPhienRequest {
+  public static class TaoPhienRequest {
     String tenPhien;
     String tenSanPham;
     String maSanPham;
+    String danhMuc;
+    String moTa;
     double giaKhoiDiem;
     int    thoiGianGiay;
+
+    public TaoPhienRequest(String tenPhien, String tenSanPham, String maSanPham, String danhMuc, String moTa, double giaKhoiDiem, int thoiGianGiay) {
+      this.tenPhien = tenPhien;
+      this.tenSanPham = tenSanPham;
+      this.maSanPham = maSanPham;
+      this.giaKhoiDiem = giaKhoiDiem;
+      this.thoiGianGiay = thoiGianGiay;
+    }
   }
 
   /** Response cho POST /api/auctions thành công */

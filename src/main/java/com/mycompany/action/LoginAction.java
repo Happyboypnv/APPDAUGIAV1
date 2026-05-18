@@ -211,6 +211,9 @@ public class LoginAction {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi hệ thống",
+                    "Đăng nhập bị gián đoạn, vui lòng thử lại!");
         }
     }
 }

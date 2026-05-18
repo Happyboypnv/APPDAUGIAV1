@@ -10,25 +10,35 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="710.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.ProfileController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.ProfileController">
    <children>
 
       <!-- Navbar Component (Auto-updates when NavbarComponent.fxml changes) -->
       <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
-      <ImageView fx:id="avatarPicture" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
+      <StackPane fx:id="avatarContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
          <StackPane.margin>
-            <Insets left="270.0" top="110.0" />
+            <Insets bottom="500.0" right="250.0" />
          </StackPane.margin>
-         <image>
-            <Image url="@../image/default_avatar.jpg" />
-         </image>
-      </ImageView>
+         <children>
+            <ImageView fx:id="avatarPicture" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#onClickedChangeAvatar" pickOnBounds="true" preserveRatio="true">
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+               <image>
+                  <Image url="@../image/default_avatar.jpg" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </StackPane>
       <TextField fx:id="nameField" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="400.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor>
          <StackPane.margin>
-            <Insets bottom="390.0" left="400.0" />
+            <Insets bottom="540.0" left="400.0" />
          </StackPane.margin>
       </TextField>
       <Label text="Username" textFill="WHITE">
@@ -36,7 +46,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
          <StackPane.margin>
-            <Insets bottom="450.0" left="100.0" />
+            <Insets bottom="600.0" left="100.0" />
          </StackPane.margin>
       </Label>
       <TextField fx:id="emailField" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="400.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css">
@@ -44,7 +54,7 @@
             <Cursor fx:constant="TEXT" />
          </cursor>
          <StackPane.margin>
-            <Insets bottom="250.0" left="400.0" />
+            <Insets bottom="400.0" left="400.0" />
          </StackPane.margin>
       </TextField>
       <Label text="Email" textFill="WHITE">
@@ -52,7 +62,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
          <StackPane.margin>
-            <Insets bottom="310.0" left="65.0" />
+            <Insets bottom="460.0" left="65.0" />
          </StackPane.margin>
       </Label>
       <TextField fx:id="birthField" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="235.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css">
@@ -105,7 +115,7 @@
       </Label>
       <ImageView fx:id="nameEditBtn" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#onClickedEditName" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT">
          <StackPane.margin>
-            <Insets bottom="390.0" right="5.0" />
+            <Insets bottom="540.0" right="5.0" />
          </StackPane.margin>
          <image>
             <Image url="@../image/pen.png" />

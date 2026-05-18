@@ -68,7 +68,7 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, transaction.getId());
-            ps.setString(2, transaction.getAuctionSession().getAuctionSessionId());
+            ps.setString(2, transaction.getAuctionSession().getSessionId());
             ps.setString(3, transaction.getStatus().name());
             ps.setString(4, transaction.getCreatedAt().toString());
 

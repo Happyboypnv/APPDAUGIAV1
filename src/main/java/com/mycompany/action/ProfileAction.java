@@ -1,9 +1,27 @@
 package com.mycompany.action;
 
 import com.mycompany.exception.Login.*;
+import com.mycompany.models.User;
 import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.SessionManager;
 import com.mycompany.utils.UserRepositorySQLite;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * ProfileAction - Class xử lý các thao tác trên trang Profile
@@ -31,6 +49,7 @@ import javafx.scene.control.TextField;
  */
 public class ProfileAction {
     private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
+    private static final Logger logger = LoggerFactory.getLogger(ProfileAction.class);
 
     private ProfileAction() {}
 
@@ -116,6 +135,80 @@ public class ProfileAction {
         field.setEditable(editing);
         field.setOpacity(1.0); // set lại ít mờ hơn
         if (editing) field.requestFocus(); // tự động focus vào ô khi bắt đầu chỉnh sửa
+    }
+
+    /**
+     * changeAvatar(Stage stage) - Cho phép người dùng chọn và lưu avatar mới
+     *
+     * KẾT NỐI VỚI CONTROLLER:
+     * - Được gọi từ ProfileController khi click vào avatar
+     * - ProfileController.onClickedChangeAvatar() → changeAvatar(stage)
+     *
+     * CHỨC NĂNG:
+     * 1. Mở FileChooser để chọn file hình ảnh
+     * 2. Validate: chỉ cho phép .jpg, .jpeg, .png
+     * 3. Copy file hình ảnh vào resources/image folder
+     * 4. Trả về đường dẫn hình ảnh mới (relative path)
+     *
+     * @param stage Stage của cửa sổ ứng dụng
+     * @return Đường dẫn hình ảnh mới (ví dụ: "image/avatar_user@email.jpg"), hoặc null nếu user cancel
+     * @throws IOException nếu có lỗi copy file
+     */
+    public String changeAvatar(Stage stage) throws IOException, URISyntaxException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Chọn hình ảnh avatar");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.jpeg", "*.png"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        if (selectedFile == null) {
+            // User cancelled the dialog
+            return null;
+        }
+
+        // Validate file extension
+        String fileName = selectedFile.getName().toLowerCase();
+        if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png")) {
+            throw new IOException("Chỉ hỗ trợ các định dạng: .jpg, .jpeg, .png");
+        }
+
+        // Validate file size (max 5MB)
+        long fileSizeInBytes = selectedFile.length();
+        long maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+        if (fileSizeInBytes > maxSizeInBytes) {
+            throw new IOException("Kích thước file quá lớn! Vui lòng chọn file nhỏ hơn 5MB");
+        }
+
+        // Generate unique filename to avoid conflicts
+        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+        String uniqueFileName = "avatar_" + UUID.randomUUID().toString() + fileExtension;
+
+        // Get the image directory path
+        // Gets the JAR/application directory and creates src/main/resources/image path
+        String projectDir = System.getProperty("user.dir");
+        String imageDir = projectDir + File.separator + "user_data" + File.separator + "image";
+
+        File destDir = new File(imageDir);
+
+        // Create directory if it doesn't exist
+        if (!destDir.exists()) {
+            destDir.mkdirs();
+        }
+
+        // Copy file to image directory
+        File destFile = new File(destDir, uniqueFileName);
+        Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        currentUser.setAvatarPath("image/" + uniqueFileName);
+        khoLuuTruNguoiDung.update(currentUser);
+        logger.info("Cập nhật avatar path thành công: " + "image/" + uniqueFileName);
+
+        // Return relative path for storage in database
+        return "image/" + uniqueFileName;
     }
 
 }

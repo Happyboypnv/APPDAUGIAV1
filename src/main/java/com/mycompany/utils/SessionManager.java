@@ -67,7 +67,7 @@ public class SessionManager {
     }
 
     public boolean isLoggedIn() {
-        return currentUser != null && currentToken != null && TokenUtil.validateToken(currentToken);
+        return currentUser != null;
     }
 
     public void logout() {
