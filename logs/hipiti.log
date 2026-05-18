@@ -1186,3 +1186,162 @@
 2026-05-14 14:38:47.692 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
 2026-05-14 14:38:49.081 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
 2026-05-14 14:38:49.083 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-16 22:51:12.920 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-16 22:51:13.578 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:51:13.583 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-16 22:51:13.585 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-16 22:51:13.591 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-16 22:51:13.596 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:51:13.600 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-16 22:51:13.900 [main] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ Cleanup task started (interval: 300000 ms)
+2026-05-16 22:51:13.968 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-16 22:51:13.980 [WebSocketSelector-34] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-16 22:51:15.452 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:51:15.452 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
+2026-05-16 22:51:15.452 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:51:15.453 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
+2026-05-16 22:51:15.453 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
+2026-05-16 22:51:15.453 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:51:15.453 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-16 22:51:15.453 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-16 22:51:15.454 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:51:15.454 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-16 22:51:15.454 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-16 22:51:15.454 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-16 22:51:15.455 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/logout
+2026-05-16 22:51:15.455 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-16 22:51:15.455 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-16 22:51:15.455 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-16 22:51:15.456 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-16 22:51:15.457 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-16 22:51:15.457 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-16 22:51:15.457 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-16 22:51:15.458 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-16 22:51:15.458 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-16 22:51:15.458 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-16 22:51:15.459 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-16 22:51:15.459 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:51:15.459 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-16 22:51:15.459 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:51:22.926 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-16 22:51:22.932 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-16 22:51:23.371 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:51:23.374 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-16 22:51:23.375 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-16 22:51:23.375 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-16 22:51:23.376 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-16 22:51:23.377 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-16 22:51:23.379 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:51:23.382 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-16 22:51:23.383 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-16 22:51:40.386 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test2@gmail.com
+2026-05-16 22:51:40.386 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: Uh1A6bxC7VEcu2DRq8R9H6vT8oISC52XjzMVbNPEKns=
+2026-05-16 22:51:40.386 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: qe04umTPZLJnGcFh1ke57w==
+2026-05-16 22:51:40.386 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: PhongProVip@132
+2026-05-16 22:51:46.881 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test2@gmail.com
+2026-05-16 22:51:46.882 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: Uh1A6bxC7VEcu2DRq8R9H6vT8oISC52XjzMVbNPEKns=
+2026-05-16 22:51:46.882 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: qe04umTPZLJnGcFh1ke57w==
+2026-05-16 22:51:46.882 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: PhongProVip@123
+2026-05-16 22:51:46.948 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:51:46.953 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test2@gmail.com
+2026-05-16 22:51:46.954 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: Uh1A6bxC7VEcu2DRq8R9H6vT8oISC52XjzMVbNPEKns=
+2026-05-16 22:51:46.954 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: qe04umTPZLJnGcFh1ke57w==
+2026-05-16 22:51:46.954 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: PhongProVip@123
+2026-05-16 22:51:46.961 [pool-1-thread-1] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ User test2@gmail.com logged in on device 127.0.0.1_6956
+2026-05-16 22:51:46.962 [pool-1-thread-1] INFO  c.m.server.controller.UserController - [LoginController] ✅ User test2@gmail.com logged in successfully. Device: 127.0.0.1_6956
+2026-05-16 22:51:46.988 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] Login response status: SUCCESS
+2026-05-16 22:51:47.762 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:52:38.338 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-16 22:52:38.339 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-16 22:52:43.843 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-16 22:52:43.850 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-16 22:52:44.227 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:52:44.230 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-16 22:52:44.230 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-16 22:52:44.231 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-16 22:52:44.231 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-16 22:52:44.232 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-16 22:52:44.234 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:52:44.236 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-16 22:52:44.237 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-16 22:53:24.107 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test2@gmail.com
+2026-05-16 22:53:24.107 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: Uh1A6bxC7VEcu2DRq8R9H6vT8oISC52XjzMVbNPEKns=
+2026-05-16 22:53:24.107 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: qe04umTPZLJnGcFh1ke57w==
+2026-05-16 22:53:24.108 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: PhongProVip@123
+2026-05-16 22:53:24.165 [pool-1-thread-5] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:53:24.166 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test2@gmail.com
+2026-05-16 22:53:24.166 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: Uh1A6bxC7VEcu2DRq8R9H6vT8oISC52XjzMVbNPEKns=
+2026-05-16 22:53:24.166 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: qe04umTPZLJnGcFh1ke57w==
+2026-05-16 22:53:24.166 [pool-1-thread-5] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: PhongProVip@123
+2026-05-16 22:53:24.166 [pool-1-thread-5] WARN  c.m.server.controller.UserController - [LoginController] ⚠️ User test2@gmail.com already logged in on device 127.0.0.1_6956. New login blocked from device 127.0.0.1_4166
+2026-05-16 22:53:24.175 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] Login response status: ALREADY_IN_USE
+2026-05-16 22:53:24.175 [JavaFX Application Thread] WARN  com.mycompany.utils.ApiClient - [ApiClient] ⚠️ User already logged in on another device: 127.0.0.1_6956
+2026-05-16 22:53:30.310 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-16 22:53:30.311 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-16 22:53:34.730 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-16 22:53:34.731 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-16 22:54:01.565 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-16 22:54:01.946 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:54:01.948 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-16 22:54:01.950 [main] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-16 22:54:01.952 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-16 22:54:01.954 [main] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:54:01.956 [main] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-16 22:54:02.056 [main] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ Cleanup task started (interval: 300000 ms)
+2026-05-16 22:54:02.080 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-16 22:54:02.093 [WebSocketSelector-29] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-16 22:54:03.581 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:54:03.581 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
+2026-05-16 22:54:03.581 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:54:03.581 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
+2026-05-16 22:54:03.581 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
+2026-05-16 22:54:03.581 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:54:03.581 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-16 22:54:03.582 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-16 22:54:03.582 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:54:03.582 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-16 22:54:03.582 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-16 22:54:03.582 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-16 22:54:03.582 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/logout
+2026-05-16 22:54:03.582 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-16 22:54:03.583 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-16 22:54:03.584 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-16 22:54:03.584 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-16 22:54:03.584 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:54:03.584 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-16 22:54:03.584 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-16 22:54:11.342 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-16 22:54:11.346 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã đăng ký Shutdown Hook.
+2026-05-16 22:54:11.730 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:54:11.734 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ℹ️ Cột salt đã tồn tại.
+2026-05-16 22:54:11.734 [JavaFX Application Thread] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Khởi tạo Database thành công.
+2026-05-16 22:54:11.735 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-16 22:54:11.735 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-16 22:54:11.737 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-16 22:54:11.739 [JavaFX Application Thread] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:54:11.753 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-16 22:54:11.754 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-16 22:54:23.782 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test2@gmail.com
+2026-05-16 22:54:23.783 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: Uh1A6bxC7VEcu2DRq8R9H6vT8oISC52XjzMVbNPEKns=
+2026-05-16 22:54:23.783 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: qe04umTPZLJnGcFh1ke57w==
+2026-05-16 22:54:23.783 [JavaFX Application Thread] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: PhongProVip@123
+2026-05-16 22:54:23.849 [pool-1-thread-1] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:54:23.853 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Tìm thấy user với email: test2@gmail.com
+2026-05-16 22:54:23.854 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password hash trong DB: Uh1A6bxC7VEcu2DRq8R9H6vT8oISC52XjzMVbNPEKns=
+2026-05-16 22:54:23.854 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Salt trong DB: qe04umTPZLJnGcFh1ke57w==
+2026-05-16 22:54:23.854 [pool-1-thread-1] INFO  c.m.utils.KhoLuuTruNguoiDungSQLite -  Password nhập vào: PhongProVip@123
+2026-05-16 22:54:23.865 [pool-1-thread-1] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ User test2@gmail.com logged in on device 127.0.0.1_63857
+2026-05-16 22:54:23.866 [pool-1-thread-1] INFO  c.m.server.controller.UserController - [LoginController] ✅ User test2@gmail.com logged in successfully. Device: 127.0.0.1_63857
+2026-05-16 22:54:23.908 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] Login response status: SUCCESS
+2026-05-16 22:54:25.083 [pool-1-thread-3] DEBUG com.mycompany.utils.KetNoiCSDL - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-16 22:54:55.238 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-16 22:54:55.239 [Thread-3] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-16 23:01:02.947 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - Đang đóng tất cả database connections...
+2026-05-16 23:01:02.949 [Thread-0] INFO  com.mycompany.utils.KetNoiCSDL - ✅ Đã giải phóng toàn bộ tài nguyên Database.

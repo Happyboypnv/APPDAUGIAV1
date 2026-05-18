@@ -56,10 +56,10 @@ public class App extends Application {
             Scene scene = new Scene(root);
 
             // 3. Thiết lập Stage (Cửa sổ)
-            primaryStage.setTitle("Sign Up Account");
+            primaryStage.setTitle("HiPiTi Bidding App");
 
             // Nếu bạn muốn bỏ thanh tiêu đề trắng của Windows để nhìn app "xịn" hơn:
-             primaryStage.initStyle(StageStyle.TRANSPARENT);
+//             primaryStage.initStyle(StageStyle.TRANSPARENT);
              scene.setFill(Color.TRANSPARENT);
 
             primaryStage.setScene(scene);
