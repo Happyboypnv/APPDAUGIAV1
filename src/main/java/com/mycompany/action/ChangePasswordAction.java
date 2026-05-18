@@ -1,7 +1,6 @@
 package com.mycompany.action;
 
-import com.mycompany.exception.Login.PasswordException;
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import com.mycompany.utils.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,7 +11,7 @@ import java.util.Map;
 
 public class ChangePasswordAction {
     private static volatile ChangePasswordAction instance;
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository userRepository = new UserRepositorySQLite();
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ChangePasswordAction.class);
     private ChangePasswordAction() {}
 
@@ -92,7 +91,7 @@ public class ChangePasswordAction {
         // Gợi ý: Sử dụng KhoLuuTruNguoiDungSQLite.kiemTraNguoiDung(email, olderPassword)
         // Nếu không match → báo lỗi "Mật khẩu cũ không đúng"
 
-        if (!khoLuuTruNguoiDung.kiemTraNguoiDung(email, olderPassword)) {
+        if (!userRepository.verifyCredentials(email, olderPassword)) {
             HandleNavigationAndAlert.getInstance().showAlert(
                     Alert.AlertType.ERROR,
                     "Lỗi thông tin",
@@ -108,14 +107,14 @@ public class ChangePasswordAction {
         // 3. Cập nhật database
         // 4. Thông báo thành công
 
-        String newSalt = BoMaHoaMatKhau.taoSalt();
-        String hashedNewPassword = BoMaHoaMatKhau.maHoaMatKhau(newPassword, newSalt);
+        String newSalt = PasswordEncoder.createSalt();
+        String hashedNewPassword = PasswordEncoder.passwordEncoder(newPassword, newSalt);
 
-        NguoiDung currentUser = SessionManager.getInstance().getCurrentUser();
-        currentUser.setMatKhau(hashedNewPassword);
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        currentUser.setPassword(hashedNewPassword);
         currentUser.setSalt(newSalt);
 
-        khoLuuTruNguoiDung.capNhatNguoiDung(currentUser);
+        userRepository.update(currentUser);
 
         HandleNavigationAndAlert.getInstance().showAlert(
                 Alert.AlertType.INFORMATION,

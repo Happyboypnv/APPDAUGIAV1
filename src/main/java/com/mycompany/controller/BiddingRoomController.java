@@ -2,12 +2,14 @@ package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.server.controller.AuctionWebSocketControllerAdapter;
+import com.mycompany.server.dto.PhienDauGiaDTO;
 import com.mycompany.server.websocket.AuctionWebSocketClient;
 import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.SessionManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -65,7 +67,7 @@ public class BiddingRoomController implements Initializable {
     private String currentPhienId;
     private Thread wsThread;
     private volatile boolean isDestroyed = false; // Biến trạng thái kết nối WebSocket
-
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BiddingRoomController.class);
     // --- CÁC BIẾN LOGIC ---
     private double currentPrice = 135000000; // Giá cao nhất hiện tại
     private double stepPrice = 5000000; // Bước giá (mỗi lần +/- 5 triệu)
@@ -76,37 +78,76 @@ public class BiddingRoomController implements Initializable {
      * Hàm này tự động chạy khi giao diện FXML được load
      */
     @Override
+    // ✅ SAU - gán currentPhienId TRƯỚC KHI tạo bất kỳ thread nào để đảm bảo tất cả các thread đều có giá trị currentPhienId hợp lệ, tránh lỗi null pointer khi truy cập currentPhienId trong các thread đó.
     public void initialize(URL location, ResourceBundle resources) {
-        startClock();
-        loadDummyBidHistory();
-        setupButtonActions();
-        updateBidAmountField(currentPrice + stepPrice);
-
-        // 1. Lấy phienId từ session
+        // ⭐ BƯỚC 1: Gán currentPhienId NGAY ĐẦU TIÊN
         currentPhienId = SessionManager.getInstance().getCurrentPhienId();
-        if (currentPhienId != null && auctionNameLabel != null) {
-            auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + currentPhienId);
-        }
 
-        // 2. Kết nối WebSocket trên thread riêng (không block JavaFX thread)
+        startClock();
+        setupButtonActions();
+        bidHistoryListView.setItems(bidHistoryList); // fix Bug 10 luôn
+        Platform.runLater(() -> {
+            if (placeBidButton != null && placeBidButton.getScene() != null) {
+                placeBidButton.getScene().getRoot().setUserData(this);
+            }
+        });
+        // BƯỚC 2: Load thông tin phiên thực tế (currentPhienId đã có giá trị)
+        new Thread(() -> {
+            PhienDauGiaDTO phien = ApiClient.getAuctionById(
+                    currentPhienId,  // ✅ không còn null
+                    SessionManager.getInstance().getServerToken()
+            );
+            if (phien != null) {
+                Platform.runLater(() -> {
+                    currentPrice = phien.giaHienTai;
+                    stepPrice = currentPrice * 0.06;
+                    updateBidAmountField(currentPrice + stepPrice);
+                    if (auctionNameLabel != null) {
+                        auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + phien.tenPhien);
+                    }
+                    if (currentPriceLabel != null) {
+                        currentPriceLabel.setText(formatter.format(currentPrice) + " VNĐ");
+                    }
+                });
+            }
+        }).start();
+
+        // BƯỚC 3: Kết nối WebSocket (currentPhienId đã có giá trị)
+        // ✅ SAU
         wsThread = new Thread(() -> {
             try {
-                // Thêm delay nhỏ để đảm bảo server sẵn sàng
                 Thread.sleep(1000);
-                if(isDestroyed) return;
+                if (isDestroyed) return;
 
                 wsClient = AuctionWebSocketClient.getInstance();
                 adapter = new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
                 wsClient.setListener(adapter);
-                wsClient.connectToServer();
 
-                String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
-                wsClient.sendJoin(currentPhienId, email);
+                // ⭐ Chỉ connect nếu chưa connected
+                if (!wsClient.isConnected()) {
+                    wsClient.connectToServer();
+                }
+
+                // ⭐ Chỉ join nếu connect thành công
+                if (wsClient.isConnected()) {
+                    String email = SessionManager.getInstance().getCurrentUser().getEmail();
+                    wsClient.sendJoin(currentPhienId, email);
+                    logger.info("✅ Đã kết nối và JOIN phòng: " + currentPhienId);
+                } else {
+                    logger.error("❌ Không thể kết nối WebSocket sau timeout");
+                    Platform.runLater(() ->
+                            HandleNavigationAndAlert.getInstance().showAlert(
+                                    Alert.AlertType.WARNING,
+                                    "Cảnh báo",
+                                    "Không thể kết nối real-time. Tính năng đặt giá có thể bị chậm."
+                            )
+                    );
+                }
             } catch (Exception e) {
-                System.err.println("❌ Lỗi kết nối WebSocket: " + e.getMessage());
+                logger.error("❌ Lỗi kết nối WebSocket: " + e.getMessage());
             }
         });
-        wsThread.setDaemon(true); // Đảm bảo thread sẽ tự động dừng khi ứng dụng đóng
+        wsThread.setDaemon(true);
         wsThread.setName("BiddingRoom-WebSocket-Thread");
         wsThread.start();
     }
@@ -156,7 +197,7 @@ public class BiddingRoomController implements Initializable {
 
         // Gửi qua WebSocket thay vì cập nhật local
         if (wsClient != null && wsClient.isConnected() && currentPhienId != null) {
-            String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+            String email = SessionManager.getInstance().getCurrentUser().getEmail();
             wsClient.sendBid(currentPhienId, email, myBid);
         } else {
             // Fallback: gọi REST API nếu mất kết nối

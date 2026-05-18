@@ -24,7 +24,7 @@ public class SignUpController {
         String email = emailField.getText().trim().toLowerCase(); // email chữ thường hết
         String password = passwordField.getText().trim();
         LocalDate date = datePicker.getValue();
-        LoginAction.getInstance().dangKy(event, name, email, password, date);
+        LoginAction.getInstance().signUp(event, name, email, password, date);
     }
 
     @FXML

@@ -154,9 +154,9 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
     @Override
     public void onUserJoined(JsonObject message) {
         try {
-            String userId = message.get("userId").getAsString();
+            String email = message.get("email").getAsString();
 
-           logger.info("👤 User joined: " + userId);
+           logger.info("👤 User joined: " + email);
 
             // Update UI: increment online user count if you have such display
             // Example: onlineCountLabel.setText("Online: 5");
@@ -165,7 +165,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             // HandleNavigationAndAlert.getInstance().showAlert(
             //     Alert.AlertType.INFORMATION,
             //     "Người dùng mới",
-            //     userId + " đã vào phòng"
+            //     email + " đã vào phòng"
             // );
 
         } catch (Exception e) {
@@ -262,7 +262,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      */
     public void sendBid(String phienId, double giaRa) {
         try {
-            String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
+            String email = SessionManager.getInstance().getCurrentUser().getEmail();
             AuctionWebSocketClient client = AuctionWebSocketClient.getInstance();
 
             if (!client.isConnected()) {

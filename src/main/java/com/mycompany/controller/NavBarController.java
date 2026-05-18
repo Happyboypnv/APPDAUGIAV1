@@ -6,6 +6,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Side;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 
 import javafx.scene.control.ContextMenu;
@@ -49,7 +52,7 @@ public class NavBarController implements Initializable { // Controller chung cho
     // Initializable cho phép chúng ta thực hiện các thao tác khởi tạo sau khi tất cả các @FXML đã được liên kết với controller, đảm bảo rằng avatarImage đã sẵn sàng để sử dụng khi chúng ta thiết lập hình ảnh và clip.
     // Đảm bảo tất cả UI (ảnh, video...) được load trước khi thao tác tiếp, tránh null pointer
     // Ở đây còn có tác dụng khởi tạo menu item không qua scene buider, vì nếu tạo trong scene buider sẽ bị vướng dấu mũi tên thừa khi click vào ảnh, còn tạo trong controller thì sẽ không bị
-
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(NavBarController.class);
     // @FXML FIELDS - Các thành phần UI được inject từ FXML
     @FXML
     private ImageView avatarImage; // Hình ảnh avatar của người dùng (hình tròn)
@@ -128,10 +131,12 @@ public class NavBarController implements Initializable { // Controller chung cho
      */
     @FXML
     public void returnToHome(MouseEvent event) {
+        cleanupBiddingRoom((Node) event.getSource()); // ⭐ cleanup trước
         try {
             HandleNavigationAndAlert.getInstance().handleGoToHome(event);
         } catch (IOException e) {
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện trang chủ không thành công!");
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện trang chủ không thành công!");
         }
     }
 
@@ -184,7 +189,7 @@ public class NavBarController implements Initializable { // Controller chung cho
         try {
             // Lấy Stage từ scene của avatarImage
             Stage stage = (Stage) avatarImage.getScene().getWindow();
-            HomeAction.getInstance().dangXuat(stage);
+            HomeAction.getInstance().logOut(stage);
         } catch (IOException e) {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi", "Đăng xuất thất bại!");
         }
@@ -224,6 +229,7 @@ public class NavBarController implements Initializable { // Controller chung cho
      */
     @FXML
     public void navigateToFinance(MouseEvent event) {
+        cleanupBiddingRoom((Node) event.getSource()); // ⭐ Cleanup trước khi điều hướng
         try {
             HandleNavigationAndAlert.getInstance().goToFinance(event);
         } catch (IOException e) {
@@ -249,6 +255,31 @@ public class NavBarController implements Initializable { // Controller chung cho
         } catch (IOException e) {
             e.printStackTrace();
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện tạo phiên đấu giá không thành công!");
+        }
+    }
+    private void cleanupBiddingRoom(Node sourceNode) {
+        try {
+            // Lấy scene hiện tại
+            Scene currentScene = sourceNode.getScene();
+            if (currentScene == null) return;
+
+            // Tìm root node
+            Parent root = currentScene.getRoot();
+            if (root == null) return;
+
+            // Kiểm tra xem controller hiện tại có phải BiddingRoom không
+            // bằng cách tìm fx:id đặc trưng của BiddingRoom
+            Node placeBidButton = root.lookup("#placeBidButton");
+            if (placeBidButton != null) {
+                // Đang ở BiddingRoom - tìm controller qua userData
+                Object userData = root.getUserData();
+                if (userData instanceof BiddingRoomController) {
+                    ((BiddingRoomController) userData).onClose();
+                    logger.info("✅ BiddingRoom WebSocket đã được cleanup");
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Lỗi cleanup BiddingRoom: " + e.getMessage());
         }
     }
 }

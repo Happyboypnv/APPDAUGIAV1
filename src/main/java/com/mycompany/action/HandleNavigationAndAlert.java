@@ -1,6 +1,6 @@
 package com.mycompany.action;
 
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 import com.sun.javafx.stage.EmbeddedWindow;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -151,8 +151,8 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
      * @throws IOException nếu không load được FXML
      */
     public void goToProfile(Stage stage) throws IOException {
-        NguoiDung nguoiDung = SessionManager.getInstance().getCurrentUser();
-        if (nguoiDung == null) {
+        User user = SessionManager.getInstance().getCurrentUser();
+        if (user == null) {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Bạn cần đăng nhập để xem trang cá nhân!");
             return;
         }
@@ -181,8 +181,9 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         window.show();
     }
 
-    public void goToChangePassword(Event event) throws IOException {
-        StackPane changeRoot = FXMLLoader.load(getClass().getResource("/view/ChangePassword.fxml"));
+    public void goToChangePassword(ActionEvent event) throws IOException {
+        StackPane changeRoot = FXMLLoader.load(
+                getClass().getResource("/view/ChangePassword.fxml"));
         Scene changeScene = new Scene(changeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(changeScene);

@@ -15,13 +15,13 @@ public class SignInController {
 
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField; // nơi nhận vào input của user
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
 
     @FXML
     public void signIn(ActionEvent event) {
         String email = emailField.getText().trim().toLowerCase(); // email quy về chữ thường hết
         String password = passwordField.getText().trim();
-        LoginAction.getInstance().dangNhap(event, email,password);
+        LoginAction.getInstance().signIn(event, email,password);
     }
 
     @FXML

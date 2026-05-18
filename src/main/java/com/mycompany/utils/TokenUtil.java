@@ -1,6 +1,6 @@
 package com.mycompany.utils;
 
-import com.mycompany.models.NguoiDung;
+import com.mycompany.models.User;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -14,16 +14,16 @@ public class TokenUtil {
     // tên người, email, địa chỉ, số điện thoại tiếng Việt
     private static final String SEP = "|";
 
-    public static String generateToken(NguoiDung user) {
-        String tokenData = nvl(user.layMaNguoiDung())  + SEP +
-                nvl(user.layThuDienTu())    + SEP +
-                nvl(user.layHoTen())        + SEP +
-                nvl(user.layNgaySinh())     + SEP +
-                nvl(user.getDiaChi())       + SEP +  // FIX BUG 3
-                nvl(user.getSoDienThoai())  + SEP +  // FIX BUG 3
-                user.getSoDuKhaDung()       + SEP +
-                nvl(user.getSoTaiKhoan())   + SEP +  // FIX BUG 3
-                nvl(user.getNganHang())     + SEP +  // FIX BUG 3
+    public static String generateToken(User user) {
+        String tokenData = nvl(user.getUserId())  + SEP +
+                nvl(user.getEmail())    + SEP +
+                nvl(user.getFullName())        + SEP +
+                nvl(user.getDateOfBirth())     + SEP +
+                nvl(user.getAddress())       + SEP +  // FIX BUG 3
+                nvl(user.getPhoneNumber())  + SEP +  // FIX BUG 3
+                user.getAvailableBalance()       + SEP +
+                nvl(user.getBankAccountNumber())   + SEP +  // FIX BUG 3
+                nvl(user.getBankName())     + SEP +  // FIX BUG 3
                 System.currentTimeMillis();
 
         String encoded   = Base64.getEncoder().encodeToString(

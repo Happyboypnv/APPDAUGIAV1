@@ -1,6 +1,7 @@
 package com.mycompany.controller;
 
-import com.mycompany.utils.CapNhatThongTinNguoiDung;
+import com.mycompany.models.User;
+import com.mycompany.utils.UserProfileUpdater;
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.ProfileAction;
 import com.mycompany.utils.SessionManager;
@@ -77,27 +78,33 @@ public class ProfileController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // ⭐ Load trực tiếp từ currentUser trong session (luôn mới nhất)
+        User currentUser = SessionManager.getInstance().getCurrentUser();
 
-        // 🔹 BƯỚC 1: Lấy thông tin người dùng từ JWT token
-        String token = SessionManager.getInstance().getCurrentToken();
-        Map<String, Object> info = TokenUtil.getUserInfoFromToken(token);
-
-        // 🔹 BƯỚC 2: Hiển thị thông tin nếu token hợp lệ
-        if (info != null) {
-            nameField.setText((String) info.get("name"));
-            emailField.setText((String) info.get("email"));
-            birthField.setText((String) info.get("birth"));
-            phoneField.setText((String) info.get("phone"));
-            addressField.setText((String) info.get("address"));
+        if (currentUser != null) {
+            nameField.setText(currentUser.getFullName() != null ? currentUser.getFullName() : "");
+            emailField.setText(currentUser.getEmail() != null ? currentUser.getEmail() : "");
+            birthField.setText(currentUser.getDateOfBirth() != null ? currentUser.getDateOfBirth() : "");
+            phoneField.setText(currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "");
+            addressField.setText(currentUser.getAddress() != null ? currentUser.getAddress() : "");
+        }
+        // Fallback: nếu currentUser null thì dùng token như cũ
+        else {
+            String token = SessionManager.getInstance().getCurrentToken();
+            Map<String, Object> info = TokenUtil.getUserInfoFromToken(token);
+            if (info != null) {
+                nameField.setText((String) info.get("name"));
+                emailField.setText((String) info.get("email"));
+                birthField.setText((String) info.get("birth"));
+                phoneField.setText((String) info.get("phone"));
+                addressField.setText((String) info.get("address"));
+            }
         }
 
-        // 🔹 BƯỚC 3: Load và hiển thị avatar
         Image avt = new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm());
         avatarPicture.setImage(avt);
-
-        // Tạo hình tròn cho avatar (centerX, centerY, radius)
         Circle clip = new Circle(75, 75, 75);
-        avatarPicture.setClip(clip); // Cắt avatar thành hình tròn
+        avatarPicture.setClip(clip);
     }
 
     /**
@@ -181,7 +188,7 @@ public class ProfileController implements Initializable {
             updates.put("address", newAddress);
 
             // 🔹 BƯỚC 5: Lưu vào hệ thống
-            CapNhatThongTinNguoiDung.getInstance().updateUser(updates);
+            UserProfileUpdater.getInstance().updateUser(updates);
 
             // 🔹 BƯỚC 6: Thông báo thành công
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thông tin cá nhân đã được cập nhật!");

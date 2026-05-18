@@ -3,10 +3,10 @@ package com.mycompany.action;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mycompany.models.NguoiDung;
-import com.mycompany.utils.CapNhatThongTinNguoiDung;
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.models.User;
+import com.mycompany.utils.UserProfileUpdater;
+import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.UserRepositorySQLite;
 import com.mycompany.utils.SessionManager;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -37,7 +37,7 @@ import javafx.scene.control.TextField;
  * - Business Logic Layer: Tách logic kinh doanh ra khỏi UI controller
  */
 public class FinanceAction {
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
 
     private FinanceAction() {}
 
@@ -104,11 +104,11 @@ public class FinanceAction {
             if (amount <= 0) {
                 throw new NumberFormatException();
             }
-            NguoiDung currentUser = SessionManager.getInstance().getCurrentUser(); // lấy người dùng hiện tại
-            double newBalance = currentUser.getSoDuKhaDung() + amount; // cộng thêm số tiền thêm vào
+            User currentUser = SessionManager.getInstance().getCurrentUser(); // lấy người dùng hiện tại
+            double newBalance = currentUser.getAvailableBalance() + amount; // cộng thêm số tiền thêm vào
             Map<String, String> updateBalance = new HashMap<>();
             updateBalance.put("balance", String.valueOf(newBalance));
-            CapNhatThongTinNguoiDung.getInstance().updateUser(updateBalance); // tạo map để update
+            UserProfileUpdater.getInstance().updateUser(updateBalance); // tạo map để update
 
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Nạp tiền thành công!");
         } catch (NumberFormatException e) {
@@ -139,8 +139,8 @@ public class FinanceAction {
      * @param amount Số tiền cần rút (phải > 0 và <= số dư hiện tại)
      */
     public void withdraw(double amount) {
-        NguoiDung currentUser = SessionManager.getInstance().getCurrentUser();
-        double currentBalance = currentUser.getSoDuKhaDung();
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+        double currentBalance = currentUser.getAvailableBalance();
         try {
             if (amount <=0) {
                 throw new NumberFormatException();
@@ -151,7 +151,7 @@ public class FinanceAction {
             double newBalance = currentBalance - amount;
             Map<String, String> updateBalance = new HashMap<>();
             updateBalance.put("balance", String.valueOf(newBalance));
-            CapNhatThongTinNguoiDung.getInstance().updateUser(updateBalance); // tạo map để update
+            UserProfileUpdater.getInstance().updateUser(updateBalance); // tạo map để update
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Rút tiền thành công!");
         } catch (NumberFormatException e) {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền rút không hợp lệ! Vui lòng nhập lại.");

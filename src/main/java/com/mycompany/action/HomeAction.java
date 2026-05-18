@@ -1,8 +1,6 @@
 package com.mycompany.action;
 
-// ...existing code...
-import com.mycompany.utils.ApiClient;
-import com.mycompany.utils.KhoLuuTruNguoiDungSQLite;
+import com.mycompany.utils.UserRepositorySQLite;
 import javafx.fxml.FXML; // Quan trọng
 import javafx.fxml.FXMLLoader; // Quan trọng
 import javafx.scene.Parent; // Quan trọng
@@ -11,7 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage; // Quan trọng
 import java.io.IOException; // Quan trọng
 
-import com.mycompany.utils.IKhoLuuTruNguoiDung;
+import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.SessionManager;
 
 import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
@@ -39,7 +37,7 @@ import java.util.concurrent.locks.*; // Handle nhieu nguoi dang nhap cung luc
  * - Thread-safe: Sử dụng Lock để đồng bộ hóa
  */
 public class HomeAction {
-    private final IKhoLuuTruNguoiDung khoLuuTruNguoiDung = new KhoLuuTruNguoiDungSQLite();
+    private final IUserRepository userRepository = new UserRepositorySQLite();
     private final Lock lock = new ReentrantLock();
     private HomeAction() {};
 
@@ -85,26 +83,9 @@ public class HomeAction {
      * @throws IOException nếu không load được SignIn.fxml
      */
     @FXML
-    public void dangXuat(Stage stage) throws IOException {
-        String email = SessionManager.getInstance().getCurrentUser().layThuDienTu();
-
+    public void logOut(Stage stage) throws IOException {
         if (SessionManager.getInstance().isLoggedIn()) {
-            // Get server token BEFORE clearing local session so we can inform server
-            String token = SessionManager.getInstance().getCurrentServerToken();
-
-            // Attempt server-side logout if we have a token
-            if (token != null && !token.isEmpty()) {
-                try {
-                    ApiClient.logout(token);
-                } catch (Exception ignored) {
-                    // If server logout fails, proceed to clear local session anyway
-                }
-            }
-
-            // Clear local session (always)
             SessionManager.getInstance().logout();
-
-
             Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
             Scene signUpScene = new Scene(signUpRoot);
             stage.setScene(signUpScene);
