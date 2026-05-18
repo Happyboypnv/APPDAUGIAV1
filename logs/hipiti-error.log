@@ -68,3 +68,6 @@
 2026-05-18 20:52:22.446 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
 2026-05-18 20:54:10.891 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
 2026-05-18 21:02:30.201 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 22:34:00.739 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
+}
