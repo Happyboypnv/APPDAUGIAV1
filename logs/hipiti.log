@@ -1,232 +1,237 @@
-2026-05-17 08:44:06.501 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 08:44:06.896 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 08:44:06.900 [main] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 08:44:06.900 [main] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 08:44:06.925 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 08:44:06.927 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 08:44:06.929 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 08:44:07.185 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-17 08:44:07.192 [WebSocketSelector-29] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-17 08:44:08.670 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-17 08:44:08.671 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 08:44:17.496 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-17 08:44:17.500 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 08:44:17.751 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 08:44:17.753 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 08:44:17.754 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 08:44:17.754 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-17 08:44:17.754 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-17 08:44:17.755 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 08:44:17.757 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 08:44:17.759 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 08:44:17.759 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-17 08:44:33.210 [pool-2-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 08:44:33.215 [pool-2-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Không tìm thấy user với email: phong@gmail.com
-2026-05-17 08:44:43.893 [pool-2-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 08:44:43.894 [pool-2-thread-3] INFO  c.m.utils.UserRepositorySQLite -  Không tìm thấy user với email: phong@gmail.com
-2026-05-17 08:45:03.813 [pool-2-thread-5] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 08:45:03.813 [pool-2-thread-5] INFO  c.m.utils.UserRepositorySQLite -  Không tìm thấy user với email: phong@gmail.com
-2026-05-17 08:45:54.419 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 08:45:54.420 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-17 08:45:54.423 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 08:45:54.424 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-17 09:00:45.035 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 09:00:45.371 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:00:45.376 [main] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 09:00:45.376 [main] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 09:00:45.412 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 09:00:45.415 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:00:45.417 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 09:00:45.625 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-17 09:00:45.631 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-17 09:00:47.107 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:00:47.107 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-17 09:00:47.107 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:00:47.107 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-17 09:00:47.108 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-17 09:00:47.109 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 09:00:47.110 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-17 09:00:47.110 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-17 09:00:47.110 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-17 09:00:47.110 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:00:47.110 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-17 09:00:47.111 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:00:51.895 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-17 09:00:51.901 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 09:00:52.146 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:00:52.148 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 09:00:52.148 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 09:00:52.149 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-17 09:00:52.149 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-17 09:00:52.150 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 09:00:52.151 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:00:52.153 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 09:00:52.154 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-17 09:01:19.254 [pool-1-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:01:19.325 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
-2026-05-17 09:01:19.331 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite - COMMIT thành công cho user: PPTT000004
-2026-05-17 09:01:32.113 [pool-1-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:01:32.113 [pool-1-thread-3] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-17 09:01:32.113 [pool-1-thread-3] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: NH+DBB4OxHxT77F3gE9UntEKZB0bgxVhxHi3geIfvMM=
-2026-05-17 09:01:32.113 [pool-1-thread-3] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: gfvWq1hmnHHestLZgT3HxQ==
-2026-05-17 09:01:32.114 [pool-1-thread-3] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: @Phong2007
-2026-05-17 09:02:10.758 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 09:02:10.759 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-17 09:02:10.765 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 09:02:10.768 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-17 09:07:07.983 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 09:07:08.288 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:07:08.292 [main] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 09:07:08.292 [main] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 09:07:08.295 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 09:07:08.297 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:07:08.300 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 09:07:08.396 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-17 09:07:08.402 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-17 09:07:09.893 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:07:09.893 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-17 09:07:09.893 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:07:09.894 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-17 09:07:09.894 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-17 09:07:09.895 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:07:09.895 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-17 09:07:09.895 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-17 09:07:09.895 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:07:09.896 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-17 09:07:09.896 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-17 09:07:09.897 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-17 09:07:09.897 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-17 09:07:09.897 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 09:07:09.897 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-17 09:07:09.897 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-17 09:07:09.897 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-17 09:07:09.897 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-17 09:07:09.898 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 09:07:13.872 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-17 09:07:13.876 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 09:07:14.113 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:07:14.116 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 09:07:14.116 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 09:07:14.117 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-17 09:07:14.117 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-17 09:07:14.118 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 09:07:14.119 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:07:14.121 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 09:07:14.121 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-17 09:07:26.747 [pool-1-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:07:26.753 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-17 09:07:26.753 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: NH+DBB4OxHxT77F3gE9UntEKZB0bgxVhxHi3geIfvMM=
-2026-05-17 09:07:26.753 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: gfvWq1hmnHHestLZgT3HxQ==
-2026-05-17 09:07:26.754 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: @Phong2007
-2026-05-17 09:07:28.345 [pool-1-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 09:07:41.044 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 09:07:41.045 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-17 09:07:41.048 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 09:07:41.050 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-17 10:39:41.396 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 10:39:41.725 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 10:39:41.727 [main] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 10:39:41.728 [main] INFO  c.mycompany.utils.DatabaseConnection - ✅ Migration: Đã thêm cột so_tai_khoan_ngan_hang
-2026-05-17 10:39:41.730 [main] INFO  c.mycompany.utils.DatabaseConnection - ✅ Migration: Đã thêm cột ten_ngan_hang
-2026-05-17 10:39:41.735 [main] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 10:39:41.765 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 10:39:41.768 [main] INFO  com.mycompany.server.ServerApp - ✅ Loaded 0 active sessions into registry
-2026-05-17 10:39:41.782 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 10:39:41.783 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 10:39:41.927 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
-2026-05-17 10:39:41.934 [WebSocketSelector-33] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
-2026-05-17 10:39:43.420 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 10:39:43.420 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
-2026-05-17 10:39:43.421 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 10:39:43.421 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
-2026-05-17 10:39:43.421 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
-2026-05-17 10:39:43.421 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 10:39:43.421 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
-2026-05-17 10:39:43.422 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
-2026-05-17 10:39:43.422 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 10:39:43.422 [main] INFO  com.mycompany.server.ServerApp -   USERS:
-2026-05-17 10:39:43.422 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
-2026-05-17 10:39:43.422 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
-2026-05-17 10:39:43.422 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
-2026-05-17 10:39:43.422 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 10:39:43.423 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
-2026-05-17 10:39:43.424 [main] INFO  com.mycompany.server.ServerApp - ========================================
-2026-05-17 10:39:48.139 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
-2026-05-17 10:39:48.143 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
-2026-05-17 10:39:48.412 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 10:39:48.415 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột salt đã tồn tại.
-2026-05-17 10:39:48.415 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột so_tai_khoan_ngan_hang đã tồn tại.
-2026-05-17 10:39:48.416 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ℹ️ Cột ten_ngan_hang đã tồn tại.
-2026-05-17 10:39:48.416 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - ✅ Khởi tạo Database thành công.
-2026-05-17 10:39:48.416 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
-2026-05-17 10:39:48.416 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
-2026-05-17 10:39:48.419 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
-2026-05-17 10:39:48.420 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 10:39:48.422 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
-2026-05-17 10:39:48.423 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
-2026-05-17 10:40:04.228 [pool-1-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 10:40:04.281 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: phong@gmail.com
-2026-05-17 10:40:04.281 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: NH+DBB4OxHxT77F3gE9UntEKZB0bgxVhxHi3geIfvMM=
-2026-05-17 10:40:04.281 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: gfvWq1hmnHHestLZgT3HxQ==
-2026-05-17 10:40:04.281 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: @Phong2007
-2026-05-17 10:40:06.424 [pool-1-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
-2026-05-17 10:40:19.523 [JavaFX Application Thread] INFO  c.m.c.ChangePasswordController - ✅ ChangePasswordController initialized
-2026-05-17 10:40:37.103 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 10:40:37.104 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
-2026-05-17 10:40:37.107 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
-2026-05-17 10:40:37.108 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-18 13:57:09.770 [main] INFO  c.m.action.AuctionSessionService - 💰 Hoàn 5000000.0 cho Nguoi Dat 1
+2026-05-18 14:14:29.457 [main] INFO  c.m.action.TransactionService - [refun] Giao dịch không tồn tại.
+2026-05-18 14:14:29.484 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.484 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:14:29.484 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:14:29.486 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:14:29.487 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:14:29.496 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:14:29.496 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:14:29.496 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.496 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.496 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh toán thành công!
+2026-05-18 14:14:29.496 [main] INFO  c.m.action.TransactionService -   Giao dịch : TEMP
+2026-05-18 14:14:29.496 [main] INFO  c.m.action.TransactionService -   Số tiền   : 5,000,000 VNĐ
+2026-05-18 14:14:29.497 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang | Số dư còn: 5,000,000 VNĐ
+2026-05-18 14:14:29.497 [main] INFO  c.m.action.TransactionService -   [Thông báo -> Nguoi Ban]: Bạn vừa nhận thanh toán cho giao dịch TEMP
+2026-05-18 14:14:29.497 [main] INFO  c.m.action.TransactionService -   Số dư người bán: 5,000,000 VNĐ
+2026-05-18 14:14:29.497 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.503 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.503 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:14:29.503 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:14:29.503 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:14:29.503 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:14:29.504 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:14:29.504 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:14:29.504 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.509 [main] INFO  c.m.action.TransactionService - [creatTransaction] Không thể tạo: không có người đặt giá.
+2026-05-18 14:14:29.512 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.512 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:14:29.514 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:14:29.514 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:14:29.514 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:14:29.514 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:14:29.514 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:14:29.514 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.515 [main] INFO  c.m.action.TransactionService - [confirmPayment] Số dư không đủ. Cần: 5,000,000 | Có: 100 VNĐ
+2026-05-18 14:14:29.518 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.518 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:14:29.518 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:14:29.518 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:14:29.518 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:14:29.519 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:14:29.519 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:14:29.519 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.519 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.519 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh toán thành công!
+2026-05-18 14:14:29.519 [main] INFO  c.m.action.TransactionService -   Giao dịch : TEMP
+2026-05-18 14:14:29.520 [main] INFO  c.m.action.TransactionService -   Số tiền   : 5,000,000 VNĐ
+2026-05-18 14:14:29.520 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang | Số dư còn: 5,000,000 VNĐ
+2026-05-18 14:14:29.520 [main] INFO  c.m.action.TransactionService -   [Thông báo -> Nguoi Ban]: Bạn vừa nhận thanh toán cho giao dịch TEMP
+2026-05-18 14:14:29.520 [main] INFO  c.m.action.TransactionService -   Số dư người bán: 5,000,000 VNĐ
+2026-05-18 14:14:29.521 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.521 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.521 [main] INFO  c.m.action.TransactionService - [refun] Hoàn tiền thành công!
+2026-05-18 14:14:29.521 [main] INFO  c.m.action.TransactionService -   Giao dịch       : TEMP
+2026-05-18 14:14:29.521 [main] INFO  c.m.action.TransactionService -   Người nhận hoàn : Nguoi Thang
+2026-05-18 14:14:29.521 [main] INFO  c.m.action.TransactionService -   Số tiền hoàn    : 5,000,000 VNĐ
+2026-05-18 14:14:29.522 [main] INFO  c.m.action.TransactionService -   Số dư sau hoàn  : 10,000,000 VNĐ
+2026-05-18 14:14:29.522 [main] INFO  c.m.action.TransactionService -   Lý do           : Hàng bị lỗi
+2026-05-18 14:14:29.522 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.525 [main] INFO  c.m.action.TransactionService - [confirmPayment] Giao dịch không tồn tại.
+2026-05-18 14:14:29.528 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiên chưa kết thúc hoặc bị hủy. Trạng thái: IN_PROGRESS
+2026-05-18 14:14:29.530 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.531 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:14:29.531 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:14:29.531 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:14:29.531 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:14:29.531 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:14:29.531 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:14:29.531 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.532 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.532 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh toán thành công!
+2026-05-18 14:14:29.532 [main] INFO  c.m.action.TransactionService -   Giao dịch : TEMP
+2026-05-18 14:14:29.532 [main] INFO  c.m.action.TransactionService -   Số tiền   : 5,000,000 VNĐ
+2026-05-18 14:14:29.532 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang | Số dư còn: 5,000,000 VNĐ
+2026-05-18 14:14:29.532 [main] INFO  c.m.action.TransactionService -   [Thông báo -> Nguoi Ban]: Bạn vừa nhận thanh toán cho giao dịch TEMP
+2026-05-18 14:14:29.533 [main] INFO  c.m.action.TransactionService -   Số dư người bán: 5,000,000 VNĐ
+2026-05-18 14:14:29.533 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.535 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.535 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:14:29.535 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:14:29.535 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:14:29.535 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:14:29.535 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:14:29.536 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:14:29.536 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.546 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiên chưa kết thúc hoặc bị hủy. Trạng thái: CANCELLED
+2026-05-18 14:14:29.549 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.549 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:14:29.549 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:14:29.549 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:14:29.549 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:14:29.549 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:14:29.550 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:14:29.550 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.550 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.550 [main] INFO  c.m.action.TransactionService - [refun] Hoàn tiền thành công!
+2026-05-18 14:14:29.550 [main] INFO  c.m.action.TransactionService -   Giao dịch       : TEMP
+2026-05-18 14:14:29.550 [main] INFO  c.m.action.TransactionService -   Người nhận hoàn : Nguoi Thang
+2026-05-18 14:14:29.550 [main] INFO  c.m.action.TransactionService -   Số tiền hoàn    : 5,000,000 VNĐ
+2026-05-18 14:14:29.551 [main] INFO  c.m.action.TransactionService -   Số dư sau hoàn  : 15,000,000 VNĐ
+2026-05-18 14:14:29.551 [main] INFO  c.m.action.TransactionService -   Lý do           : Lần 1
+2026-05-18 14:14:29.551 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:14:29.551 [main] INFO  c.m.action.TransactionService - [refun] Giao dịch đã được hoàn tiền trước đó.
+2026-05-18 14:15:47.939 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 14:15:47.948 [main] INFO  c.m.utils.UserRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-18 14:15:47.954 [main] INFO  c.m.utils.UserRepositorySQLite - COMMIT thành công cho user: PPTT000005
+2026-05-18 14:15:47.956 [main] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: verify@test.com
+2026-05-18 14:15:47.956 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: lClQyObbRvICZ+puFGsWFXFaFdD3e6XoLXHkEGk/XJ8=
+2026-05-18 14:15:47.956 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: b/U+ZfDjyhrnO4zXJO7LdQ==
+2026-05-18 14:15:47.956 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: Password1!
+2026-05-18 14:15:47.976 [main] INFO  c.m.utils.UserRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-18 14:15:47.977 [main] INFO  c.m.utils.UserRepositorySQLite - COMMIT thành công cho user: PPTT000006
+2026-05-18 14:15:47.978 [main] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: wrong@test.com
+2026-05-18 14:15:47.978 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: KW9ZS07wWX92eJVhXpRAB0IKeKR+Q4hA5ABBQKbD0a8=
+2026-05-18 14:15:47.978 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: XOVi2zdPbHHDU7mQa9xFTg==
+2026-05-18 14:15:47.978 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: WrongPass2!
+2026-05-18 14:15:47.984 [main] INFO  c.m.utils.UserRepositorySQLite -  Không tìm thấy user với email: nonexistent@test.com
+2026-05-18 14:15:47.996 [main] INFO  c.m.utils.UserRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-18 14:15:47.996 [main] INFO  c.m.utils.UserRepositorySQLite - COMMIT thành công cho user: PPTT000007
+2026-05-18 14:20:19.590 [main] INFO  c.m.action.AuctionSessionService - 💰 Hoàn 5000000.0 cho Nguoi Dat 1
+2026-05-18 14:20:22.826 [main] INFO  c.m.action.TransactionService - [refun] Giao dịch không tồn tại.
+2026-05-18 14:20:22.855 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.855 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:20:22.856 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:20:22.861 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:20:22.862 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:20:22.864 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:20:22.864 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:20:22.865 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.865 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.865 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh toán thành công!
+2026-05-18 14:20:22.866 [main] INFO  c.m.action.TransactionService -   Giao dịch : TEMP
+2026-05-18 14:20:22.866 [main] INFO  c.m.action.TransactionService -   Số tiền   : 5,000,000 VNĐ
+2026-05-18 14:20:22.866 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang | Số dư còn: 5,000,000 VNĐ
+2026-05-18 14:20:22.866 [main] INFO  c.m.action.TransactionService -   [Thông báo -> Nguoi Ban]: Bạn vừa nhận thanh toán cho giao dịch TEMP
+2026-05-18 14:20:22.867 [main] INFO  c.m.action.TransactionService -   Số dư người bán: 5,000,000 VNĐ
+2026-05-18 14:20:22.867 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.871 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.871 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:20:22.872 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:20:22.872 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:20:22.872 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:20:22.872 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:20:22.873 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:20:22.873 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.876 [main] INFO  c.m.action.TransactionService - [creatTransaction] Không thể tạo: không có người đặt giá.
+2026-05-18 14:20:22.889 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.889 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:20:22.889 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:20:22.890 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:20:22.890 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:20:22.890 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:20:22.890 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:20:22.891 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.891 [main] INFO  c.m.action.TransactionService - [confirmPayment] Số dư không đủ. Cần: 5,000,000 | Có: 100 VNĐ
+2026-05-18 14:20:22.895 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.898 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:20:22.899 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:20:22.899 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:20:22.900 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:20:22.900 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:20:22.900 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:20:22.900 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.901 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.901 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh toán thành công!
+2026-05-18 14:20:22.901 [main] INFO  c.m.action.TransactionService -   Giao dịch : TEMP
+2026-05-18 14:20:22.903 [main] INFO  c.m.action.TransactionService -   Số tiền   : 5,000,000 VNĐ
+2026-05-18 14:20:22.903 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang | Số dư còn: 5,000,000 VNĐ
+2026-05-18 14:20:22.904 [main] INFO  c.m.action.TransactionService -   [Thông báo -> Nguoi Ban]: Bạn vừa nhận thanh toán cho giao dịch TEMP
+2026-05-18 14:20:22.904 [main] INFO  c.m.action.TransactionService -   Số dư người bán: 5,000,000 VNĐ
+2026-05-18 14:20:22.904 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.905 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.905 [main] INFO  c.m.action.TransactionService - [refun] Hoàn tiền thành công!
+2026-05-18 14:20:22.905 [main] INFO  c.m.action.TransactionService -   Giao dịch       : TEMP
+2026-05-18 14:20:22.905 [main] INFO  c.m.action.TransactionService -   Người nhận hoàn : Nguoi Thang
+2026-05-18 14:20:22.906 [main] INFO  c.m.action.TransactionService -   Số tiền hoàn    : 5,000,000 VNĐ
+2026-05-18 14:20:22.906 [main] INFO  c.m.action.TransactionService -   Số dư sau hoàn  : 10,000,000 VNĐ
+2026-05-18 14:20:22.906 [main] INFO  c.m.action.TransactionService -   Lý do           : Hàng bị lỗi
+2026-05-18 14:20:22.906 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.919 [main] INFO  c.m.action.TransactionService - [confirmPayment] Giao dịch không tồn tại.
+2026-05-18 14:20:22.924 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiên chưa kết thúc hoặc bị hủy. Trạng thái: IN_PROGRESS
+2026-05-18 14:20:22.931 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.933 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:20:22.934 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:20:22.935 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:20:22.935 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:20:22.935 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:20:22.935 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:20:22.936 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.936 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.936 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh toán thành công!
+2026-05-18 14:20:22.936 [main] INFO  c.m.action.TransactionService -   Giao dịch : TEMP
+2026-05-18 14:20:22.937 [main] INFO  c.m.action.TransactionService -   Số tiền   : 5,000,000 VNĐ
+2026-05-18 14:20:22.937 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang | Số dư còn: 5,000,000 VNĐ
+2026-05-18 14:20:22.937 [main] INFO  c.m.action.TransactionService -   [Thông báo -> Nguoi Ban]: Bạn vừa nhận thanh toán cho giao dịch TEMP
+2026-05-18 14:20:22.937 [main] INFO  c.m.action.TransactionService -   Số dư người bán: 5,000,000 VNĐ
+2026-05-18 14:20:22.938 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.941 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:22.941 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:20:22.941 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:20:22.942 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:20:22.942 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:20:22.942 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:20:22.942 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:20:22.942 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:23.028 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiên chưa kết thúc hoặc bị hủy. Trạng thái: CANCELLED
+2026-05-18 14:20:23.034 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:23.034 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao dịch tạo thành công!
+2026-05-18 14:20:23.034 [main] INFO  c.m.action.TransactionService -   Sản phẩm  : Laptop Dell
+2026-05-18 14:20:23.035 [main] INFO  c.m.action.TransactionService -   Người bán : Nguoi Ban
+2026-05-18 14:20:23.035 [main] INFO  c.m.action.TransactionService -   Người mua : Nguoi Thang
+2026-05-18 14:20:23.035 [main] INFO  c.m.action.TransactionService -   Giá chốt  : 5,000,000 VNĐ
+2026-05-18 14:20:23.035 [main] INFO  c.m.action.TransactionService -   Trạng thái: CHỜ THANH TOÁN
+2026-05-18 14:20:23.035 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:23.036 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:23.036 [main] INFO  c.m.action.TransactionService - [refun] Hoàn tiền thành công!
+2026-05-18 14:20:23.036 [main] INFO  c.m.action.TransactionService -   Giao dịch       : TEMP
+2026-05-18 14:20:23.036 [main] INFO  c.m.action.TransactionService -   Người nhận hoàn : Nguoi Thang
+2026-05-18 14:20:23.037 [main] INFO  c.m.action.TransactionService -   Số tiền hoàn    : 5,000,000 VNĐ
+2026-05-18 14:20:23.037 [main] INFO  c.m.action.TransactionService -   Số dư sau hoàn  : 15,000,000 VNĐ
+2026-05-18 14:20:23.037 [main] INFO  c.m.action.TransactionService -   Lý do           : Lần 1
+2026-05-18 14:20:23.103 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-18 14:20:23.150 [main] INFO  c.m.action.TransactionService - [refun] Giao dịch đã được hoàn tiền trước đó.
+2026-05-18 14:20:24.009 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-18 14:20:24.028 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: verify@test.com
+2026-05-18 14:20:24.066 [main] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: verify@test.com
+2026-05-18 14:20:24.066 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: lClQyObbRvICZ+puFGsWFXFaFdD3e6XoLXHkEGk/XJ8=
+2026-05-18 14:20:24.067 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: b/U+ZfDjyhrnO4zXJO7LdQ==
+2026-05-18 14:20:24.067 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: Password1!
+2026-05-18 14:20:24.078 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: wrong@test.com
+2026-05-18 14:20:24.080 [main] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: wrong@test.com
+2026-05-18 14:20:24.080 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: KW9ZS07wWX92eJVhXpRAB0IKeKR+Q4hA5ABBQKbD0a8=
+2026-05-18 14:20:24.080 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: XOVi2zdPbHHDU7mQa9xFTg==
+2026-05-18 14:20:24.081 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: WrongPass2!
+2026-05-18 14:20:24.086 [main] INFO  c.m.utils.UserRepositorySQLite -  Không tìm thấy user với email: nonexistent@test.com
+2026-05-18 14:20:24.095 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: test001@test.com

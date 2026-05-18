@@ -111,9 +111,9 @@ public class LoginAction {
                         e.printStackTrace();
                     }
 
-                } catch (UserNameException | EmailException | PasswordException | DateException e) {
+                } catch (UserNameException | EmailException | PasswordException | DateException exception) {
                     HandleNavigationAndAlert.getInstance().showAlert(
-                            Alert.AlertType.WARNING, "Lỗi đăng ký", e.getMessage());
+                            Alert.AlertType.WARNING, "Lỗi đăng ký", exception.getMessage());
                 } finally {
                     lock.unlock();
                 }
