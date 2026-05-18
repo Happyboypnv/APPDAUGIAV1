@@ -15,14 +15,24 @@
 
       <!-- Navbar Component (Auto-updates when NavbarComponent.fxml changes) -->
       <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
-      <ImageView fx:id="avatarPicture" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
+      <StackPane fx:id="avatarContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
          <StackPane.margin>
-            <Insets left="270.0" top="110.0" />
+            <Insets bottom="500.0" right="250.0" />
          </StackPane.margin>
-         <image>
-            <Image url="@../image/default_avatar.jpg" />
-         </image>
-      </ImageView>
+         <children>
+            <ImageView fx:id="avatarPicture" fitHeight="150.0" fitWidth="150.0" onMouseClicked="#onClickedChangeAvatar" pickOnBounds="true" preserveRatio="true">
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+               <image>
+                  <Image url="@../image/default_avatar.jpg" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </StackPane>
       <TextField fx:id="nameField" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="400.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css">
          <cursor>
             <Cursor fx:constant="TEXT" />

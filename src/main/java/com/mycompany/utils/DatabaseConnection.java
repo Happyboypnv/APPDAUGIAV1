@@ -98,7 +98,8 @@ public class DatabaseConnection {
                 "so_dien_thoai TEXT, " +
                 "so_du_kha_dung REAL DEFAULT 0, " +
                 "so_tai_khoan_ngan_hang TEXT, " +  // ⭐ thêm
-                "ten_ngan_hang TEXT);";
+                "ten_ngan_hang TEXT, " +
+                "duong_dan_avatar TEXT);";
 
         String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
                 "ma_san_pham TEXT PRIMARY KEY, " +
@@ -161,6 +162,13 @@ public class DatabaseConnection {
                 logger.info("✅ Migration: Đã thêm cột ten_ngan_hang");
             } catch (SQLException e) {
                 logger.debug("ℹ️ Cột ten_ngan_hang đã tồn tại.");
+            }
+
+            try {
+                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN duong_dan_avatar TEXT;");
+                logger.info(" Thêm cột đường dẫn avatar thành công vào bảng người dùng!");
+            } catch (SQLException e) {
+                logger.debug("Cột đường dẫn avatar đã tồn tại");
             }
 
             stmt.execute(sqlSanPham);

@@ -39,7 +39,7 @@ public class ApiClient {
     /**
      * Gọi POST /api/users/logout
      *
-     * MULTI-DEVICE SESSION HANDLING:
+     * MULTI-DEVICx`E SESSION HANDLING:
      *   - Notifies server to remove user from online users list
      *   - Marks session as LOGGED_OUT
      *   - Broadcasts logout event (optional, via WebSocket)
