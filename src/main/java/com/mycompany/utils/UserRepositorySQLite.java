@@ -114,6 +114,11 @@ public class UserRepositorySQLite implements IUserRepository {
             // Thực thi câu lệnh INSERT
             // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
             // Trả về số dòng bị ảnh hưởng (1 = thành công)
+            logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+                    maMoi, User.getFullName(), User.getEmail(), User.getPassword(), User.getSalt(),
+                    User.getDateOfBirth(), User.getAddress(), User.getPhoneNumber(),
+                    User.getAvailableBalance(), User.getBankAccountNumber(), User.getBankName(),
+                    User.getAvatarPath());
             int rowsAffected = ps.executeUpdate();
             logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
 

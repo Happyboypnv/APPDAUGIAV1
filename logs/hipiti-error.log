@@ -38,3 +38,9 @@
 }
 2026-05-18 23:45:41.389 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
 2026-05-18 23:46:13.799 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 14:33:47.982 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 15:16:41.950 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Server timeout at http://192.168.0.1:8080 (no response). Server might be overloaded or unresponsive.
+2026-05-19 15:55:52.758 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 18:39:21.553 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 19:14:49.217 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 21:20:51.716 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
