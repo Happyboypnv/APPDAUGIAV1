@@ -53,8 +53,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
     @Override
     public void save(AuctionSession AuctionSession) {
         /// kiem tra auction ton tai
-        if(isAuctionAvailable(AuctionSession.getAuctionSessionId())){
-            logger.info("[WARN] Phiên đấu giá đã tồn tại: " + AuctionSession.getAuctionSessionId());
+        if(isAuctionAvailable(AuctionSession.getSessionId())){
+            logger.info("[WARN] Phiên đấu giá đã tồn tại: " + AuctionSession.getSessionId());
             return;
         }
         // FIX: kiemTraauctionTonTai() thực thi SELECT, mở transaction ngầm nhưng không commit.
@@ -88,7 +88,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
         String sql = "INSERT INTO phien_dau_gia " + "(ma_phien, ten_phien, gia_hien_tai, buoc_gia, thoi_gian_bat_dau, thoi_gian_ket_thuc, trang_thai, ma_nguoi_ban, ma_san_pham, ma_nguoi_thang_cuoc, is_closed) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)){
-            ps.setString(1, AuctionSession.getAuctionSessionId());
+             ps.setString(1, AuctionSession.getSessionId());
             ps.setString(2, AuctionSession.getSessionName());
             ps.setDouble(3, AuctionSession.getCurrentPrice());
             ps.setDouble(4, AuctionSession.getPriceStep());
@@ -173,7 +173,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
                 AuctionSession.setStatus(SessionStatus.valueOf(rs.getString("trang_thai")));
                 AuctionSession.setClosed(rs.getBoolean("is_closed"));
                 AuctionSession.setWinner(winner);
-                result.put(AuctionSession.getAuctionSessionId(), AuctionSession);
+                result.put(AuctionSession.getSessionId(), AuctionSession);
             }
         } catch (SQLException e) {
             logger.error("[ERROR] Lỗi khi lấy tất cả phiên đấu giá: " + e.getMessage());
@@ -259,7 +259,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
             ps.setString(8, AuctionSession.getProduct().getProductCode());
             ps.setString(9, AuctionSession.getWinner() != null ? AuctionSession.getWinner().getUserId() : null);
             ps.setBoolean(10, AuctionSession.isClosed());
-            ps.setString(11, AuctionSession.getAuctionSessionId());
+            ps.setString(11, AuctionSession.getSessionId());
             int rows = ps.executeUpdate();
             ps.getConnection().commit();
             return rows > 0;

@@ -55,8 +55,8 @@ public class CreateAuctionController implements Initializable {
 
     private void setupDanhMuc() {
         danhMucSanPham.getItems().addAll(
-                "Đồng hồ", "Trang sức", "Nghệ thuật", "Bất động sản",
-                "Xe cộ", "Điện tử", "Thời trang", "Khác"
+                "Da quy", "Nghệ thuật",
+                "Xe cộ", "Điện tử"
         );
     }
 

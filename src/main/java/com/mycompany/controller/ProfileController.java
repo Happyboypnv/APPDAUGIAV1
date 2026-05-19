@@ -1,11 +1,9 @@
 package com.mycompany.controller;
 
 import com.mycompany.models.User;
-import com.mycompany.utils.UserProfileUpdater;
+import com.mycompany.utils.*;
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.ProfileAction;
-import com.mycompany.utils.SessionManager;
-import com.mycompany.utils.TokenUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.Initializable;
@@ -13,6 +11,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 
 import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 
 /**
@@ -51,6 +53,7 @@ public class ProfileController implements Initializable {
     // @FXML FIELDS - Các thành phần UI được inject từ FXML
     @FXML private ImageView avatarPicture; // Hình ảnh avatar (hình tròn)
 
+    @FXML private StackPane avatarContainer; // Container để chứa avatar (dùng để clip hình tròn)
     @FXML private TextField nameField, // Họ tên
                              emailField, // Email (read-only)
                              birthField, // Ngày sinh (read-only)
@@ -101,8 +104,56 @@ public class ProfileController implements Initializable {
             }
         }
 
-        Image avt = new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm());
-        avatarPicture.setImage(avt);
+        // Load avatar image - use saved path if available
+        loadAvatarImage(currentUser);
+
+        // Make avatar clickable to allow changing
+
+    }
+
+    /**
+     * Load avatar image from stored path or use default
+     *
+     * @param currentUser Current logged-in user
+     */
+    private void loadAvatarImage(User currentUser) {
+        try {
+            String avatarPath;
+            if (currentUser != null && currentUser.getAvatarPath() != null) {
+                avatarPath = currentUser.getAvatarPath();
+            } else {
+                avatarPath = "image/default_avatar.jpg";
+                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING,"Ko tìm thấy đường dẫn", "Không lấy được đường dẫn từ user!");
+            }
+
+            // Trường hợp 1: Nếu là ảnh mặc định ban đầu -> Đọc từ resource tĩnh của bạn
+            if (avatarPath.equals("image/default_avatar.jpg")) {
+                URL resourceUrl = getClass().getResource("/" + avatarPath);
+                if (resourceUrl != null) {
+                    avatarPicture.setImage(new Image(resourceUrl.toExternalForm()));
+                }
+            }
+            // Trường hợp 2: Nếu là ảnh do user thay đổi -> Đọc từ thư mục lưu trữ vĩnh viễn trong dự án
+            else {
+                String projectDir = System.getProperty("user.dir");
+                File externalFile = new File(projectDir + File.separator + "user_data" + File.separator + avatarPath);
+
+                if (externalFile.exists()) {
+                    avatarPicture.setImage(new Image(externalFile.toURI().toString()));
+                } else {
+                    // Nếu không tìm thấy file, quay về ảnh mặc định trong resource
+                    avatarPicture.setImage(new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm()));
+                }
+            }
+        } catch (Exception e) {
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING, "Lỗi ko xác định", "Lỗi ko xác định");
+            try {
+                Image avt = new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm());
+                avatarPicture.setImage(avt);
+            } catch (Exception ignored) {}
+        }
+
+        // Apply circular clip
         Circle clip = new Circle(75, 75, 75);
         avatarPicture.setClip(clip);
     }
@@ -205,6 +256,53 @@ public class ProfileController implements Initializable {
             HandleNavigationAndAlert.getInstance().goToChangePassword(event);
         } catch (IOException e) {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện đổi mật khẩu không thành công!");
+        }
+    }
+
+    /**
+     * PHƯƠNG THỨC: onClickedChangeAvatar()
+     * MỤC ĐÍCH: Cho phép người dùng thay đổi avatar
+     *
+     * GIẢI THÍCH CHI TIẾT:
+     * 1. Gọi ProfileAction để mở FileChooser
+     * 2. Người dùng chọn file hình ảnh
+     * 3. Validate và copy file vào resources/image
+     * 4. Cập nhật avatar path vào database thông qua UserProfileUpdater
+     * 5. Reload avatar image trên giao diện
+     * 6. Hiển thị thông báo thành công
+     *
+     * XỬ LÝ LỖI:
+     * - User cancel: không làm gì cả
+     * - File format không hợp lệ: hiển thị lỗi
+     * - File quá lớn: hiển thị lỗi
+     * - Lỗi copy file: hiển thị lỗi
+     */
+    @FXML
+    public void onClickedChangeAvatar(MouseEvent event) {
+        try {
+            // Get current stage
+            Stage stage = (Stage) avatarPicture.getScene().getWindow();
+
+            // Call ProfileAction to handle avatar selection
+            String newAvatarPath = ProfileAction.getInstance().changeAvatar(stage);
+
+            // If user cancelled or no file selected
+            if (newAvatarPath == null) {
+                return;
+            }
+
+            User currentUser = SessionManager.getInstance().getCurrentUser();
+
+            // Reload avatar image on UI
+
+            loadAvatarImage(currentUser);
+
+            // Show success message
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Avatar đã được cập nhật!");
+        } catch (IOException e) {
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thay đổi avatar: " + e.getMessage());
+        } catch (Exception e) {
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra: " + e.getMessage());
         }
     }
 

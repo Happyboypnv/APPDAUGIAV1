@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="710.0" prefWidth="893.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.FinanceController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.FinanceController">
    <children>
        <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
       <Label alignment="CENTER" text="Liên kết tài khoản" textFill="WHITE" StackPane.alignment="TOP_CENTER">
@@ -20,7 +20,7 @@
             <Font name="System Bold" size="36.0" />
          </font>
          <StackPane.margin>
-            <Insets right="30.0" top="30.0" />
+            <Insets right="60.0" top="30.0" />
          </StackPane.margin>
       </Label>
       <ComboBox fx:id="banks" prefWidth="150.0" styleClass="combo-box" stylesheets="@../style/dropDown.css" StackPane.alignment="TOP_CENTER">
@@ -55,7 +55,7 @@
             <Insets right="150.0" top="150.0" />
          </StackPane.margin>
       </TextField>
-      <Separator maxWidth="-Infinity" prefHeight="53.0" prefWidth="554.0" styleClass="custom-separator" stylesheets="@../style/nen.css" StackPane.alignment="CENTER_RIGHT">
+      <Separator maxWidth="-Infinity" prefHeight="53.0" prefWidth="611.0" styleClass="custom-separator" stylesheets="@../style/nen.css" StackPane.alignment="CENTER_RIGHT">
          <StackPane.margin>
             <Insets bottom="140.0" right="50.0" />
          </StackPane.margin>
@@ -70,7 +70,7 @@
       </Label>
       <Button fx:id="linkToBankButton" mnemonicParsing="false" onMouseClicked="#onClickedLinkToBank" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Liên kết" StackPane.alignment="CENTER_RIGHT">
          <StackPane.margin>
-            <Insets bottom="240.0" right="250.0" />
+            <Insets bottom="240.0" right="280.0" />
          </StackPane.margin>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -134,7 +134,7 @@
       </TextField>
       <Button fx:id="depositButton" mnemonicParsing="false" onMouseClicked="#onClickedDeposit" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Xác nhận" StackPane.alignment="CENTER_RIGHT">
          <StackPane.margin>
-            <Insets right="250.0" top="300.0" />
+            <Insets right="280.0" top="300.0" />
          </StackPane.margin>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -142,7 +142,7 @@
       </Button>
       <Button fx:id="withdrawButton" mnemonicParsing="false" onMouseClicked="#onClickedWithdraw" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Xác nhận" StackPane.alignment="CENTER_RIGHT">
          <StackPane.margin>
-            <Insets right="250.0" top="650.0" />
+            <Insets right="280.0" top="650.0" />
          </StackPane.margin>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -156,7 +156,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
          <StackPane.margin>
-            <Insets bottom="370.0" right="100.0" />
+            <Insets bottom="470.0" right="100.0" />
          </StackPane.margin>
       </ImageView>
     </children>

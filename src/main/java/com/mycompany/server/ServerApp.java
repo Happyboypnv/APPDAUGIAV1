@@ -21,10 +21,16 @@ import java.util.concurrent.Executors;
  * ServerApp — Điểm khởi động HTTP server của ứng dụng đấu giá.
  *
  * Chạy trên cổng 8080 với các endpoint:
- *  POST /api/users/login      → Đăng nhập, trả về token
+ *  POST /api/users/login      → Đăng nhập, trả về token (với session validation)
  *  POST /api/users/register   → Đăng ký tài khoản mới
+ *  POST /api/users/logout     → Đăng xuất, xóa session khỏi online users
  *  GET  /api/users/{email}    → Lấy thông tin user theo email
  *  OPTIONS (mọi đường dẫn)    → Xử lý CORS preflight request từ browser
+ *
+ * MULTI-DEVICE SESSION VALIDATION:
+ *  - OnlineUsersManager tracks all logged-in users
+ *  - Prevents multiple active sessions for same user (1 per email)
+ *  - Auto-cleanup of disconnected sessions after 30 minutes
  *
  * Cách chạy:
  *   Chạy main() của class này → server lắng nghe tại http://localhost:8080
@@ -34,7 +40,7 @@ import java.util.concurrent.Executors;
  *        -H "Content-Type: application/json" \
  *        -d "{\"email\":\"abc@gmail.com\",\"matKhau\":\"123456\"}"
  */
-public class ServerApp {
+public class    ServerApp {
 
     /** Cổng server lắng nghe */
     private static final int PORT = 8080;
@@ -94,6 +100,19 @@ public class ServerApp {
                 return;
             }
             userController.handleRegister(exchange);
+        });
+
+        /**
+         * POST /api/users/logout
+         * Đăng xuất → xóa session khỏi online users list
+         * NEW: Multi-device session handling
+         */
+        server.createContext("/api/users/logout", exchange -> {
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                xuLyCors(exchange);
+                return;
+            }
+            userController.handleLogout(exchange);
         });
 
         /**
@@ -192,6 +211,7 @@ public class ServerApp {
         logger.info("  USERS:");
         logger.info("  POST http://localhost:" + PORT + "/api/users/login");
         logger.info("  POST http://localhost:" + PORT + "/api/users/register");
+        logger.info("  POST http://localhost:" + PORT + "/api/users/logout");
         logger.info("  GET  http://localhost:" + PORT + "/api/users/{email}");
         logger.info("----------------------------------------");
         logger.info("  AUCTIONS:");

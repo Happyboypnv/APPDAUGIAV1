@@ -1,6 +1,7 @@
 package com.mycompany.utils;
 
 import com.google.gson.Gson;
+import com.mycompany.server.controller.AuctionController;
 import com.mycompany.server.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,15 +34,57 @@ public class ApiClient {
     private static final Gson gson = new Gson();
 
     // ============================================================
+    // ĐĂNG XUẤT
+    // ============================================================
+
+    /**
+     * Gọi POST /api/users/logout
+     *
+     * MULTI-DEVICx`E SESSION HANDLING:
+     *   - Notifies server to remove user from online users list
+     *   - Marks session as LOGGED_OUT
+     *   - Broadcasts logout event (optional, via WebSocket)
+     *   - Allows other devices to login to same account
+     *
+     * @param token JWT token của user hiện tại
+     * @return LoginResponse chứa kết quả logout
+     */
+    public static LoginResponse logout(String token) {
+        // Bước 1: Gửi POST request với token
+        String responseJson = guiPost("/api/users/logout", "{}", token);
+
+        // Bước 2: Parse response
+        if (responseJson == null) {
+            logger.warn("[ApiClient] ⚠️ Logout request failed (no response from server)");
+            return new LoginResponse("Không kết nối được server");
+        }
+
+        try {
+            LoginResponse response = gson.fromJson(responseJson, LoginResponse.class);
+            logger.info("[ApiClient] ✅ Logout successful");
+            return response;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Error parsing logout response: " + e.getMessage());
+            return new LoginResponse("Lỗi xử lý phản hồi từ server");
+        }
+    }
+
+    // ============================================================
     // ĐĂNG NHẬP
     // ============================================================
 
     /**
      * Gọi POST /api/users/login
      *
+     * MULTI-DEVICE SESSION HANDLING:
+     *   - Server checks if user already logged in on another device
+     *   - If yes: Returns response with sessionStatus="ALREADY_IN_USE"
+     *   - If no: Returns response with sessionStatus="SUCCESS" + token
+     *   - Client must check sessionStatus before accepting login
+     *
      * @param email    email người dùng
      * @param matKhau  mật khẩu plain text
-     * @return LoginResponse chứa token nếu thành công, thongBao nếu thất bại
+     * @return LoginResponse chứa token (SUCCESS) hoặc conflict info (ALREADY_IN_USE)
      */
     public static LoginResponse login(String email, String matKhau) {
         // Bước 1: Tạo object request rồi chuyển thành JSON
@@ -53,7 +96,25 @@ public class ApiClient {
 
         // Bước 3: Chuyển JSON response thành object Java
         if (responseJson == null) return new LoginResponse("Không kết nối được server");
-        return gson.fromJson(responseJson, LoginResponse.class);
+
+        try {
+            LoginResponse response = gson.fromJson(responseJson, LoginResponse.class);
+
+            // Log session status if present
+            if (response != null && response.getSessionStatus() != null) {
+                logger.info("[ApiClient] Login response status: {}", response.getSessionStatus());
+
+                if (response.getSessionStatus().equals("ALREADY_IN_USE")) {
+                    logger.warn("[ApiClient] ⚠️ User already logged in on another device: {}",
+                            response.getExistingDeviceId());
+                }
+            }
+
+            return response;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Error parsing login response: " + e.getMessage());
+            return new LoginResponse("Lỗi xử lý phản hồi từ server");
+        }
     }
 
     // ============================================================
@@ -80,13 +141,23 @@ public class ApiClient {
         return gson.fromJson(responseJson, LoginResponse.class);
     }
     public static DatGiaResponse createBid(String maPhien, double gia, String token) {
-        String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
-            put("maPhien", maPhien);
-            put("gia", gia);
-        }});
-        String responseJson = guiPost("/api/bids", jsonBody, token); // đúng endpoint
-        if (responseJson == null) return null;
-        return gson.fromJson(responseJson, DatGiaResponse.class);
+        try {
+            // Build request body explicitly (avoid anonymous initializer issues)
+            DatGiaRequest request = new DatGiaRequest(maPhien,gia);
+            
+            String jsonBody = gson.toJson(request);
+            if (jsonBody == null || jsonBody.equals("null")) {
+                logger.error("[createBid] ❌ JSON serialization failed, got null");
+                return null;
+            }
+            
+            String responseJson = guiPost("/api/bids", jsonBody, token);
+            if (responseJson == null) return null;
+            return gson.fromJson(responseJson, DatGiaResponse.class);
+        } catch (Exception e) {
+            logger.error("[createBid] ❌ Exception in createBid: " + e.getMessage(), e);
+            return null;
+        }
     }
     public static List<PhienDauGiaDTO> getAuctions() {
         String responseJson = guiGet("/api/auctions", null);
@@ -128,31 +199,36 @@ public class ApiClient {
     public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
                                         String danhMuc, String moTa,         // ← thêm 2 dòng này
                                         double giaKhoiDiem, int thoiGianGiay, String token) {
-        String jsonBody = gson.toJson(new java.util.HashMap<String, Object>() {{
-            put("tenPhien",     tenPhien);
-            put("tenSanPham",   tenSanPham);
-            put("maSanPham",    maSanPham);
-            put("danhMuc",      danhMuc);    // ← thêm
-            put("moTa",         moTa);       // ← thêm
-            put("giaKhoiDiem",  giaKhoiDiem);
-            put("thoiGianGiay", thoiGianGiay);
-        }});
-        logger.info("[createAuction] JSON gửi lên: " + jsonBody);
-        logger.info("[createAuction] Token: " + token);
-        String responseJson = guiPost("/api/auctions", jsonBody, token);
-
-        if (responseJson == null) return false;
-        logger.info("[createAuction] Server trả về: " + responseJson);
         try {
-            com.google.gson.JsonObject obj = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
-            if (!obj.has("maPhien")) {
-                // Log ra lỗi thật sự từ server thay vì im lặng
-                logger.error("[ApiClient] Server từ chối tạo phiên: " + responseJson);
+            // Build request body explicitly (avoid anonymous initializer issues)
+            AuctionController.TaoPhienRequest request = new AuctionController.TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,giaKhoiDiem,thoiGianGiay);
+
+            String jsonBody = gson.toJson(request);
+            if (jsonBody == null || jsonBody.equals("null")) {
+                logger.error("[createAuction] ❌ JSON serialization failed, got null");
                 return false;
             }
-            return true;
+
+            logger.info("[createAuction] JSON gửi lên: " + jsonBody);
+            logger.info("[createAuction] Token: " + token);
+            String responseJson = guiPost("/api/auctions", jsonBody, token);
+
+            if (responseJson == null) return false;
+            logger.info("[createAuction] Server trả về: " + responseJson);
+            try {
+                com.google.gson.JsonObject obj = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
+                if (!obj.has("maPhien")) {
+                    // Log ra lỗi thật sự từ server thay vì im lặng
+                    logger.error("[ApiClient] Server từ chối tạo phiên: " + responseJson);
+                    return false;
+                }
+                return true;
+            } catch (Exception e) {
+                logger.error("[ApiClient] Lỗi parse createAuction response: " + e.getMessage());
+                return false;
+            }
         } catch (Exception e) {
-            logger.error("[ApiClient] Lỗi parse createAuction response: " + e.getMessage());
+            logger.error("[createAuction] ❌ Exception in createAuction: " + e.getMessage(), e);
             return false;
         }
     }
@@ -178,6 +254,8 @@ public class ApiClient {
     public static String getUser(String email, String token) {
         return guiGet("/api/users/" + email, token);
     }
+
+
 
     // ============================================================
     // PHƯƠNG THỨC HỖ TRỢ (private)

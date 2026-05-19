@@ -140,9 +140,6 @@ public class AuctionSession {
         return this.sessionId;
     }
 
-    public String getAuctionSessionId() {
-        return this.sessionId;
-    }
 
     public String getSessionName() {
         return this.sessionName;
