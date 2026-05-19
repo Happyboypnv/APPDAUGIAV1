@@ -1,6 +1,0 @@
-2026-05-18 14:20:24.028 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: verify@test.com
-2026-05-18 14:20:24.078 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: wrong@test.com
-2026-05-18 14:20:24.095 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: test001@test.com
-2026-05-18 15:08:49.403 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
-}
