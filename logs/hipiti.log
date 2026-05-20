@@ -1421,3 +1421,247 @@
 2026-05-20 13:34:29.567 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ‚úÖ ƒê√£ gi·∫£i ph√≥ng to√†n b·ªô t√†i nguy√™n Database.
 2026-05-20 13:34:31.491 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ƒêang ƒë√≥ng t·∫•t c·∫£ database connections...
 2026-05-20 13:34:31.493 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ‚úÖ ƒê√£ gi·∫£i ph√≥ng to√†n b·ªô t√†i nguy√™n Database.
+2026-05-20 13:38:01.207 [main] INFO  c.m.action.AuctionSessionService - ? HoÖn 5000000.0 cho Nguoi Dat 1
+2026-05-20 13:38:01.503 [main] DEBUG c.mycompany.utils.DatabaseConnection - ? ?? cÖi ??t PRAGMA vÖ t?t AutoCommit cho Connection
+2026-05-20 13:38:01.515 [main] INFO  c.m.action.AuctionSessionService - Phiàn PH003 ?? m? l£c 2026-05-20T13:38:01.237782400, s? ?¢ng l£c 2026-05-20T13:40:01.237782400
+2026-05-20 13:38:01.556 [main] INFO  c.m.action.AuctionSessionService - Phiàn PH002 ?? m? l£c 2026-05-20T13:38:01.555025200, s? ?¢ng l£c 2026-05-20T13:39:01.555025200
+2026-05-20 13:38:03.501 [main] INFO  c.m.action.TransactionService - [refun] Giao d?ch khìng t?n t?i.
+2026-05-20 13:38:03.528 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.528 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:03.529 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:03.529 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:03.529 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:03.530 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:03.530 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:03.531 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.531 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.531 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh to†n thÖnh cìng!
+2026-05-20 13:38:03.531 [main] INFO  c.m.action.TransactionService -   Giao d?ch : TEMP
+2026-05-20 13:38:03.532 [main] INFO  c.m.action.TransactionService -   S? ti?n   : 5,000,000 VN?
+2026-05-20 13:38:03.532 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang | S? d? cïn: 5,000,000 VN?
+2026-05-20 13:38:03.532 [main] INFO  c.m.action.TransactionService -   [Thìng b†o -> Nguoi Ban]: B?n v?a nh?n thanh to†n cho giao d?ch TEMP
+2026-05-20 13:38:03.532 [main] INFO  c.m.action.TransactionService -   S? d? ng??i b†n: 5,000,000 VN?
+2026-05-20 13:38:03.532 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.536 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.536 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:03.536 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:03.537 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:03.537 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:03.537 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:03.537 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:03.537 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.540 [main] INFO  c.m.action.TransactionService - [creatTransaction] Khìng th? t?o: khìng c¢ ng??i ??t gi†.
+2026-05-20 13:38:03.542 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.543 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:03.543 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:03.543 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:03.543 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:03.543 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:03.543 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:03.543 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.544 [main] INFO  c.m.action.TransactionService - [confirmPayment] S? d? khìng ??. C?n: 5,000,000 | C¢: 100 VN?
+2026-05-20 13:38:03.547 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.547 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:03.547 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:03.547 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:03.547 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh to†n thÖnh cìng!
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService -   Giao d?ch : TEMP
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService -   S? ti?n   : 5,000,000 VN?
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang | S? d? cïn: 5,000,000 VN?
+2026-05-20 13:38:03.548 [main] INFO  c.m.action.TransactionService -   [Thìng b†o -> Nguoi Ban]: B?n v?a nh?n thanh to†n cho giao d?ch TEMP
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService -   S? d? ng??i b†n: 5,000,000 VN?
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService - [refun] HoÖn ti?n thÖnh cìng!
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService -   Giao d?ch       : TEMP
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService -   Ng??i nh?n hoÖn : Nguoi Thang
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService -   S? ti?n hoÖn    : 5,000,000 VN?
+2026-05-20 13:38:03.549 [main] INFO  c.m.action.TransactionService -   S? d? sau hoÖn  : 10,000,000 VN?
+2026-05-20 13:38:03.550 [main] INFO  c.m.action.TransactionService -   L? do           : HÖng b? l?i
+2026-05-20 13:38:03.550 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.553 [main] INFO  c.m.action.TransactionService - [confirmPayment] Giao d?ch khìng t?n t?i.
+2026-05-20 13:38:03.555 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiàn ch?a k?t th£c ho?c b? h?y. Tr?ng th†i: IN_PROGRESS
+2026-05-20 13:38:03.558 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.559 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:03.559 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:03.559 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:03.559 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:03.559 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:03.559 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:03.559 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh to†n thÖnh cìng!
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService -   Giao d?ch : TEMP
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService -   S? ti?n   : 5,000,000 VN?
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang | S? d? cïn: 5,000,000 VN?
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService -   [Thìng b†o -> Nguoi Ban]: B?n v?a nh?n thanh to†n cho giao d?ch TEMP
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService -   S? d? ng??i b†n: 5,000,000 VN?
+2026-05-20 13:38:03.560 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.563 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.563 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:03.563 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:03.563 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:03.563 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:03.564 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:03.564 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:03.564 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.583 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiàn ch?a k?t th£c ho?c b? h?y. Tr?ng th†i: CANCELLED
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService - [refun] HoÖn ti?n thÖnh cìng!
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService -   Giao d?ch       : TEMP
+2026-05-20 13:38:03.586 [main] INFO  c.m.action.TransactionService -   Ng??i nh?n hoÖn : Nguoi Thang
+2026-05-20 13:38:03.587 [main] INFO  c.m.action.TransactionService -   S? ti?n hoÖn    : 5,000,000 VN?
+2026-05-20 13:38:03.587 [main] INFO  c.m.action.TransactionService -   S? d? sau hoÖn  : 15,000,000 VN?
+2026-05-20 13:38:03.587 [main] INFO  c.m.action.TransactionService -   L? do           : L?n 1
+2026-05-20 13:38:03.587 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:03.587 [main] INFO  c.m.action.TransactionService - [refun] Giao d?ch ?? ???c hoÖn ti?n tr??c ?¢.
+2026-05-20 13:38:03.662 [main] INFO  c.m.utils.UserRepositorySQLite - PPTT000002, Test, verify@test.com, rQTlUNoHrNfqEx0V8zYz5NgUh1/v/8/2CMqJDgFjq5U=, xMVLw9ZrPWX/OOgdWniWYA==, 2000-01-01, null, null, 0.0, null, null, image/default_avatar.jpg
+2026-05-20 13:38:03.663 [main] INFO  c.m.utils.UserRepositorySQLite -  INSERT thÖnh cìng, s? dïng ?nh h??ng: 1
+2026-05-20 13:38:03.665 [main] INFO  c.m.utils.UserRepositorySQLite - COMMIT thÖnh cìng cho user: PPTT000002
+2026-05-20 13:38:03.667 [main] INFO  c.m.utils.UserRepositorySQLite -  Tçm th?y user v?i email: verify@test.com
+2026-05-20 13:38:03.667 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: rQTlUNoHrNfqEx0V8zYz5NgUh1/v/8/2CMqJDgFjq5U=
+2026-05-20 13:38:03.667 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: xMVLw9ZrPWX/OOgdWniWYA==
+2026-05-20 13:38:03.667 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nh?p vÖo: Password1!
+2026-05-20 13:38:03.670 [main] INFO  c.m.utils.UserRepositorySQLite - PPTT000003, Test, wrong@test.com, lPP0Ob9gFhpHsJSXUE9e0fdqXW4rDfUh8tAmuAp4RgE=, 8t6k2XxzZp/jfBDdc/7VDQ==, 2000-01-01, null, null, 0.0, null, null, image/default_avatar.jpg
+2026-05-20 13:38:03.671 [main] INFO  c.m.utils.UserRepositorySQLite -  INSERT thÖnh cìng, s? dïng ?nh h??ng: 1
+2026-05-20 13:38:03.671 [main] INFO  c.m.utils.UserRepositorySQLite - COMMIT thÖnh cìng cho user: PPTT000003
+2026-05-20 13:38:03.671 [main] INFO  c.m.utils.UserRepositorySQLite -  Tçm th?y user v?i email: wrong@test.com
+2026-05-20 13:38:03.672 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: lPP0Ob9gFhpHsJSXUE9e0fdqXW4rDfUh8tAmuAp4RgE=
+2026-05-20 13:38:03.672 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: 8t6k2XxzZp/jfBDdc/7VDQ==
+2026-05-20 13:38:03.672 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nh?p vÖo: WrongPass2!
+2026-05-20 13:38:03.674 [main] INFO  c.m.utils.UserRepositorySQLite -  Khìng tçm th?y user v?i email: nonexistent@test.com
+2026-05-20 13:38:03.679 [main] INFO  c.m.utils.UserRepositorySQLite - PPTT000004, Test User 001, test001@test.com, 8pA5bB8+nnHqJD5sBNPqiqk7BgIicNlnHaDSDOZ4FtQ=, C9HZ9Mzqoy4rapAjVmqc3w==, 2000-01-01, null, null, 0.0, null, null, image/default_avatar.jpg
+2026-05-20 13:38:03.679 [main] INFO  c.m.utils.UserRepositorySQLite -  INSERT thÖnh cìng, s? dïng ?nh h??ng: 1
+2026-05-20 13:38:03.680 [main] INFO  c.m.utils.UserRepositorySQLite - COMMIT thÖnh cìng cho user: PPTT000004
+2026-05-20 13:38:23.824 [main] INFO  c.m.action.AuctionSessionService - ? HoÖn 5000000.0 cho Nguoi Dat 1
+2026-05-20 13:38:24.074 [main] DEBUG c.mycompany.utils.DatabaseConnection - ? ?? cÖi ??t PRAGMA vÖ t?t AutoCommit cho Connection
+2026-05-20 13:38:24.083 [main] INFO  c.m.action.AuctionSessionService - Phiàn PH003 ?? m? l£c 2026-05-20T13:38:23.847098100, s? ?¢ng l£c 2026-05-20T13:40:23.847098100
+2026-05-20 13:38:24.114 [main] INFO  c.m.action.AuctionSessionService - Phiàn PH002 ?? m? l£c 2026-05-20T13:38:24.113385800, s? ?¢ng l£c 2026-05-20T13:39:24.113385800
+2026-05-20 13:38:25.874 [main] INFO  c.m.action.TransactionService - [refun] Giao d?ch khìng t?n t?i.
+2026-05-20 13:38:25.914 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.915 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:25.915 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:25.915 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:25.915 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:25.916 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:25.916 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:25.916 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.917 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.917 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh to†n thÖnh cìng!
+2026-05-20 13:38:25.917 [main] INFO  c.m.action.TransactionService -   Giao d?ch : TEMP
+2026-05-20 13:38:25.917 [main] INFO  c.m.action.TransactionService -   S? ti?n   : 5,000,000 VN?
+2026-05-20 13:38:25.918 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang | S? d? cïn: 5,000,000 VN?
+2026-05-20 13:38:25.918 [main] INFO  c.m.action.TransactionService -   [Thìng b†o -> Nguoi Ban]: B?n v?a nh?n thanh to†n cho giao d?ch TEMP
+2026-05-20 13:38:25.918 [main] INFO  c.m.action.TransactionService -   S? d? ng??i b†n: 5,000,000 VN?
+2026-05-20 13:38:25.918 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.921 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.921 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:25.922 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:25.922 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:25.922 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:25.922 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:25.922 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:25.922 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.925 [main] INFO  c.m.action.TransactionService - [creatTransaction] Khìng th? t?o: khìng c¢ ng??i ??t gi†.
+2026-05-20 13:38:25.927 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.927 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:25.928 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:25.928 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:25.928 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:25.928 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:25.928 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:25.928 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.928 [main] INFO  c.m.action.TransactionService - [confirmPayment] S? d? khìng ??. C?n: 5,000,000 | C¢: 100 VN?
+2026-05-20 13:38:25.931 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.931 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:25.931 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:25.931 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:25.931 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:25.932 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:25.932 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:25.932 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.932 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.932 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh to†n thÖnh cìng!
+2026-05-20 13:38:25.932 [main] INFO  c.m.action.TransactionService -   Giao d?ch : TEMP
+2026-05-20 13:38:25.933 [main] INFO  c.m.action.TransactionService -   S? ti?n   : 5,000,000 VN?
+2026-05-20 13:38:25.933 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang | S? d? cïn: 5,000,000 VN?
+2026-05-20 13:38:25.933 [main] INFO  c.m.action.TransactionService -   [Thìng b†o -> Nguoi Ban]: B?n v?a nh?n thanh to†n cho giao d?ch TEMP
+2026-05-20 13:38:25.933 [main] INFO  c.m.action.TransactionService -   S? d? ng??i b†n: 5,000,000 VN?
+2026-05-20 13:38:25.933 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.934 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.934 [main] INFO  c.m.action.TransactionService - [refun] HoÖn ti?n thÖnh cìng!
+2026-05-20 13:38:25.934 [main] INFO  c.m.action.TransactionService -   Giao d?ch       : TEMP
+2026-05-20 13:38:25.934 [main] INFO  c.m.action.TransactionService -   Ng??i nh?n hoÖn : Nguoi Thang
+2026-05-20 13:38:25.934 [main] INFO  c.m.action.TransactionService -   S? ti?n hoÖn    : 5,000,000 VN?
+2026-05-20 13:38:25.934 [main] INFO  c.m.action.TransactionService -   S? d? sau hoÖn  : 10,000,000 VN?
+2026-05-20 13:38:25.935 [main] INFO  c.m.action.TransactionService -   L? do           : HÖng b? l?i
+2026-05-20 13:38:25.935 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.937 [main] INFO  c.m.action.TransactionService - [confirmPayment] Giao d?ch khìng t?n t?i.
+2026-05-20 13:38:25.940 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiàn ch?a k?t th£c ho?c b? h?y. Tr?ng th†i: IN_PROGRESS
+2026-05-20 13:38:25.943 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.943 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:25.943 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:25.943 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:25.944 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:25.944 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:25.944 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:25.944 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.944 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.945 [main] INFO  c.m.action.TransactionService - [confirmPayment] Thanh to†n thÖnh cìng!
+2026-05-20 13:38:25.945 [main] INFO  c.m.action.TransactionService -   Giao d?ch : TEMP
+2026-05-20 13:38:25.945 [main] INFO  c.m.action.TransactionService -   S? ti?n   : 5,000,000 VN?
+2026-05-20 13:38:25.945 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang | S? d? cïn: 5,000,000 VN?
+2026-05-20 13:38:25.945 [main] INFO  c.m.action.TransactionService -   [Thìng b†o -> Nguoi Ban]: B?n v?a nh?n thanh to†n cho giao d?ch TEMP
+2026-05-20 13:38:25.945 [main] INFO  c.m.action.TransactionService -   S? d? ng??i b†n: 5,000,000 VN?
+2026-05-20 13:38:25.945 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:25.948 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.966 [main] INFO  c.m.action.TransactionService - [creatTransaction] Phiàn ch?a k?t th£c ho?c b? h?y. Tr?ng th†i: CANCELLED
+2026-05-20 13:38:25.969 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.969 [main] INFO  c.m.action.TransactionService - [creatTransaction] Giao d?ch t?o thÖnh cìng!
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService -   S?n ph?m  : Laptop Dell
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService -   Ng??i b†n : Nguoi Ban
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService -   Ng??i mua : Nguoi Thang
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService -   Gi† ch?t  : 5,000,000 VN?
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService -   Tr?ng th†i: CH? THANH TO?N
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.970 [main] INFO  c.m.action.TransactionService - [refun] HoÖn ti?n thÖnh cìng!
+2026-05-20 13:38:25.971 [main] INFO  c.m.action.TransactionService -   Giao d?ch       : TEMP
+2026-05-20 13:38:25.971 [main] INFO  c.m.action.TransactionService -   Ng??i nh?n hoÖn : Nguoi Thang
+2026-05-20 13:38:25.971 [main] INFO  c.m.action.TransactionService -   S? ti?n hoÖn    : 5,000,000 VN?
+2026-05-20 13:38:25.971 [main] INFO  c.m.action.TransactionService -   S? d? sau hoÖn  : 15,000,000 VN?
+2026-05-20 13:38:25.971 [main] INFO  c.m.action.TransactionService -   L? do           : L?n 1
+2026-05-20 13:38:25.971 [main] INFO  c.m.action.TransactionService - ========================================
+2026-05-20 13:38:25.971 [main] INFO  c.m.action.TransactionService - [refun] Giao d?ch ?? ???c hoÖn ti?n tr??c ?¢.
+2026-05-20 13:38:26.046 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: verify@test.com
+2026-05-20 13:38:26.048 [main] INFO  c.m.utils.UserRepositorySQLite -  Tçm th?y user v?i email: verify@test.com
+2026-05-20 13:38:26.048 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: rQTlUNoHrNfqEx0V8zYz5NgUh1/v/8/2CMqJDgFjq5U=
+2026-05-20 13:38:26.048 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: xMVLw9ZrPWX/OOgdWniWYA==
+2026-05-20 13:38:26.048 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nh?p vÖo: Password1!
+2026-05-20 13:38:26.051 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: wrong@test.com
+2026-05-20 13:38:26.051 [main] INFO  c.m.utils.UserRepositorySQLite -  Tçm th?y user v?i email: wrong@test.com
+2026-05-20 13:38:26.051 [main] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: lPP0Ob9gFhpHsJSXUE9e0fdqXW4rDfUh8tAmuAp4RgE=
+2026-05-20 13:38:26.051 [main] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: 8t6k2XxzZp/jfBDdc/7VDQ==
+2026-05-20 13:38:26.051 [main] INFO  c.m.utils.UserRepositorySQLite -  Password nh?p vÖo: WrongPass2!
+2026-05-20 13:38:26.053 [main] INFO  c.m.utils.UserRepositorySQLite -  Khìng tçm th?y user v?i email: nonexistent@test.com
+2026-05-20 13:38:26.060 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: test001@test.com

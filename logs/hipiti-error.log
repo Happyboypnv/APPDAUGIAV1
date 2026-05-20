@@ -59,3 +59,6 @@
 2026-05-20 11:42:36.923 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
 2026-05-20 11:44:29.047 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
 2026-05-20 11:44:32.244 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 13:38:26.046 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: verify@test.com
+2026-05-20 13:38:26.051 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: wrong@test.com
+2026-05-20 13:38:26.060 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: test001@test.com

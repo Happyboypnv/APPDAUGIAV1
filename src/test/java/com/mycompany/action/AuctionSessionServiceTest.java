@@ -139,7 +139,7 @@ class AuctionSessionServiceTest {
         AuctionSession newAuction = new AuctionSession(
                 "PH002", "Test", product, 1_000_000, seller, 60);
         // newAuction mặc định WAITING
-        service.start(newAuction);
+        service.startAuction(newAuction);
         assertEquals(SessionStatus.IN_PROGRESS, newAuction.getStatus());
     }
 
@@ -149,7 +149,7 @@ class AuctionSessionServiceTest {
         Product product = new Product("Item", "SP003");
         AuctionSession newAuction = new AuctionSession(
                 "PH003", "Test", product, 1_000_000, seller, 120);
-        service.start(newAuction);
+        service.startAuction(newAuction);
         assertNotNull(newAuction.getStartTime());
         assertNotNull(newAuction.getEndTime());
     }
@@ -158,7 +158,7 @@ class AuctionSessionServiceTest {
     @DisplayName("start() phiên đang IN_PROGRESS không được bắt đầu lại")
     void start_alreadyInProgress_shouldNotRestart() {
         java.time.LocalDateTime originalStart = auction.getStartTime();
-        service.start(auction); // auction đã IN_PROGRESS
+        service.startAuction(auction); // auction đã IN_PROGRESS
         // startTime không được thay đổi
         assertEquals(originalStart, auction.getStartTime(),
                 "Phiên đang chạy không được bắt đầu lại");
