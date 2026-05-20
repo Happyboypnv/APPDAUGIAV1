@@ -312,6 +312,8 @@ public class BidController {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
         }
+        // FIX: Gọi exchange.close() để tránh EOF phía client
+        exchange.close();
     }
     private static class sendBug {
         String bug;

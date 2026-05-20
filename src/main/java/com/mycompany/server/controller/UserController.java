@@ -525,5 +525,7 @@ public class UserController {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
         }
+        // FIX: Gọi exchange.close() để tránh EOF phía client
+        exchange.close();
     }
 }

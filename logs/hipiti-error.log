@@ -44,3 +44,18 @@
 2026-05-19 18:39:21.553 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
 2026-05-19 19:14:49.217 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
 2026-05-19 21:20:51.716 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-20 00:16:22.034 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:16:27.385 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:18:13.811 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:18:32.542 [Thread-8] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:24:47.440 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:28:54.629 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:16.823 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:28.973 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:30.674 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:41:35.818 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:32:27.385 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:34:00.950 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:42:36.923 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:44:29.047 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:44:32.244 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server

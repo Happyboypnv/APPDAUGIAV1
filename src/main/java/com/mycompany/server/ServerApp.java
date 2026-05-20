@@ -1,6 +1,8 @@
 package com.mycompany.server;
 
+import com.mycompany.action.AuctionScheduler;
 import com.mycompany.action.AuctionSessionRegistry;
+import com.mycompany.action.AuctionSessionService;
 import com.mycompany.models.AuctionSession;
 import com.mycompany.models.SessionStatus;
 import com.mycompany.server.controller.AuctionController;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
@@ -57,17 +60,65 @@ public class ServerApp {
     DatabaseConnection.initialize();
     AuctionRepositorySQLite auctionRepo = new AuctionRepositorySQLite();
     try {
-      Map<String, AuctionSession> activeSessions = auctionRepo.findAll();
-      int loadedCount = 0;
-      for (AuctionSession session : activeSessions.values()) {
-        if (session.getStatus() == SessionStatus.IN_PROGRESS) {
-          AuctionSessionRegistry.getInstance().add(session);
-          loadedCount++;
+      Map<String, AuctionSession> allSessions = auctionRepo.findAll();
+      AuctionScheduler scheduler = AuctionScheduler.getInstance();
+      AuctionSessionService sessionService = AuctionSessionService.getInstance();
+      AuctionSessionRegistry registry = AuctionSessionRegistry.getInstance();
+      LocalDateTime now = LocalDateTime.now();
+
+      int countOpened = 0;    // WAITING da den gio -> mo ngay
+      int countScheduled = 0; // WAITING chua den gio -> len lich
+      int countClosed = 0;    // IN_PROGRESS qua gio dong -> dong ngay
+      int countResumed = 0;   // IN_PROGRESS con hieu luc -> khoi phuc lich dong
+
+      for (AuctionSession session : allSessions.values()) {
+        SessionStatus status = session.getStatus();
+
+        if (status == SessionStatus.WAITING) {
+          if (session.getStartTime() == null) continue;
+
+          if (!session.getStartTime().isAfter(now)) {
+            // Da den hoac qua gio mo -> mo ngay (delay=0)
+            registry.add(session);
+            scheduler.setASAuction(session);
+            countOpened++;
+            logger.info("Mo ngay phien {} (startTime={} da qua)", session.getSessionId(), session.getStartTime());
+          } else {
+            // Chua den gio mo -> len lich binh thuong
+            AuctionSessionRegistry.getInstance().add(session);
+            scheduler.setASAuction(session);
+            countScheduled++;
+            logger.info("Len lich mo phien {} luc {}", session.getSessionId(), session.getStartTime());
+          }
+
+        } else if (status == SessionStatus.IN_PROGRESS) {
+          if (session.getEndTime() != null && !session.getEndTime().isAfter(now)) {
+            // Da qua gio dong -> dong ngay (delay=0)
+            AuctionSessionRegistry.getInstance().add(session);
+            scheduler.setACAuction(session);
+            countClosed++;
+            logger.info("Dong ngay phien {} (endTime={} da qua)", session.getSessionId(), session.getEndTime());
+          } else {
+            // Con dang dien ra -> nap lai va len lich dong dung gio
+            AuctionSessionRegistry.getInstance().add(session);
+            scheduler.setACAuction(session);
+            countResumed++;
+            logger.info("Khoi phuc phien {} (dong luc {})", session.getSessionId(), session.getEndTime());
+          }
         }
+        // PAID / CANCELLED -> bo qua
       }
-      logger.info("✅ Loaded " + loadedCount + " active sessions into registry");
+
+      logger.info("========================================");
+      logger.info("  KHOI PHUC PHIEN DAU GIA:");
+      logger.info("  Mo ngay (da den gio):       {}", countOpened);
+      logger.info("  Len lich mo (chua den gio): {}", countScheduled);
+      logger.info("  Dong ngay (qua gio dong):   {}", countClosed);
+      logger.info("  Khoi phuc dang chay:        {}", countResumed);
+      logger.info("========================================");
+
     } catch (Exception e) {
-      logger.error("❌ Failed to preload sessions: " + e.getMessage());
+      logger.error("Failed to preload sessions: " + e.getMessage());
     }
     UserRepositorySQLite userStorage = new UserRepositorySQLite();
     userStorage.migrateLegacyPasswords();
@@ -256,7 +307,7 @@ public class ServerApp {
     /// GET lấy dữ liệu
     /// POST gửi hoặc tạo mới dữ liệu
     /// OPTIONS phương thức ướm hỏi, Trình duyệt tự động gửi nó để hỏi xem Server có cho phép thực hiện yêu cầu hay không
-    exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
     /// cho phép các lại thông tin đi kèm
     exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
     /// gửi mã phản hồi 200 (Thành công) nhưng không có nội dung (-1)

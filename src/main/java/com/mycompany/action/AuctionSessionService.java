@@ -3,6 +3,7 @@ package com.mycompany.action;
 import com.mycompany.models.AuctionSession;
 import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
+import com.mycompany.utils.AuctionRepositorySQLite;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
@@ -18,6 +19,7 @@ public class AuctionSessionService {
 
     private static final AuctionSessionRegistry auctionSessionRegistry = AuctionSessionRegistry.getInstance();
     private static final AuctionScheduler auctionScheduler = AuctionScheduler.getInstance();
+    private static final AuctionRepositorySQLite auctionRepository = new AuctionRepositorySQLite();
 
     private AuctionSessionService() {}
 
@@ -36,16 +38,40 @@ public class AuctionSessionService {
         return locks.computeIfAbsent(maauction, k -> new Object());
     }
 
-    public void start(AuctionSession auction) {
+    /**
+     * Mở phiên đấu giá: chuyển WAITING → IN_PROGRESS.
+     *
+     * Nếu phiên đã có startTime được lên lịch sẵn (từ DB hoặc từ tạo phiên),
+     * giữ nguyên startTime đó và tính endTime = startTime + duration.
+     *
+     * Nếu phiên chưa có startTime (bắt đầu thủ công ngay lập tức),
+     * đặt startTime = now và endTime = now + duration.
+     */
+    public void startAuction(AuctionSession auction) {
         synchronized (getLock(auction.getSessionId())) {
             if (auction.getStatus() != SessionStatus.WAITING) return;
 
             LocalDateTime now = LocalDateTime.now();
-            auction.setStartTime(now);
-            auction.setEndTime(now.plusSeconds(auction.getDuration()));
-            auction.setStatus(SessionStatus.IN_PROGRESS);
 
-            auctionScheduler.setTimeCancelAuction(auction);
+            // Nếu phiên có startTime được lên lịch sẵn: giữ nguyên startTime,
+            // chỉ tính lại endTime dựa trên duration (nếu endTime chưa có).
+            // Nếu chưa có startTime (bắt đầu ngay): đặt startTime = now.
+            if (auction.getStartTime() == null) {
+                auction.setStartTime(now);
+            }
+
+            // Tính endTime nếu chưa có (dùng duration từ phiên)
+            if (auction.getEndTime() == null) {
+                auction.setEndTime(auction.getStartTime().plusSeconds(auction.getDuration()));
+            }
+
+            auction.setStatus(SessionStatus.IN_PROGRESS);
+            auctionSessionRegistry.add(auction);
+            auctionScheduler.setACAuction(auction);
+            auctionRepository.update(auction);
+
+            logger.info("Phiên {} đã mở lúc {}, sẽ đóng lúc {}",
+                    auction.getSessionId(), auction.getStartTime(), auction.getEndTime());
         }
     }
 
@@ -66,7 +92,9 @@ public class AuctionSessionService {
                 // TODO: Thực hiện trừ tiền người thắng và cộng tiền người bán ở đây
             } else {
                 auction.setStatus(SessionStatus.CANCELLED);
-                auctionScheduler.cancel(auction);
+                auctionScheduler.cancelAC(auction);
+                // Hủy lịch tự động mở phiên nếu phiên bị đóng trước khi bắt đầu
+                auctionScheduler.cancelAS(auction);
             }
 
             auctionSessionRegistry.delete(auction);
@@ -108,7 +136,7 @@ public class AuctionSessionService {
 
             if (thoiGianConLai <= 60 && thoiGianConLai > 0) {
                 auction.setEndTime(auction.getEndTime().plusSeconds(30));
-                auctionScheduler.setTimeCancelAuction(auction); // Cập nhật lại lịch đóng phiên
+                auctionScheduler.setACAuction(auction); // Cập nhật lại lịch đóng phiên
             }
 
             // 6. Cập nhật thông tin đấu giá

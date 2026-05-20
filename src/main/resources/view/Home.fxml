@@ -27,13 +27,15 @@
                      </font>
                   </Label>
 
-                  <Label text="Đây là Home" textFill="WHITE">
+                  <Label text="Danh sách phiên đấu giá" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="31.0" />
                      </font>
                   </Label>
 
-                  <ListView fx:id="listViewPhien" style="-fx-background-color: rgba(255,255,255,0.1); -fx-control-inner-background: transparent; -fx-text-fill: white;" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="listViewPhien"
+                     style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-border-color: transparent;"
+                     VBox.vgrow="ALWAYS" />
 
                </children>
             </VBox>

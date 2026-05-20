@@ -30,7 +30,6 @@ import java.util.List;
 public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
-//    private static final String BASE_URL = "http://localhost:8080";
     private static final String BASE_URL = "http://localhost:8080";
     private static final Gson gson = new Gson();
 
@@ -326,6 +325,12 @@ public class ApiClient {
         } catch (java.net.UnknownHostException uhe) {
             // DNS resolution failed
             String errorMsg = "[ApiClient] ❌ Cannot resolve hostname: " + BASE_URL;
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
+        } catch (java.io.IOException ioe) {
+            // Bắt các lỗi về EOF, Socket đóng đột ngột từ phía server
+            String errorMsg = "[ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): " + ioe.getMessage();
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
