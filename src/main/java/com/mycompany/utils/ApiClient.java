@@ -30,7 +30,7 @@ import java.util.List;
 public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
-    private static final String BASE_URL = "http://localhost:8080";
+    private static final String BASE_URL = "http://26.71.32.210:8080";
     private static final Gson gson = new Gson();
 
     // ============================================================

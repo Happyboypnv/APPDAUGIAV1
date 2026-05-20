@@ -38,3 +38,4 @@
 }
 2026-05-18 23:45:41.389 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
 2026-05-18 23:46:13.799 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 16:47:33.994 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.

@@ -24,7 +24,7 @@
             <HBox prefHeight="800.0" prefWidth="950.0">
                <children>
                   <fx:include source="NavbarComponent.fxml" />
-                  <VBox spacing="20.0" HBox.hgrow="ALWAYS">
+                  <VBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="30.0" left="40.0" right="40.0" top="40.0" />
                      </padding>
@@ -165,6 +165,11 @@
                                           <Label text="Thời gian kết thúc" textFill="WHITE">
                                              <font>
                                                 <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER_RIGHT" graphicTextGap="3.0" prefHeight="18.0" prefWidth="297.0" text="Giờ mở phiên" textFill="WHITE">
+                                             <font>
+                                                <Font size="12" />
                                              </font>
                                           </Label>
                                           <HBox spacing="10.0">
