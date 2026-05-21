@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import com.mycompany.server.dto.LichSuDatGiaResponse;
 /**
  * Hiện tại JavaFX đang gọi thẳng vào database:
  * [SignInController] → [LoginAction] → [KhoLuuTruNguoiDungSQLite] → [SQLite]
@@ -30,7 +31,7 @@ import java.util.List;
 public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
-    private static final String BASE_URL = "http://localhost:8080";
+    private static final String BASE_URL = "http://26.71.32.210:8080";
     private static final Gson gson = new Gson();
 
     // ============================================================
@@ -240,6 +241,44 @@ public class ApiClient {
         } catch (Exception e) {
             logger.error("[ApiClient] Lỗi parse auction: " + e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Gọi GET /api/bids/{maPhien} để lấy lịch sử đặt giá của phiên.
+     */
+    public static LichSuDatGiaResponse getBidHistory(String maPhien) {
+        String responseJson = guiGet("/api/bids/" + maPhien, null);
+        if (responseJson == null) return null;
+        try {
+            return gson.fromJson(responseJson, LichSuDatGiaResponse.class);
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse bid history: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Gọi DELETE /api/auctions/{maPhien} để xóa phiên đã hủy/kết thúc.
+     * @return true nếu xóa thành công
+     */
+    public static boolean deleteAuction(String maPhien, String token) {
+        try {
+            URL url = new URL(BASE_URL + "/api/auctions/" + maPhien);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Accept", "application/json");
+            if (token != null) {
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+            }
+            int status = conn.getResponseCode();
+            conn.disconnect();
+            return status == 200;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi DELETE auction: " + e.getMessage());
+            return false;
         }
     }
     /**

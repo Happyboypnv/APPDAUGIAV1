@@ -3,8 +3,13 @@ package com.mycompany.action;
 import com.mycompany.models.AuctionSession;
 import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
+import com.mycompany.models.Transaction;
 import com.mycompany.server.websocket.AuctionWebSocketServer;
 import com.mycompany.utils.AuctionRepositorySQLite;
+import com.mycompany.action.TransactionService;
+import com.mycompany.utils.TransactionRepositorySQLite;
+import com.mycompany.utils.UserRepositorySQLite;
+import com.mycompany.utils.IUserRepository;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
@@ -22,6 +27,9 @@ public class AuctionSessionService {
     private static final AuctionSessionRegistry auctionSessionRegistry = AuctionSessionRegistry.getInstance();
     private static final AuctionScheduler auctionScheduler = AuctionScheduler.getInstance();
     private static final AuctionRepositorySQLite auctionRepository = new AuctionRepositorySQLite();
+
+    private final TransactionService transactionService = new TransactionService(new TransactionRepositorySQLite());
+    private final IUserRepository userRepository = new UserRepositorySQLite();
 
     private AuctionSessionService() {}
     public void setWebSocketServer(AuctionWebSocketServer server) {
@@ -93,7 +101,23 @@ public class AuctionSessionService {
             if (lyDo == SessionStatus.PAID) {
                 auction.setStatus(SessionStatus.PAID);
                 auction.setWinner();
-                // TODO: Thực hiện trừ tiền người thắng và cộng tiền người bán ở đây
+
+                // Tạo giao dịch và xác nhận thanh toán tự động
+                Transaction tx = transactionService.creatTransaction(auction);
+                if (tx != null) {
+                    boolean paid = transactionService.confirmPayment(tx);
+                    if (paid) {
+                        // Lưu số dư mới vào DB
+                        User winner = auction.getWinner();
+                        User seller = auction.getSeller();
+                        userRepository.updateBalance(winner.getUserId(), winner.getAvailableBalance());
+                        userRepository.updateBalance(seller.getUserId(), seller.getAvailableBalance());
+                        logger.info("✅ Thanh toán thành công. Giao dịch: {}", tx.getId());
+                    } else {
+                        logger.warn("⚠️ Thanh toán thất bại (thiếu tiền?). Giao dịch: {}",
+                            tx != null ? tx.getId() : "null");
+                    }
+                }
             } else {
                 auction.setStatus(SessionStatus.CANCELLED);
                 auctionScheduler.cancelAC(auction);

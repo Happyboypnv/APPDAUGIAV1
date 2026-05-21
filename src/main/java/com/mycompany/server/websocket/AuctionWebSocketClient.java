@@ -106,7 +106,7 @@ public class AuctionWebSocketClient extends WebSocketClient{
             if (instance == null || instance.isClosed()) {
                 try {
                     instance = new AuctionWebSocketClient(
-                            new URI("ws://localhost:8081"));
+                            new URI("ws://26.71.32.210:8081"));
                 } catch (URISyntaxException e) {
                     throw new RuntimeException(e);
                 }

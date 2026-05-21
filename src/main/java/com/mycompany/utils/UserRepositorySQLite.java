@@ -499,4 +499,17 @@ public class UserRepositorySQLite implements IUserRepository {
             logger.error("❌ Lỗi migrate passwords: " + e.getMessage());
         }
     }
+
+    @Override
+    public void updateBalance(String userId, double newBalance) {
+        String sql = "UPDATE users SET so_du = ? WHERE ma_nguoi_dung = ?";
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+            ps.setDouble(1, newBalance);
+            ps.setString(2, userId);
+            ps.executeUpdate();
+            ps.getConnection().commit();
+        } catch (SQLException e) {
+            logger.error("Lỗi updateBalance: " + e.getMessage());
+        }
+    }
 }

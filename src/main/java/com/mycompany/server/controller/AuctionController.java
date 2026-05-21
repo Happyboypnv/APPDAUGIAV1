@@ -110,6 +110,12 @@ public class AuctionController {
       return;
     }
 
+    // DELETE /api/auctions/{id}  → xóa phiên đã kết thúc/hủy
+    if (method.equals("DELETE") && path.startsWith("/api/auctions/")) {
+      handleDeleteAuction(exchange, getIDByPath(path, "/api/auctions/"));
+      return;
+    }
+
     guiPhanHoi(exchange, 404, sendBug("Endpoint không tồn tại: " + method + " " + path));
   }
 
@@ -290,6 +296,45 @@ public class AuctionController {
   }
 
   // =========================================================
+// API 5: DELETE /api/auctions/{id}  →  xóa phiên đã hủy/kết thúc
+// =========================================================
+  private void handleDeleteAuction(HttpExchange exchange, String maPhien) throws IOException {
+    User nguoiYeuCau = checkToken(exchange);
+    if (nguoiYeuCau == null) return;
+
+    if (maPhien == null || maPhien.isBlank()) {
+      guiPhanHoi(exchange, 400, sendBug("Thiếu mã phiên"));
+      return;
+    }
+
+    AuctionSession phien = auctionRepository.findById(maPhien);
+    if (phien == null) {
+      guiPhanHoi(exchange, 404, sendBug("Không tìm thấy phiên: " + maPhien));
+      return;
+    }
+
+    // Chỉ cho xóa phiên PAID hoặc CANCELLED
+    SessionStatus status = phien.getStatus();
+    if (status != SessionStatus.PAID && status != SessionStatus.CANCELLED) {
+      guiPhanHoi(exchange, 400, sendBug("Chỉ có thể xóa phiên đã kết thúc hoặc đã hủy"));
+      return;
+    }
+
+    // Chỉ người tạo phiên mới được xóa
+    if (!phien.getSeller().getUserId().equals(nguoiYeuCau.getUserId())) {
+      guiPhanHoi(exchange, 403, sendBug("Bạn không có quyền xóa phiên này"));
+      return;
+    }
+
+    boolean deleted = auctionRepository.delete(maPhien);
+    if (deleted) {
+      guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("Đã xóa phiên " + maPhien)));
+    } else {
+      guiPhanHoi(exchange, 500, sendBug("Lỗi khi xóa phiên"));
+    }
+  }
+
+  // =========================================================
   // PHƯƠNG THỨC HỖ TRỢ
   // =========================================================
 
@@ -359,7 +404,7 @@ public class AuctionController {
     byte[] bytes = jsonBody.getBytes(StandardCharsets.UTF_8);
     exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
     exchange.getResponseHeaders().add("Access-Control-Allow-Origin",  "*");
-    exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
+    exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
     exchange.sendResponseHeaders(statusCode, bytes.length);
     try (OutputStream os = exchange.getResponseBody()) {

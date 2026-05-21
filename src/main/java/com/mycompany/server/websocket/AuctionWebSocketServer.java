@@ -403,12 +403,23 @@ public class AuctionWebSocketServer extends WebSocketServer {
     }
 
     public void broadcastSessionEnded(String phienId) {
+        AuctionSession phien = AuctionSessionRegistry.getInstance().find(phienId);
+
         JsonObject msg = new JsonObject();
         msg.addProperty("event", "SESSION_ENDED");
         msg.addProperty("phienId", phienId);
         msg.addProperty("message", "Phiên đấu giá đã kết thúc");
         msg.addProperty("timestamp", System.currentTimeMillis());
-        broadcastToRoom(phienId, gson.toJson(msg));
+
+        if (phien != null) {
+            msg.addProperty("finalPrice", phien.getCurrentPrice());
+            if (phien.getWinner() != null) {
+                msg.addProperty("winner", phien.getWinner().getEmail());
+                msg.addProperty("winnerName", phien.getWinner().getFullName());
+            }
+        }
+
+        broadcastToRoom(phienId, gson.toJson(msg));   // ← dùng broadcastToRoom, không phải broadcastToSession
         logger.info("📢 Broadcast SESSION_ENDED cho phòng: " + phienId);
     }
 }

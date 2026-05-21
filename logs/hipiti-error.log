@@ -87,3 +87,14 @@
 2026-05-20 22:12:05.332 [Thread-48] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
 2026-05-20 22:12:08.112 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
 2026-05-20 22:21:24.070 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-21 11:06:42.919 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
+2026-05-21 11:06:42.936 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
+2026-05-21 11:06:55.636 [pool-1-thread-2] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 11:06:59.488 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 11:07:09.837 [pool-1-thread-10] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 11:07:30.455 [pool-1-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 11:21:33.564 [Thread-288] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-21 11:21:33.589 [Thread-289] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-21 11:21:36.502 [Thread-290] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-21 11:21:37.817 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-21 11:28:00.022 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)

@@ -76,7 +76,10 @@ public class    App extends Application {
             scene.setFill(Color.TRANSPARENT);
 
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false); // Giữ nguyên form đẹp như thiết kế
+            primaryStage.setResizable(true);
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            primaryStage.setMaximized(false);
             primaryStage.show();
         } catch (Exception e) {
             logger.error("Không thể khởi động ứng dụng: " + e.getMessage());

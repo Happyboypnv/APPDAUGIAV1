@@ -96,20 +96,38 @@ public class BiddingRoomController implements Initializable {
         // BƯỚC 2: Load thông tin phiên thực tế (currentPhienId đã có giá trị)
         new Thread(() -> {
             PhienDauGiaDTO phien = ApiClient.getAuctionById(
-                    currentPhienId,  // ✅ không còn null
-                    SessionManager.getInstance().getServerToken()
+                currentPhienId,
+                SessionManager.getInstance().getServerToken()
             );
+            // Load lịch sử bid song song
+            com.mycompany.server.dto.LichSuDatGiaResponse history =
+                ApiClient.getBidHistory(currentPhienId);
+
             if (phien != null) {
                 Platform.runLater(() -> {
                     currentPrice = phien.giaHienTai;
                     stepPrice = currentPrice * 0.06;
-                    suggestedPrice = currentPrice + stepPrice;  // ← lưu lại giá đề xuất chính xác
+                    suggestedPrice = currentPrice + stepPrice;
                     updateBidAmountField(suggestedPrice);
                     if (auctionNameLabel != null) {
                         auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + phien.tenPhien);
                     }
                     if (currentPriceLabel != null) {
                         currentPriceLabel.setText(formatter.format(currentPrice) + " VNĐ");
+                    }
+
+                    // ← THÊM: Load lịch sử đặt giá từ server
+                    if (history != null && history.getLichSu() != null && !history.getLichSu().isEmpty()) {
+                        bidHistoryList.clear();
+                        // Hiển thị từ mới nhất → cũ nhất (reverse)
+                        for (int i = history.getLichSu().size() - 1; i >= 0; i--) {
+                            com.mycompany.server.dto.LuotDatGia luot = history.getLichSu().get(i);
+                            bidHistoryList.add(luot.getTenNguoiDat() + ": lượt #" + luot.getStt());
+                        }
+                        // Cập nhật người đang dẫn đầu
+                        if (topBidderLabel != null && history.getNguoiDangThang() != null) {
+                            topBidderLabel.setText("Người dẫn đầu: " + history.getNguoiDangThang());
+                        }
                     }
                 });
             }
