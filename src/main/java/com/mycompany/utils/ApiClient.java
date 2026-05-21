@@ -30,7 +30,7 @@ import java.util.List;
 public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
-    private static final String BASE_URL = "http://26.71.32.210:8080";
+    private static final String BASE_URL = "http://localhost:8080";
     private static final Gson gson = new Gson();
 
     // ============================================================
@@ -282,7 +282,7 @@ public class ApiClient {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true); // cho phép gửi body
+            conn.setDoOutput(true);
 
             // 3. Thêm token nếu có
             if (token != null) {
@@ -297,7 +297,6 @@ public class ApiClient {
 
             // 5. Đọc response trả về
             int statusCode = conn.getResponseCode();
-
             // Nếu status 4xx/5xx thì đọc error stream thay vì input stream
             InputStream is = (statusCode >= 200 && statusCode < 300)
                     ? conn.getInputStream()
@@ -326,6 +325,12 @@ public class ApiClient {
         } catch (java.net.UnknownHostException uhe) {
             // DNS resolution failed
             String errorMsg = "[ApiClient] ❌ Cannot resolve hostname: " + BASE_URL;
+            logger.error(errorMsg);
+            System.err.println(errorMsg);
+            return null;
+        } catch (java.io.IOException ioe) {
+            // Bắt các lỗi về EOF, Socket đóng đột ngột từ phía server
+            String errorMsg = "[ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): " + ioe.getMessage();
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;

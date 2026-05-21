@@ -105,5 +105,7 @@ public interface AuctionWebSocketListener {
      * USAGE: Show error dialog
      */
     void onError(String errorMessage);
+
+    void onSessionEnded(JsonObject message);
 }
 

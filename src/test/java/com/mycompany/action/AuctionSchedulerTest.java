@@ -16,12 +16,14 @@ public class AuctionSchedulerTest {
 
     private AuctionScheduler scheduler;
     private AuctionSession auction;
+    private AuctionSessionService auctionSessionService;
     private User seller;
     private Product product;
 
     @BeforeEach
     void setUp() {
         scheduler = AuctionScheduler.getInstance();
+        auctionSessionService = AuctionSessionService.getInstance();
 
         seller = new User("Seller", "seller@test.com", "Pass1234!", "1990-01-01");
         seller.setUserId("SELLER001");
@@ -45,7 +47,7 @@ public class AuctionSchedulerTest {
         auction.setEndTime(now.plusSeconds(30));
 
         assertDoesNotThrow(() -> {
-            scheduler.setTimeCancelAuction(auction);
+            scheduler.setACAuction(auction);
         });
     }
 
@@ -55,10 +57,10 @@ public class AuctionSchedulerTest {
         LocalDateTime now = LocalDateTime.now();
         auction.setEndTime(now.plusSeconds(30));
 
-        scheduler.setTimeCancelAuction(auction);
+        scheduler.setACAuction(auction);
 
         assertDoesNotThrow(() -> {
-            scheduler.cancel(auction);
+            scheduler.cancelAC(auction);
         });
     }
 
@@ -68,7 +70,7 @@ public class AuctionSchedulerTest {
         auction.setStatus(SessionStatus.IN_PROGRESS);
         auction.setHasBid(true);
 
-        scheduler.closeAuction(auction);
+        auctionSessionService.closeAuction(auction, SessionStatus.PAID);
 
         assertEquals(SessionStatus.PAID, auction.getStatus());
     }
@@ -89,7 +91,7 @@ public class AuctionSchedulerTest {
         auction.setEndTime(now.minusSeconds(10)); // Already past
 
         assertDoesNotThrow(() -> {
-            scheduler.setTimeCancelAuction(auction);
+            scheduler.setACAuction(auction);
         });
     }
 
@@ -110,8 +112,8 @@ public class AuctionSchedulerTest {
         auction2.setEndTime(now.plusSeconds(40));
 
         assertDoesNotThrow(() -> {
-            scheduler.setTimeCancelAuction(auction);
-            scheduler.setTimeCancelAuction(auction2);
+            scheduler.setACAuction(auction);
+            scheduler.setACAuction(auction2);
         });
     }
 
@@ -121,13 +123,13 @@ public class AuctionSchedulerTest {
         LocalDateTime now = LocalDateTime.now();
         auction.setEndTime(now.plusSeconds(30));
 
-        scheduler.setTimeCancelAuction(auction);
+        scheduler.setACAuction(auction);
 
         // Reschedule with new end time
         auction.setEndTime(now.plusSeconds(60));
 
         assertDoesNotThrow(() -> {
-            scheduler.setTimeCancelAuction(auction);
+            scheduler.setACAuction(auction);
         });
     }
 
@@ -140,8 +142,8 @@ public class AuctionSchedulerTest {
         assertDoesNotThrow(() -> {
             LocalDateTime now = LocalDateTime.now();
             auction.setEndTime(now.plusSeconds(30));
-            scheduler.setTimeCancelAuction(auction);
-            scheduler.cancel(auction);
+            scheduler.setACAuction(auction);
+            scheduler.cancelAC(auction);
         });
     }
 
@@ -157,7 +159,7 @@ public class AuctionSchedulerTest {
                 0,
                 seller
             );
-            scheduler.cancel(nullAuction);
+            scheduler.cancelAC(nullAuction);
         });
     }
 }

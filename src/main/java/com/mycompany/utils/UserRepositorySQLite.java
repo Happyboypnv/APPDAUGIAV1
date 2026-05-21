@@ -74,98 +74,129 @@ public class UserRepositorySQLite implements IUserRepository {
      */
     @Override
     public void save(User User) {
-        // Hàm sinhMaMoi() sẽ đếm số người dùng hiện có rồi +1
-        // kiemTraEmail() returns true if email DOESN'T exist (safe to register)
-        // So we check if it returns FALSE (email DOES exist) → reject
-        if(!isEmailAvailable(User.getEmail())) {
-            logger.error("Email đã tồn tại: " + User.getEmail());
-            return;
-        }
-        String maMoi = RandomIDGenerator();
-        // Gán mã mới vào đối tượng người dùng
-        User.setUserId(maMoi);
-        // Dấu ? là placeholder - để lại chỗ trống cho dữ liệu thực tế
-        // Dùng placeholder tránh SQL Injection - an toàn hơn ghép string thô
-        String sql = "INSERT INTO nguoi_dung " +
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+
+            // Kiểm tra email trong cùng transaction
+            if (!isEmailAvailable(User.getEmail())) {
+                logger.error("Email đã tồn tại: " + User.getEmail());
+                return;
+            }
+
+            String maMoi = RandomIDGenerator();
+            User.setUserId(maMoi);
+
+            String sql = "INSERT INTO nguoi_dung " +
                 "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, " +
                 "dia_chi, so_dien_thoai, so_du_kha_dung, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        // AN TOÀN (DÙNG CÁI NÀY):
-        // Dùng ? là "chỗ trống", không ghép string
-        // Database sẽ xử lý ? như một tham số dữ liệu, không phải SQL code
-        // try-with-resources: tự động đóng PreparedStatement (đóng tài nguyên)
-        // Ngay khi ra khỏi try block → PreparedStatement tự gọi close()
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            // Điền dữ liệu vào các vị trí ? (đánh số từ 1, không phải 0)
-            // ps.setString(vị_trí, giá_trị);
-            ps.setString(1, maMoi);                          // Vị trí 1 = ma_nguoi_dung
-            ps.setString(2, User.getFullName());          // Vị trí 2 = ho_ten
-            ps.setString(3, User.getEmail());      // Vị trí 3 = thu_dien_tu (email)
-            ps.setString(4, User.getPassword());        // Vị trí 4 = mat_khau
-            ps.setString(5, User.getSalt());           // Vị trí 5 = salt
-            ps.setString(6, User.getDateOfBirth());       // Vị trí 6 = ngay_sinh
-            ps.setString(7, User.getAddress());        // Vị trí 7 = dia_chi
-            ps.setString(8, User.getPhoneNumber());  // Vị trí 8 = so_dien_thoai
-            ps.setDouble(9, User.getAvailableBalance()); // Vị trí 9 = so_du_kha_dung
-            ps.setString(10, User.getBankAccountNumber()); // Vị trí 10 = so_tai_khoan_ngan_hang
-            ps.setString(11, User.getBankName());
-            ps.setString(12, User.getAvatarPath());  // Vị trí 12 = duong_dan_avatar (avatar path)
 
-            // Thực thi câu lệnh INSERT
-            // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
-            // Trả về số dòng bị ảnh hưởng (1 = thành công)
-            int rowsAffected = ps.executeUpdate();
-            logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, maMoi);
+                ps.setString(2, User.getFullName());
+                ps.setString(3, User.getEmail());
+                ps.setString(4, User.getPassword());
+                ps.setString(5, User.getSalt());
+                ps.setString(6, User.getDateOfBirth());
+                ps.setString(7, User.getAddress());
+                ps.setString(8, User.getPhoneNumber());
+                ps.setDouble(9, User.getAvailableBalance());
+                ps.setString(10, User.getBankAccountNumber());
+                ps.setString(11, User.getBankName());
+                ps.setString(12, User.getAvatarPath());
 
-            // ĐẢM BẢO DATA ĐƯỢC LƯU VÀO DATABASE
-            // SQLite mặc định auto-commit = true, nhưng với WAL mode cần explicit commit
-            ps.getConnection().commit();
+                logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+                    maMoi, User.getFullName(), User.getEmail(), User.getPassword(), User.getSalt(),
+                    User.getDateOfBirth(), User.getAddress(), User.getPhoneNumber(),
+                    User.getAvailableBalance(), User.getBankAccountNumber(), User.getBankName(),
+                    User.getAvatarPath());
+
+                int rowsAffected = ps.executeUpdate();
+                logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
+            }
+
+            // Commit 1 lần duy nhất sau khi tất cả thao tác hoàn tất
+            conn.commit();
             logger.info("COMMIT thành công cho user: " + maMoi);
 
         } catch (SQLException e) {
-            // Nếu có lỗi (kết nối thất bại, SQL sai, ...) → in lỗi ra stderr
+            // Rollback nếu có lỗi để giải phóng write lock
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                    logger.warn("ROLLBACK do lỗi lưu user: " + e.getMessage());
+                } catch (SQLException ex) {
+                    logger.error("Lỗi rollback: " + ex.getMessage());
+                }
+            }
             logger.error("Lỗi lưu người dùng: " + e.getMessage());
         }
     }
 
     @Override
     public void update(User User) {
-        // Kiểm tra người dùng có tồn tại không
         if (User == null || User.getUserId() == null) {
             logger.error("Không thể cập nhật: Người dùng null hoặc không có mã");
             return;
         }
 
         String sql = "UPDATE nguoi_dung SET " +
-                "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, " +
-                "dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ?, " +
-                "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ? " +
-                "WHERE ma_nguoi_dung = ?";
+            "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, " +
+            "dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ?, " +
+            "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ? " +
+            "WHERE ma_nguoi_dung = ?";
 
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            // Điền dữ liệu vào các vị trí ?
-            ps.setString(1, User.getFullName());          // ho_ten
-            ps.setString(2, User.getEmail());      // thu_dien_tu (email)
-            ps.setString(3, User.getPassword());        // mat_khau
-            ps.setString(4, User.getSalt());           // salt
-            ps.setString(5, User.getDateOfBirth());       // ngay_sinh
-            ps.setString(6, User.getAddress());         // dia_chi
-            ps.setString(7, User.getPhoneNumber());    // so_dien_thoai
-            ps.setDouble(8, User.getAvailableBalance());    // so_du_kha_dung
-            ps.setString(9, User.getBankAccountNumber());  // so_tai_khoan_ngan_hang
-            ps.setString(10, User.getBankName());
-            ps.setString(11, User.getAvatarPath());    // duong_dan_avatar (new field)
-            ps.setString(12, User.getUserId());    // WHERE ma_nguoi_dung
-
-            int rowsAffected = ps.executeUpdate();
-            logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
-
-            // Commit để đảm bảo data được cập nhật
-            ps.getConnection().commit();
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, User.getFullName());
+                ps.setString(2, User.getEmail());
+                ps.setString(3, User.getPassword());
+                ps.setString(4, User.getSalt());
+                ps.setString(5, User.getDateOfBirth());
+                ps.setString(6, User.getAddress());
+                ps.setString(7, User.getPhoneNumber());
+                ps.setDouble(8, User.getAvailableBalance());
+                ps.setString(9, User.getBankAccountNumber());
+                ps.setString(10, User.getBankName());
+                ps.setString(11, User.getAvatarPath());
+                ps.setString(12, User.getUserId());
+                int rowsAffected = ps.executeUpdate();
+                logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
+            }
+            conn.commit();
             logger.info("COMMIT cập nhật user: " + User.getUserId());
-
         } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { logger.error("Lỗi rollback update: " + ex.getMessage()); }
+            }
             logger.error("Lỗi cập nhật người dùng: " + e.getMessage());
+        }
+    }
+
+    public void delete(User User) {
+        if (User == null || User.getUserId() == null) {
+            logger.error("Không thể xóa: Người dùng null hoặc không có mã");
+            return;
+        }
+
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM nguoi_dung WHERE ma_nguoi_dung = ?")) {
+                ps.setString(1, User.getUserId());
+                int rowsAffected = ps.executeUpdate();
+                logger.info("Xóa user thành công, số dòng ảnh hưởng: " + rowsAffected);
+            }
+            conn.commit();
+            logger.info("COMMIT xóa user: " + User.getUserId());
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { logger.error("Lỗi rollback delete: " + ex.getMessage()); }
+            }
+            logger.error("Lỗi xóa người dùng: " + e.getMessage());
         }
     }
 
@@ -237,30 +268,6 @@ public class UserRepositorySQLite implements IUserRepository {
         return result;
     }
 
-    public void delete(User User){
-        // Kiểm tra người dùng có tồn tại không
-        if (User == null || User.getUserId() == null) {
-            logger.error("Không thể xóa: Người dùng null hoặc không có mã");
-            return;
-        }
-
-        String maUser = User.getUserId();
-        String sql = "DELETE FROM nguoi_dung WHERE ma_nguoi_dung = ?";
-
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, maUser);
-
-            int rowsAffected = ps.executeUpdate();
-            logger.info("Xóa user thành công, số dòng ảnh hưởng: " + rowsAffected);
-
-            // Commit để đảm bảo data được xóa
-            ps.getConnection().commit();
-            logger.info("COMMIT xóa user: " + maUser);
-
-        } catch (SQLException e) {
-            logger.error("Lỗi xóa người dùng: " + e.getMessage());
-        }
-    }
     /**
      * METHOD: kiemTraUser()
      * Mục đích: Kiểm tra đăng nhập - xác minh email VÀ password có khớp không.

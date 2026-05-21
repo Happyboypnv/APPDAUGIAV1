@@ -271,6 +271,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
                 response.addProperty("status", "SUCCESS");
                 // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
                 response.addProperty("currentPrice", phienHienTai.getCurrentPrice());
+                response.addProperty("fullName", bidder.getFullName()); //Hiển thị full name của người chơi
             } else {
                 response.addProperty("status", "FAILED");
                 response.addProperty("message", "Giá không hợp lệ hoặc phiên đã kết thúc");
@@ -399,6 +400,16 @@ public class AuctionWebSocketServer extends WebSocketServer {
         conn.send(gson.toJson(err));
 
 
+    }
+
+    public void broadcastSessionEnded(String phienId) {
+        JsonObject msg = new JsonObject();
+        msg.addProperty("event", "SESSION_ENDED");
+        msg.addProperty("phienId", phienId);
+        msg.addProperty("message", "Phiên đấu giá đã kết thúc");
+        msg.addProperty("timestamp", System.currentTimeMillis());
+        broadcastToRoom(phienId, gson.toJson(msg));
+        logger.info("📢 Broadcast SESSION_ENDED cho phòng: " + phienId);
     }
 }
 

@@ -38,4 +38,52 @@
 }
 2026-05-18 23:45:41.389 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
 2026-05-18 23:46:13.799 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-19 16:47:33.994 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-19 14:33:47.982 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 15:16:41.950 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Server timeout at http://192.168.0.1:8080 (no response). Server might be overloaded or unresponsive.
+2026-05-19 15:55:52.758 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 18:39:21.553 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 19:14:49.217 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 21:20:51.716 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-20 00:16:22.034 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:16:27.385 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:18:13.811 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:18:32.542 [Thread-8] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:24:47.440 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:28:54.629 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:16.823 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:28.973 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:30.674 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:41:35.818 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:32:27.385 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:34:00.950 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:42:36.923 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:44:29.047 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:44:32.244 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 13:38:26.046 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: verify@test.com
+2026-05-20 13:38:26.051 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: wrong@test.com
+2026-05-20 13:38:26.060 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: test001@test.com
+2026-05-20 16:12:59.881 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-20 16:44:46.390 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-20 16:44:48.014 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-20 20:22:23.968 [Thread-93] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:24.971 [WebSocketConnectReadThread-156] ERROR c.m.s.w.AuctionWebSocketClient - ? WebSocket error: Connection refused: connect
+2026-05-20 20:22:24.976 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? Kh�ng th? k?t n?i WebSocket sau timeout
+2026-05-20 20:22:30.749 [Thread-96] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:32.114 [Thread-97] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:32.861 [Thread-98] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:35.189 [Thread-99] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:35.908 [Thread-100] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:46.183 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:17.209 [Thread-10] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:18.425 [Thread-11] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:19.281 [Thread-12] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:19.667 [Thread-13] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:19.832 [Thread-14] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:07:13.248 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-20 22:12:02.922 [Thread-44] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:04.231 [Thread-45] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:05.004 [Thread-46] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:05.178 [Thread-47] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:05.332 [Thread-48] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:08.112 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:21:24.070 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted

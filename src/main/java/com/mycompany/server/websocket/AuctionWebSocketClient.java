@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
  * - Cần setListener() nếu muốn inject custom listener (ví dụ: update UI)
  * - Listener.onBidResult() được gọi từ JavaFX thread (safe to update UI)
  */
-public class AuctionWebSocketClient extends WebSocketClient {
+public class AuctionWebSocketClient extends WebSocketClient{
 
     // ===== THREAD-SAFE FIELDS =====
 
@@ -106,7 +106,7 @@ public class AuctionWebSocketClient extends WebSocketClient {
             if (instance == null || instance.isClosed()) {
                 try {
                     instance = new AuctionWebSocketClient(
-                            new URI("ws://26.71.32.210:8081"));
+                            new URI("ws://localhost:8081"));
                 } catch (URISyntaxException e) {
                     throw new RuntimeException(e);
                 }
@@ -329,6 +329,10 @@ public class AuctionWebSocketClient extends WebSocketClient {
                             if (listener != null) {
                                 listener.onUserLeft(json);
                             }
+                            break;
+
+                        case "SESSION_ENDED":
+                            if (listener != null) listener.onSessionEnded(json);
                             break;
 
                         default:

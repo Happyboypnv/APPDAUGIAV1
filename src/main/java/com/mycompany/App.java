@@ -61,7 +61,7 @@ public class    App extends Application {
 
             // 1. Tải file giao diện đăng ký (SignUp.fxml)
             // Đảm bảo tên file khớp chính xác (phân biệt hoa thường)
-            Parent root = FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
 
             // 2. Tạo Scene
             // Vì giao diện của bạn có bo góc (Radius), nên để Fill là TRANSPARENT
@@ -72,8 +72,8 @@ public class    App extends Application {
             primaryStage.setTitle("HiPiTi Bidding App");
 
             // Nếu bạn muốn bỏ thanh tiêu đề trắng của Windows để nhìn app "xịn" hơn:
-//             primaryStage.initStyle(StageStyle.TRANSPARENT);
-             scene.setFill(Color.TRANSPARENT);
+            // primaryStage.initStyle(StageStyle.TRANSPARENT);
+            scene.setFill(Color.TRANSPARENT);
 
             primaryStage.setScene(scene);
             primaryStage.setResizable(false); // Giữ nguyên form đẹp như thiết kế
