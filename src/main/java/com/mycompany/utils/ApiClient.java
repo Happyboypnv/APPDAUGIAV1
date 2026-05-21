@@ -31,7 +31,7 @@ import com.mycompany.server.dto.LichSuDatGiaResponse;
 public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
-    private static final String BASE_URL = "http://26.71.32.210:8080";
+    private static final String BASE_URL = "http://localhost:8080";
     private static final Gson gson = new Gson();
 
     // ============================================================
@@ -198,12 +198,11 @@ public class ApiClient {
      */
     // Thêm 2 tham số moTa và danhMuc
     public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
-                                        String danhMuc, String moTa,         // ← thêm 2 dòng này
+                                        String danhMuc, String moTa, String thoiGianBatDau,
                                         double giaKhoiDiem, int thoiGianGiay, String token) {
         try {
             // Build request body explicitly (avoid anonymous initializer issues)
-            AuctionController.TaoPhienRequest request = new AuctionController.TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,giaKhoiDiem,thoiGianGiay);
-
+            AuctionController.TaoPhienRequest request = new AuctionController.TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,thoiGianBatDau,giaKhoiDiem,thoiGianGiay);
             String jsonBody = gson.toJson(request);
             if (jsonBody == null || jsonBody.equals("null")) {
                 logger.error("[createAuction] ❌ JSON serialization failed, got null");

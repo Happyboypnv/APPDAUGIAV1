@@ -299,4 +299,25 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
     }
     return false;
   }
+
+  /**
+   * Lưu 1 lượt đặt giá vào bảng nguoi_tra_gia.
+   * Gọi sau mỗi lần setPrice() thành công.
+   */
+  public void saveBidRecord(String maPhien, String maNguoiDung, double gia) {
+    String sql = "INSERT INTO nguoi_tra_gia (ma_phien, ma_nguoi_dung, gia_tra, thoi_gian) " +
+        "VALUES (?, ?, ?, ?)";
+    try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+      ps.setString(1, maPhien);
+      ps.setString(2, maNguoiDung);
+      ps.setDouble(3, gia);
+      ps.setString(4, java.time.LocalDateTime.now().toString());
+      ps.executeUpdate();
+      ps.getConnection().commit();
+      logger.info("✅ Lưu bid record: phien={}, user={}, gia={}", maPhien, maNguoiDung, gia);
+    } catch (java.sql.SQLException e) {
+      logger.error("Lỗi saveBidRecord: " + e.getMessage());
+    }
+  }
+
 }

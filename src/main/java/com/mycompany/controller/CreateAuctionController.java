@@ -195,11 +195,12 @@ public class CreateAuctionController implements Initializable {
       return;
     }
 
-    double giaKhoiDiem = Double.parseDouble(giaStr);
-    LocalDateTime thoiGianBD = LocalDateTime.of(ngayBD, LocalTime.of(gioBD, phutBD));
-    LocalDateTime thoiGianKT = LocalDateTime.of(ngayKT, LocalTime.of(gioKT, phutKT));
-    long thoiGianGiay = Duration.between(thoiGianBD, thoiGianKT).getSeconds();
-    String maSanPham = "SP_" + System.currentTimeMillis();
+    final double giaKhoiDiem = Double.parseDouble(giaStr);
+    final LocalDateTime thoiGianBD = LocalDateTime.of(ngayBD, LocalTime.of(gioBD, phutBD));
+    final LocalDateTime thoiGianKT = LocalDateTime.of(ngayKT, LocalTime.of(gioKT, phutKT));
+    final long thoiGianGiay = Duration.between(thoiGianBD, thoiGianKT).getSeconds();
+    final String maSanPham = "SP_" + System.currentTimeMillis();
+    final String thoiGianBatDauISO = thoiGianBD.toString();
 
     // *** FIX QUAN TRỌNG: Dùng serverToken (USER_...) thay vì localToken (Base64) ***
     String token = SessionManager.getInstance().getServerToken();
@@ -229,10 +230,14 @@ public class CreateAuctionController implements Initializable {
     Task<Boolean> task = new Task<>() {
       @Override
       protected Boolean call() {
+        String thoiGianBatDauISO = thoiGianBD.toString(); // LocalDateTime.toString() = ISO-860
         return ApiClient.createAuction(
             tenPhien, tenSanPham, maSanPham,
             danhMuc, moTa,
-            giaKhoiDiem, (int) thoiGianGiay, finalToken
+            thoiGianBatDauISO,
+            giaKhoiDiem,
+            (int) thoiGianGiay,
+            finalToken
         );
       }
     };

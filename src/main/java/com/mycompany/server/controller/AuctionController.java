@@ -212,14 +212,14 @@ public class AuctionController {
     TaoPhienRequest req = gson.fromJson(body, TaoPhienRequest.class);
 
     if (req == null || req.tenPhien == null || req.tenSanPham == null
-            || req.maSanPham == null || req.giaKhoiDiem <= 0 || req.thoiGianGiay <= 0) {
+        || req.maSanPham == null || req.giaKhoiDiem <= 0 || req.thoiGianGiay <= 0) {
       guiPhanHoi(exchange, 400, sendBug("Thiếu hoặc sai thông tin bắt buộc"));
       return;
     }
 
     Product sanPham = new Product(req.tenSanPham, req.maSanPham);
     AuctionSession phienMoi = new AuctionSession(
-            null, req.tenPhien, sanPham, req.giaKhoiDiem, seller, req.thoiGianGiay);
+        null, req.tenPhien, sanPham, req.giaKhoiDiem, seller, req.thoiGianGiay);
 
     // Tính startTime và endTime
     java.time.LocalDateTime thoiGianBD;
@@ -248,7 +248,7 @@ public class AuctionController {
 
     String maPhienDaSinh = phienMoi.getSessionId();
     guiPhanHoi(exchange, 201,
-            gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
+        gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
   }
 
   // =========================================================
@@ -320,12 +320,7 @@ public class AuctionController {
       return;
     }
 
-    // Chỉ người tạo phiên mới được xóa
-    if (!phien.getSeller().getUserId().equals(nguoiYeuCau.getUserId())) {
-      guiPhanHoi(exchange, 403, sendBug("Bạn không có quyền xóa phiên này"));
-      return;
-    }
-
+    // Bất kỳ user đăng nhập đều được xóa phiên đã kết thúc/hủy
     boolean deleted = auctionRepository.delete(maPhien);
     if (deleted) {
       guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("Đã xóa phiên " + maPhien)));
@@ -431,12 +426,13 @@ public class AuctionController {
     int    thoiGianGiay;
     String thoiGianBatDau; // ISO-8601, vd: "2026-05-20T09:00:00" — tuỳ chọn, nếu có sẽ lên lịch tự động mở
 
-    public TaoPhienRequest(String tenPhien, String tenSanPham, String maSanPham, String danhMuc, String moTa, double giaKhoiDiem, int thoiGianGiay) {
+    public TaoPhienRequest(String tenPhien, String tenSanPham, String maSanPham, String danhMuc, String moTa, String thoiGianBatDau, double giaKhoiDiem, int thoiGianGiay) {
       this.tenPhien = tenPhien;
       this.tenSanPham = tenSanPham;
       this.maSanPham = maSanPham;
-      this.danhMuc = danhMuc;   // FIX: trước đây bị thiếu → danhMuc luôn null khi server nhận
-      this.moTa = moTa;         // FIX: trước đây bị thiếu → moTa luôn null khi server nhận
+      this.danhMuc = danhMuc;
+      this.moTa = moTa;
+      this.thoiGianBatDau = thoiGianBatDau;
       this.giaKhoiDiem = giaKhoiDiem;
       this.thoiGianGiay = thoiGianGiay;
     }

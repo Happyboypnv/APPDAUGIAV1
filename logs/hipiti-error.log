@@ -98,3 +98,22 @@
 2026-05-21 11:21:36.502 [Thread-290] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
 2026-05-21 11:21:37.817 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
 2026-05-21 11:28:00.022 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 11:34:08.635 [pool-1-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 17:14:42.702 [pool-1-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 23:40:56.213 [pool-1-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-21 23:40:58.703 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
+2026-05-21 23:41:01.009 [pool-1-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
+2026-05-21 23:42:33.435 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ❌ Lỗi kết nối WebSocket: sleep interrupted
+2026-05-22 00:19:45.287 [pool-2-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-22 00:19:51.631 [pool-2-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
+2026-05-22 00:19:54.182 [pool-2-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
+2026-05-22 00:19:56.856 [pool-2-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-22 00:24:03.692 [pool-2-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-22 00:24:06.445 [pool-2-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
+2026-05-22 00:29:59.804 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
+2026-05-22 00:29:59.805 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
+2026-05-22 00:32:50.019 [pool-2-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-22 00:32:56.467 [pool-2-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-22 00:33:26.066 [pool-2-thread-4] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-22 00:34:04.382 [pool-2-thread-10] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-22 00:35:44.907 [pool-2-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)

@@ -119,15 +119,19 @@ public class BiddingRoomController implements Initializable {
                     // ← THÊM: Load lịch sử đặt giá từ server
                     if (history != null && history.getLichSu() != null && !history.getLichSu().isEmpty()) {
                         bidHistoryList.clear();
-                        // Hiển thị từ mới nhất → cũ nhất (reverse)
-                        for (int i = history.getLichSu().size() - 1; i >= 0; i--) {
-                            com.mycompany.server.dto.LuotDatGia luot = history.getLichSu().get(i);
-                            bidHistoryList.add(luot.getTenNguoiDat() + ": lượt #" + luot.getStt());
+                        // Hiển thị từ mới nhất → cũ nhất
+                        List<com.mycompany.server.dto.LuotDatGia> ds = history.getLichSu();
+                        for (int i = ds.size() - 1; i >= 0; i--) {
+                            bidHistoryList.add(ds.get(i).getTenNguoiDat()); // đã chứa sẵn "Tên — giá VNĐ"
                         }
-                        // Cập nhật người đang dẫn đầu
-                        if (topBidderLabel != null && history.getNguoiDangThang() != null) {
-                            topBidderLabel.setText("Người dẫn đầu: " + history.getNguoiDangThang());
-                        }
+                    }
+                    // Luôn cập nhật giá và người dẫn đầu (kể cả khi lịch sử rỗng)
+                    if (currentPriceLabel != null) {
+                        currentPriceLabel.setText(formatter.format(history != null
+                            ? history.getGiaHienTai() : currentPrice) + " VNĐ");
+                    }
+                    if (topBidderLabel != null && history != null && history.getNguoiDangThang() != null) {
+                        topBidderLabel.setText("Người dẫn đầu: " + history.getNguoiDangThang());
                     }
                 });
             }

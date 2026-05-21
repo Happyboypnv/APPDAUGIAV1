@@ -268,6 +268,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
 
             if (bidIsCompleted) {
                 auctionRepositorySQLite.update(phienHienTai);
+                auctionRepositorySQLite.saveBidRecord(phienHienTai.getSessionId(), bidder.getUserId(), giaRa);
                 response.addProperty("status", "SUCCESS");
                 // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
                 response.addProperty("currentPrice", phienHienTai.getCurrentPrice());
