@@ -1,7 +1,9 @@
 package com.mycompany;
 
 import com.mycompany.action.AuctionScheduler;
+import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.DatabaseConnection;
+import com.mycompany.utils.SessionManager;
 import com.mycompany.utils.UserRepositorySQLite;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,11 +15,22 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class App extends Application {
+public class    App extends Application {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
+    @Override
     public void stop() throws Exception {
-        super.stop();
+        SessionManager session = SessionManager.getInstance();
+        if (session.isLoggedIn()) {
+            String serverToken = session.getServerToken();
+            if (serverToken != null && !serverToken.isEmpty()) {
+                try {
+                    ApiClient.logout(serverToken);  // ← Cái này bị thiếu trước đây
+                } catch (Exception e) { /* không block tắt app */ }
+            }
+            session.logout();
+        }
         AuctionScheduler.getInstance().shutdown();
+        super.stop();
     }
     @Override
     public void start(Stage primaryStage) {
@@ -48,7 +61,7 @@ public class App extends Application {
 
             // 1. Tải file giao diện đăng ký (SignUp.fxml)
             // Đảm bảo tên file khớp chính xác (phân biệt hoa thường)
-            Parent root = FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
 
             // 2. Tạo Scene
             // Vì giao diện của bạn có bo góc (Radius), nên để Fill là TRANSPARENT
@@ -56,11 +69,11 @@ public class App extends Application {
             Scene scene = new Scene(root);
 
             // 3. Thiết lập Stage (Cửa sổ)
-            primaryStage.setTitle("Sign Up Account");
+            primaryStage.setTitle("HiPiTi Bidding App");
 
             // Nếu bạn muốn bỏ thanh tiêu đề trắng của Windows để nhìn app "xịn" hơn:
-             primaryStage.initStyle(StageStyle.TRANSPARENT);
-             scene.setFill(Color.TRANSPARENT);
+            // primaryStage.initStyle(StageStyle.TRANSPARENT);
+            scene.setFill(Color.TRANSPARENT);
 
             primaryStage.setScene(scene);
             primaryStage.setResizable(false); // Giữ nguyên form đẹp như thiết kế

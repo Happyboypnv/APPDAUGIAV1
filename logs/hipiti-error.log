@@ -4,3 +4,198 @@
 2026-05-18 15:08:49.403 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
   "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
 }
+2026-05-18 13:40:42.162 [pool-1-thread-9] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-18 13:46:25.035 [pool-1-thread-7] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-18 13:49:15.560 [pool-1-thread-1] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-18 13:54:49.586 [pool-1-thread-7] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-18 13:55:23.367 [pool-1-thread-9] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-18 15:00:00.979 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-18 15:38:47.044 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 15:40:16.047 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 15:59:41.068 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:28:07.128 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:28:25.925 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:28:32.308 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:28:39.933 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:29:15.400 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:29:43.097 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:30:08.000 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:30:45.617 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:34:59.718 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:37:38.500 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:38:27.472 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:45:49.588 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:52:22.446 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 20:54:10.891 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 21:02:30.201 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
+2026-05-18 22:34:00.739 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-18 22:43:10.513 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
+  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
+}
+2026-05-18 23:45:41.389 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-18 23:46:13.799 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 14:33:47.982 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 15:16:41.950 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Server timeout at http://192.168.0.1:8080 (no response). Server might be overloaded or unresponsive.
+2026-05-19 15:55:52.758 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 18:39:21.553 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 19:14:49.217 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-19 21:20:51.716 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-20 00:16:22.034 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:16:27.385 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:18:13.811 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:18:32.542 [Thread-8] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
+2026-05-20 00:24:47.440 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:28:54.629 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:16.823 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:28.973 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:34:30.674 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 00:41:35.818 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:32:27.385 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:34:00.950 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:42:36.923 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:44:29.047 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 11:44:32.244 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
+2026-05-20 13:38:26.046 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: verify@test.com
+2026-05-20 13:38:26.051 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: wrong@test.com
+2026-05-20 13:38:26.060 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: test001@test.com
+2026-05-20 16:12:59.881 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-20 16:44:46.390 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-20 16:44:48.014 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-20 20:22:23.968 [Thread-93] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:24.971 [WebSocketConnectReadThread-156] ERROR c.m.s.w.AuctionWebSocketClient - ? WebSocket error: Connection refused: connect
+2026-05-20 20:22:24.976 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? Kh�ng th? k?t n?i WebSocket sau timeout
+2026-05-20 20:22:30.749 [Thread-96] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:32.114 [Thread-97] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:32.861 [Thread-98] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:35.189 [Thread-99] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:35.908 [Thread-100] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 20:22:46.183 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:17.209 [Thread-10] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:18.425 [Thread-11] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:19.281 [Thread-12] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:19.667 [Thread-13] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 21:59:19.832 [Thread-14] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:07:13.248 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-20 22:12:02.922 [Thread-44] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:04.231 [Thread-45] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:05.004 [Thread-46] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:05.178 [Thread-47] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:05.332 [Thread-48] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:12:08.112 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-20 22:21:24.070 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
+2026-05-21 08:40:58.878 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:00.336 [Thread-2] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:00.382 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:01.865 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:03.360 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:04.838 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:06.312 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:10.202 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:11.654 [main] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:13.147 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:14.588 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:16.073 [pool-2-thread-1] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:16.073 [pool-2-thread-3] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:16.073 [pool-2-thread-5] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:16.073 [pool-2-thread-2] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:16.073 [pool-2-thread-4] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:17.543 [main] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:17.543 [main] ERROR c.m.utils.UserRepositorySQLite - Kh�ng th? x�a: Ng??i d�ng null ho?c kh�ng c� m�
+2026-05-21 08:41:19.003 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra email: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:20.467 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:21.945 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:21.947 [main] ERROR c.m.utils.UserRepositorySQLite - Kh�ng th? c?p nh?t: Ng??i d�ng null ho?c kh�ng c� m�
+2026-05-21 08:41:23.420 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:24.884 [main] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:26.343 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:27.805 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:29.269 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ??c danh s�ch: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:30.346 [Thread-4] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:30.751 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:32.206 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:33.668 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:35.136 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:36.600 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:38.044 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ??c danh s�ch: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:39.489 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:39.490 [main] ERROR c.m.utils.UserRepositorySQLite - Kh�ng th? c?p nh?t: Ng??i d�ng null ho?c kh�ng c� m�
+2026-05-21 08:41:40.367 [Thread-6] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:40.958 [main] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:42.439 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:43.898 [pool-3-thread-1] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:43.900 [pool-3-thread-3] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:43.898 [pool-3-thread-2] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:45.372 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:45.374 [main] ERROR c.m.utils.UserRepositorySQLite - Kh�ng th? c?p nh?t: Ng??i d�ng null ho?c kh�ng c� m�
+2026-05-21 08:41:46.842 [main] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:48.325 [pool-4-thread-3] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:48.325 [pool-4-thread-1] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:48.325 [pool-4-thread-2] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:49.803 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:51.260 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:52.713 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:54.174 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ??c danh s�ch: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:55.638 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:41:57.088 [main] ERROR c.m.utils.UserRepositorySQLite - L?i layTheoEmail: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:06.357 [Thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:22.723 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:24.234 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra ??ng nh?p: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:25.701 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:27.164 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra ??ng nh?p: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:28.627 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra ??ng nh?p: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:30.076 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra email: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:42:31.529 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:43:57.246 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:43:58.726 [Thread-2] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:43:58.742 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:00.220 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:01.711 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:03.161 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:04.635 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:08.600 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:10.060 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra ??ng nh?p: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:11.537 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:13.000 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra ??ng nh?p: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:14.459 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra ??ng nh?p: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:15.910 [main] ERROR c.m.utils.UserRepositorySQLite - L?i ki?m tra email: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:17.357 [main] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:36.066 [main] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:37.530 [main] ERROR c.m.utils.UserRepositorySQLite - Lỗi kiểm tra đăng nhập: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:39.007 [main] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:40.422 [main] ERROR c.m.utils.UserRepositorySQLite - Lỗi kiểm tra đăng nhập: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:41.885 [main] ERROR c.m.utils.UserRepositorySQLite - Lỗi kiểm tra đăng nhập: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:43.358 [main] ERROR c.m.utils.UserRepositorySQLite - Lỗi kiểm tra email: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:44:44.785 [main] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:48:15.148 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi cập nhật phiên đấu giá: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:48:16.607 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi cập nhật phiên đấu giá: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:48:18.025 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi cập nhật phiên đấu giá: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:48:19.472 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi cập nhật phiên đấu giá: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:48:20.929 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi cập nhật phiên đấu giá: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:21.455 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: testdup@example.com
+2026-05-21 08:51:21.481 [main] ERROR c.m.utils.UserRepositorySQLite - Không thể xóa: Người dùng null hoặc không có mã
+2026-05-21 08:51:21.534 [main] ERROR c.m.utils.UserRepositorySQLite - Không thể cập nhật: Người dùng null hoặc không có mã
+2026-05-21 08:51:21.567 [main] ERROR c.m.utils.UserRepositorySQLite - Không thể cập nhật: Người dùng null hoặc không có mã
+2026-05-21 08:51:48.466 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:49.938 [Thread-2] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:49.970 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:51.432 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:52.908 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:54.391 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:55.867 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] L?i khi c?p nh?t phi�n ??u gi�: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:51:58.464 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?� t?n t?i: testdup@example.com
+2026-05-21 08:51:58.489 [main] ERROR c.m.utils.UserRepositorySQLite - Kh�ng th? x�a: Ng??i d�ng null ho?c kh�ng c� m�
+2026-05-21 08:51:58.543 [main] ERROR c.m.utils.UserRepositorySQLite - Kh�ng th? c?p nh?t: Ng??i d�ng null ho?c kh�ng c� m�
+2026-05-21 08:51:58.573 [main] ERROR c.m.utils.UserRepositorySQLite - Kh�ng th? c?p nh?t: Ng??i d�ng null ho?c kh�ng c� m�
+2026-05-21 08:52:23.899 [main] ERROR c.mycompany.utils.DatabaseConnection - Lỗi khởi tạo DB: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:52:25.308 [main] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi lấy tất cả phiên đấu giá: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:52:28.247 [main] ERROR c.m.utils.UserRepositorySQLite - ❌ Lỗi migrate passwords: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:57:26.641 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:57:28.033 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - ? L?i migrate passwords: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:58:30.639 [pool-1-thread-1] ERROR c.m.utils.UserRepositorySQLite - Lỗi kiểm tra email: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:58:32.106 [pool-1-thread-1] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:58:46.353 [pool-1-thread-3] ERROR c.m.utils.UserRepositorySQLite - Lỗi kiểm tra đăng nhập: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)
+2026-05-21 08:58:56.450 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi kiểm tra đăng nhập: [SQLITE_IOERR_DELETE] I/O error within xDelete (disk I/O error)

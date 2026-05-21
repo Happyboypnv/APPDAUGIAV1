@@ -47,8 +47,7 @@ public class LoginAction {
 
         if (password == null || password.isEmpty()) throw new PasswordException("Mật khẩu đang bỏ trống!");
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!#%*?&])[A-Za-z0-9@$!#%*?&]{8,}$";
-        if (!password.matches(passwordRegex))
-            throw new PasswordException("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@$!#%*?&)!");
+        if (!password.matches(passwordRegex)) throw new PasswordException("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@$!#%*?&)!");
 
         if (birthDate == null) throw new DateException("Ngày sinh đang bỏ trống!");
         if (birthDate.isAfter(LocalDate.now())) throw new DateException("Ngày sinh không hợp lệ!");
@@ -150,27 +149,39 @@ public class LoginAction {
 
                     if (response == null) {
                         throw new UserException(
-                                "Không kết nối được server (localhost:8080). Hãy chắc chắn ServerApp đang chạy!");
+                            "Không kết nối được server. Hãy chắc chắn ServerApp đang chạy!");
                     }
 
                     if (response.getToken() == null) {
                         throw new UserException(response.getThongBao() != null
-                                ? response.getThongBao() : "Sai email hoặc mật khẩu!");
+                            ? response.getThongBao() : "Sai email hoặc mật khẩu!");
                     }
 
                     // Lấy thông tin user từ DB local để tạo object NguoiDung
-                    User user = userRepository.findByEmail(email);
+                    // Refresh connection trước để đảm bảo thấy data server vừa INSERT
+                    DatabaseConnection.refreshConnection();
+                    // Retry tối đa 3 lần để tránh race condition khi server vừa INSERT xong
+                    User user = null;
+                    for (int attempt = 0; attempt < 3 && user == null; attempt++) {
+                        if (attempt > 0) {
+                            try { Thread.sleep(200); } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                        user = userRepository.findByEmail(email);
+                    }
 
                     if (user == null) {
-                        // User exists on server but not in local DB
-                        // Build a minimal User from the server response
+                        // Server xác thực thành công nhưng DB local chưa có user
+                        // (trường hợp client và server dùng DB khác nhau hoặc chưa sync)
+                        // Dùng thông tin từ server response để tạo session tạm thời
                         user = new User(
-                                response.getHoTen(),  // full name from server
-                                email,
-                                "",                   // no password needed locally
-                                ""                    // no birthdate needed locally
+                            response.getHoTen(),
+                            email,
+                            "",
+                            ""
                         );
-                        // Save to local DB so next login works offline
+                        // Thử lưu vào local DB (sẽ bị skip nếu email đã tồn tại — không sao)
                         userRepository.save(user);
                         // Re-fetch to get the generated local ID
                         user = userRepository.findByEmail(email);
@@ -211,6 +222,9 @@ public class LoginAction {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.ERROR, "Lỗi hệ thống",
+                    "Đăng nhập bị gián đoạn, vui lòng thử lại!");
         }
     }
 }

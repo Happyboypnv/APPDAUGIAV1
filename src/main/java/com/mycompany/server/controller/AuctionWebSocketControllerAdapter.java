@@ -132,11 +132,13 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             String status = message.get("status").getAsString();
             if ("SUCCESS".equalsIgnoreCase(status)) {
                 double newPrice = message.get("currentPrice").getAsDouble();
-                String bidder = message.get("email").getAsString();
+                String displayId = message.has("fullName") && !message.get("fullName").isJsonNull()
+                    ? message.get("fullName").getAsString()
+                    : message.get("email").getAsString();
 
                 // ← gọi method mới thay vì tự set label
-                controller.syncNewPrice(newPrice, bidder);
-                controller.addBidHistory(bidder, newPrice);
+                controller.syncNewPrice(newPrice, displayId);
+                controller.addBidHistory(displayId, newPrice);
             }
         } catch (Exception e) {
             logger.error("Error processing bid result: " + e.getMessage());
@@ -283,6 +285,22 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             logger.error("❌ Error sending bid: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSessionEnded(JsonObject message) {
+        javafx.application.Platform.runLater(() -> {
+            // Vô hiệu hóa nút đặt giá
+            controller.disableBidding();
+            // Hiển thị thông báo
+            HandleNavigationAndAlert.getInstance().showAlert(
+                Alert.AlertType.INFORMATION,
+                "Phiên đấu giá kết thúc",
+                "Phiên đấu giá này đã kết thúc. Bạn sẽ được chuyển về trang chủ."
+            );
+            // Tự động về Home sau khi user bấm OK
+            controller.navigateToHome();
+        });
     }
 }
 

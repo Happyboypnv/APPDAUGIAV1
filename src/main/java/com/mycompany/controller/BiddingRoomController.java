@@ -29,6 +29,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class BiddingRoomController implements Initializable {
@@ -70,6 +71,7 @@ public class BiddingRoomController implements Initializable {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(BiddingRoomController.class);
     // --- CÁC BIẾN LOGIC ---
     private double currentPrice = 135000000; // Giá cao nhất hiện tại
+    private double suggestedPrice = 0;
     private double stepPrice = 5000000; // Bước giá (mỗi lần +/- 5 triệu)
     private DecimalFormat formatter = new DecimalFormat("#,###"); // Định dạng tiền tệ kiểu 135,000,000
     private ObservableList<String> bidHistoryList = FXCollections.observableArrayList();
@@ -101,7 +103,8 @@ public class BiddingRoomController implements Initializable {
                 Platform.runLater(() -> {
                     currentPrice = phien.giaHienTai;
                     stepPrice = currentPrice * 0.06;
-                    updateBidAmountField(currentPrice + stepPrice);
+                    suggestedPrice = currentPrice + stepPrice;  // ← lưu lại giá đề xuất chính xác
+                    updateBidAmountField(suggestedPrice);
                     if (auctionNameLabel != null) {
                         auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + phien.tenPhien);
                     }
@@ -157,10 +160,11 @@ public class BiddingRoomController implements Initializable {
         // Nút Giảm giá
         decreaseBidButton.setOnAction(event -> {
             double currentInput = parseBidAmount(bidAmountField.getText());
-            if (currentInput - stepPrice > currentPrice) {
+            double minRequired = currentPrice + stepPrice;
+            if (currentInput - stepPrice >= minRequired) {
                 updateBidAmountField(currentInput - stepPrice);
             } else {
-                showAlert("Thông báo", "Mức giá đặt phải cao hơn giá hiện tại!");
+                updateBidAmountField(minRequired); // reset về mức tối thiểu
             }
         });
 
@@ -190,8 +194,13 @@ public class BiddingRoomController implements Initializable {
     // --- LOGIC ĐẶT GIÁ ---
     private void handlePlaceBid() {
         double myBid = parseBidAmount(bidAmountField.getText());
-        if (myBid <= currentPrice) {
-            showAlert("Lỗi đặt giá", "Giá phải lớn hơn giá hiện tại!");
+
+        // Validate: giá phải >= suggestedPrice (tức currentPrice + stepPrice)
+        double minRequired = currentPrice + stepPrice;
+        if (myBid < minRequired) {
+            showAlert("Lỗi đặt giá",
+                "Giá tối thiểu phải là: " + formatter.format(minRequired) + " VNĐ");
+            updateBidAmountField(suggestedPrice);
             return;
         }
 
@@ -243,17 +252,26 @@ public class BiddingRoomController implements Initializable {
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
     }
-    public void syncNewPrice(double newPrice, String bidderId) {
-        this.currentPrice = newPrice;  // ← cập nhật state nội bộ
+    public void syncNewPrice(double newPrice, String bidderFullName) {
+        this.currentPrice = newPrice;
+        this.stepPrice = newPrice * 0.06;
+        this.suggestedPrice = newPrice + stepPrice;
         currentPriceLabel.setText(formatter.format(newPrice) + " VNĐ");
-        topBidderLabel.setText("Người dẫn đầu: " + bidderId);
-        updateBidAmountField(newPrice + stepPrice); // tự tăng ô nhập
+
+        String displayName = getDisplayName(bidderFullName, participantNames);
+        topBidderLabel.setText("Người dẫn đầu: " + displayName);
+        updateBidAmountField(suggestedPrice);
     }
 
-    public void addBidHistory(String bidderId, double price) {
-        String entry = bidderId + ": " + formatter.format(price) + " VNĐ (vừa xong)";
-        bidHistoryList.add(0, entry); // thêm vào đầu danh sách
+    public void addBidHistory(String bidderFullName, double price) {
+        if (!participantNames.contains(bidderFullName)) {
+            participantNames.add(bidderFullName);
+        }
+        String displayName = getDisplayName(bidderFullName, participantNames);
+        String entry = displayName + ": " + formatter.format(price) + " VNĐ (vừa xong)";
+        bidHistoryList.add(0, entry);
     }
+
     private void loadDummyBidHistory() {
         bidHistoryList.addAll(
                 "Nguyễn Văn T. : 135,000,000 VND (1 phút trước)",
@@ -269,5 +287,61 @@ public class BiddingRoomController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait(); // Có ở HandleNavigationAndAlert rồi
+    }
+
+    /**
+     * Rút gọn tên hiển thị: dùng chữ cái đầu họ + tên cuối.
+     * Nếu trùng với người khác trong danh sách, thêm tên đệm.
+     * VD: "Hồ Văn Trung" → "H Trung", nếu trùng → "H Văn Trung"
+     */
+    private String getDisplayName(String fullName, List<String> otherNames) {
+        if (fullName == null || fullName.isBlank()) return fullName;
+        String[] parts = fullName.trim().split("\\s+");
+        if (parts.length == 1) return parts[0];
+
+        String lastName = parts[0];
+        String firstName = parts[parts.length - 1];
+        String shortName = lastName.substring(0, 1) + " " + firstName;
+
+        // Kiểm tra có trùng với ai trong danh sách không
+        boolean hasDuplicate = otherNames.stream()
+            .anyMatch(other -> {
+                String[] otherParts = other.trim().split("\\s+");
+                if (otherParts.length < 2) return false;
+                String otherFirst = otherParts[otherParts.length - 1];
+                String otherLastInitial = otherParts[0].substring(0, 1);
+                return otherFirst.equals(firstName) && otherLastInitial.equals(lastName.substring(0, 1));
+            });
+
+        if (hasDuplicate && parts.length >= 3) {
+            // Thêm tên đệm: "H Văn Trung"
+            String middleName = parts[parts.length - 2];
+            return lastName.substring(0, 1) + " " + middleName + " " + firstName;
+        }
+        return shortName;
+    }
+
+    private final List<String> participantNames = new java.util.ArrayList<>();
+
+    public void disableBidding() {
+        if (placeBidButton != null) placeBidButton.setDisable(true);
+        if (increaseBidButton != null) increaseBidButton.setDisable(true);
+        if (decreaseBidButton != null) decreaseBidButton.setDisable(true);
+        if (bidAmountField != null) bidAmountField.setEditable(false);
+    }
+
+    public void navigateToHome() {
+        onClose();
+        // Cần một Event giả hoặc dùng Stage trực tiếp
+        javafx.stage.Stage stage = (javafx.stage.Stage) placeBidButton.getScene().getWindow();
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/view/Home.fxml"));
+            javafx.scene.layout.StackPane root = loader.load();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

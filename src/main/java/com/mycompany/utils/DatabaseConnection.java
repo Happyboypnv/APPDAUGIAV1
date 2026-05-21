@@ -3,7 +3,10 @@ package com.mycompany.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,25 +21,41 @@ public class DatabaseConnection {
 
     // ThreadLocal giúp mỗi luồng sở hữu 1 Connection riêng, tránh tranh chấp.
     private static final ThreadLocal<Connection> CONNECTION =
-            ThreadLocal.withInitial(() -> {
-                try {
-                    Connection conn = DriverManager.getConnection(URL);
-                    setPragma(conn);
-                    return conn;
-                } catch (SQLException e) {
-                    throw new RuntimeException("Không thể khởi tạo Connection cho luồng: " + Thread.currentThread().getName(), e);
-                }
-            });
+        ThreadLocal.withInitial(() -> {
+            try {
+                Connection conn = DriverManager.getConnection(URL);
+                setPragma(conn);
+                return conn;
+            } catch (SQLException e) {
+                throw new RuntimeException("Không thể khởi tạo Connection cho luồng: " + Thread.currentThread().getName(), e);
+            }
+        });
 
     // Tập hợp lưu trữ tất cả Connection để đóng khi tắt ứng dụng
     private static final Set<Connection> tatCaConnection =
-            Collections.newSetFromMap(new ConcurrentHashMap<>());
+        Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     // Flag để đảm bảo Shutdown Hook chỉ đăng ký 1 lần
     private static boolean isHookRegistered = false;
 
     /**
-     * Lấy kết nối của luồng hiện tại.
+     * Force connection của thread hiện tại đọc lại data mới nhất từ DB.
+     * Dùng khi cần đảm bảo thấy data vừa được commit bởi thread khác (server thread).
+     * Cách hoạt động: rollback transaction rỗng → SQLite bắt đầu snapshot mới,
+     * thấy được tất cả data đã commit trước đó.
+     */
+    public static void refreshConnection() {
+        try {
+            Connection conn = CONNECTION.get();
+            if (conn != null && !conn.isClosed()) {
+                conn.rollback(); // reset snapshot → thấy committed data mới nhất
+            }
+        } catch (SQLException e) {
+            logger.warn("Lỗi refresh connection: " + e.getMessage());
+        }
+    }
+
+    /**
      */
     public static Connection getConnection() throws SQLException {
         try {
@@ -67,11 +86,13 @@ public class DatabaseConnection {
             // WAL mode: Cho phép nhiều luồng đọc trong khi 1 luồng đang ghi
             stmt.execute("PRAGMA journal_mode=WAL;");
             // Đợi tối đa 5s nếu file DB đang bị khóa ghi
-            stmt.execute("PRAGMA busy_timeout=5000;");
+            stmt.execute("PRAGMA busy_timeout=10000;");
             // Bật ràng buộc khóa ngoại
             stmt.execute("PRAGMA foreign_keys=ON;");
             // Normal giúp cân bằng giữa tốc độ và an toàn dữ liệu khi dùng WAL
             stmt.execute("PRAGMA synchronous=NORMAL;");
+            //
+            stmt.execute("PRAGMA wal_autocheckpoint=100;");
         }
 
         // Tắt AutoCommit để kiểm soát Transaction thủ công
@@ -88,90 +109,69 @@ public class DatabaseConnection {
         registerShutdownHook();
 
         String sqlNguoiDung = "CREATE TABLE IF NOT EXISTS nguoi_dung (" +
-                "ma_nguoi_dung TEXT PRIMARY KEY, " +
-                "ho_ten TEXT NOT NULL, " +
-                "thu_dien_tu TEXT UNIQUE NOT NULL, " +
-                "mat_khau TEXT NOT NULL, " +
-                "salt TEXT NOT NULL, " +
-                "ngay_sinh TEXT, " +
-                "dia_chi TEXT, " +
-                "so_dien_thoai TEXT, " +
-                "so_du_kha_dung REAL DEFAULT 0, " +
-                "so_tai_khoan_ngan_hang TEXT, " +  // ⭐ thêm
-                "ten_ngan_hang TEXT);";
+            "ma_nguoi_dung TEXT PRIMARY KEY, " +
+            "ho_ten TEXT NOT NULL, " +
+            "thu_dien_tu TEXT UNIQUE NOT NULL, " +
+            "mat_khau TEXT NOT NULL, " +
+            "salt TEXT NOT NULL, " +
+            "ngay_sinh TEXT, " +
+            "dia_chi TEXT, " +
+            "so_dien_thoai TEXT, " +
+            "so_du_kha_dung REAL DEFAULT 0, " +
+            "so_tai_khoan_ngan_hang TEXT, " +
+            "ten_ngan_hang TEXT, " +
+            "duong_dan_avatar TEXT);";
 
         String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
-                "ma_san_pham TEXT PRIMARY KEY, " +
-                "ten_san_pham TEXT NOT NULL);";
+            "ma_san_pham TEXT PRIMARY KEY, " +
+            "ten_san_pham TEXT NOT NULL);";
 
         String sqlPhien = "CREATE TABLE IF NOT EXISTS phien_dau_gia (" +
-                "ma_phien TEXT PRIMARY KEY, " +
-                "ten_phien TEXT NOT NULL, " +
-                "gia_hien_tai REAL NOT NULL, " +
-                "buoc_gia REAL DEFAULT 0, " +
-                "thoi_gian_bat_dau TEXT, " +
-                "thoi_gian_ket_thuc TEXT, " +
-                "trang_thai TEXT NOT NULL, " +
-                "ma_nguoi_ban TEXT, " +
-                "ma_nguoi_thang_cuoc TEXT, " +
-                "ma_san_pham TEXT, " +
-                "is_closed INTEGER DEFAULT 0, " +
-                "FOREIGN KEY (ma_nguoi_ban) REFERENCES nguoi_dung(ma_nguoi_dung), " +
-                "FOREIGN KEY (ma_nguoi_thang_cuoc) REFERENCES nguoi_dung(ma_nguoi_dung), " +
-                "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
+            "ma_phien TEXT PRIMARY KEY, " +
+            "ten_phien TEXT NOT NULL, " +
+            "gia_hien_tai REAL NOT NULL, " +
+            "buoc_gia REAL DEFAULT 0, " +
+            "thoi_gian_bat_dau TEXT, " +
+            "thoi_gian_ket_thuc TEXT, " +
+            "trang_thai TEXT NOT NULL, " +
+            "ma_nguoi_ban TEXT, " +
+            "ma_nguoi_thang_cuoc TEXT, " +
+            "ma_san_pham TEXT, " +
+            "is_closed INTEGER DEFAULT 0, " +
+            "FOREIGN KEY (ma_nguoi_ban) REFERENCES nguoi_dung(ma_nguoi_dung), " +
+            "FOREIGN KEY (ma_nguoi_thang_cuoc) REFERENCES nguoi_dung(ma_nguoi_dung), " +
+            "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
 
         String sqlGiaoDich = "CREATE TABLE IF NOT EXISTS giao_dich (" +
-                "ma_giao_dich TEXT PRIMARY KEY, " +
-                "ma_phien TEXT NOT NULL, " +
-                "trang_thai TEXT NOT NULL, " +
-                "thoi_gian_tao TEXT NOT NULL, " +
-                "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
+            "ma_giao_dich TEXT PRIMARY KEY, " +
+            "ma_phien TEXT NOT NULL, " +
+            "trang_thai TEXT NOT NULL, " +
+            "thoi_gian_tao TEXT NOT NULL, " +
+            "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
 
         String sqlNguoiTraGia = "CREATE TABLE IF NOT EXISTS nguoi_tra_gia (" +
-                "ma_phien TEXT, " +
-                "ma_nguoi_dung TEXT, " +
-                "gia_tra REAL, " +
-                "thoi_gian TEXT, " +
-                "PRIMARY KEY (ma_phien, ma_nguoi_dung, thoi_gian), " +
-                "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien), " +
-                "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
+            "ma_phien TEXT, " +
+            "ma_nguoi_dung TEXT, " +
+            "gia_tra REAL, " +
+            "thoi_gian TEXT, " +
+            "PRIMARY KEY (ma_phien, ma_nguoi_dung, thoi_gian), " +
+            "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien), " +
+            "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
 
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(sqlNguoiDung);
 
-            // Logic Migration: Thêm cột salt nếu database cũ chưa có
-            try {
-                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN salt TEXT;");
-                logger.info("✅ Migration: Đã thêm cột salt vào bảng nguoi_dung");
-            } catch (SQLException e) {
-                // Lỗi này thường là do cột đã tồn tại, có thể bỏ qua
-                logger.debug("ℹ️ Cột salt đã tồn tại.");
-            }
-            try {
-                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN so_tai_khoan_ngan_hang TEXT;");
-                logger.info("✅ Migration: Đã thêm cột so_tai_khoan_ngan_hang");
-            } catch (SQLException e) {
-                logger.debug("ℹ️ Cột so_tai_khoan_ngan_hang đã tồn tại.");
-            }
-
-            try {
-                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN ten_ngan_hang TEXT;");
-                logger.info("✅ Migration: Đã thêm cột ten_ngan_hang");
-            } catch (SQLException e) {
-                logger.debug("ℹ️ Cột ten_ngan_hang đã tồn tại.");
-            }
-
             stmt.execute(sqlSanPham);
             stmt.execute(sqlPhien);
             stmt.execute(sqlGiaoDich);
             stmt.execute(sqlNguoiTraGia);
 
-            conn.commit(); // Quan trọng: Phải commit vì auto-commit đã tắt
-            logger.info("✅ Khởi tạo Database thành công.");
+            conn.commit();
+            logger.info("Khởi tạo Database thành công.");
         } catch (SQLException e) {
-            logger.error("❌ Lỗi khởi tạo DB: " + e.getMessage());
+            logger.error("Lỗi khởi tạo DB: " + e.getMessage());
         }
     }
 
