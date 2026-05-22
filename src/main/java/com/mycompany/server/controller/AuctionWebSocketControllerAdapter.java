@@ -127,21 +127,36 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
 
     @Override
     public void onBidResult(JsonObject message) {
-        if (priceLabel == null) return;
+        if (priceLabel == null) {
+            logger.warn("⚠️ onBidResult: priceLabel is null, bỏ qua cập nhật UI");
+            return;
+        }
         try {
             String status = message.get("status").getAsString();
+            logger.info("📊 onBidResult status={}, message={}", status, message);
             if ("SUCCESS".equalsIgnoreCase(status)) {
                 double newPrice = message.get("currentPrice").getAsDouble();
                 String displayId = message.has("fullName") && !message.get("fullName").isJsonNull()
                     ? message.get("fullName").getAsString()
                     : message.get("email").getAsString();
 
-                // ← gọi method mới thay vì tự set label
+                // syncNewPrice và addBidHistory phải chạy trên JavaFX thread.
+                // onBidResult đã được gọi từ Platform.runLater() trong AuctionWebSocketClient,
+                // nên đây an toàn để update UI trực tiếp.
                 controller.syncNewPrice(newPrice, displayId);
                 controller.addBidHistory(displayId, newPrice);
+            } else {
+                String msg = message.has("message") ? message.get("message").getAsString() : "Không rõ lý do";
+                logger.warn("❌ BID_RESULT FAILED: {}", msg);
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.WARNING);
+                alert.setTitle("Đặt giá thất bại");
+                alert.setHeaderText(null);
+                alert.setContentText(msg);
+                alert.show();
             }
         } catch (Exception e) {
-            logger.error("Error processing bid result: " + e.getMessage());
+            logger.error("❌ Error processing bid result: {}", e.getMessage(), e);
         }
     }
 
@@ -209,9 +224,9 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      */
     @Override
     public void onConnected() {
-        if (priceLabel == null) return; // guard clause
-        priceLabel.setStyle("-fx-text-fill: #2196F3;");
-        priceLabel.setText("Giá hiện tại: Đang cập nhật...");
+        // KHÔNG ghi đè label giá ở đây — giá đã được load từ API trước đó.
+        // Chỉ log để biết kết nối thành công; UI sẽ tự cập nhật khi nhận BID_RESULT.
+        logger.info("✅ WebSocket connected — ready to receive real-time updates");
     }
 
     /**

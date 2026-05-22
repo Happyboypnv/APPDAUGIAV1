@@ -259,6 +259,10 @@ public class AuctionWebSocketServer extends WebSocketServer {
                 return;
             }
             boolean bidIsCompleted = auctionSessionService.setPrice(phienHienTai, bidder, giaRa);
+            logger.info("[handleBid] phienId={} email={} giaRa={} | status={} currentPrice={} priceStep={} hasBid={} balance={}",
+                phienId, email, giaRa,
+                phienHienTai.getStatus(), phienHienTai.getCurrentPrice(), phienHienTai.getPriceStep(),
+                phienHienTai.isHasBid(), bidder.getAvailableBalance());
 
             JsonObject response = new JsonObject();
             response.addProperty("event", "BID_RESULT");
@@ -270,12 +274,28 @@ public class AuctionWebSocketServer extends WebSocketServer {
                 auctionRepositorySQLite.update(phienHienTai);
                 auctionRepositorySQLite.saveBidRecord(phienHienTai.getSessionId(), bidder.getUserId(), giaRa);
                 response.addProperty("status", "SUCCESS");
-                // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
                 response.addProperty("currentPrice", phienHienTai.getCurrentPrice());
-                response.addProperty("fullName", bidder.getFullName()); //Hiển thị full name của người chơi
+                response.addProperty("fullName", bidder.getFullName());
             } else {
+                // Tạo message lỗi chi tiết để dễ debug
+                double giaToiThieu = phienHienTai.isHasBid()
+                    ? phienHienTai.getCurrentPrice() + phienHienTai.getPriceStep()
+                    : phienHienTai.getCurrentPrice();
+                String failReason;
+                if (phienHienTai.getStatus() != com.mycompany.models.SessionStatus.IN_PROGRESS) {
+                    failReason = "Phiên đấu giá đã kết thúc";
+                } else if (bidder.getAvailableBalance() < giaRa) {
+                    failReason = String.format("Số dư không đủ (số dư: %,.0f, giá đặt: %,.0f)", bidder.getAvailableBalance(), giaRa);
+                } else if (giaRa < giaToiThieu) {
+                    failReason = String.format("Giá phải ≥ %,.0f (hiện tại: %,.0f + bước: %,.0f)",
+                        giaToiThieu, phienHienTai.getCurrentPrice(), phienHienTai.getPriceStep());
+                } else {
+                    failReason = "Đặt giá thất bại";
+                }
                 response.addProperty("status", "FAILED");
-                response.addProperty("message", "Giá không hợp lệ hoặc phiên đã kết thúc");
+                response.addProperty("message", failReason);
+                logger.warn("[handleBid] FAILED phienId={} email={} giaRa={} reason={}",
+                    phienId, email, giaRa, failReason);
             }
 
             broadcastToRoom(phienId, gson.toJson(response));

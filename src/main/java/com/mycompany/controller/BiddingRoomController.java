@@ -134,8 +134,8 @@ public class BiddingRoomController implements Initializable {
             if (phien != null) {
                 Platform.runLater(() -> {
                     currentPrice = phien.giaHienTai;
-                    stepPrice = currentPrice * 0.06;
-                    suggestedPrice = currentPrice + stepPrice;
+                    stepPrice = roundToThousand(currentPrice * 0.06);
+                    suggestedPrice = roundToThousand(currentPrice + stepPrice);
                     updateBidAmountField(suggestedPrice);
                     if (auctionNameLabel != null) {
                         auctionNameLabel.setText("PHÒNG ĐẤU GIÁ: " + phien.tenPhien);
@@ -172,11 +172,11 @@ public class BiddingRoomController implements Initializable {
         // ✅ SAU
         wsThread = new Thread(() -> {
             try {
-                Thread.sleep(1000);
                 if (isDestroyed) return;
 
                 wsClient = AuctionWebSocketClient.getInstance();
                 adapter = new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
+                // ⭐ setListener TRƯỚC connectToServer — đảm bảo không bỏ sót message nào
                 wsClient.setListener(adapter);
 
                 // ⭐ Chỉ connect nếu chưa connected
@@ -248,12 +248,12 @@ public class BiddingRoomController implements Initializable {
     private void handlePlaceBid() {
         double myBid = parseBidAmount(bidAmountField.getText());
 
-        // Validate: giá phải >= suggestedPrice (tức currentPrice + stepPrice)
-        double minRequired = currentPrice + stepPrice;
+        // Validate: giá phải >= currentPrice + stepPrice (tính trực tiếp từ currentPrice)
+        double minRequired = roundToThousand(currentPrice + stepPrice);
         if (myBid < minRequired) {
             showAlert("Lỗi đặt giá",
                 "Giá tối thiểu phải là: " + formatter.format(minRequired) + " VNĐ");
-            updateBidAmountField(suggestedPrice);
+            updateBidAmountField(minRequired);
             return;
         }
 
@@ -306,25 +306,40 @@ public class BiddingRoomController implements Initializable {
         clock.play();
     }
     public void syncNewPrice(double newPrice, String bidderFullName) {
-        this.currentPrice = newPrice;
-        this.stepPrice = newPrice * 0.06;
-        this.suggestedPrice = newPrice + stepPrice;
-        currentPriceLabel.setText(formatter.format(newPrice) + " VNĐ");
+        Runnable update = () -> {
+            this.currentPrice = newPrice;
+            this.stepPrice = roundToThousand(newPrice * 0.06);
+            this.suggestedPrice = roundToThousand(newPrice + stepPrice);
+            currentPriceLabel.setText(formatter.format(newPrice) + " VNĐ");
 
-        String displayName = getDisplayName(bidderFullName, participantNames);
-        topBidderLabel.setText("Người dẫn đầu: " + displayName);
-        updateBidAmountField(suggestedPrice);
+            String displayName = getDisplayName(bidderFullName, participantNames);
+            topBidderLabel.setText("Người dẫn đầu: " + displayName);
+            updateBidAmountField(suggestedPrice);
+            logger.info("✅ syncNewPrice UI updated: {} VNĐ, người dẫn đầu: {}", newPrice, displayName);
+        };
+        if (Platform.isFxApplicationThread()) {
+            update.run();
+        } else {
+            Platform.runLater(update);
+        }
     }
 
     public void addBidHistory(String bidderFullName, double price) {
-        if (!participantNames.contains(bidderFullName)) {
-            participantNames.add(bidderFullName);
+        Runnable update = () -> {
+            if (!participantNames.contains(bidderFullName)) {
+                participantNames.add(bidderFullName);
+            }
+            String displayName = getDisplayName(bidderFullName, participantNames);
+            String thoiGianBayGio = java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            String entry = displayName + ": " + formatter.format(price) + " VNĐ \u2022 " + thoiGianBayGio;
+            bidHistoryList.add(0, entry);
+        };
+        if (Platform.isFxApplicationThread()) {
+            update.run();
+        } else {
+            Platform.runLater(update);
         }
-        String displayName = getDisplayName(bidderFullName, participantNames);
-        String thoiGianBayGio = java.time.LocalDateTime.now()
-            .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-        String entry = displayName + ": " + formatter.format(price) + " VNĐ \u2022 " + thoiGianBayGio;
-        bidHistoryList.add(0, entry);
     }
 
     private void loadDummyBidHistory() {
@@ -334,6 +349,10 @@ public class BiddingRoomController implements Initializable {
                 "Lê Văn B. : 125,000,000 VND (5 phút trước)"
         );
         bidHistoryListView.setItems(bidHistoryList);
+    }
+
+    private double roundToThousand(double value) {
+        return Math.ceil(value / 1000.0) * 1000L;
     }
 
     private void showAlert(String title, String content) {

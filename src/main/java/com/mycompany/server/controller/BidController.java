@@ -3,6 +3,7 @@ package com.mycompany.server.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycompany.action.AuctionSessionService;
+import com.mycompany.action.AuctionSessionRegistry;
 import com.mycompany.models.*;
 import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.IAuctionRepository;
@@ -63,6 +64,9 @@ public class BidController {
 
     /** Service đấu giá — tái sử dụng singleton đã có, KHÔNG tạo mới */
     private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
+
+    /** Registry phiên đang chạy trong RAM — dùng để lấy object thật thay vì load lại từ DB */
+    private final AuctionSessionRegistry auctionSessionRegistry = AuctionSessionRegistry.getInstance();
 
     // =========================================================
     // ROUTING
@@ -140,15 +144,23 @@ public class BidController {
             return;
         }
 
-        // Bước 3: Tìm phiên
-        AuctionSession phien = auctionRepository.findById(req.getMaPhien());
+        // Bước 3: Lấy phiên ĐANG CHẠY từ Registry (object thật trong RAM).
+        // QUAN TRỌNG: KHÔNG dùng auctionRepository.findById() vì nó load bản sao từ DB —
+        // khi gọi setPrice() trên bản sao đó, Registry vẫn giữ giá cũ, bid tiếp theo sẽ sai.
+        AuctionSession phien = auctionSessionRegistry.find(req.getMaPhien());
         if (phien == null) {
-            guiPhanHoi(exchange, 404, bug("Không tìm thấy phiên: " + req.getMaPhien()));
+            // Phiên không có trong Registry → kiểm tra DB để phân biệt 404 vs 409
+            AuctionSession phienDB = auctionRepository.findById(req.getMaPhien());
+            if (phienDB == null) {
+                guiPhanHoi(exchange, 404, bug("Không tìm thấy phiên: " + req.getMaPhien()));
+            } else {
+                guiPhanHoi(exchange, 409, bug(
+                    "Phiên không ở trạng thái DANG_DIEN_RA. Trạng thái hiện tại: " + phienDB.getStatus().name()));
+            }
             return;
         }
 
-        // Bước 4: Kiểm tra nhanh trạng thái trước khi gọi service
-        // (service cũng kiểm tra bên trong, nhưng ta cần phân biệt lỗi để trả HTTP code đúng)
+        // Bước 4: Kiểm tra nhanh trạng thái (object từ Registry là live state)
         if (phien.getStatus() != SessionStatus.IN_PROGRESS) {
             guiPhanHoi(exchange, 409, bug(
                     "Phiên không ở trạng thái DANG_DIEN_RA. Trạng thái hiện tại: " + phien.getStatus().name()));

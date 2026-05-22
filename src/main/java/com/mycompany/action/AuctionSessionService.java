@@ -139,27 +139,33 @@ public class AuctionSessionService {
         synchronized (getLock(auction.getSessionId())) {
             // 1. Kiểm tra trạng thái phiên
             if (auction.getStatus() != SessionStatus.IN_PROGRESS) {
+                logger.warn("[setPrice] FAIL – phiên {} không ở IN_PROGRESS (trạng thái: {})",
+                    auction.getSessionId(), auction.getStatus());
                 return false;
             }
 
             // 2. Chủ phòng không được tự đấu giá
-            if (bidder.equals(auction.getSeller())) {
+            if (bidder.getUserId() != null && bidder.getUserId().equals(
+                    auction.getSeller() != null ? auction.getSeller().getUserId() : null)) {
+                logger.warn("[setPrice] FAIL – người bán tự đặt giá ({})", bidder.getEmail());
                 return false;
             }
 
             // 3. Tính toán giá tối thiểu cần đặt
-            // Nếu là người đầu tiên: giaToiThieu = gia khoi diem
-            // Nếu đã có người đặt: giaToiThieu = gia hien tai + buoc gia
             double giaToiThieu = auction.isHasBid()
                     ? auction.getCurrentPrice() + auction.getPriceStep()
                     : auction.getCurrentPrice();
 
             if (gia < giaToiThieu) {
+                logger.warn("[setPrice] FAIL – gia={} < giaToiThieu={} (currentPrice={}, step={})",
+                    gia, giaToiThieu, auction.getCurrentPrice(), auction.getPriceStep());
                 return false;
             }
 
-            // 4. Kiểm tra số dư người mua (giả định có method getSoDu)
+            // 4. Kiểm tra số dư người mua
             if (bidder.getAvailableBalance() < gia) {
+                logger.warn("[setPrice] FAIL – số dư không đủ: balance={} < gia={}  (user={})",
+                    bidder.getAvailableBalance(), gia, bidder.getEmail());
                 return false;
             }
 

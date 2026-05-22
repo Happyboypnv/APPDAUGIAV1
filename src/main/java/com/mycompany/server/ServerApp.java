@@ -80,7 +80,7 @@ public class ServerApp {
           if (!session.getStartTime().isAfter(now)) {
             // Da den hoac qua gio mo -> mo ngay (delay=0)
             registry.add(session);
-            scheduler.setASAuction(session);
+              scheduler.setASAuction(session);
             countOpened++;
             logger.info("Mo ngay phien {} (startTime={} da qua)", session.getSessionId(), session.getStartTime());
           } else {
