@@ -293,6 +293,39 @@ public class ApiClient {
         return guiGet("/api/users/" + email, token);
     }
 
+    public static boolean updateBalance(String email, double newBalance, String token) {
+        try {
+            com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+            body.addProperty("email", email);
+            body.addProperty("balance", newBalance);
+            String jsonBody = gson.toJson(body);
+
+            URL url = new URL(BASE_URL + "/api/users/balance");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            if (token != null) {
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+            }
+
+            byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(bodyBytes);
+            }
+
+            int statusCode = conn.getResponseCode();
+            conn.disconnect();
+            return statusCode == 200;
+
+        } catch (Exception e) {
+            logger.error("[ApiClient] ❌ Lỗi updateBalance: " + e.getMessage());
+            return false;
+        }
+    }
 
 
     // ============================================================

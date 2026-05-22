@@ -125,11 +125,27 @@ public class UserProfileUpdater {
                 currentUser.setAvatarPath(updates.get("avatar"));
             }
 
-            // 🔹 BƯỚC 4: ⭐ LƯU VÀO FILE JSON - QUAN TRỌNG NHẤT!!!
+            // 🔹 BƯỚC 4a: ⭐ LƯU VÀO FILE JSON - QUAN TRỌNG NHẤT!!!
             // Nếu bỏ qua bước này, dữ liệu chỉ thay đổi trong RAM
             // Khi app đóng, tất cả thay đổi sẽ mất vĩnh viễn
             // capNhatNguoiDung() sẽ cập nhật bản ghi cũ (giữ nguyên ID)
             userRepository.update(currentUser);
+
+            // 🔹 BƯỚC 4b: ĐỒNG BỘ SỐ DƯ LÊN SERVER CHUNG
+            if (updates.containsKey("balance")) {
+                String token = prefs.get("auth_token", null);
+                if (token != null && !token.isEmpty()) {
+                    boolean serverUpdated = com.mycompany.utils.ApiClient.updateBalance(
+                        currentUser.getEmail(),
+                        currentUser.getAvailableBalance(),
+                        token
+                    );
+                    if (!serverUpdated) {
+                        org.slf4j.LoggerFactory.getLogger(UserProfileUpdater.class)
+                            .warn("[UserProfileUpdater] ⚠️ Không thể đồng bộ số dư lên server.");
+                    }
+                }
+            }
 
             // 🔹 BƯỚC 5: Tạo token JWT mới với dữ liệu đã cập nhật
             // Token chứa tất cả thông tin người dùng dưới dạng Base64

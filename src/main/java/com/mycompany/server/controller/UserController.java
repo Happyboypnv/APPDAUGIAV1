@@ -432,6 +432,47 @@ public class UserController {
     // PHƯƠNG THỨC HỖ TRỢ
     // =========================================================
 
+    public void handleUpdateBalance(HttpExchange exchange) throws IOException {
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
+            return;
+        }
+        if (!exchange.getRequestMethod().equalsIgnoreCase("PUT")) {
+            guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận PUT\"}");
+            return;
+        }
+
+        String body = docBody(exchange);
+        com.google.gson.JsonObject req;
+        try {
+            req = gson.fromJson(body, com.google.gson.JsonObject.class);
+        } catch (Exception e) {
+            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Body JSON không hợp lệ\"}");
+            return;
+        }
+
+        if (req == null || !req.has("email") || !req.has("balance")) {
+            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Thiếu email hoặc balance\"}");
+            return;
+        }
+
+        String email = req.get("email").getAsString();
+        double newBalance = req.get("balance").getAsDouble();
+
+        User nguoiDung = khoNguoiDung.findByEmail(email);
+        if (nguoiDung == null) {
+            guiPhanHoi(exchange, 404, "{\"thongBao\":\"Không tìm thấy người dùng: " + email + "\"}");
+            return;
+        }
+
+        nguoiDung.setAvailableBalance(newBalance);
+        khoNguoiDung.update(nguoiDung);
+
+        logger.info("[UserController] ✅ Cập nhật số dư {} → {}", email, newBalance);
+        guiPhanHoi(exchange, 200, "{\"thongBao\":\"Cập nhật số dư thành công\"}");
+    }
+
     /**
      * Lấy IP address của client từ HTTP request headers
      *
