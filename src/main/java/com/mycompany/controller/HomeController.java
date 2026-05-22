@@ -395,7 +395,7 @@ public class HomeController implements Initializable {
                                     doRefresh(); // Refresh danh sách
                                 } else {
                                     HandleNavigationAndAlert.getInstance().showAlert(
-                                        Alert.AlertType.ERROR, "Lỗi", "Không thể xóa phiên. Bạn có phải người tạo phiên không?");
+                                        Alert.AlertType.ERROR, "Lỗi", "Không thể xóa phiên. Vui lòng thử lại.");
                                 }
                             });
                         }).start();
