@@ -2177,3 +2177,18 @@
   "maPhien": "PH000003",
   "thongBao": "Tạo phiên thành công"
 }
+2026-05-18 23:33:53.602 [pool-1-thread-9] INFO  c.m.server.controller.UserController - [LoginController] 🚪 User test3@gmail.com logging out...
+2026-05-18 23:33:53.604 [pool-1-thread-9] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] 🚪 User test3@gmail.com logged out
+2026-05-18 23:33:53.604 [pool-1-thread-9] INFO  c.m.server.controller.UserController - [LoginController] ✅ User test3@gmail.com successfully logged out
+2026-05-18 23:33:53.606 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] ✅ Logout successful
+2026-05-18 23:34:16.030 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: test3@gmail.com
+2026-05-18 23:34:16.030 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: 3OF3LJn3f1JUZXx41d4ZWaVSqMjntm71ezXYKcQMK+Y=
+2026-05-18 23:34:16.030 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: aQUP4AWyMdsad5KEGS8UEg==
+2026-05-18 23:34:16.030 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: PhongProVip@123
+2026-05-18 23:34:16.031 [pool-1-thread-1] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ User test3@gmail.com logged in on device 127.0.0.1_56031
+2026-05-18 23:34:16.031 [pool-1-thread-1] INFO  c.m.server.controller.UserController - [LoginController] ✅ User test3@gmail.com logged in successfully. Device: 127.0.0.1_56031
+2026-05-18 23:34:16.033 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] Login response status: SUCCESS
+2026-05-18 23:34:32.150 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-18 23:34:32.152 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-18 23:34:33.941 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-18 23:34:33.946 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
