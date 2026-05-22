@@ -243,9 +243,21 @@ public class BidController {
                 while (rs.next()) {
                     String tenNguoiDat = rs.getString("ho_ten");
                     double giaTra      = rs.getDouble("gia_tra");
+                    String thoiGianRaw = rs.getString("thoi_gian");
+                    // Format: "2026-05-22T12:47:50.123" → "22/05/2026 12:47:50"
+                    String thoiGianHienThi = "";
+                    try {
+                        java.time.LocalDateTime ldt = java.time.LocalDateTime.parse(
+                            thoiGianRaw.length() > 19 ? thoiGianRaw.substring(0, 19) : thoiGianRaw);
+                        thoiGianHienThi = ldt.format(
+                            java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+                    } catch (Exception ignored) {
+                        thoiGianHienThi = thoiGianRaw != null ? thoiGianRaw : "";
+                    }
                     lichSu.add(new LuotDatGia(stt++, tenNguoiDat + " — " +
                         String.format("%,.0f", giaTra) + " VNĐ",
-                        rs.getString("ma_nguoi_dung")));
+                        rs.getString("ma_nguoi_dung"),
+                        thoiGianHienThi));
                     tenNguoiDangThang = tenNguoiDat; // người cuối = người đang thắng
                 }
             }

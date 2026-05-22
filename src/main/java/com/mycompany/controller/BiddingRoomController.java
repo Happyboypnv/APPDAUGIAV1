@@ -2,6 +2,7 @@ package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.server.controller.AuctionWebSocketControllerAdapter;
+import com.mycompany.server.dto.LuotDatGia;
 import com.mycompany.server.dto.PhienDauGiaDTO;
 import com.mycompany.server.websocket.AuctionWebSocketClient;
 import com.mycompany.utils.ApiClient;
@@ -87,7 +88,34 @@ public class BiddingRoomController implements Initializable {
 
         startClock();
         setupButtonActions();
-        bidHistoryListView.setItems(bidHistoryList); // fix Bug 10 luôn
+        bidHistoryListView.setItems(bidHistoryList);
+        bidHistoryListView.setCellFactory(lv -> new javafx.scene.control.ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
+                }
+                // Tách phần "Tên — Giá" và phần "• thời gian"
+                int idx = item.indexOf(" \u2022 ");
+                javafx.scene.text.TextFlow flow = new javafx.scene.text.TextFlow();
+                if (idx >= 0) {
+                    javafx.scene.text.Text mainText = new javafx.scene.text.Text(item.substring(0, idx));
+                    mainText.setStyle("-fx-fill: white; -fx-font-size: 13px;");
+                    javafx.scene.text.Text timeText = new javafx.scene.text.Text(item.substring(idx));
+                    timeText.setStyle("-fx-fill: #8899aa; -fx-font-size: 12px;");
+                    flow.getChildren().addAll(mainText, timeText);
+                } else {
+                    javafx.scene.text.Text mainText = new javafx.scene.text.Text(item);
+                    mainText.setStyle("-fx-fill: white; -fx-font-size: 13px;");
+                    flow.getChildren().add(mainText);
+                }
+                setGraphic(flow);
+                setText(null);
+            }
+        });
         Platform.runLater(() -> {
             if (placeBidButton != null && placeBidButton.getScene() != null) {
                 placeBidButton.getScene().getRoot().setUserData(this);
@@ -122,7 +150,10 @@ public class BiddingRoomController implements Initializable {
                         // Hiển thị từ mới nhất → cũ nhất
                         List<com.mycompany.server.dto.LuotDatGia> ds = history.getLichSu();
                         for (int i = ds.size() - 1; i >= 0; i--) {
-                            bidHistoryList.add(ds.get(i).getTenNguoiDat()); // đã chứa sẵn "Tên — giá VNĐ"
+                            LuotDatGia luot = ds.get(i);
+                            String tg = luot.getThoiGian() != null && !luot.getThoiGian().isEmpty()
+                                ? " \u2022 " + luot.getThoiGian() : "";
+                            bidHistoryList.add(luot.getTenNguoiDat() + tg);
                         }
                     }
                     // Luôn cập nhật giá và người dẫn đầu (kể cả khi lịch sử rỗng)
@@ -290,7 +321,9 @@ public class BiddingRoomController implements Initializable {
             participantNames.add(bidderFullName);
         }
         String displayName = getDisplayName(bidderFullName, participantNames);
-        String entry = displayName + ": " + formatter.format(price) + " VNĐ (vừa xong)";
+        String thoiGianBayGio = java.time.LocalDateTime.now()
+            .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        String entry = displayName + ": " + formatter.format(price) + " VNĐ \u2022 " + thoiGianBayGio;
         bidHistoryList.add(0, entry);
     }
 
