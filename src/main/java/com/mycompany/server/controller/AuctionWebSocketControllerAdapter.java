@@ -290,15 +290,46 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
     @Override
     public void onSessionEnded(JsonObject message) {
         javafx.application.Platform.runLater(() -> {
-            // Vô hiệu hóa nút đặt giá
             controller.disableBidding();
-            // Hiển thị thông báo
-            HandleNavigationAndAlert.getInstance().showAlert(
-                Alert.AlertType.INFORMATION,
-                "Phiên đấu giá kết thúc",
-                "Phiên đấu giá này đã kết thúc. Bạn sẽ được chuyển về trang chủ."
-            );
-            // Tự động về Home sau khi user bấm OK
+
+            // Lấy thông tin người thắng (nếu có) từ message
+            String winner = null;
+            double finalPrice = 0;
+            if (message.has("winner") && !message.get("winner").isJsonNull()) {
+                winner = message.get("winner").getAsString();
+            }
+            if (message.has("finalPrice") && !message.get("finalPrice").isJsonNull()) {
+                finalPrice = message.get("finalPrice").getAsDouble();
+            }
+
+            String currentUserEmail = com.mycompany.utils.SessionManager.getInstance()
+                .getCurrentUser().getEmail();
+            boolean isWinner = winner != null && winner.equals(currentUserEmail);
+
+            if (isWinner) {
+                // Người thắng: hỏi xác nhận thanh toán
+                java.text.DecimalFormat fmt = new java.text.DecimalFormat("#,###");
+                javafx.scene.control.Alert confirmAlert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                confirmAlert.setTitle("🎉 Bạn đã thắng đấu giá!");
+                confirmAlert.setHeaderText("Chúc mừng! Bạn là người trả giá cao nhất.");
+                confirmAlert.setContentText(
+                    "Giá chốt: " + fmt.format(finalPrice) + " VNĐ\n\n" +
+                        "Giao dịch đã được xử lý tự động.\n" +
+                        "Tiền đã được trừ khỏi ví của bạn.\n\n" +
+                        "Nhấn OK để về trang chủ."
+                );
+                confirmAlert.showAndWait();
+            } else {
+                // Người thua hoặc khán giả
+                HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Phiên đấu giá kết thúc",
+                    winner != null
+                        ? "Phiên đã kết thúc. Người thắng: " + winner
+                        : "Phiên đấu giá đã kết thúc (không có người đặt giá)."
+                );
+            }
             controller.navigateToHome();
         });
     }

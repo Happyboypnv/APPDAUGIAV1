@@ -35,11 +35,6 @@ public class    App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Khởi tạo database trước khi load giao diện
-            logger.info("🗄️ Đang khởi tạo database...");
-            DatabaseConnection.initialize();
-            logger.info("✅ Database đã sẵn sàng!");
-
             // THAY ĐỔI QUAN TRỌNG (SQLite Migration):
             // Lý do thêm: Migrate users cũ từ JSON sang SQLite
             // Vấn đề: Users cũ có password plain text, SQLite expect hashed
@@ -76,7 +71,10 @@ public class    App extends Application {
             scene.setFill(Color.TRANSPARENT);
 
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false); // Giữ nguyên form đẹp như thiết kế
+            primaryStage.setResizable(true);
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            primaryStage.setMaximized(false);
             primaryStage.show();
         } catch (Exception e) {
             logger.error("Không thể khởi động ứng dụng: " + e.getMessage());

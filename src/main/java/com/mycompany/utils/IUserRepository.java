@@ -6,6 +6,7 @@ import java.util.Map;
 
 public interface IUserRepository {
 
+    void updateBalance(String userId, double newBalance);
     void save(User nguoiDung);
     void update(User nguoiDung);
     Map<String, User> findAll();

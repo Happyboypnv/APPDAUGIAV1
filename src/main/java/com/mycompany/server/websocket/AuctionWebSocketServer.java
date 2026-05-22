@@ -267,11 +267,12 @@ public class AuctionWebSocketServer extends WebSocketServer {
             response.addProperty("timestamp", System.currentTimeMillis());
 
             if (bidIsCompleted) {
-                auctionRepositorySQLite.update(phienHienTai);
+                // Persistence already handled inside AuctionSessionService.setPrice()
+                // Avoid duplicate DB writes here to prevent SQLITE_BUSY / I/O conflicts.
                 response.addProperty("status", "SUCCESS");
-                // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
+                // Gửi giá MỚI (sau khi đặt)
                 response.addProperty("currentPrice", phienHienTai.getCurrentPrice());
-                response.addProperty("fullName", bidder.getFullName()); //Hiển thị full name của người chơi
+                response.addProperty("fullName", bidder.getFullName()); // Hiển thị full name của người chơi
             } else {
                 response.addProperty("status", "FAILED");
                 response.addProperty("message", "Giá không hợp lệ hoặc phiên đã kết thúc");
@@ -401,12 +402,23 @@ public class AuctionWebSocketServer extends WebSocketServer {
     }
 
     public void broadcastSessionEnded(String phienId) {
+        AuctionSession phien = AuctionSessionRegistry.getInstance().find(phienId);
+
         JsonObject msg = new JsonObject();
         msg.addProperty("event", "SESSION_ENDED");
         msg.addProperty("phienId", phienId);
         msg.addProperty("message", "Phiên đấu giá đã kết thúc");
         msg.addProperty("timestamp", System.currentTimeMillis());
-        broadcastToRoom(phienId, gson.toJson(msg));
+
+        if (phien != null) {
+            msg.addProperty("finalPrice", phien.getCurrentPrice());
+            if (phien.getWinner() != null) {
+                msg.addProperty("winner", phien.getWinner().getEmail());
+                msg.addProperty("winnerName", phien.getWinner().getFullName());
+            }
+        }
+
+        broadcastToRoom(phienId, gson.toJson(msg));   // ← dùng broadcastToRoom, không phải broadcastToSession
         logger.info("📢 Broadcast SESSION_ENDED cho phòng: " + phienId);
     }
 

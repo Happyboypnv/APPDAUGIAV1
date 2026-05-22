@@ -45,6 +45,9 @@ import java.util.List;
  */
 public class BidController {
 
+    private static final org.slf4j.Logger logger =
+        org.slf4j.LoggerFactory.getLogger(BidController.class);
+
     // ===== PHỤ THUỘC =====
 
     private final Gson gson = new GsonBuilder()
@@ -222,27 +225,53 @@ public class BidController {
             return;
         }
 
-        List<User> danhSach = phien.getBidderList();
-
-        // Xây dựng lịch sử — mỗi entry là một lượt đặt giá
+        // ĐỌC LỊCH SỬ TỪ DB (bảng nguoi_tra_gia) thay vì bidderList trong RAM
         List<LuotDatGia> lichSu = new ArrayList<>();
-        for (int i = 0; i < danhSach.size(); i++) {
-            lichSu.add(new LuotDatGia(i + 1, danhSach.get(i).getFullName(), danhSach.get(i).getUserId()));
-        }
-
-        // Người đang thắng = người cuối trong danh sách
         String tenNguoiDangThang = null;
-        if (!danhSach.isEmpty()) {
-            tenNguoiDangThang = danhSach.get(danhSach.size() - 1).getFullName();
+
+        String sql = "SELECT ntg.ma_nguoi_dung, ntg.gia_tra, ntg.thoi_gian, nd.ho_ten " +
+            "FROM nguoi_tra_gia ntg " +
+            "JOIN nguoi_dung nd ON ntg.ma_nguoi_dung = nd.ma_nguoi_dung " +
+            "WHERE ntg.ma_phien = ? " +
+            "ORDER BY ntg.thoi_gian ASC";
+
+        try (java.sql.PreparedStatement ps =
+                 com.mycompany.utils.DatabaseConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, maPhien);
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                int stt = 1;
+                while (rs.next()) {
+                    String tenNguoiDat = rs.getString("ho_ten");
+                    double giaTra      = rs.getDouble("gia_tra");
+                    String thoiGianRaw = rs.getString("thoi_gian");
+                    // Format: "2026-05-22T12:47:50.123" → "22/05/2026 12:47:50"
+                    String thoiGianHienThi = "";
+                    try {
+                        java.time.LocalDateTime ldt = java.time.LocalDateTime.parse(
+                            thoiGianRaw.length() > 19 ? thoiGianRaw.substring(0, 19) : thoiGianRaw);
+                        thoiGianHienThi = ldt.format(
+                            java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+                    } catch (Exception ignored) {
+                        thoiGianHienThi = thoiGianRaw != null ? thoiGianRaw : "";
+                    }
+                    lichSu.add(new LuotDatGia(stt++, tenNguoiDat + " — " +
+                        String.format("%,.0f", giaTra) + " VNĐ",
+                        rs.getString("ma_nguoi_dung"),
+                        thoiGianHienThi));
+                    tenNguoiDangThang = tenNguoiDat; // người cuối = người đang thắng
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            logger.error("Lỗi đọc nguoi_tra_gia: " + e.getMessage());
         }
 
         LichSuDatGiaResponse response = new LichSuDatGiaResponse(
-                maPhien,
-                phien.getCurrentPrice(),
-                phien.getStatus().name(),
-                danhSach.size(),
-                tenNguoiDangThang,
-                lichSu
+            maPhien,
+            phien.getCurrentPrice(),
+            phien.getStatus().name(),
+            lichSu.size(),
+            tenNguoiDangThang,
+            lichSu
         );
 
         guiPhanHoi(exchange, 200, gson.toJson(response));

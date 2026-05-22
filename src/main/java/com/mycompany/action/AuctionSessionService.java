@@ -4,8 +4,7 @@ import com.mycompany.models.AuctionSession;
 import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
 import com.mycompany.server.websocket.AuctionWebSocketServer;
-import com.mycompany.utils.AuctionRepositorySQLite;
-import com.mycompany.utils.UserRepositorySQLite;
+import com.mycompany.utils.*;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
@@ -17,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.sql.Connection;
 import java.sql.SQLException;
 import com.mycompany.models.Bid;
-import com.mycompany.utils.BidRepositorySQLite;
 
 public class AuctionSessionService {
     private static volatile AuctionSessionService instance;
@@ -28,8 +26,8 @@ public class AuctionSessionService {
 
     private static final AuctionSessionRegistry auctionSessionRegistry = AuctionSessionRegistry.getInstance();
     private static final AuctionScheduler auctionScheduler = AuctionScheduler.getInstance();
-    private static final AuctionRepositorySQLite auctionRepository = new AuctionRepositorySQLite();
-    private static final UserRepositorySQLite userRepository = new UserRepositorySQLite();
+    private static final IAuctionRepository auctionRepository = new AuctionRepositorySQLite();
+    private static final IUserRepository userRepository = new UserRepositorySQLite();
     private static final BidRepositorySQLite bidRepository = new BidRepositorySQLite();
 
     private AuctionSessionService() {}
@@ -227,10 +225,9 @@ public class AuctionSessionService {
                     try { conn.setAutoCommit(false); } catch (SQLException ignore) {}
                 }
             }
-            // 9. Broadcast WebSocket nếu thành công
-            if (success && webSocketServer != null) {
-                webSocketServer.broadcastBidPlaced(auction.getSessionId(), bidder.getFullName(), gia);
-            }
+            // 9. Broadcast WebSocket: responsibility moved to WebSocket server (handleBid)
+            //    To avoid duplicate broadcasts and keep single source-of-truth for persistence,
+            //    AuctionWebSocketServer.handleBid(...) will broadcast BID_RESULT to clients.
             return success;
         }
     }

@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import com.mycompany.server.dto.LichSuDatGiaResponse;
 /**
  * Hiện tại JavaFX đang gọi thẳng vào database:
  * [SignInController] → [LoginAction] → [KhoLuuTruNguoiDungSQLite] → [SQLite]
@@ -197,12 +198,11 @@ public class ApiClient {
      */
     // Thêm 2 tham số moTa và danhMuc
     public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
-                                        String danhMuc, String moTa,         // ← thêm 2 dòng này
+                                        String danhMuc, String moTa, String thoiGianBatDau,
                                         double giaKhoiDiem, int thoiGianGiay, String token) {
         try {
             // Build request body explicitly (avoid anonymous initializer issues)
-            AuctionController.TaoPhienRequest request = new AuctionController.TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,giaKhoiDiem,thoiGianGiay);
-
+            AuctionController.TaoPhienRequest request = new AuctionController.TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,thoiGianBatDau,giaKhoiDiem,thoiGianGiay);
             String jsonBody = gson.toJson(request);
             if (jsonBody == null || jsonBody.equals("null")) {
                 logger.error("[createAuction] ❌ JSON serialization failed, got null");
@@ -240,6 +240,44 @@ public class ApiClient {
         } catch (Exception e) {
             logger.error("[ApiClient] Lỗi parse auction: " + e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Gọi GET /api/bids/{maPhien} để lấy lịch sử đặt giá của phiên.
+     */
+    public static LichSuDatGiaResponse getBidHistory(String maPhien) {
+        String responseJson = guiGet("/api/bids/" + maPhien, null);
+        if (responseJson == null) return null;
+        try {
+            return gson.fromJson(responseJson, LichSuDatGiaResponse.class);
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse bid history: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Gọi DELETE /api/auctions/{maPhien} để xóa phiên đã hủy/kết thúc.
+     * @return true nếu xóa thành công
+     */
+    public static boolean deleteAuction(String maPhien, String token) {
+        try {
+            URL url = new URL(BASE_URL + "/api/auctions/" + maPhien);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Accept", "application/json");
+            if (token != null) {
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+            }
+            int status = conn.getResponseCode();
+            conn.disconnect();
+            return status == 200;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi DELETE auction: " + e.getMessage());
+            return false;
         }
     }
     /**
