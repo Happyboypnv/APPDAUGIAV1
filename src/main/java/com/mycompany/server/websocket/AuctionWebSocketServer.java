@@ -398,8 +398,6 @@ public class AuctionWebSocketServer extends WebSocketServer {
         err.addProperty("status", "FAILED");
         err.addProperty("message", message);
         conn.send(gson.toJson(err));
-
-
     }
 
     public void broadcastSessionEnded(String phienId) {
@@ -411,5 +409,23 @@ public class AuctionWebSocketServer extends WebSocketServer {
         broadcastToRoom(phienId, gson.toJson(msg));
         logger.info("📢 Broadcast SESSION_ENDED cho phòng: " + phienId);
     }
-}
 
+    /**
+     * ✅ FIX BUG: Thêm method broadcastBidPlaced()
+     * Broadcast khi có bid mới được đặt thành công
+     *
+     * @param phienId Session ID
+     * @param bidderName Tên người đặt giá
+     * @param gia Giá bid
+     */
+    public void broadcastBidPlaced(String phienId, String bidderName, double gia) {
+        JsonObject msg = new JsonObject();
+        msg.addProperty("event", "BID_PLACED");
+        msg.addProperty("phienId", phienId);
+        msg.addProperty("bidder", bidderName);
+        msg.addProperty("newPrice", gia);
+        msg.addProperty("timestamp", System.currentTimeMillis());
+        broadcastToRoom(phienId, gson.toJson(msg));
+        logger.info("📢 Broadcast BID_PLACED: {} đặt {} VNĐ ở phòng {}", bidderName, gia, phienId);
+    }
+}

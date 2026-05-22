@@ -5,12 +5,19 @@ import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
 import com.mycompany.server.websocket.AuctionWebSocketServer;
 import com.mycompany.utils.AuctionRepositorySQLite;
+import com.mycompany.utils.UserRepositorySQLite;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.sql.Connection;
+import java.sql.SQLException;
+import com.mycompany.models.Bid;
+import com.mycompany.utils.BidRepositorySQLite;
 
 public class AuctionSessionService {
     private static volatile AuctionSessionService instance;
@@ -22,6 +29,8 @@ public class AuctionSessionService {
     private static final AuctionSessionRegistry auctionSessionRegistry = AuctionSessionRegistry.getInstance();
     private static final AuctionScheduler auctionScheduler = AuctionScheduler.getInstance();
     private static final AuctionRepositorySQLite auctionRepository = new AuctionRepositorySQLite();
+    private static final UserRepositorySQLite userRepository = new UserRepositorySQLite();
+    private static final BidRepositorySQLite bidRepository = new BidRepositorySQLite();
 
     private AuctionSessionService() {}
     public void setWebSocketServer(AuctionWebSocketServer server) {
@@ -117,75 +126,126 @@ public class AuctionSessionService {
             if (auction.getStatus() != SessionStatus.IN_PROGRESS) {
                 return false;
             }
-
             // 2. Chủ phòng không được tự đấu giá
             if (bidder.equals(auction.getSeller())) {
                 return false;
             }
-
             // 3. Tính toán giá tối thiểu cần đặt
-            // Nếu là người đầu tiên: giaToiThieu = gia khoi diem
-            // Nếu đã có người đặt: giaToiThieu = gia hien tai + buoc gia
             double giaToiThieu = auction.isHasBid()
                     ? auction.getCurrentPrice() + auction.getPriceStep()
                     : auction.getCurrentPrice();
-
             if (gia < giaToiThieu) {
                 return false;
             }
-
-            // 4. Kiểm tra số dư người mua (giả định có method getSoDu)
+            // 4. Kiểm tra số dư người mua
             if (bidder.getAvailableBalance() < gia) {
                 return false;
             }
-
             // 5. Logic gia hạn thời gian (Anti-sniping)
             LocalDateTime now = LocalDateTime.now();
             long thoiGianConLai = Duration.between(now, auction.getEndTime()).getSeconds();
-
-            if (thoiGianConLai <= 60 && thoiGianConLai > 0) {
-                auction.setEndTime(auction.getEndTime().plusSeconds(30));
-                auctionScheduler.setACAuction(auction); // Cập nhật lại lịch đóng phiên
+            if (thoiGianConLai < 60 && thoiGianConLai > 0) {
+                LocalDateTime newEnd = now.plusSeconds(60);
+                if (newEnd.isAfter(auction.getEndTime())) {
+                    auction.setEndTime(newEnd);
+                    auctionScheduler.setACAuction(auction);
+                    logger.info("⏱️  Gia hạn phiên {} đến {}", auction.getSessionId(), newEnd);
+                }
             }
-
-            // 6. Cập nhật thông tin đấu giá
+            // 6. Lưu lại thông tin hiện tại để rollback nếu cần
+            boolean isCurBidderRepeating = false;
+            User previousLeader = null;
+            double oldPrice = auction.getCurrentPrice();
+            if (auction.isHasBid() && !auction.getBidderList().isEmpty()) {
+                previousLeader = auction.getBidderList().get(auction.getBidderList().size() - 1);
+                isCurBidderRepeating = bidder.getUserId().equals(previousLeader.getUserId());
+            }
+            // 7. Cập nhật trạng thái phiên
             if (!auction.isHasBid()) {
                 auction.setHasBid(true);
             }
-
-            // Hoàn lại tiền cho người trả giá cao nhất trước đó (nếu có)
-            // FIX BUG #4: Use snapshot of bidders list BEFORE adding new bidder
-            // This correctly identifies the previous leader for refund
-            List<User> biddersBeforeAdd = auction.getBidderList();
-            double oldPrice = auction.getCurrentPrice(); // lưu giá cũ TRƯỚC khi thêm bidder
-
-            // Thêm bidder vào danh sách
-            auction.addBidder(bidder);
-
-            if (biddersBeforeAdd.size() >= 1) { // size TRƯỚC khi add → người trước đó
-                User previousLeader = biddersBeforeAdd.get(biddersBeforeAdd.size() - 1);
-
-                if (!previousLeader.getUserId().equals(bidder.getUserId())) {
-                    // Người khác đang dẫn đầu → hoàn tiền cho họ
-                    previousLeader.setAvailableBalance(
-                            previousLeader.getAvailableBalance() + oldPrice
-                    );
-                    logger.info("💰 Hoàn " + oldPrice + " cho " + previousLeader.getFullName());
+            // 8. Chuẩn bị Bid entity (unique ID)
+            Bid bid = new Bid(auction.getSessionId(), bidder.getUserId(), gia);
+            Connection conn = null;
+            boolean success = false;
+            try {
+                conn = com.mycompany.utils.DatabaseConnection.getConnection();
+                conn.setAutoCommit(false);
+                // 8.1. Idempotency: Nếu bid đã tồn tại, coi là thành công (không double-process)
+                if (bidRepository.existsByBidId(bid.getBidId())) {
+                    logger.info("Bid {} đã tồn tại, idempotent success", bid.getBidId());
+                    return true;
+                }
+                // 8.2. Xử lý tiền tệ (in-memory)
+                if (isCurBidderRepeating && previousLeader != null) {
+                    bidder.setAvailableBalance(bidder.getAvailableBalance() + oldPrice);
+                    logger.info("💰 Hoàn {} cho {} (nâng giá cũ)", oldPrice, bidder.getFullName());
+                } else if (previousLeader != null && !isCurBidderRepeating) {
+                    previousLeader.setAvailableBalance(previousLeader.getAvailableBalance() + oldPrice);
+                    logger.info("💰 Hoàn {} cho {} (thua người khác)", oldPrice, previousLeader.getFullName());
+                }
+                bidder.setAvailableBalance(bidder.getAvailableBalance() - gia);
+                logger.info("💸 Trừ {} từ {}", gia, bidder.getFullName());
+                // 8.3. Thêm bidder vào danh sách nếu chưa có
+                if (!isBidderInList(auction, bidder)) {
+                    auction.addBidder(bidder);
+                    logger.info("✅ Thêm bidder {} vào danh sách", bidder.getFullName());
                 } else {
-                    // Cùng người đặt lại: chỉ hoàn phần chênh lệch
-                    // Họ đã bị trừ oldPrice trước đó, giờ đặt gia mới hơn
-                    // Không cần hoàn vì họ đang nâng giá của chính mình
-                    logger.info("ℹ️ Cùng user đặt lại, không hoàn tiền");
+                    logger.info("ℹ️  Bidder {} đã có trong danh sách, không thêm lại", bidder.getFullName());
+                }
+                // 8.4. Cập nhật giá hiện tại và bước giá
+                auction.setCurrentPrice(gia);
+                auction.setPriceStep(gia * auction.getMinPriceDiffRatio());
+                // 8.5. Lưu Bid vào DB
+                bidRepository.insertBid(bid);
+                // 8.6. Lưu auction và user vào DB
+                auctionRepository.update(auction);
+                userRepository.update(bidder);
+                logger.info("✅ Cập nhật balance DB cho bidder: {}", bidder.getFullName());
+                if (previousLeader != null && !isCurBidderRepeating) {
+                    userRepository.update(previousLeader);
+                    logger.info("✅ Cập nhật balance DB cho previousLeader: {}", previousLeader.getFullName());
+                }
+                conn.commit();
+                logger.info("✅ Transaction commit thành công cho bid {}", bid.getBidId());
+                success = true;
+            } catch (Exception e) {
+                logger.error("❌ Lỗi transaction đặt giá: " + e.getMessage(), e);
+                if (conn != null) {
+                    try { conn.rollback(); } catch (SQLException ex) { logger.error("Lỗi rollback: " + ex.getMessage()); }
+                }
+                // Rollback in-memory state
+                if (isCurBidderRepeating && previousLeader != null) {
+                    bidder.setAvailableBalance(bidder.getAvailableBalance() + oldPrice);
+                } else if (previousLeader != null && !isCurBidderRepeating) {
+                    previousLeader.setAvailableBalance(previousLeader.getAvailableBalance() - oldPrice);
+                }
+                bidder.setAvailableBalance(bidder.getAvailableBalance() + gia);
+                success = false;
+            } finally {
+                if (conn != null) {
+                    try { conn.setAutoCommit(false); } catch (SQLException ignore) {}
                 }
             }
-
-            // Trừ tiền người đặt giá hiện tại
-            bidder.setAvailableBalance(bidder.getAvailableBalance() - gia);
-
-            // Cập nhật giá và bước giá
-            auction.setCurrentPrice(gia);
-            auction.setPriceStep(gia * auction.getMinPriceDiffRatio());
-            return true;
+            // 9. Broadcast WebSocket nếu thành công
+            if (success && webSocketServer != null) {
+                webSocketServer.broadcastBidPlaced(auction.getSessionId(), bidder.getFullName(), gia);
+            }
+            return success;
         }
+    }
+
+    /**
+     * ✅ Helper method: Check if bidder already in bidderList (avoid duplicates)
+     */
+    private boolean isBidderInList(AuctionSession auction, User bidder) {
+        if (auction.getBidderList() == null || auction.getBidderList().isEmpty()) {
+            return false;
+        }
+        Set<String> bidderIds = new HashSet<>();
+        for (User u : auction.getBidderList()) {
+            bidderIds.add(u.getUserId());
+        }
+        return bidderIds.contains(bidder.getUserId());
     }
 }

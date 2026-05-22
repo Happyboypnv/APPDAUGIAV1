@@ -1,8 +1,17 @@
 package com.mycompany.action;
 
 import com.mycompany.models.*;
+import com.mycompany.utils.DatabaseConnection;
 import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import sun.misc.Unsafe;
+
+import java.lang.reflect.Field;
+import java.sql.Connection;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class AuctionSessionServiceTest {
 
@@ -12,9 +21,40 @@ class AuctionSessionServiceTest {
     private User bidder1;
     private User bidder2;
 
+    // Mocks for repositories and DB
+    private com.mycompany.utils.AuctionRepositorySQLite mockAuctionRepo;
+    private com.mycompany.utils.UserRepositorySQLite mockUserRepo;
+    private com.mycompany.utils.BidRepositorySQLite mockBidRepo;
+    private Connection mockConnection;
+    private MockedStatic<DatabaseConnection> dbConnectionMockStatic;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         service = AuctionSessionService.getInstance();
+
+        // Tạo và inject mocks vào AuctionSessionService (thông qua reflection vì các field là private static final)
+        mockAuctionRepo = mock(com.mycompany.utils.AuctionRepositorySQLite.class);
+        mockUserRepo = mock(com.mycompany.utils.UserRepositorySQLite.class);
+        mockBidRepo = mock(com.mycompany.utils.BidRepositorySQLite.class);
+        mockConnection = mock(Connection.class);
+        try {
+            setFinalStaticField(AuctionSessionService.class, "auctionRepository", mockAuctionRepo);
+            setFinalStaticField(AuctionSessionService.class, "userRepository", mockUserRepo);
+            setFinalStaticField(AuctionSessionService.class, "bidRepository", mockBidRepo);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to inject repository mocks", e);
+        }
+
+        dbConnectionMockStatic = Mockito.mockStatic(DatabaseConnection.class);
+        dbConnectionMockStatic.when(() -> DatabaseConnection.getConnection()).thenReturn(mockConnection);
+
+        // ===== CHỈ CẦN MOCK CÁC HÀM CÓ GIÁ TRỊ TRẢ VỀ =====
+        when(mockBidRepo.existsByBidId(anyString())).thenReturn(false);
+
+        // XÓA (HOẶC COMMENT) 3 DÒNG DƯỚI ĐÂY VÌ CHÚNG LÀ HÀM VOID, MOCKITO SẼ TỰ ĐỘNG BỎ QUA:
+        // doNothing().when(mockBidRepo).insertBid(any(Bid.class));
+        // doNothing().when(mockAuctionRepo).update(any(AuctionSession.class));
+        // doNothing().when(mockUserRepo).update(any(User.class));
 
         // Tạo người bán
         seller = new User("Nguoi Ban", "seller@test.com", "pass", "1990-01-01");
@@ -39,6 +79,11 @@ class AuctionSessionServiceTest {
         auction.setStartTime(java.time.LocalDateTime.now());
         auction.setEndTime(java.time.LocalDateTime.now().plusSeconds(300));
         auction.setPriceStep(0); // Lần đặt đầu tiên không cần bước giá
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (dbConnectionMockStatic != null) dbConnectionMockStatic.close();
     }
 
     // ===== setPrice() — các trường hợp hợp lệ =====
@@ -164,6 +209,24 @@ class AuctionSessionServiceTest {
                 "Phiên đang chạy không được bắt đầu lại");
     }
 
+    @Test
+    @DisplayName("setPrice() phải gọi commit trên Connection khi thành công")
+    void setPrice_shouldCommitTransaction() throws Exception {
+        service.setPrice(auction, bidder1, 5_000_000);
+        // commit phải được gọi
+        verify(mockConnection, atLeastOnce()).commit();
+    }
+
+    @Test
+    @DisplayName("setPrice() khi DB lỗi phải rollback và trả về false")
+    void setPrice_shouldRollbackOnDbError() throws Exception {
+        // Làm cho update() ném lỗi để kích hoạt rollback
+        doThrow(new RuntimeException("DB error")).when(mockAuctionRepo).update(any(AuctionSession.class));
+        boolean result = service.setPrice(auction, bidder1, 5_000_000);
+        assertFalse(result, "Khi có lỗi DB, setPrice phải trả về false");
+        verify(mockConnection, atLeastOnce()).rollback();
+    }
+
     // ===== closeAuction() =====
 
     @Test
@@ -192,5 +255,19 @@ class AuctionSessionServiceTest {
         service.closeAuction(auction, SessionStatus.CANCELLED);
         assertEquals(SessionStatus.PAID, auction.getStatus(),
                 "Phiên đã đóng không được thay đổi trạng thái");
+    }
+
+    private static void setFinalStaticField(Class<?> clazz, String fieldName, Object value) throws Exception {
+        Field field = clazz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+
+        // Sử dụng Unsafe để vượt qua giới hạn reflection của Java 12+
+        Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+        unsafeField.setAccessible(true);
+        Unsafe unsafe = (Unsafe) unsafeField.get(null);
+
+        Object staticFieldBase = unsafe.staticFieldBase(field);
+        long staticFieldOffset = unsafe.staticFieldOffset(field);
+        unsafe.putObject(staticFieldBase, staticFieldOffset, value);
     }
 }

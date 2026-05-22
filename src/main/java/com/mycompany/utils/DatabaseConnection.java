@@ -157,7 +157,13 @@ public class DatabaseConnection {
             "PRIMARY KEY (ma_phien, ma_nguoi_dung, thoi_gian), " +
             "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien), " +
             "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
-
+        String sqlBids = "CREATE TABLE IF NOT EXISTS bids (" +
+                "bid_id TEXT PRIMARY KEY, " +
+                "session_id TEXT NOT NULL, " +
+                "user_id TEXT NOT NULL, " +
+                "amount REAL NOT NULL, " +
+                "bid_time TEXT NOT NULL" +
+                ");";
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
@@ -167,6 +173,7 @@ public class DatabaseConnection {
             stmt.execute(sqlPhien);
             stmt.execute(sqlGiaoDich);
             stmt.execute(sqlNguoiTraGia);
+            stmt.execute(sqlBids);
 
             conn.commit();
             logger.info("Khởi tạo Database thành công.");
