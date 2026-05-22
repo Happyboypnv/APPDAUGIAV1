@@ -29,6 +29,8 @@ public class LoginResponse {
     /** Họ tên đầy đủ của người dùng */
     private String hoTen;
 
+    private int role; // admin / user
+
     /** Thông báo kết quả: thành công hoặc lý do thất bại */
     private String thongBao;
 
@@ -87,7 +89,11 @@ public class LoginResponse {
     public String getSessionStatus() { return sessionStatus; }
     public String getExistingDeviceId() { return existingDeviceId; }
     public String getExistingIpAddress() { return existingIpAddress; }
-    
+
+    public int getRole() {
+        return role;
+    }
+
     // Setters
     public void setSessionStatus(String sessionStatus) { this.sessionStatus = sessionStatus; }
     public void setExistingDeviceId(String deviceId) { this.existingDeviceId = deviceId; }
@@ -95,5 +101,9 @@ public class LoginResponse {
 
     public void setThongBao(String thongBao) {
         this.thongBao = thongBao;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 }

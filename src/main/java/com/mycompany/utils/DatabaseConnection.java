@@ -120,7 +120,8 @@ public class DatabaseConnection {
             "so_du_kha_dung REAL DEFAULT 0, " +
             "so_tai_khoan_ngan_hang TEXT, " +
             "ten_ngan_hang TEXT, " +
-            "duong_dan_avatar TEXT);";
+            "duong_dan_avatar TEXT, " +
+                "role INTEGER);";
 
         String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
             "ma_san_pham TEXT PRIMARY KEY, " +
@@ -168,6 +169,13 @@ public class DatabaseConnection {
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(sqlNguoiDung);
+
+            try {
+                stmt.execute("ALTER TABLE nguoi_dung ADD COLUMN role INTEGER;");
+                logger.info(" Thêm role thành công vào bảng người dùng!");
+            } catch (SQLException e) {
+                logger.debug("Cột role đã tồn tại");
+            }
 
             stmt.execute(sqlSanPham);
             stmt.execute(sqlPhien);

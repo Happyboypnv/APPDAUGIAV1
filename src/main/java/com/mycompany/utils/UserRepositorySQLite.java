@@ -89,8 +89,8 @@ public class UserRepositorySQLite implements IUserRepository {
 
             String sql = "INSERT INTO nguoi_dung " +
                 "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, " +
-                "dia_chi, so_dien_thoai, so_du_kha_dung, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "dia_chi, so_dien_thoai, so_du_kha_dung, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar, role) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, maMoi);
@@ -105,12 +105,13 @@ public class UserRepositorySQLite implements IUserRepository {
                 ps.setString(10, User.getBankAccountNumber());
                 ps.setString(11, User.getBankName());
                 ps.setString(12, User.getAvatarPath());
+                ps.setInt(13, User.getRole());
 
-                logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+                logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
                     maMoi, User.getFullName(), User.getEmail(), User.getPassword(), User.getSalt(),
                     User.getDateOfBirth(), User.getAddress(), User.getPhoneNumber(),
                     User.getAvailableBalance(), User.getBankAccountNumber(), User.getBankName(),
-                    User.getAvatarPath());
+                    User.getAvatarPath(),User.getRole());
 
                 int rowsAffected = ps.executeUpdate();
                 logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
@@ -144,7 +145,7 @@ public class UserRepositorySQLite implements IUserRepository {
         String sql = "UPDATE nguoi_dung SET " +
             "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, " +
             "dia_chi = ?, so_dien_thoai = ?, so_du_kha_dung = ?, " +
-            "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ? " +
+            "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ?, role = ? " +
             "WHERE ma_nguoi_dung = ?";
 
         Connection conn = null;
@@ -163,6 +164,7 @@ public class UserRepositorySQLite implements IUserRepository {
                 ps.setString(10, User.getBankName());
                 ps.setString(11, User.getAvatarPath());
                 ps.setString(12, User.getUserId());
+                ps.setInt(13,User.getRole());
                 int rowsAffected = ps.executeUpdate();
                 logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
             }
@@ -174,6 +176,36 @@ public class UserRepositorySQLite implements IUserRepository {
             }
             logger.error("Lỗi cập nhật người dùng: " + e.getMessage());
         }
+    }
+    /**
+     * Mục đích: Cấp quyền admin thủ công cho email tuỳ chọn
+     * Set value ở cột role = 1 (là admin)
+     * Lưu ý: CHỈ DÙNG 1 LẦN KHI MUỐN TẠO 1 ACC ADMIN MỚI, gọi đến hàm này 1 lần ở server app trước khi xoá
+     * @param email - email của tài khoản muốn cấp quyền admin
+     */
+    public void authorizeAdmin(String email) { // chú
+        if (isEmailAvailable(email)) { // hàm trả ra true nếu email ko tồn tại
+            logger.error("Email không tồn tại");
+            return;
+        }
+
+        String sql = "UPDATE nguoi_dung SET role = 1 WHERE thu_dien_tu = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,email);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            conn.commit();
+            if (rowsAffected > 0) {
+                logger.info("Cấp quyền Admin cho email " + email + " thành công!");
+            } else {
+                logger.warn("Không có tài khoản nào được cập nhật.");
+            }        } catch (SQLException e) {
+            logger.error("Lỗi cấp quyền admin DB: " + e.getMessage());
+        }
+
     }
 
     public void delete(User User) {
@@ -246,6 +278,7 @@ public class UserRepositorySQLite implements IUserRepository {
                 nd.setBankAccountNumber(rs.getString("so_tai_khoan_ngan_hang")); // ⭐ thêm
                 nd.setBankName(rs.getString("ten_ngan_hang"));
                 nd.setAvatarPath(rs.getString("duong_dan_avatar")); // ⭐ Avatar path
+                nd.setRole(rs.getInt("role"));
 
                 // FIX QUAN TRỌNG (App Restart Issue):
                 // - Trước: Không retrieve/set salt từ database
@@ -431,6 +464,7 @@ public class UserRepositorySQLite implements IUserRepository {
                     nd.setBankAccountNumber(rs.getString("so_tai_khoan_ngan_hang")); // ⭐ thêm
                     nd.setBankName(rs.getString("ten_ngan_hang"));
                     nd.setAvatarPath(rs.getString("duong_dan_avatar"));
+                    nd.setRole(rs.getInt("role"));
                     nd.setSalt(rs.getString("salt"));
                     return nd;
                 }

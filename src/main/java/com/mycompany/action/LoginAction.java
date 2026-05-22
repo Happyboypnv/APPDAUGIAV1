@@ -204,7 +204,11 @@ public class LoginAction {
                             "Đăng nhập thành công! Chào mừng " + user.getFullName() + ".");
 
                     try {
-                        HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+                        if (response.getRole()==0){
+                            HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+                        } else {
+                            HandleNavigationAndAlert.getInstance().handleGoToAdminHome(event);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

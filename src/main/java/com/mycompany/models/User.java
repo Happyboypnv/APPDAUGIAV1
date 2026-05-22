@@ -15,7 +15,7 @@ public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
     public User(String fullName, String email,
                 String password, String dateOfBirth,
                 String address, String phoneNumber) {
-        super(fullName, email, password, dateOfBirth);
+        super(fullName, email, password, dateOfBirth,0);
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.availableBalance = 0;
@@ -23,7 +23,7 @@ public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
     }
 
     public User(String fullName, String email, String password, String dateOfBirth) {
-        super(fullName, email, password, dateOfBirth);
+        super(fullName, email, password, dateOfBirth, 0);
         this.transactions = new ArrayList<>();
         this.availableBalance = 0;
     }

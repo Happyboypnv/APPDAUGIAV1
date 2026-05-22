@@ -161,6 +161,8 @@ public class UserController {
         String token = "USER_" + req.getEmail() + "_" + System.currentTimeMillis();
         User nguoiDung = khoNguoiDung.findByEmail(req.getEmail());
         String hoTen = (nguoiDung != null) ? nguoiDung.getFullName() : "";
+        int userRole = (nguoiDung != null) ? nguoiDung.getRole() : 0;
+
 
         // 🔹 NEW: Add user to online users list
         OnlineUserSession session = onlineUsersManager.addOrReplaceSession(
@@ -176,6 +178,7 @@ public class UserController {
 
         // Build successful response
         LoginResponse response = new LoginResponse(token, req.getEmail(), hoTen, "Đăng nhập thành công");
+        response.setRole(userRole);
         response.setSessionStatus("SUCCESS");
 
         logger.info("[LoginController] ✅ User {} logged in successfully. Device: {}",

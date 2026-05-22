@@ -23,6 +23,7 @@ public class Person implements Serializable {
     private String email;
     private String dateOfBirth;
     private String password;
+    private int role; // 0 là user thường, 1 là admin
 
     /**
      * Salt field for password hashing.
@@ -55,11 +56,12 @@ public class Person implements Serializable {
      * @param password    Password (already hashed by caller, stored as-is)
      * @param dateOfBirth Date of birth
      */
-    protected Person(String fullName, String email, String password, String dateOfBirth) {
+    protected Person(String fullName, String email, String password, String dateOfBirth, int role) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
+        this.role = role;
     }
 
     /**
@@ -103,6 +105,10 @@ public class Person implements Serializable {
         return avatarPath != null ? avatarPath : "image/default_avatar.jpg";
     }
 
+    public int getRole() {
+        return role;
+    }
+
     // ===== SETTERS =====
 
     public void setUserId(String userId) {
@@ -133,5 +139,9 @@ public class Person implements Serializable {
     /** Sets the avatar path for the user. */
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 }

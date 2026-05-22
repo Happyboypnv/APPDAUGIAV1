@@ -284,3 +284,21 @@ java.lang.RuntimeException: DB error
 2026-05-22 12:32:54.680 [main] ERROR c.m.utils.UserRepositorySQLite - KhÙng th? xÛa: Ng??i d˘ng null ho?c khÙng cÛ m„
 2026-05-22 12:32:54.726 [main] ERROR c.m.utils.UserRepositorySQLite - KhÙng th? c?p nh?t: Ng??i d˘ng null ho?c khÙng cÛ m„
 2026-05-22 12:32:54.752 [main] ERROR c.m.utils.UserRepositorySQLite - KhÙng th? c?p nh?t: Ng??i d˘ng null ho?c khÙng cÛ m„
+2026-05-22 22:03:15.644 [pool-1-thread-1] ERROR c.m.utils.UserRepositorySQLite - L·ªói layTheoEmail: no such column: 'role'
+2026-05-22 22:03:15.682 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L·ªói layTheoEmail: no such column: 'role'
+2026-05-22 22:03:15.883 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L·ªói layTheoEmail: no such column: 'role'
+2026-05-22 22:03:16.085 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L·ªói layTheoEmail: no such column: 'role'
+2026-05-22 22:03:16.089 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Email ƒë√£ t·ªìn t·∫°i: test5@gmail.com
+2026-05-22 22:03:16.092 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L·ªói layTheoEmail: no such column: 'role'
+2026-05-22 23:37:33.886 [Thread-274] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.886 [Thread-275] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.888 [Thread-266] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.889 [Thread-255] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.889 [Thread-258] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.889 [Thread-271] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.890 [Thread-270] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.890 [Thread-399] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.890 [Thread-282] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.889 [Thread-263] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.890 [Thread-279] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-22 23:37:33.890 [Thread-278] ERROR com.mycompany.utils.ApiClient - [ApiClient] ‚ùå Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.

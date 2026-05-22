@@ -122,6 +122,8 @@ public class ServerApp {
     }
     UserRepositorySQLite userStorage = new UserRepositorySQLite();
     userStorage.migrateLegacyPasswords();
+//    userStorage.authorizeAdmin("adminphong@gmail.com"); cấp quyền 1 lần
+
 
     // ===== KHỞI TẠO SERVER =====
     HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);

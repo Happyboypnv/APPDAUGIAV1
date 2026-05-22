@@ -217,6 +217,14 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         window.show();
     }
 
+    public void handleGoToAdminHome(Event event) throws IOException { // phải dùng Event vì phải nhận cả MouseEvent (nút home) và ActionEvent (còn lại)
+        StackPane homeRoot = FXMLLoader.load(getClass().getResource("/view/Admin_Home.fxml"));
+        Scene homeScene = new Scene(homeRoot);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(homeScene);
+        window.show();
+    }
+
     /**
      * showAlert(Alert.AlertType alertType, String title, String message) - Hiển thị hộp thoại thông báo
      *
