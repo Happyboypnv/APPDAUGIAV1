@@ -172,11 +172,11 @@ public class BiddingRoomController implements Initializable {
         // ✅ SAU
         wsThread = new Thread(() -> {
             try {
+                Thread.sleep(1000);
                 if (isDestroyed) return;
 
                 wsClient = AuctionWebSocketClient.getInstance();
                 adapter = new AuctionWebSocketControllerAdapter(this, currentPriceLabel);
-                // ⭐ setListener TRƯỚC connectToServer — đảm bảo không bỏ sót message nào
                 wsClient.setListener(adapter);
 
                 // ⭐ Chỉ connect nếu chưa connected

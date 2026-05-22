@@ -155,7 +155,7 @@ public class BidController {
                 guiPhanHoi(exchange, 404, bug("Không tìm thấy phiên: " + req.getMaPhien()));
             } else {
                 guiPhanHoi(exchange, 409, bug(
-                    "Phiên không ở trạng thái DANG_DIEN_RA. Trạng thái hiện tại: " + phienDB.getStatus().name()));
+                    "Phiên không ở trạng thái IN_PROGRESS. Trạng thái hiện tại: " + phienDB.getStatus().name()));
             }
             return;
         }
@@ -163,7 +163,7 @@ public class BidController {
         // Bước 4: Kiểm tra nhanh trạng thái (object từ Registry là live state)
         if (phien.getStatus() != SessionStatus.IN_PROGRESS) {
             guiPhanHoi(exchange, 409, bug(
-                    "Phiên không ở trạng thái DANG_DIEN_RA. Trạng thái hiện tại: " + phien.getStatus().name()));
+                    "Phiên không ở trạng thái IN_PROGRESS. Trạng thái hiện tại: " + phien.getStatus().name()));
             return;
         }
 

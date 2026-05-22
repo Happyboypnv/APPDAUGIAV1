@@ -2910,3 +2910,269 @@
 2026-05-22 13:33:10.002 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ⚠️ Unknown event: CONNECTED
 2026-05-22 13:33:10.002 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 👤 User joined: tuan2@gmail.com
 2026-05-22 13:33:13.353 [pool-1-thread-10] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:34:05.216 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent JOIN: {"action":"JOIN","phienId":"PH000002","email":"tuan2@gmail.com"}
+2026-05-22 13:34:05.217 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ✅ Đã kết nối và JOIN phòng: PH000002
+2026-05-22 13:34:05.217 [WebSocketWorker-35] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email tuan2@gmail.com joining room: PH000002
+2026-05-22 13:34:05.218 [WebSocketConnectReadThread-70] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: USER_JOINED
+2026-05-22 13:34:05.236 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 👤 User joined: tuan2@gmail.com
+2026-05-22 13:34:07.321 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🔌 Disconnecting from WebSocket server...
+2026-05-22 13:34:07.321 [WebSocketConnectReadThread-70] INFO  c.m.s.w.AuctionWebSocketClient - 🚪 WebSocket closed: 
+2026-05-22 13:34:07.321 [WebSocketSelector-41] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000002
+2026-05-22 13:34:07.322 [JavaFX Application Thread] INFO  c.m.controller.NavBarController - ✅ BiddingRoom WebSocket đã được cleanup
+2026-05-22 13:34:07.322 [WebSocketSelector-41] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000002
+2026-05-22 13:34:07.322 [WebSocketSelector-41] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:52271
+2026-05-22 13:34:26.249 [Thread-96] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: {"tenPhien":"test#4","tenSanPham":"test 4","maSanPham":"SP_1779431666234","danhMuc":"Đá quý","moTa":"test 4","giaKhoiDiem":1000000.0,"thoiGianGiay":86400,"thoiGianBatDau":"2026-05-22T13:00"}
+2026-05-22 13:34:26.250 [Thread-96] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_tuan2@gmail.com_1779431557676
+2026-05-22 13:34:26.260 [pool-1-thread-5] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Đã upsert san_pham: SP_1779431666234
+2026-05-22 13:34:26.260 [pool-1-thread-5] INFO  c.m.utils.AuctionRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-22 13:34:26.261 [pool-1-thread-5] INFO  c.m.utils.AuctionRepositorySQLite - COMMIT thành công cho auction: PH000003
+2026-05-22 13:34:26.261 [pool-1-thread-5] INFO  c.mycompany.action.AuctionScheduler - Đã thêm phiên đấu giá PH000003 để nó bắt đầu ngay lập tức
+2026-05-22 13:34:26.262 [Thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:34:26.262 [Thread-96] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
+  "maPhien": "PH000003",
+  "thongBao": "Tạo phiên thành công"
+}
+2026-05-22 13:34:26.263 [Thread-1] INFO  c.m.action.AuctionSessionService - Phiên PH000003 đã mở lúc 2026-05-22T13:00, sẽ đóng lúc 2026-05-23T13:00
+2026-05-22 13:34:26.263 [Thread-1] INFO  c.mycompany.action.AuctionScheduler - Đã mở phiên đấu giá PH000003 ngay lập tức vì startTime đã qua
+2026-05-22 13:34:39.031 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🎯 AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-22 13:34:39.034 [WebSocketWorker-36] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:52404
+2026-05-22 13:34:39.034 [WebSocketConnectReadThread-164] INFO  c.m.s.w.AuctionWebSocketClient - ✅ WebSocket connection opened
+2026-05-22 13:34:39.035 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent JOIN: {"action":"JOIN","phienId":"PH000003","email":"tuan2@gmail.com"}
+2026-05-22 13:34:39.035 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ✅ Đã kết nối và JOIN phòng: PH000003
+2026-05-22 13:34:39.035 [WebSocketConnectReadThread-164] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: CONNECTED
+2026-05-22 13:34:39.036 [pool-1-thread-6] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:34:39.036 [WebSocketWorker-36] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email tuan2@gmail.com joining room: PH000003
+2026-05-22 13:34:39.036 [WebSocketConnectReadThread-164] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: USER_JOINED
+2026-05-22 13:34:39.064 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ✅ WebSocket connected — ready to receive real-time updates
+2026-05-22 13:34:39.064 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ⚠️ Unknown event: CONNECTED
+2026-05-22 13:34:39.064 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 👤 User joined: tuan2@gmail.com
+2026-05-22 13:34:41.329 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent BID: {"action":"BID","phienId":"PH000003","email":"tuan2@gmail.com","giaRa":1060000.0}
+2026-05-22 13:34:41.330 [WebSocketWorker-36] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:34:41.331 [WebSocketWorker-36] WARN  c.m.action.AuctionSessionService - [setPrice] FAIL – người bán tự đặt giá (tuan2@gmail.com)
+2026-05-22 13:34:41.331 [WebSocketWorker-36] INFO  c.m.s.w.AuctionWebSocketServer - [handleBid] phienId=PH000003 email=tuan2@gmail.com giaRa=1060000.0 | status=IN_PROGRESS currentPrice=1000000.0 priceStep=0.0 hasBid=false balance=1.23123123123E11
+2026-05-22 13:34:41.331 [WebSocketWorker-36] WARN  c.m.s.w.AuctionWebSocketServer - [handleBid] FAILED phienId=PH000003 email=tuan2@gmail.com giaRa=1060000.0 reason=Đặt giá thất bại
+2026-05-22 13:34:41.331 [WebSocketConnectReadThread-164] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: BID_RESULT
+2026-05-22 13:34:41.331 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 📊 onBidResult status=FAILED, message={"event":"BID_RESULT","email":"tuan2@gmail.com","giaRa":1060000.0,"timestamp":1779431681331,"status":"FAILED","message":"Đặt giá thất bại"}
+2026-05-22 13:34:41.332 [JavaFX Application Thread] WARN  c.m.s.c.AuctionWebSocketControllerAdapter - ❌ BID_RESULT FAILED: Đặt giá thất bại
+2026-05-22 13:34:45.661 [pool-1-thread-5] INFO  c.m.server.controller.UserController - [LoginController] 🚪 User tuan2@gmail.com logging out...
+2026-05-22 13:34:45.662 [pool-1-thread-5] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] 🚪 User tuan2@gmail.com logged out
+2026-05-22 13:34:45.662 [pool-1-thread-5] INFO  c.m.server.controller.UserController - [LoginController] ✅ User tuan2@gmail.com successfully logged out
+2026-05-22 13:34:45.663 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] ✅ Logout successful
+2026-05-22 13:34:50.100 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-22 13:34:50.103 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-22 13:34:50.103 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-22 13:34:50.106 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-22 13:39:39.965 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-22 13:39:39.968 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
+2026-05-22 13:39:40.126 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:39:40.127 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - Khởi tạo Database thành công.
+2026-05-22 13:39:40.128 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-22 13:39:40.128 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-22 13:39:40.130 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-22 13:39:40.131 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:39:40.134 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-22 13:39:40.135 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-22 13:39:43.373 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
+2026-05-22 13:39:43.541 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:39:43.542 [main] INFO  c.mycompany.utils.DatabaseConnection - Khởi tạo Database thành công.
+2026-05-22 13:39:43.545 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:39:43.570 [main] INFO  com.mycompany.server.ServerApp - Khoi phuc phien PH000002 (dong luc 2026-05-22T14:00)
+2026-05-22 13:39:43.572 [main] INFO  com.mycompany.server.ServerApp - Khoi phuc phien PH000003 (dong luc 2026-05-23T13:00)
+2026-05-22 13:39:43.573 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:39:43.573 [main] INFO  com.mycompany.server.ServerApp -   KHOI PHUC PHIEN DAU GIA:
+2026-05-22 13:39:43.573 [main] INFO  com.mycompany.server.ServerApp -   Mo ngay (da den gio):       0
+2026-05-22 13:39:43.573 [main] INFO  com.mycompany.server.ServerApp -   Len lich mo (chua den gio): 0
+2026-05-22 13:39:43.573 [main] INFO  com.mycompany.server.ServerApp -   Dong ngay (qua gio dong):   0
+2026-05-22 13:39:43.573 [main] INFO  com.mycompany.server.ServerApp -   Khoi phuc dang chay:        2
+2026-05-22 13:39:43.573 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:39:43.573 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-22 13:39:43.574 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-22 13:39:43.672 [main] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ Cleanup task started (interval: 300000 ms)
+2026-05-22 13:39:43.687 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-22 13:39:43.694 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp - ✅ WebSocket server đã được inject vào AuctionSessionService
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/logout
+2026-05-22 13:39:45.183 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-22 13:39:45.184 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 13:40:32.419 [pool-1-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:40:32.423 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: tuan2@gmail.com
+2026-05-22 13:40:32.424 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: ppCnLZAE1XFNLR/N1BMfchIm9U2AtkIvhqJXLqcVmII=
+2026-05-22 13:40:32.424 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: 9qT/YfuBKMkBtrdKVJp4Ow==
+2026-05-22 13:40:32.424 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: @Tuan2007
+2026-05-22 13:40:32.428 [pool-1-thread-1] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ User tuan2@gmail.com logged in on device 127.0.0.1_32425
+2026-05-22 13:40:32.428 [pool-1-thread-1] INFO  c.m.server.controller.UserController - [LoginController] ✅ User tuan2@gmail.com logged in successfully. Device: 127.0.0.1_32425
+2026-05-22 13:40:32.455 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] Login response status: SUCCESS
+2026-05-22 13:40:33.286 [pool-1-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:40:36.616 [pool-1-thread-5] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:40:36.624 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🎯 AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-22 13:40:36.629 [pool-1-thread-7] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:40:36.642 [WebSocketWorker-34] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:52604
+2026-05-22 13:40:36.648 [WebSocketConnectReadThread-50] INFO  c.m.s.w.AuctionWebSocketClient - ✅ WebSocket connection opened
+2026-05-22 13:40:36.653 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent JOIN: {"action":"JOIN","phienId":"PH000003","email":"tuan2@gmail.com"}
+2026-05-22 13:40:36.653 [WebSocketConnectReadThread-50] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: CONNECTED
+2026-05-22 13:40:36.653 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ✅ Đã kết nối và JOIN phòng: PH000003
+2026-05-22 13:40:36.656 [WebSocketWorker-34] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email tuan2@gmail.com joining room: PH000003
+2026-05-22 13:40:36.657 [WebSocketConnectReadThread-50] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: USER_JOINED
+2026-05-22 13:40:36.697 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ✅ WebSocket connected — ready to receive real-time updates
+2026-05-22 13:40:36.697 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ⚠️ Unknown event: CONNECTED
+2026-05-22 13:40:36.698 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 👤 User joined: tuan2@gmail.com
+2026-05-22 13:40:38.297 [pool-1-thread-9] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:40:39.156 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent BID: {"action":"BID","phienId":"PH000003","email":"tuan2@gmail.com","giaRa":1060000.0}
+2026-05-22 13:40:39.157 [WebSocketWorker-34] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 13:40:39.158 [WebSocketWorker-34] WARN  c.m.action.AuctionSessionService - [setPrice] FAIL – người bán tự đặt giá (tuan2@gmail.com)
+2026-05-22 13:40:39.158 [WebSocketWorker-34] INFO  c.m.s.w.AuctionWebSocketServer - [handleBid] phienId=PH000003 email=tuan2@gmail.com giaRa=1060000.0 | status=IN_PROGRESS currentPrice=1000000.0 priceStep=0.0 hasBid=false balance=1.23123123123E11
+2026-05-22 13:40:39.159 [WebSocketWorker-34] WARN  c.m.s.w.AuctionWebSocketServer - [handleBid] FAILED phienId=PH000003 email=tuan2@gmail.com giaRa=1060000.0 reason=Đặt giá thất bại
+2026-05-22 13:40:39.160 [WebSocketConnectReadThread-50] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: BID_RESULT
+2026-05-22 13:40:39.160 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 📊 onBidResult status=FAILED, message={"event":"BID_RESULT","email":"tuan2@gmail.com","giaRa":1060000.0,"timestamp":1779432039158,"status":"FAILED","message":"Đặt giá thất bại"}
+2026-05-22 13:40:39.160 [JavaFX Application Thread] WARN  c.m.s.c.AuctionWebSocketControllerAdapter - ❌ BID_RESULT FAILED: Đặt giá thất bại
+2026-05-22 13:40:40.971 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent BID: {"action":"BID","phienId":"PH000003","email":"tuan2@gmail.com","giaRa":1060000.0}
+2026-05-22 13:40:40.972 [WebSocketWorker-34] WARN  c.m.action.AuctionSessionService - [setPrice] FAIL – người bán tự đặt giá (tuan2@gmail.com)
+2026-05-22 13:40:40.972 [WebSocketWorker-34] INFO  c.m.s.w.AuctionWebSocketServer - [handleBid] phienId=PH000003 email=tuan2@gmail.com giaRa=1060000.0 | status=IN_PROGRESS currentPrice=1000000.0 priceStep=0.0 hasBid=false balance=1.23123123123E11
+2026-05-22 13:40:40.972 [WebSocketWorker-34] WARN  c.m.s.w.AuctionWebSocketServer - [handleBid] FAILED phienId=PH000003 email=tuan2@gmail.com giaRa=1060000.0 reason=Đặt giá thất bại
+2026-05-22 13:40:40.972 [WebSocketConnectReadThread-50] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: BID_RESULT
+2026-05-22 13:40:40.973 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 📊 onBidResult status=FAILED, message={"event":"BID_RESULT","email":"tuan2@gmail.com","giaRa":1060000.0,"timestamp":1779432040972,"status":"FAILED","message":"Đặt giá thất bại"}
+2026-05-22 13:40:40.973 [JavaFX Application Thread] WARN  c.m.s.c.AuctionWebSocketControllerAdapter - ❌ BID_RESULT FAILED: Đặt giá thất bại
+2026-05-22 13:40:43.155 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🔌 Disconnecting from WebSocket server...
+2026-05-22 13:40:43.157 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000003
+2026-05-22 13:40:43.157 [WebSocketConnectReadThread-50] INFO  c.m.s.w.AuctionWebSocketClient - 🚪 WebSocket closed: 
+2026-05-22 13:40:43.157 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000003
+2026-05-22 13:40:43.158 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:52604
+2026-05-22 13:40:43.158 [JavaFX Application Thread] INFO  c.m.controller.NavBarController - ✅ BiddingRoom WebSocket đã được cleanup
+2026-05-22 13:40:43.884 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🎯 AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-22 13:40:43.895 [WebSocketConnectReadThread-58] INFO  c.m.s.w.AuctionWebSocketClient - ✅ WebSocket connection opened
+2026-05-22 13:40:43.895 [WebSocketWorker-35] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:52617
+2026-05-22 13:40:43.896 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - 💬 Sent JOIN: {"action":"JOIN","phienId":"PH000002","email":"tuan2@gmail.com"}
+2026-05-22 13:40:43.896 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ✅ Đã kết nối và JOIN phòng: PH000002
+2026-05-22 13:40:43.899 [WebSocketConnectReadThread-58] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: CONNECTED
+2026-05-22 13:40:43.899 [WebSocketWorker-35] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email tuan2@gmail.com joining room: PH000002
+2026-05-22 13:40:43.901 [WebSocketConnectReadThread-58] INFO  c.m.s.w.AuctionWebSocketClient - 📩 Received message: USER_JOINED
+2026-05-22 13:40:43.923 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ✅ WebSocket connected — ready to receive real-time updates
+2026-05-22 13:40:43.924 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ⚠️ Unknown event: CONNECTED
+2026-05-22 13:40:43.924 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - 👤 User joined: tuan2@gmail.com
+2026-05-22 13:40:48.104 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - 🔌 Disconnecting from WebSocket server...
+2026-05-22 13:40:48.105 [WebSocketConnectReadThread-58] INFO  c.m.s.w.AuctionWebSocketClient - 🚪 WebSocket closed: 
+2026-05-22 13:40:48.105 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000002
+2026-05-22 13:40:48.105 [JavaFX Application Thread] INFO  c.m.controller.NavBarController - ✅ BiddingRoom WebSocket đã được cleanup
+2026-05-22 13:40:48.105 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000002
+2026-05-22 13:40:48.105 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:52617
+2026-05-22 13:40:58.307 [pool-1-thread-6] INFO  c.m.server.controller.UserController - [LoginController] 🚪 User tuan2@gmail.com logging out...
+2026-05-22 13:40:58.309 [pool-1-thread-6] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] 🚪 User tuan2@gmail.com logged out
+2026-05-22 13:40:58.309 [pool-1-thread-6] INFO  c.m.server.controller.UserController - [LoginController] ✅ User tuan2@gmail.com successfully logged out
+2026-05-22 13:40:58.310 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] ✅ Logout successful
+2026-05-22 13:40:58.320 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-22 13:40:58.320 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-22 13:41:01.076 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-22 13:41:01.078 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-22 14:07:47.113 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
+2026-05-22 14:07:47.313 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:07:47.317 [main] INFO  c.mycompany.utils.DatabaseConnection - Khởi tạo Database thành công.
+2026-05-22 14:07:47.325 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:07:47.364 [main] INFO  com.mycompany.server.ServerApp - Dong ngay phien PH000002 (endTime=2026-05-22T14:00 da qua)
+2026-05-22 14:07:47.367 [main] INFO  com.mycompany.server.ServerApp - Khoi phuc phien PH000003 (dong luc 2026-05-23T13:00)
+2026-05-22 14:07:47.368 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:47.368 [main] INFO  com.mycompany.server.ServerApp -   KHOI PHUC PHIEN DAU GIA:
+2026-05-22 14:07:47.368 [main] INFO  com.mycompany.server.ServerApp -   Mo ngay (da den gio):       0
+2026-05-22 14:07:47.368 [Thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:07:47.368 [main] INFO  com.mycompany.server.ServerApp -   Len lich mo (chua den gio): 0
+2026-05-22 14:07:47.368 [main] INFO  com.mycompany.server.ServerApp -   Dong ngay (qua gio dong):   1
+2026-05-22 14:07:47.368 [main] INFO  com.mycompany.server.ServerApp -   Khoi phuc dang chay:        1
+2026-05-22 14:07:47.369 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:47.369 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-22 14:07:47.370 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-22 14:07:47.487 [main] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ Cleanup task started (interval: 300000 ms)
+2026-05-22 14:07:47.511 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-22 14:07:47.519 [WebSocketSelector-42] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-22 14:07:49.001 [main] INFO  com.mycompany.server.ServerApp - ✅ WebSocket server đã được inject vào AuctionSessionService
+2026-05-22 14:07:49.001 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:49.002 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
+2026-05-22 14:07:49.002 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:49.004 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
+2026-05-22 14:07:49.004 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
+2026-05-22 14:07:49.004 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:49.005 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-22 14:07:49.013 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-22 14:07:49.014 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:49.016 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-22 14:07:49.016 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-22 14:07:49.016 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-22 14:07:49.016 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/logout
+2026-05-22 14:07:49.016 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-22 14:07:49.016 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-22 14:07:49.016 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-22 14:07:49.017 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-22 14:07:49.019 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-22 14:07:49.020 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-22 14:07:49.021 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 14:07:57.556 [JavaFX Application Thread] INFO  com.mycompany.App - 🗄️ Đang khởi tạo database...
+2026-05-22 14:07:57.561 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
+2026-05-22 14:07:57.748 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:07:57.752 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - Khởi tạo Database thành công.
+2026-05-22 14:07:57.753 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Database đã sẵn sàng!
+2026-05-22 14:07:57.753 [JavaFX Application Thread] INFO  com.mycompany.App - 🔄 Đang kiểm tra migration passwords...
+2026-05-22 14:07:57.755 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-22 14:07:57.759 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:07:57.762 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-22 14:07:57.763 [JavaFX Application Thread] INFO  com.mycompany.App - ✅ Migration hoàn thành!
+2026-05-22 14:09:04.184 [pool-1-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:09:04.185 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: tuan2@gmail.com
+2026-05-22 14:09:04.185 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: ppCnLZAE1XFNLR/N1BMfchIm9U2AtkIvhqJXLqcVmII=
+2026-05-22 14:09:04.185 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: 9qT/YfuBKMkBtrdKVJp4Ow==
+2026-05-22 14:09:04.185 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: @Tuan2007
+2026-05-22 14:09:04.190 [pool-1-thread-1] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ User tuan2@gmail.com logged in on device 127.0.0.1_44188
+2026-05-22 14:09:04.191 [pool-1-thread-1] INFO  c.m.server.controller.UserController - [LoginController] ✅ User tuan2@gmail.com logged in successfully. Device: 127.0.0.1_44188
+2026-05-22 14:09:04.222 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] Login response status: SUCCESS
+2026-05-22 14:09:05.360 [pool-1-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:09:10.372 [pool-1-thread-5] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:09:15.364 [pool-1-thread-7] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:09:20.371 [pool-1-thread-9] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:09:35.121 [Thread-10] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON gửi lên: {"tenPhien":"test#5","tenSanPham":"test 5","maSanPham":"SP_1779433775110","danhMuc":"Đá quý","moTa":"test 5","giaKhoiDiem":1000000.0,"thoiGianGiay":120,"thoiGianBatDau":"2026-05-22T14:10"}
+2026-05-22 14:09:35.122 [Thread-10] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_tuan2@gmail.com_1779433744189
+2026-05-22 14:09:35.134 [pool-1-thread-5] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Đã upsert san_pham: SP_1779433775110
+2026-05-22 14:09:35.135 [pool-1-thread-5] INFO  c.m.utils.AuctionRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-22 14:09:35.135 [pool-1-thread-5] INFO  c.m.utils.AuctionRepositorySQLite - COMMIT thành công cho auction: PH000004
+2026-05-22 14:09:35.137 [pool-1-thread-5] INFO  c.mycompany.action.AuctionScheduler - Đã thêm phiên đấu giá PH000004 vào đồng hồ
+2026-05-22 14:09:35.138 [Thread-10] INFO  com.mycompany.utils.ApiClient - [createAuction] Server trả về: {
+  "maPhien": "PH000004",
+  "thongBao": "Tạo phiên thành công"
+}
+2026-05-22 14:09:59.142 [Thread-2] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:09:59.143 [Thread-2] INFO  c.m.action.AuctionSessionService - Phiên PH000004 đã mở lúc 2026-05-22T14:10, sẽ đóng lúc 2026-05-22T14:12
+2026-05-22 14:09:59.143 [Thread-2] INFO  c.mycompany.action.AuctionScheduler - Đã mở phiên đấu giá PH000004
+2026-05-22 14:11:59.143 [Thread-16] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 14:11:59.146 [Thread-16] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000004
+2026-05-22 14:11:59.147 [Thread-16] INFO  c.m.s.w.AuctionWebSocketServer - 📢 Broadcast SESSION_ENDED cho phòng: PH000004
+2026-05-22 14:12:18.876 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-22 14:12:18.876 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-22 14:12:18.877 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-22 14:12:18.882 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
