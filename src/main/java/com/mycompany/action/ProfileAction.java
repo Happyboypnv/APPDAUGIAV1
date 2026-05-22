@@ -87,7 +87,7 @@ public class ProfileAction {
      * @throws UserNameException nếu tên không hợp lệ
      * @throws PhoneNumberException nếu số điện thoại không hợp lệ
      */
-    public void checkInfo(String name, String phoneNumber,String address) throws UserNameException, PhoneNumberException {
+    public void checkInfo(String name, String phoneNumber,String address) throws UserNameException, PhoneNumberException, AddressException{
         if(name == null || name.isEmpty()) throw new UserNameException("Tên đang bỏ trống!");
         String nameRegex = "^[\\p{L} .'-]{2,30}$";
         // p{L} : cho phep ngon ngu tieng Viet
@@ -104,15 +104,15 @@ public class ProfileAction {
         // $: kết thúc chuỗi
         if (!phoneNumber.matches(phoneRegex)) throw new PhoneNumberException("Số điện thoại không hợp lệ!");
 
-        if (address == null || address.isEmpty()) throw new UserNameException("Địa chỉ đang bỏ trống!");
-        String addressRegex = "^[\\p{L}\\s]+,\\s*[\\p{L}\\s]+$";
+        if (address == null || address.isEmpty()) throw new AddressException("Địa chỉ đang bỏ trống!");
+        String addressRegex = "^[^,]+,\\s*[^,]+$"; // <--- Chỉ dùng 2 dấu gạch chéo
         // ^: bắt đầu chuỗi
         // p{L} : cho phep ngon ngu tieng Viet
         // [^,]+: mỗi phần phải có ít nhất 1 ký tự và không chứa dấu phẩy
         // ,\\s*: cho phép có hoặc không có khoảng trắng sau dấu phẩy
         // $: kết thúc chuỗi
         // Yêu cầu địa chỉ phải đúng nhất 2 phần (xã + thành phố), mỗi phần không chứa dấu phẩy, và được phân tách bằng một dấu phẩy (có thể có khoảng trắng sau dấu phẩy)
-        if (!address.matches(addressRegex)) throw new UserNameException("Địa chỉ không hợp lệ! Vui lòng nhập đúng định dạng: 'Xã, Thành phố'");
+        if (!address.matches(addressRegex)) throw new AddressException("Địa chỉ không hợp lệ! Vui lòng nhập đúng định dạng: 'Xã, Thành phố'");
     }
 
     /**

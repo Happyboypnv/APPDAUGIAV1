@@ -145,6 +145,7 @@
                               </HBox>
                               <HBox spacing="20.0">
                                  <children>
+                                    <!-- Thời gian bắt đầu -->
                                     <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <Label text="Thời gian bắt đầu" textFill="WHITE">
@@ -152,14 +153,23 @@
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <HBox spacing="10.0">
+                                          <DatePicker fx:id="ngayBatDauPicker" prefHeight="35.0" maxWidth="1.7976931348623157E308" />
+                                          <HBox spacing="8.0" alignment="CENTER_LEFT">
                                              <children>
-                                                <DatePicker fx:id="ngayBatDauPicker" prefHeight="35.0" HBox.hgrow="ALWAYS" />
-                                                <Spinner fx:id="gioBatDauSpinner" prefHeight="35.0" prefWidth="80.0" />
+                                                <Label text="Giờ:" textFill="#aab4d4">
+                                                   <font><Font size="13.0" /></font>
+                                                </Label>
+                                                <Spinner fx:id="gioBatDauSpinner" prefHeight="35.0" prefWidth="70.0" />
+                                                <Label text="Phút:" textFill="#aab4d4">
+                                                   <font><Font size="13.0" /></font>
+                                                </Label>
+                                                <Spinner fx:id="phutBatDauSpinner" prefHeight="35.0" prefWidth="70.0" />
                                              </children>
                                           </HBox>
                                        </children>
                                     </VBox>
+
+                                    <!-- Thời gian kết thúc -->
                                     <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <Label text="Thời gian kết thúc" textFill="WHITE">
@@ -167,10 +177,17 @@
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <HBox spacing="10.0">
+                                          <DatePicker fx:id="ngayKetThucPicker" prefHeight="35.0" maxWidth="1.7976931348623157E308" />
+                                          <HBox spacing="8.0" alignment="CENTER_LEFT">
                                              <children>
-                                                <DatePicker fx:id="ngayKetThucPicker" prefHeight="35.0" HBox.hgrow="ALWAYS" />
-                                                <Spinner fx:id="gioKetThucSpinner" prefHeight="35.0" prefWidth="80.0" />
+                                                <Label text="Giờ:" textFill="#aab4d4">
+                                                   <font><Font size="13.0" /></font>
+                                                </Label>
+                                                <Spinner fx:id="gioKetThucSpinner" prefHeight="35.0" prefWidth="70.0" />
+                                                <Label text="Phút:" textFill="#aab4d4">
+                                                   <font><Font size="13.0" /></font>
+                                                </Label>
+                                                <Spinner fx:id="phutKetThucSpinner" prefHeight="35.0" prefWidth="70.0" />
                                              </children>
                                           </HBox>
                                        </children>

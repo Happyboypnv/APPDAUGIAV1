@@ -9,19 +9,16 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import java.io.IOException;
 
-import com.mycompany.utils.*;
-
 public class SignInController {
 
     @FXML private TextField emailField;
-    @FXML private PasswordField passwordField; // nơi nhận vào input của user
-    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
+    @FXML private PasswordField passwordField;
 
     @FXML
     public void signIn(ActionEvent event) {
-        String email = emailField.getText().trim().toLowerCase(); // email quy về chữ thường hết
+        String email = emailField.getText().trim().toLowerCase();
         String password = passwordField.getText().trim();
-        LoginAction.getInstance().signIn(event, email,password);
+        LoginAction.getInstance().signIn(event, email, password);
     }
 
     @FXML

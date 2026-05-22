@@ -136,26 +136,25 @@ public class UserController {
 
         // Check if user already logged in on another device
         if (onlineUsersManager.isAlreadyInUse(req.getEmail())) {
-            // User already online → Return conflict error
             OnlineUserSession existingSession = onlineUsersManager.getSession(req.getEmail());
+            boolean sessionExpired = existingSession == null
+                || !existingSession.isValidSession(30 * 60 * 1000L);
 
-            LoginResponse response = new LoginResponse();
-            response.setSessionStatus("ALREADY_IN_USE");
-            response.setThongBao("⚠️ Tài khoản của bạn đang đăng nhập trên thiết bị khác. Vui lòng đăng xuất thiết bị kia trước hoặc chờ kết nối mất (30 phút).");
-
-            if (existingSession != null) {
-                response.setExistingDeviceId(existingSession.getDeviceId());
-                response.setExistingIpAddress(existingSession.getIpAddress());
+            if (sessionExpired) {
+                // App bị tắt đột ngột, session cũ hết hạn → xóa và cho login lại
+                onlineUsersManager.removeSession(req.getEmail());
+            } else {
+                // Thực sự đang online trên thiết bị khác → block
+                LoginResponse response = new LoginResponse();
+                response.setSessionStatus("ALREADY_IN_USE");
+                response.setThongBao("⚠️ Tài khoản của bạn đang đăng nhập trên thiết bị khác...");
+                if (existingSession != null) {
+                    response.setExistingDeviceId(existingSession.getDeviceId());
+                    response.setExistingIpAddress(existingSession.getIpAddress());
+                }
+                guiPhanHoi(exchange, 409, gson.toJson(response));
+                return;
             }
-
-            logger.warn("[LoginController] ⚠️ User {} already logged in on device {}. New login blocked from device {}",
-                    req.getEmail(),
-                    existingSession != null ? existingSession.getDeviceId() : "unknown",
-                    deviceId);
-
-            // Return 409 Conflict
-            guiPhanHoi(exchange, 409, gson.toJson(response));
-            return;
         }
 
         // Đăng nhập thành công → tạo token + lưu session
@@ -525,5 +524,7 @@ public class UserController {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
         }
+        // FIX: Gọi exchange.close() để tránh EOF phía client
+        exchange.close();
     }
 }

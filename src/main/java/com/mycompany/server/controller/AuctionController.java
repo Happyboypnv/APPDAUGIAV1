@@ -2,6 +2,7 @@ package com.mycompany.server.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mycompany.action.AuctionScheduler;
 import com.mycompany.action.AuctionSessionService;
 import com.mycompany.action.AuctionSessionRegistry;
 import com.mycompany.models.AuctionSession;
@@ -58,6 +59,9 @@ public class AuctionController {
   /** Service xử lý logic đấu giá — tái sử dụng singleton đã có */
   private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
 
+  /** Scheduler để lên lịch tự động mở phiên khi đến startTime*/
+  private final AuctionScheduler auctionScheduler = AuctionScheduler.getInstance();
+
   // =========================================================
   // ROUTING — phân phối request đến handler phù hợp
   // =========================================================
@@ -103,6 +107,12 @@ public class AuctionController {
       // Trích xuất id từ /api/auctions/{id}/start
       String segment = path.replace("/api/auctions/", "").replace("/start", "");
       handleStartAuction(exchange, segment);
+      return;
+    }
+
+    // DELETE /api/auctions/{id}  → xóa phiên đã kết thúc/hủy
+    if (method.equals("DELETE") && path.startsWith("/api/auctions/")) {
+      handleDeleteAuction(exchange, getIDByPath(path, "/api/auctions/"));
       return;
     }
 
@@ -195,30 +205,50 @@ public class AuctionController {
    * Response 401: { "sendBug": "Cần đăng nhập trước" }
    */
   private void handleCreateAuction(HttpExchange exchange) throws IOException {
-    User nguoiBan = checkToken(exchange);
-    if (nguoiBan == null) return;
+    User seller = checkToken(exchange);
+    if (seller == null) return;
 
     String body = readBody(exchange);
     TaoPhienRequest req = gson.fromJson(body, TaoPhienRequest.class);
 
     if (req == null || req.tenPhien == null || req.tenSanPham == null
-            || req.maSanPham == null || req.giaKhoiDiem <= 0 || req.thoiGianGiay <= 0) {
+        || req.maSanPham == null || req.giaKhoiDiem <= 0 || req.thoiGianGiay <= 0) {
       guiPhanHoi(exchange, 400, sendBug("Thiếu hoặc sai thông tin bắt buộc"));
       return;
     }
 
     Product sanPham = new Product(req.tenSanPham, req.maSanPham);
     AuctionSession phienMoi = new AuctionSession(
-            null, req.tenPhien, sanPham, req.giaKhoiDiem, nguoiBan, req.thoiGianGiay);
+        null, req.tenPhien, sanPham, req.giaKhoiDiem, seller, req.thoiGianGiay);
+
+    // Tính startTime và endTime
+    java.time.LocalDateTime thoiGianBD;
+    if (req.thoiGianBatDau != null && !req.thoiGianBatDau.isBlank()) {
+      try {
+        thoiGianBD = java.time.LocalDateTime.parse(req.thoiGianBatDau);
+      } catch (Exception e) {
+        guiPhanHoi(exchange, 400, sendBug("thoiGianBatDau không đúng định dạng ISO-8601 (vd: 2026-05-20T09:00:00)"));
+        return;
+      }
+    } else {
+      // Client không truyền thoiGianBatDau → bắt đầu ngay bây giờ
+      thoiGianBD = java.time.LocalDateTime.now();
+    }
+    phienMoi.setStartTime(thoiGianBD);
+    phienMoi.setEndTime(thoiGianBD.plusSeconds(req.thoiGianGiay)); // FIX: endTime không còn null
 
     auctionRepository.save(phienMoi);
 
     // FIX: Đồng bộ vào in-memory store để WebSocket tìm thấy
     AuctionSessionRegistry.getInstance().add(phienMoi);
 
-    String maPhienDaSinh = phienMoi.getAuctionSessionId();
+    // Lên lịch tự động chuyển WAITING → IN_PROGRESS khi đến startTime
+    // Dùng setASAuction (Auction Start), không phải setACAuction (Auction Close)
+    auctionScheduler.setASAuction(phienMoi);
+
+    String maPhienDaSinh = phienMoi.getSessionId();
     guiPhanHoi(exchange, 201,
-            gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
+        gson.toJson(new TaoPhienResponse(maPhienDaSinh, "Tạo phiên thành công")));
   }
 
   // =========================================================
@@ -256,13 +286,47 @@ public class AuctionController {
       return;
     }
 
-    auctionSessionService.start(phien);
+    auctionSessionService.startAuction(phien);
     auctionRepository.update(phien);
 
     // FIX: Đảm bảo phiên đang hoạt động được đăng ký để WebSocket tìm thấy
     AuctionSessionRegistry.getInstance().add(phien);
 
     guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("Phiên " + maPhien + " đã bắt đầu")));
+  }
+
+  // =========================================================
+// API 5: DELETE /api/auctions/{id}  →  xóa phiên đã hủy/kết thúc
+// =========================================================
+  private void handleDeleteAuction(HttpExchange exchange, String maPhien) throws IOException {
+    User nguoiYeuCau = checkToken(exchange);
+    if (nguoiYeuCau == null) return;
+
+    if (maPhien == null || maPhien.isBlank()) {
+      guiPhanHoi(exchange, 400, sendBug("Thiếu mã phiên"));
+      return;
+    }
+
+    AuctionSession phien = auctionRepository.findById(maPhien);
+    if (phien == null) {
+      guiPhanHoi(exchange, 404, sendBug("Không tìm thấy phiên: " + maPhien));
+      return;
+    }
+
+    // Chỉ cho xóa phiên PAID hoặc CANCELLED
+    SessionStatus status = phien.getStatus();
+    if (status != SessionStatus.PAID && status != SessionStatus.CANCELLED) {
+      guiPhanHoi(exchange, 400, sendBug("Chỉ có thể xóa phiên đã kết thúc hoặc đã hủy"));
+      return;
+    }
+
+    // Bất kỳ user đăng nhập đều được xóa phiên đã kết thúc/hủy
+    boolean deleted = auctionRepository.delete(maPhien);
+    if (deleted) {
+      guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("Đã xóa phiên " + maPhien)));
+    } else {
+      guiPhanHoi(exchange, 500, sendBug("Lỗi khi xóa phiên"));
+    }
   }
 
   // =========================================================
@@ -335,12 +399,16 @@ public class AuctionController {
     byte[] bytes = jsonBody.getBytes(StandardCharsets.UTF_8);
     exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
     exchange.getResponseHeaders().add("Access-Control-Allow-Origin",  "*");
-    exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
+    exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
     exchange.sendResponseHeaders(statusCode, bytes.length);
     try (OutputStream os = exchange.getResponseBody()) {
       os.write(bytes);
     }
+    // FIX: Phải gọi exchange.close() tường minh để com.sun.net.httpserver
+    // giải phóng kết nối đúng cách. Thiếu dòng này → server giữ socket lơ lửng
+    // → client nhận EOF/Unexpected end of file khi đọc response.
+    exchange.close();
   }
 
   // =========================================================
@@ -356,11 +424,15 @@ public class AuctionController {
     String moTa;
     double giaKhoiDiem;
     int    thoiGianGiay;
+    String thoiGianBatDau; // ISO-8601, vd: "2026-05-20T09:00:00" — tuỳ chọn, nếu có sẽ lên lịch tự động mở
 
-    public TaoPhienRequest(String tenPhien, String tenSanPham, String maSanPham, String danhMuc, String moTa, double giaKhoiDiem, int thoiGianGiay) {
+    public TaoPhienRequest(String tenPhien, String tenSanPham, String maSanPham, String danhMuc, String moTa, String thoiGianBatDau, double giaKhoiDiem, int thoiGianGiay) {
       this.tenPhien = tenPhien;
       this.tenSanPham = tenSanPham;
       this.maSanPham = maSanPham;
+      this.danhMuc = danhMuc;
+      this.moTa = moTa;
+      this.thoiGianBatDau = thoiGianBatDau;
       this.giaKhoiDiem = giaKhoiDiem;
       this.thoiGianGiay = thoiGianGiay;
     }
@@ -392,10 +464,10 @@ public class AuctionController {
       this.tenPhien        = p.getSessionName();
       this.giaHienTai      = p.getCurrentPrice();
       this.trangThai       = p.getStatus().name();
-      this.tenNguoiBan     = p.getSeller() != null ? p.getSeller().getFullName() : null;
-      this.tenSanPham      = p.getProduct()  != null ? p.getProduct().getProductName() : null;
-      this.thoiGianBatDau  = p.getStartTime()  != null ? p.getStartTime().toString()  : null;
-      this.thoiGianKetThuc = p.getEndTime() != null ? p.getEndTime().toString() : null;
+      this.tenNguoiBan     = p.getSeller()    != null ? p.getSeller().getFullName()     : null;
+      this.tenSanPham      = p.getProduct()   != null ? p.getProduct().getProductName() : null;
+      this.thoiGianBatDau  = p.getStartTime() != null ? p.getStartTime().toString()     : null;
+      this.thoiGianKetThuc = p.getEndTime()   != null ? p.getEndTime().toString()       : null;
     }
   }
 

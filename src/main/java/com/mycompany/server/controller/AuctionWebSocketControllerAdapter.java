@@ -132,11 +132,13 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             String status = message.get("status").getAsString();
             if ("SUCCESS".equalsIgnoreCase(status)) {
                 double newPrice = message.get("currentPrice").getAsDouble();
-                String bidder = message.get("userId").getAsString();
+                String displayId = message.has("fullName") && !message.get("fullName").isJsonNull()
+                    ? message.get("fullName").getAsString()
+                    : message.get("email").getAsString();
 
                 // ← gọi method mới thay vì tự set label
-                controller.syncNewPrice(newPrice, bidder);
-                controller.addBidHistory(bidder, newPrice);
+                controller.syncNewPrice(newPrice, displayId);
+                controller.addBidHistory(displayId, newPrice);
             }
         } catch (Exception e) {
             logger.error("Error processing bid result: " + e.getMessage());
@@ -283,6 +285,53 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             logger.error("❌ Error sending bid: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSessionEnded(JsonObject message) {
+        javafx.application.Platform.runLater(() -> {
+            controller.disableBidding();
+
+            // Lấy thông tin người thắng (nếu có) từ message
+            String winner = null;
+            double finalPrice = 0;
+            if (message.has("winner") && !message.get("winner").isJsonNull()) {
+                winner = message.get("winner").getAsString();
+            }
+            if (message.has("finalPrice") && !message.get("finalPrice").isJsonNull()) {
+                finalPrice = message.get("finalPrice").getAsDouble();
+            }
+
+            String currentUserEmail = com.mycompany.utils.SessionManager.getInstance()
+                .getCurrentUser().getEmail();
+            boolean isWinner = winner != null && winner.equals(currentUserEmail);
+
+            if (isWinner) {
+                // Người thắng: hỏi xác nhận thanh toán
+                java.text.DecimalFormat fmt = new java.text.DecimalFormat("#,###");
+                javafx.scene.control.Alert confirmAlert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                confirmAlert.setTitle("🎉 Bạn đã thắng đấu giá!");
+                confirmAlert.setHeaderText("Chúc mừng! Bạn là người trả giá cao nhất.");
+                confirmAlert.setContentText(
+                    "Giá chốt: " + fmt.format(finalPrice) + " VNĐ\n\n" +
+                        "Giao dịch đã được xử lý tự động.\n" +
+                        "Tiền đã được trừ khỏi ví của bạn.\n\n" +
+                        "Nhấn OK để về trang chủ."
+                );
+                confirmAlert.showAndWait();
+            } else {
+                // Người thua hoặc khán giả
+                HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Phiên đấu giá kết thúc",
+                    winner != null
+                        ? "Phiên đã kết thúc. Người thắng: " + winner
+                        : "Phiên đấu giá đã kết thúc (không có người đặt giá)."
+                );
+            }
+            controller.navigateToHome();
+        });
     }
 }
 
