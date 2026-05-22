@@ -106,7 +106,7 @@ public class AuctionWebSocketClient extends WebSocketClient{
             if (instance == null || instance.isClosed()) {
                 try {
                     instance = new AuctionWebSocketClient(
-                            new URI("ws://localhost:8081"));
+                        new URI("ws://26.71.32.210:8081"));
                 } catch (URISyntaxException e) {
                     throw new RuntimeException(e);
                 }
@@ -231,6 +231,28 @@ public class AuctionWebSocketClient extends WebSocketClient{
         }
     }
 
+    public void sendPaymentDecision(String phienId, String email, boolean accepted) {
+        if (!isConnected) {
+            logger.error("❌ WebSocket not connected");
+            return;
+        }
+
+        try {
+            JsonObject paymentMessage = new JsonObject();
+            paymentMessage.addProperty("action", "PAYMENT_DECISION");
+            paymentMessage.addProperty("phienId", phienId);
+            paymentMessage.addProperty("email", email);
+            paymentMessage.addProperty("accepted", accepted);
+
+            String jsonString = gson.toJson(paymentMessage);
+            this.send(jsonString);
+            logger.info("💬 Sent PAYMENT_DECISION: " + jsonString);
+        } catch (Exception e) {
+            logger.error("❌ Error sending payment decision: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /**
      * PHƯƠNG THỨC: setListener()
      * Inject custom listener callback cho message events
@@ -333,6 +355,14 @@ public class AuctionWebSocketClient extends WebSocketClient{
 
                         case "SESSION_ENDED":
                             if (listener != null) listener.onSessionEnded(json);
+                            break;
+
+                        case "PAYMENT_RESULT":
+                            if (listener != null) listener.onPaymentResult(json);
+                            break;
+
+                        case "BALANCE_UPDATE":
+                            if (listener != null) listener.onBalanceUpdate(json);
                             break;
 
                         default:

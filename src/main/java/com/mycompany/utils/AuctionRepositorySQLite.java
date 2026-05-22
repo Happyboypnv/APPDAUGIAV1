@@ -147,7 +147,6 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
         if (rs.getString("ma_nguoi_ban") != null) {
           seller = new User(rs.getString("ten_nguoi_ban"), rs.getString("email_nguoi_ban"), rs.getString("mat_khau_nguoi_ban"), rs.getString("ngay_sinh_nguoi_ban"), rs.getString("dia_chi_nguoi_ban"), rs.getString("so_dien_thoai_nguoi_ban"));
           seller.setUserId(rs.getString("ma_nguoi_ban"));
-          seller.setAvailableBalance(rs.getDouble("so_du_kha_dung_nguoi_ban"));
         }
         // Create Product
         Product Product = null;
@@ -159,7 +158,6 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
         if (rs.getString("ma_nguoi_thang_cuoc") != null) {
           winner = new User(rs.getString("ten_nguoi_thang_cuoc"), rs.getString("email_nguoi_thang_cuoc"), rs.getString("mat_khau_nguoi_thang_cuoc"), rs.getString("ngay_sinh_nguoi_thang_cuoc"), rs.getString("dia_chi_nguoi_thang_cuoc"), rs.getString("so_dien_thoai_nguoi_thang_cuoc"));
           winner.setUserId(rs.getString("ma_nguoi_thang_cuoc"));
-          winner.setAvailableBalance(rs.getDouble("so_du_kha_dung_nguoi_thang_cuoc"));
         }
         // Create AuctionSession
         AuctionSession AuctionSession = new AuctionSession(
@@ -209,7 +207,6 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
           if (rs.getString("ma_nguoi_ban") != null) {
             seller = new User(rs.getString("ten_nguoi_ban"), rs.getString("email_nguoi_ban"), rs.getString("mat_khau_nguoi_ban"), rs.getString("ngay_sinh_nguoi_ban"), rs.getString("dia_chi_nguoi_ban"), rs.getString("so_dien_thoai_nguoi_ban"));
             seller.setUserId(rs.getString("ma_nguoi_ban"));
-            seller.setAvailableBalance(rs.getDouble("so_du_kha_dung_nguoi_ban"));
           }
           // Create Product
           Product product = null;
@@ -221,7 +218,6 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
           if (rs.getString("ma_nguoi_thang_cuoc") != null) {
             winner = new User(rs.getString("ten_nguoi_thang_cuoc"), rs.getString("email_nguoi_thang_cuoc"), rs.getString("mat_khau_nguoi_thang_cuoc"), rs.getString("ngay_sinh_nguoi_thang_cuoc"), rs.getString("dia_chi_nguoi_thang_cuoc"), rs.getString("so_dien_thoai_nguoi_thang_cuoc"));
             winner.setUserId(rs.getString("ma_nguoi_thang_cuoc"));
-            winner.setAvailableBalance(rs.getDouble("so_du_kha_dung_nguoi_thang_cuoc"));
           }
           // Create AuctionSession
           AuctionSession auction = new AuctionSession(

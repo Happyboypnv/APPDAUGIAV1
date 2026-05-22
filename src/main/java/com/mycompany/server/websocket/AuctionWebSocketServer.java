@@ -51,6 +51,8 @@ public class AuctionWebSocketServer extends WebSocketServer {
     // ConcurrentHashMap: multiple threads có thể access cùng lúc an toàn
     private final Map<String, Set<WebSocket>> rooms = new ConcurrentHashMap<>();
 
+    private final Map<String, WebSocket> emailToConn = new ConcurrentHashMap<>();
+
     // clientRooms: Map<WebSocket client, phienId>
     // Để track client đang ở phòng nào (cần khi disconnect)
     private final Map<WebSocket, String> clientRooms = new ConcurrentHashMap<>();
@@ -162,6 +164,9 @@ public class AuctionWebSocketServer extends WebSocketServer {
                 case "BID":
                     handleBid(conn, json);
                     break;
+                case "PAYMENT_DECISION":
+                    handlePaymentDecision(conn, json);
+                    break;
                 default:
                     logger.error("❌ Unknown action: " + action);
             }
@@ -200,7 +205,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
         // computeIfAbsent: nếu phòng chưa tồn tại → tạo mới với ConcurrentHashMap.newSetFromMap()
         // Nếu phòng đã tồn tại → không làm gì, trả về Set hiện có
         Set<WebSocket> room = rooms.computeIfAbsent(phienId, k ->
-                Collections.newSetFromMap(new ConcurrentHashMap<>())
+            Collections.newSetFromMap(new ConcurrentHashMap<>())
         );
 
         // 🔹 STEP 2: Add client vào phòng
@@ -215,8 +220,9 @@ public class AuctionWebSocketServer extends WebSocketServer {
         response.addProperty("event", "USER_JOINED");
         response.addProperty("email", email);
         response.addProperty("timestamp", System.currentTimeMillis());
-
         broadcastToRoom(phienId, gson.toJson(response));
+        emailToConn.put(email, conn);
+
     }
 
     /**
@@ -258,6 +264,16 @@ public class AuctionWebSocketServer extends WebSocketServer {
                 sendError(conn, "Người dùng không tồn tại");
                 return;
             }
+            if (phienHienTai.getSeller() != null
+                && bidder.getUserId().equals(phienHienTai.getSeller().getUserId())) {
+                sendError(conn, "Người tạo phiên ko thể đặt giá");
+                return;
+            }
+            List<User> bidders = phienHienTai.getBidderList();
+            if (!bidders.isEmpty() && bidders.get(bidders.size() - 1).getUserId().equals(bidder.getUserId())) {
+                sendError(conn, "Bạn không được đặt giá 2 lần liên tiếp. Hãy chờ người khác đặt giá cao hơn.");
+                return;
+            }
             boolean bidIsCompleted = auctionSessionService.setPrice(phienHienTai, bidder, giaRa);
 
             JsonObject response = new JsonObject();
@@ -282,6 +298,37 @@ public class AuctionWebSocketServer extends WebSocketServer {
 
         } catch (Exception e) {
             logger.error("Lỗi xử lý bid: " + e.getMessage());
+        }
+    }
+
+    private void handlePaymentDecision(WebSocket conn, JsonObject json) {
+        try {
+            String phienId = json.get("phienId").getAsString();
+            String email = json.get("email").getAsString();
+            boolean accepted = json.get("accepted").getAsBoolean();
+
+            AuctionSession phien = AuctionSessionRegistry.getInstance().find(phienId);
+            if (phien == null) {
+                phien = auctionRepositorySQLite.findById(phienId);
+            }
+            if (phien == null) {
+                sendError(conn, "Phiên đấu giá không tồn tại");
+                return;
+            }
+
+            phien.setWinner();
+            User winner = phien.getWinner();
+            if (winner == null || !email.equals(winner.getEmail())) {
+                sendError(conn, "Chỉ người thắng phiên mới được xác nhận thanh toán");
+                return;
+            }
+
+            boolean ok = auctionSessionService.finalizePayment(phien, accepted);
+            if (!ok) {
+                sendError(conn, "Không thể xử lý thanh toán cho phiên này");
+            }
+        } catch (Exception e) {
+            logger.error("Lỗi xử lý xác nhận thanh toán: " + e.getMessage());
         }
     }
 
@@ -366,6 +413,7 @@ public class AuctionWebSocketServer extends WebSocketServer {
             response.addProperty("event", "USER_LEFT");
             response.addProperty("timestamp", System.currentTimeMillis());
             broadcastToRoom(phienId, gson.toJson(response));
+            emailToConn.values().remove(conn);
         }
 
         logger.info("🚪 Client disconnected: " + conn.getRemoteSocketAddress());
@@ -414,6 +462,11 @@ public class AuctionWebSocketServer extends WebSocketServer {
 
         if (phien != null) {
             msg.addProperty("finalPrice", phien.getCurrentPrice());
+            msg.addProperty("status", phien.getStatus().name());
+            if (phien.getSeller() != null) {
+                msg.addProperty("seller", phien.getSeller().getEmail());
+                msg.addProperty("sellerName", phien.getSeller().getFullName());
+            }
             if (phien.getWinner() != null) {
                 msg.addProperty("winner", phien.getWinner().getEmail());
                 msg.addProperty("winnerName", phien.getWinner().getFullName());
@@ -422,6 +475,91 @@ public class AuctionWebSocketServer extends WebSocketServer {
 
         broadcastToRoom(phienId, gson.toJson(msg));   // ← dùng broadcastToRoom, không phải broadcastToSession
         logger.info("📢 Broadcast SESSION_ENDED cho phòng: " + phienId);
+    }
+
+    /**
+     * Gửi số dư available mới cho một user cụ thể (sau Outbid).
+     */
+    public void sendBalanceUpdate(String email, double availableBalance) {
+        WebSocket conn = emailToConn.get(email);
+        if (conn != null && conn.isOpen()) {
+            JsonObject msg = new JsonObject();
+            msg.addProperty("event", "BALANCE_UPDATE");
+            msg.addProperty("availableBalance", availableBalance);
+            User user = userRepositorySQLite.findByEmail(email);
+            if (user != null) {
+                msg.addProperty("actualBalance", user.getActualBalance());
+                msg.addProperty("frozenBalance", user.getFrozenBalance());
+            }
+            msg.addProperty("timestamp", System.currentTimeMillis());
+            conn.send(gson.toJson(msg));
+            logger.info("📨 Gửi BALANCE_UPDATE tới {}: {}", email, availableBalance);
+        }
+    }
+
+    /**
+     * Gửi yêu cầu thanh toán (chỉ gửi trực tiếp cho người thắng nếu họ đang kết nối,
+     * đồng thời broadcast thông tin PAYMENT_REQUEST cho cả phòng).
+     *
+     * @param phienId      mã phiên
+     * @param winnerUserId mã người thắng (ma_nguoi_dung)
+     * @param amount       số tiền cần thanh toán
+     */
+    public void broadcastPaymentRequest(String phienId, String winnerUserId, double amount) {
+        JsonObject msg = new JsonObject();
+        msg.addProperty("event", "PAYMENT_REQUEST");
+        msg.addProperty("phienId", phienId);
+        msg.addProperty("amount", amount);
+        msg.addProperty("status", "PENDING");
+        msg.addProperty("timestamp", System.currentTimeMillis());
+
+        // Cố gắng lấy email người thắng từ DB (thông qua auction repo)
+        String winnerEmail = null;
+        try {
+            AuctionSession phien = auctionRepositorySQLite.findById(phienId);
+            if (phien != null && phien.getWinner() != null && winnerUserId != null) {
+                // ensure userId khớp
+                if (winnerUserId.equals(phien.getWinner().getUserId())) {
+                    winnerEmail = phien.getWinner().getEmail();
+                    msg.addProperty("winner", winnerEmail);
+                    msg.addProperty("winnerName", phien.getWinner().getFullName());
+                }
+            }
+        } catch (Exception ex) {
+            logger.warn("Không lấy được thông tin phiên khi broadcastPaymentRequest: " + ex.getMessage());
+        }
+
+        // 1) Nếu biết email và client đang kết nối → gửi trực tiếp
+        if (winnerEmail != null) {
+            WebSocket ws = emailToConn.get(winnerEmail);
+            if (ws != null && ws.isOpen()) {
+                try {
+                    ws.send(gson.toJson(msg));
+                    logger.info("📨 Gửi PAYMENT_REQUEST trực tiếp tới {} cho phiên {}", winnerEmail, phienId);
+                } catch (Exception e) {
+                    logger.error("Lỗi gửi PAYMENT_REQUEST trực tiếp: " + e.getMessage());
+                }
+            }
+        }
+
+        // 2) Luôn broadcast lên phòng để UI/quan sát viên biết trạng thái chờ thanh toán
+        try {
+            broadcastToRoom(phienId, gson.toJson(msg));
+            logger.info("📢 Broadcast PAYMENT_REQUEST cho phòng: " + phienId);
+        } catch (Exception e) {
+            logger.error("Lỗi broadcast PAYMENT_REQUEST cho phòng {}: {}", phienId, e.getMessage());
+        }
+    }
+
+    public void broadcastPaymentResult(String phienId, boolean paid, String message) {
+        JsonObject msg = new JsonObject();
+        msg.addProperty("event", "PAYMENT_RESULT");
+        msg.addProperty("phienId", phienId);
+        msg.addProperty("status", paid ? "PAID" : "CANCELLED");
+        msg.addProperty("message", message);
+        msg.addProperty("timestamp", System.currentTimeMillis());
+        broadcastToRoom(phienId, gson.toJson(msg));
+        logger.info("📢 Broadcast PAYMENT_RESULT cho phòng {}: {}", phienId, msg);
     }
 }
 

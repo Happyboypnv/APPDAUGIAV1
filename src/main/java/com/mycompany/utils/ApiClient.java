@@ -31,7 +31,7 @@ import com.mycompany.server.dto.LichSuDatGiaResponse;
 public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
-    private static final String BASE_URL = "http://localhost:8080";
+    private static final String BASE_URL = "http://26.71.32.210:8080";
     private static final Gson gson = new Gson();
 
     // ============================================================
@@ -41,7 +41,7 @@ public class ApiClient {
     /**
      * Gọi POST /api/users/logout
      *
-     * MULTI-DEVICx`E SESSION HANDLING:
+     * MULTI-DEVICE SESSION HANDLING:
      *   - Notifies server to remove user from online users list
      *   - Marks session as LOGGED_OUT
      *   - Broadcasts logout event (optional, via WebSocket)
@@ -107,7 +107,7 @@ public class ApiClient {
 
                 if (response.getSessionStatus().equals("ALREADY_IN_USE")) {
                     logger.warn("[ApiClient] ⚠️ User already logged in on another device: {}",
-                            response.getExistingDeviceId());
+                        response.getExistingDeviceId());
                 }
             }
 
@@ -145,13 +145,13 @@ public class ApiClient {
         try {
             // Build request body explicitly (avoid anonymous initializer issues)
             DatGiaRequest request = new DatGiaRequest(maPhien,gia);
-            
+
             String jsonBody = gson.toJson(request);
             if (jsonBody == null || jsonBody.equals("null")) {
                 logger.error("[createBid] ❌ JSON serialization failed, got null");
                 return null;
             }
-            
+
             String responseJson = guiPost("/api/bids", jsonBody, token);
             if (responseJson == null) return null;
             return gson.fromJson(responseJson, DatGiaResponse.class);
@@ -164,7 +164,7 @@ public class ApiClient {
         String responseJson = guiGet("/api/auctions", null);
         if (responseJson == null) return new java.util.ArrayList<>();
         java.lang.reflect.Type listType =
-                new com.google.gson.reflect.TypeToken<List<PhienDauGiaDTO>>(){}.getType();
+            new com.google.gson.reflect.TypeToken<List<PhienDauGiaDTO>>(){}.getType();
         try {
             return gson.fromJson(responseJson, listType);
         } catch (Exception e) {
@@ -327,6 +327,40 @@ public class ApiClient {
         }
     }
 
+    public static boolean updateBankAccount(String email, String bankAccount, String bankName, String token) {
+        try {
+            com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+            body.addProperty("email", email);
+            body.addProperty("bankAccount", bankAccount);
+            body.addProperty("bankName", bankName);
+            String jsonBody = gson.toJson(body);
+
+            URL url = new URL(BASE_URL + "/api/users/bank-account");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            if (token != null) {
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+            }
+
+            byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(bodyBytes);
+            }
+
+            int statusCode = conn.getResponseCode();
+            conn.disconnect();
+            return statusCode == 200;
+        } catch (Exception e) {
+            logger.error("[ApiClient] ❌ Lỗi updateBankAccount: " + e.getMessage());
+            return false;
+        }
+    }
+
 
     // ============================================================
     // PHƯƠNG THỨC HỖ TRỢ (private)
@@ -370,8 +404,8 @@ public class ApiClient {
             int statusCode = conn.getResponseCode();
             // Nếu status 4xx/5xx thì đọc error stream thay vì input stream
             InputStream is = (statusCode >= 200 && statusCode < 300)
-                    ? conn.getInputStream()
-                    : conn.getErrorStream();
+                ? conn.getInputStream()
+                : conn.getErrorStream();
 
             if (is == null) return null;
 
@@ -382,14 +416,14 @@ public class ApiClient {
         } catch (java.net.ConnectException ce) {
             // Connection refused - server not responding
             String errorMsg = "[ApiClient] ❌ Cannot connect to server at " + BASE_URL +
-                            " (Connection refused). Make sure the server is running on port 8080.";
+                " (Connection refused). Make sure the server is running on port 8080.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
         } catch (java.net.SocketTimeoutException ste) {
             // Server not responding in time
             String errorMsg = "[ApiClient] ❌ Server timeout at " + BASE_URL +
-                            " (no response). Server might be overloaded or unresponsive.";
+                " (no response). Server might be overloaded or unresponsive.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
@@ -438,8 +472,8 @@ public class ApiClient {
 
             int statusCode = conn.getResponseCode();
             InputStream is = (statusCode >= 200 && statusCode < 300)
-                    ? conn.getInputStream()
-                    : conn.getErrorStream();
+                ? conn.getInputStream()
+                : conn.getErrorStream();
 
             if (is == null) return null;
 
@@ -450,14 +484,14 @@ public class ApiClient {
         } catch (java.net.ConnectException ce) {
             // Connection refused - server not responding
             String errorMsg = "[ApiClient] ❌ Cannot connect to server at " + BASE_URL +
-                            " (Connection refused). Make sure the server is running on port 8080.";
+                " (Connection refused). Make sure the server is running on port 8080.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
         } catch (java.net.SocketTimeoutException ste) {
             // Server not responding in time
             String errorMsg = "[ApiClient] ❌ Server timeout at " + BASE_URL +
-                            " (no response). Server might be overloaded or unresponsive.";
+                " (no response). Server might be overloaded or unresponsive.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;

@@ -40,7 +40,7 @@ class TransactionServiceTest {
     void creatTransaction_paidWithWinner_shouldSucceed() {
         Transaction tx = transactionService.creatTransaction(auction);
         assertNotNull(tx);
-        assertEquals(TransactionStatus.PENDING_PAYMENT, tx.getStatus());
+        assertEquals(TransactionStatus.PAID, tx.getStatus());
     }
 
     @Test
@@ -124,7 +124,7 @@ class TransactionServiceTest {
         double winnerAfterPayment = winner.getAvailableBalance();
         double price = auction.getCurrentPrice();
 
-        transactionService.refun(tx, "Hàng bị lỗi");
+        transactionService.refund(tx, "Hàng bị lỗi");
 
         assertEquals(winnerAfterPayment + price, winner.getAvailableBalance(), 0.01);
         assertEquals(TransactionStatus.REFUNDED, tx.getStatus());
@@ -134,14 +134,14 @@ class TransactionServiceTest {
     @DisplayName("refund() transaction đã REFUNDED không được hoàn lần 2")
     void refund_alreadyRefunded_shouldReturnFalse() {
         Transaction tx = transactionService.creatTransaction(auction);
-        transactionService.refun(tx, "Lần 1");
-        boolean result = transactionService.refun(tx, "Lần 2");
+        transactionService.refund(tx, "Lần 1");
+        boolean result = transactionService.refund(tx, "Lần 2");
         assertFalse(result, "Không được hoàn tiền 2 lần");
     }
 
     @Test
     @DisplayName("refund() transaction null phải trả false")
     void refund_nullTransaction_shouldReturnFalse() {
-        assertFalse(transactionService.refun(null, "reason"));
+        assertFalse(transactionService.refund(null, "reason"));
     }
 }

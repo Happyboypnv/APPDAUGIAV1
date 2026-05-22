@@ -30,8 +30,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <Label fx:id="transactionHistory" style="-fx-text-fill: #b6bfff; -fx-font-size: 18px; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 10 10;" text="Lịch sử giao dịch">
-         <VBox.margin>
+      <Label fx:id="transactionHistory" onMouseClicked="#navigateToTransactionHistory" style="-fx-text-fill: #b6bfff; -fx-font-size: 18px; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 10 10;" text="Lịch sử giao dịch">         <VBox.margin>
             <Insets />
          </VBox.margin>
          <cursor>

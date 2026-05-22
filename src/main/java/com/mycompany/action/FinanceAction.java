@@ -91,7 +91,7 @@ public class FinanceAction {
      * 2. Lấy người dùng hiện tại từ SessionManager
      * 3. Tính số dư mới = số dư cũ + số tiền nạp
      * 4. Tạo Map chứa update (balance)
-     * 5. Gọi CapNhatThongTinNguoiDung.updateUser() để lưu
+     * 5. Gọi UserProfileUpdater.updateUser() để lưu
      * 6. Hiển thị thông báo thành công
      *
      * XỬ LÝ LỖI:
@@ -105,9 +105,9 @@ public class FinanceAction {
                 throw new NumberFormatException();
             }
             User currentUser = SessionManager.getInstance().getCurrentUser(); // lấy người dùng hiện tại
-            double newBalance = currentUser.getAvailableBalance() + amount; // cộng thêm số tiền thêm vào
+            double newBalance = currentUser.getActualBalance() + amount; // cộng thêm số tiền thêm vào
             Map<String, String> updateBalance = new HashMap<>();
-            updateBalance.put("balance", String.valueOf(newBalance));
+            updateBalance.put("actualBalance", String.valueOf(newBalance));
             UserProfileUpdater.getInstance().updateUser(updateBalance); // tạo map để update
 
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Nạp tiền thành công!");
@@ -129,7 +129,7 @@ public class FinanceAction {
      * 3. Kiểm tra số dư đủ để rút (amount <= currentBalance)
      * 4. Tính số dư mới = số dư cũ - số tiền rút
      * 5. Tạo Map chứa update (balance)
-     * 6. Gọi CapNhatThongTinNguoiDung.updateUser() để lưu
+     * 6. Gọi UserProfileUpdater.updateUser() để lưu
      * 7. Hiển thị thông báo thành công
      *
      * XỬ LÝ LỖI:
@@ -142,15 +142,15 @@ public class FinanceAction {
         User currentUser = SessionManager.getInstance().getCurrentUser();
         double currentBalance = currentUser.getAvailableBalance();
         try {
-            if (amount <=0) {
+            if (amount <= 0) {
                 throw new NumberFormatException();
             } else if (amount > currentBalance) {
                 HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền rút vượt quá số dư hiện tại!");
                 return;
             }
-            double newBalance = currentBalance - amount;
+            double newBalance = currentUser.getActualBalance() - amount;
             Map<String, String> updateBalance = new HashMap<>();
-            updateBalance.put("balance", String.valueOf(newBalance));
+            updateBalance.put("actualBalance", String.valueOf(newBalance));
             UserProfileUpdater.getInstance().updateUser(updateBalance); // tạo map để update
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Rút tiền thành công!");
         } catch (NumberFormatException e) {

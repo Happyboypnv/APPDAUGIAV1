@@ -1,128 +1,120 @@
-2026-05-18 14:20:24.028 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: verify@test.com
-2026-05-18 14:20:24.078 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: wrong@test.com
-2026-05-18 14:20:24.095 [main] ERROR c.m.utils.UserRepositorySQLite - Email đã tồn tại: test001@test.com
-2026-05-18 15:08:49.403 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-18 13:40:42.162 [pool-1-thread-9] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-18 13:46:25.035 [pool-1-thread-7] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-18 13:49:15.560 [pool-1-thread-1] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-18 13:54:49.586 [pool-1-thread-7] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-18 13:55:23.367 [pool-1-thread-9] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-18 15:00:00.979 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-18 15:38:47.044 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 15:40:16.047 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 15:59:41.068 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:28:07.128 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:28:25.925 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:28:32.308 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:28:39.933 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:29:15.400 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:29:43.097 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:30:08.000 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:30:45.617 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:34:59.718 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:37:38.500 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:38:27.472 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:45:49.588 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:52:22.446 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 20:54:10.891 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 21:02:30.201 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_ERROR] SQL error or missing database (no such column: duong_dan_avatar)
-2026-05-18 22:34:00.739 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-18 22:43:10.513 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] Server từ chối tạo phiên: {
-  "sendBug": "Thiếu hoặc sai thông tin bắt buộc"
-}
-2026-05-18 23:45:41.389 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-18 23:46:13.799 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - Lỗi cập nhật người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-19 14:33:47.982 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-19 15:16:41.950 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Server timeout at http://192.168.0.1:8080 (no response). Server might be overloaded or unresponsive.
-2026-05-19 15:55:52.758 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-19 18:39:21.553 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-19 19:14:49.217 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-19 21:20:51.716 [JavaFX Application Thread] ERROR c.m.utils.UserRepositorySQLite - L?i l?u ng??i d�ng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-20 00:16:22.034 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
-2026-05-20 00:16:27.385 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
-2026-05-20 00:18:13.811 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
-2026-05-20 00:18:32.542 [Thread-8] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Error POST /api/auctions: SocketException - Unexpected end of file from server
-2026-05-20 00:24:47.440 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 00:28:54.629 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 00:34:16.823 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 00:34:28.973 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 00:34:30.674 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 00:41:35.818 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 11:32:27.385 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 11:34:00.950 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 11:42:36.923 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 11:44:29.047 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 11:44:32.244 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] ❌ Lỗi kết nối mạng hoặc Server ngắt kết nối đột ngột (EOF/Socket closed): Unexpected end of file from server
-2026-05-20 13:38:26.046 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: verify@test.com
-2026-05-20 13:38:26.051 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: wrong@test.com
-2026-05-20 13:38:26.060 [main] ERROR c.m.utils.UserRepositorySQLite - Email ?? t?n t?i: test001@test.com
-2026-05-20 13:56:11.899 [pool-1-thread-1] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-20 13:57:01.197 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-20 16:12:59.881 [pool-1-thread-5] ERROR c.m.utils.UserRepositorySQLite - Lỗi lưu người dùng: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-20 16:44:46.390 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
-2026-05-20 16:44:48.014 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
-2026-05-20 20:22:23.968 [Thread-93] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 20:22:24.971 [WebSocketConnectReadThread-156] ERROR c.m.s.w.AuctionWebSocketClient - ? WebSocket error: Connection refused: connect
-2026-05-20 20:22:24.976 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? Kh�ng th? k?t n?i WebSocket sau timeout
-2026-05-20 20:22:30.749 [Thread-96] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 20:22:32.114 [Thread-97] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 20:22:32.861 [Thread-98] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 20:22:35.189 [Thread-99] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 20:22:35.908 [Thread-100] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 20:22:46.183 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 21:59:17.209 [Thread-10] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 21:59:18.425 [Thread-11] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 21:59:19.281 [Thread-12] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 21:59:19.667 [Thread-13] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 21:59:19.832 [Thread-14] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 22:07:13.248 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
-2026-05-20 22:12:02.922 [Thread-44] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 22:12:04.231 [Thread-45] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 22:12:05.004 [Thread-46] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 22:12:05.178 [Thread-47] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 22:12:05.332 [Thread-48] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 22:12:08.112 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-20 22:21:24.070 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
-2026-05-21 11:06:42.919 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
-2026-05-21 11:06:42.936 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
-2026-05-21 11:06:55.636 [pool-1-thread-2] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 11:06:59.488 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 11:07:09.837 [pool-1-thread-10] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 11:07:30.455 [pool-1-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 11:21:33.564 [Thread-288] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-21 11:21:33.589 [Thread-289] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-21 11:21:36.502 [Thread-290] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-21 11:21:37.817 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-21 11:28:00.022 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 11:34:08.635 [pool-1-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 17:14:42.702 [pool-1-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 23:40:56.213 [pool-1-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-21 23:40:58.703 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
-2026-05-21 23:41:01.009 [pool-1-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
-2026-05-21 23:42:33.435 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ❌ Lỗi kết nối WebSocket: sleep interrupted
-2026-05-22 00:19:45.287 [pool-2-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 00:19:51.631 [pool-2-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
-2026-05-22 00:19:54.182 [pool-2-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
-2026-05-22 00:19:56.856 [pool-2-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 00:24:03.692 [pool-2-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 00:24:06.445 [pool-2-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
-2026-05-22 00:29:59.804 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
-2026-05-22 00:29:59.805 [Thread-17] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
-2026-05-22 00:32:50.019 [pool-2-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 00:32:56.467 [pool-2-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 00:33:26.066 [pool-2-thread-4] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 00:34:04.382 [pool-2-thread-10] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 00:35:44.907 [pool-2-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 10:42:23.968 [pool-1-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-22 10:42:26.306 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY] The database file is locked (database is locked)
-2026-05-22 11:23:35.212 [pool-1-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-22 11:30:59.307 [Thread-16] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
-2026-05-22 11:30:59.308 [Thread-16] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
-2026-05-22 11:35:20.471 [Thread-15] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
-2026-05-22 11:35:20.472 [Thread-15] ERROR c.m.utils.UserRepositorySQLite - Lỗi updateBalance: [SQLITE_ERROR] SQL error or missing database (no such table: users)
+2026-05-23 00:49:07.026 [main] ERROR com.mycompany.server.ServerApp - Failed to preload sessions: No enum constant com.mycompany.models.SessionStatus.PAYMENT_PENDING
+2026-05-23 00:57:22.297 [main] ERROR com.mycompany.server.ServerApp - Failed to preload sessions: No enum constant com.mycompany.models.SessionStatus.PAYMENT_PENDING
+2026-05-23 00:57:53.217 [Thread-4] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:57:56.433 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:57:56.954 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:57:58.231 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:57:58.239 [Thread-8] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:57:58.770 [Thread-9] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:57:58.966 [Thread-10] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:57:59.112 [Thread-11] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:01.337 [Thread-12] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:01.960 [Thread-13] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:03.176 [Thread-14] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:03.240 [Thread-15] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:03.784 [Thread-16] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:03.977 [Thread-17] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:04.121 [Thread-18] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:06.345 [Thread-19] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:06.952 [Thread-20] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:08.185 [Thread-21] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:08.232 [Thread-22] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:08.777 [Thread-23] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:08.969 [Thread-24] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:09.114 [Thread-25] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:11.339 [Thread-26] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:11.960 [Thread-27] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:13.182 [Thread-28] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:13.241 [Thread-29] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:13.784 [Thread-30] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:13.962 [Thread-31] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:14.120 [Thread-32] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:16.343 [Thread-33] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:16.952 [Thread-34] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:18.184 [Thread-35] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:18.231 [Thread-36] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:18.777 [Thread-37] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:18.970 [Thread-38] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:19.112 [Thread-39] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:21.337 [Thread-40] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:21.963 [Thread-41] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:23.176 [Thread-42] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:23.239 [Thread-43] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:23.785 [Thread-44] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:23.961 [Thread-45] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:24.119 [Thread-46] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:26.363 [Thread-48] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:26.702 [Thread-49] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:26.952 [Thread-50] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:28.184 [Thread-51] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:28.231 [Thread-52] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:28.283 [Thread-53] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:28.777 [Thread-54] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:28.968 [Thread-55] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:29.113 [Thread-56] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:31.337 [Thread-57] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:31.704 [Thread-58] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:31.959 [Thread-59] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:33.175 [Thread-60] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:33.240 [Thread-61] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:33.288 [Thread-62] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:33.785 [Thread-63] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:33.975 [Thread-64] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:34.121 [Thread-65] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:36.344 [Thread-66] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:36.713 [Thread-67] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:36.952 [Thread-68] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:37.155 [Thread-69] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:38.183 [Thread-70] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:38.233 [Thread-71] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:38.296 [Thread-72] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 00:58:38.690 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:03:08.487 [main] ERROR com.mycompany.server.ServerApp - Failed to preload sessions: No enum constant com.mycompany.models.SessionStatus.PAYMENT_PENDING
+2026-05-23 01:03:33.023 [Thread-4] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:03:38.017 [Thread-5] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:03:43.025 [Thread-6] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:03:48.018 [Thread-7] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:03:53.026 [Thread-8] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:03:58.016 [Thread-9] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:01.334 [Thread-11] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:02.588 [Thread-12] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:03.023 [Thread-13] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:03.609 [Thread-14] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:06.356 [Thread-15] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:07.981 [Thread-16] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:08.050 [Thread-17] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:08.639 [Thread-18] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:11.344 [Thread-19] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:12.594 [Thread-20] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:13.023 [Thread-21] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:13.633 [Thread-22] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:16.337 [Thread-23] ERROR com.mycompany.utils.ApiClient - [ApiClient] L?i parse auctions: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $
+2026-05-23 01:04:17.283 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:15:57.694 [main] ERROR c.mycompany.utils.DatabaseConnection - Lỗi khởi tạo DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:16:33.463 [pool-1-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:16:36.487 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:16:40.709 [pool-1-thread-5] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:16:42.757 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:16:49.863 [pool-1-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:17:24.303 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:22:25.825 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:22:47.302 [pool-1-thread-10] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:22:49.595 [pool-1-thread-2] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:23:15.949 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:25:03.141 [pool-1-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:25:08.116 [pool-1-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
+2026-05-23 01:27:59.413 [Thread-2230] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:27:59.413 [Thread-2229] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:27:59.472 [Thread-2231] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:27:59.495 [Thread-2232] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:27:59.770 [Thread-2233] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:28:00.114 [Thread-2234] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:28:00.201 [Thread-2235] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:28:00.393 [Thread-2236] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:28:00.504 [Thread-2237] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:28:00.927 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:28:01.114 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:28:01.126 [Thread-2239] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:28:01.166 [Thread-2238] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
+2026-05-23 01:30:28.628 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 01:36:03.179 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)

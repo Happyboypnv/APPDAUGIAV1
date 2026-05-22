@@ -69,8 +69,10 @@ public class AuctionSchedulerTest {
     void testCloseAuction() {
         auction.setStatus(SessionStatus.IN_PROGRESS);
         auction.setHasBid(true);
-
-        auctionSessionService.closeAuction(auction, SessionStatus.PAID);
+        User bidder = new User("Bidder", "bidder@test.com", "Pass1234!", "1995-01-01");
+        bidder.setUserId("BIDDER-SCHEDULER");
+        bidder.setAvailableBalance(10_000);
+        auction.addBidder(bidder);
 
         assertEquals(SessionStatus.PAID, auction.getStatus());
     }

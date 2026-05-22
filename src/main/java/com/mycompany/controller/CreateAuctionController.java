@@ -227,6 +227,7 @@ public class CreateAuctionController implements Initializable {
     // Tạo bản sao final để dùng trong lambda
     final String finalToken = token;
 
+    final ActionEvent finalEvent = event;
     Task<Boolean> task = new Task<>() {
       @Override
       protected Boolean call() {
@@ -255,7 +256,7 @@ public class CreateAuctionController implements Initializable {
         );
         pause.setOnFinished(pauseEvent -> {
           try {
-            HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+            HandleNavigationAndAlert.getInstance().handleGoToHome(finalEvent);
           } catch (IOException ex) {
             ex.printStackTrace();
           }

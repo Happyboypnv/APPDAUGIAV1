@@ -27,64 +27,64 @@ import org.slf4j.Logger;
  * USAGE IN BiddingRoomController:
  *
  * public class BiddingRoomController implements Initializable {
- *     @FXML private Label priceLabel;
+ * @FXML private Label priceLabel;
  *
- *     private AuctionWebSocketClient wsClient;
- *     private AuctionWebSocketControllerAdapter adapter;
+ * private AuctionWebSocketClient wsClient;
+ * private AuctionWebSocketControllerAdapter adapter;
  *
- *     @Override
- *     public void initialize(URL url, ResourceBundle resources) {
- *         try {
- *             // Initialize WebSocket
- *             wsClient = AuctionWebSocketClient.getInstance();
- *             adapter = new AuctionWebSocketControllerAdapter(this, priceLabel);
- *             wsClient.setListener(adapter);
+ * @Override
+ * public void initialize(URL url, ResourceBundle resources) {
+ * try {
+ * // Initialize WebSocket
+ * wsClient = AuctionWebSocketClient.getInstance();
+ * adapter = new AuctionWebSocketControllerAdapter(this, priceLabel);
+ * wsClient.setListener(adapter);
  *
- *             // Connect to server (block until connected)
- *             wsClient.connect();
- *             logger.info("✅ Connected to WebSocket server");
+ * // Connect to server (block until connected)
+ * wsClient.connect();
+ * logger.info("✅ Connected to WebSocket server");
  *
- *             // Join auction room
- *             String phienId = "PHIEN001";  // Get from current auction session
- *             String userId = SessionManager.getInstance().getUserId();
- *             wsClient.sendJoin(phienId, userId);
+ * // Join auction room
+ * String phienId = "PHIEN001";  // Get from current auction session
+ * String userId = SessionManager.getInstance().getUserId();
+ * wsClient.sendJoin(phienId, userId);
  *
- *         } catch (Exception e) {
- *             HandleNavigationAndAlert.getInstance().showAlert(
- *                 Alert.AlertType.ERROR,
- *                 "Connection Error",
- *                 "Failed to connect to auction server: " + e.getMessage()
- *             );
- *         }
- *     }
+ * } catch (Exception e) {
+ * HandleNavigationAndAlert.getInstance().showAlert(
+ * Alert.AlertType.ERROR,
+ * "Connection Error",
+ * "Failed to connect to auction server: " + e.getMessage()
+ * );
+ * }
+ * }
  *
- *     @FXML
- *     public void onClickedBid(ActionEvent event) {
- *         try {
- *             String phienId = "PHIEN001";
- *             String userId = SessionManager.getInstance().getUserId();
- *             double giaRa = Double.parseDouble(bidAmountField.getText());
+ * @FXML
+ * public void onClickedBid(ActionEvent event) {
+ * try {
+ * String phienId = "PHIEN001";
+ * String userId = SessionManager.getInstance().getUserId();
+ * double giaRa = Double.parseDouble(bidAmountField.getText());
  *
- *             // Send bid (non-blocking)
- *             wsClient.sendBid(phienId, userId, giaRa);
+ * // Send bid (non-blocking)
+ * wsClient.sendBid(phienId, userId, giaRa);
  *
- *         } catch (NumberFormatException e) {
- *             HandleNavigationAndAlert.getInstance().showAlert(
- *                 Alert.AlertType.ERROR,
- *                 "Invalid Input",
- *                 "Please enter a valid amount"
- *             );
- *         }
- *     }
+ * } catch (NumberFormatException e) {
+ * HandleNavigationAndAlert.getInstance().showAlert(
+ * Alert.AlertType.ERROR,
+ * "Invalid Input",
+ * "Please enter a valid amount"
+ * );
+ * }
+ * }
  *
- *     @Override
- *     public void cleanup() {
- *         try {
- *             wsClient.disconnect();
- *         } catch (InterruptedException e) {
- *             logger.error("Error disconnecting: " + e.getMessage());
- *         }
- *     }
+ * @Override
+ * public void cleanup() {
+ * try {
+ * wsClient.disconnect();
+ * } catch (InterruptedException e) {
+ * logger.error("Error disconnecting: " + e.getMessage());
+ * }
+ * }
  * }
  */
 public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListener {
@@ -113,13 +113,13 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
      *
      * MESSAGE FORMAT:
      * {
-     *   "event": "BID_RESULT",
-     *   "userId": "USER001",
-     *   "giaRa": 150000.0,
-     *   "status": "SUCCESS"|"FAILED",
-     *   "currentPrice": 150000.0,
-     *   "message": "error message if failed",
-     *   "timestamp": 1710000000000
+     * "event": "BID_RESULT",
+     * "userId": "USER001",
+     * "giaRa": 150000.0,
+     * "status": "SUCCESS"|"FAILED",
+     * "currentPrice": 150000.0,
+     * "message": "error message if failed",
+     * "timestamp": 1710000000000
      * }
      *
      * @param message JSON message from server
@@ -173,7 +173,7 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
         try {
             String email = message.get("email").getAsString();
 
-           logger.info("👤 User joined: " + email);
+            logger.info("👤 User joined: " + email);
 
             // Update UI: increment online user count if you have such display
             // Example: onlineCountLabel.setText("Online: 5");
@@ -307,46 +307,66 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
         javafx.application.Platform.runLater(() -> {
             controller.disableBidding();
 
-            // Lấy thông tin người thắng (nếu có) từ message
-            String winner = null;
-            double finalPrice = 0;
-            if (message.has("winner") && !message.get("winner").isJsonNull()) {
-                winner = message.get("winner").getAsString();
-            }
-            if (message.has("finalPrice") && !message.get("finalPrice").isJsonNull()) {
-                finalPrice = message.get("finalPrice").getAsDouble();
-            }
+            String winner = message.has("winner") && !message.get("winner").isJsonNull()
+                ? message.get("winner").getAsString() : null;
+            String winnerName = message.has("winnerName") && !message.get("winnerName").isJsonNull()
+                ? message.get("winnerName").getAsString() : null;
+            String seller = message.has("seller") && !message.get("seller").isJsonNull()
+                ? message.get("seller").getAsString() : null;
+            double finalPrice = message.has("finalPrice") && !message.get("finalPrice").isJsonNull()
+                ? message.get("finalPrice").getAsDouble() : 0;
 
-            String currentUserEmail = com.mycompany.utils.SessionManager.getInstance()
-                .getCurrentUser().getEmail();
+            String currentUserEmail = SessionManager.getInstance().getCurrentUser().getEmail();
             boolean isWinner = winner != null && winner.equals(currentUserEmail);
+            boolean isSeller = seller != null && seller.equals(currentUserEmail);
+            java.text.DecimalFormat fmt = new java.text.DecimalFormat("#,###");
+            String priceText = fmt.format(finalPrice) + " VNĐ";
 
             if (isWinner) {
-                // Người thắng: hỏi xác nhận thanh toán
-                java.text.DecimalFormat fmt = new java.text.DecimalFormat("#,###");
-                javafx.scene.control.Alert confirmAlert = new javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                confirmAlert.setTitle("🎉 Bạn đã thắng đấu giá!");
-                confirmAlert.setHeaderText("Chúc mừng! Bạn là người trả giá cao nhất.");
-                confirmAlert.setContentText(
-                    "Giá chốt: " + fmt.format(finalPrice) + " VNĐ\n\n" +
-                        "Giao dịch đã được xử lý tự động.\n" +
-                        "Tiền đã được trừ khỏi ví của bạn.\n\n" +
-                        "Nhấn OK để về trang chủ."
+                HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Phiên đấu giá kết thúc",
+                    "Bạn đã thắng phiên. Hệ thống đã thanh toán " + priceText + " từ số dư đóng băng."
                 );
-                confirmAlert.showAndWait();
+            } else if (isSeller) {
+                HandleNavigationAndAlert.getInstance().showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Phiên đấu giá kết thúc",
+                    "Phiên của bạn đã kết thúc. Người mua: " +
+                        (winnerName != null ? winnerName : winner) + ". Số tiền: " + priceText + "."
+                );
             } else {
-                // Người thua hoặc khán giả
                 HandleNavigationAndAlert.getInstance().showAlert(
                     Alert.AlertType.INFORMATION,
                     "Phiên đấu giá kết thúc",
                     winner != null
-                        ? "Phiên đã kết thúc. Người thắng: " + winner
+                        ? "Phiên đã kết thúc. Người thắng: " + (winnerName != null ? winnerName : winner)
                         : "Phiên đấu giá đã kết thúc (không có người đặt giá)."
                 );
             }
             controller.navigateToHome();
         });
     }
-}
 
+    @Override
+    public void onBalanceUpdate(JsonObject message) {
+        com.mycompany.models.User user = SessionManager.getInstance().getCurrentUser();
+        if (user == null) return;
+        if (message.has("actualBalance") && !message.get("actualBalance").isJsonNull()) {
+            user.setActualBalance(message.get("actualBalance").getAsDouble());
+        }
+        if (message.has("frozenBalance") && !message.get("frozenBalance").isJsonNull()) {
+            user.setFrozenBalance(message.get("frozenBalance").getAsDouble());
+        }
+    }
+    @Override
+    public void onPaymentResult(JsonObject message) {
+        javafx.application.Platform.runLater(() -> {
+            String status = message.has("status") ? message.get("status").getAsString() : "";
+            String msg = message.has("message") ? message.get("message").getAsString() : "Đã xử lý thanh toán";
+            Alert.AlertType type = "PAID".equals(status) ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING;
+            HandleNavigationAndAlert.getInstance().showAlert(type, "Kết quả thanh toán", msg);
+            controller.navigateToHome();
+        });
+    }
+}

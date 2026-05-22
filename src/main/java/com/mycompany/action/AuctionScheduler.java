@@ -31,8 +31,36 @@ public class AuctionScheduler {
 
     private final Map<String, ScheduledFuture<?>> acFutures = new ConcurrentHashMap<>();
     private final Map<String, ScheduledFuture<?>> asFutures = new ConcurrentHashMap<>();
+    private final Map<String, ScheduledFuture<?>> paymentFutures = new ConcurrentHashMap<>();
     private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
     private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuctionScheduler.class);
+
+    /**
+     * Lên lịch timeout cho PAYMENT_PENDING.
+     * Nếu timeout tới mà người thắng chưa trả lời → gọi finalizePayment(phien, false)
+     */
+    public void setPaymentTimeout(AuctionSession phien, long seconds) {
+        String maPhien = phien.getSessionId();
+        // cancel nếu đã có lịch trước đó
+        cancelPaymentTimeout(phien);
+        ScheduledFuture<?> future = executor.schedule(() -> {
+            try {
+                auctionSessionService.finalizePayment(phien, false);
+            } catch (Exception ex) {
+                logger.error("Lỗi finalizePayment tự động cho {}: {}", maPhien, ex.getMessage());
+            } finally {
+                paymentFutures.remove(maPhien);
+            }
+        }, seconds, TimeUnit.SECONDS);
+        paymentFutures.put(maPhien, future);
+    }
+
+    public void cancelPaymentTimeout(AuctionSession phien) {
+        ScheduledFuture<?> f = paymentFutures.remove(phien.getSessionId());
+        if (f != null && !f.isDone()) {
+            f.cancel(false);
+        }
+    }
 
     /**
      * Lên lịch tự động chuyển trạng thái AuctionSession từ WAITING → IN_PROGRESS

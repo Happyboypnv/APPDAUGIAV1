@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.prefs.Preferences; // save thong tin sau khi app dong
 
 /**
- * CapNhatThongTinNguoiDung - Utility class để cập nhật thông tin người dùng
+ * UserProfileUpdater - Utility class để cập nhật thông tin người dùng
  *
  * MỤC ĐÍCH:
  * - Quản lý việc cập nhật thông tin người dùng từ giao diện (UI) vào hệ thống
@@ -23,12 +23,12 @@ import java.util.prefs.Preferences; // save thong tin sau khi app dong
  */
 public class UserProfileUpdater {
 
-    // Singleton instance - đảm bảo chỉ có một CapNhatThongTinNguoiDung trong suốt ứng dụng
+    // Singleton instance - đảm bảo chỉ có một UserProfileUpdater trong suốt ứng dụng
 
     // Preferences là Java API để lưu trữ cài đặt ứng dụng an toàn (dùng registry trên Windows)
     // Lưu trữ auth_token để khôi phục session sau khi app đóng
     private static final Preferences prefs =
-            Preferences.userNodeForPackage(UserProfileUpdater.class);
+        Preferences.userNodeForPackage(UserProfileUpdater.class);
 
     // Interface để lưu trữ dữ liệu người dùng - hiện tại dùng JSON
     // Có thể thay thế bằng database trong tương lai (design pattern: Strategy)
@@ -49,7 +49,7 @@ public class UserProfileUpdater {
      * - Lần sau gọi chỉ trả về instance cũ
      * - Thread-safe pattern: kiểm tra rồi tạo
      *
-     * @return Instance duy nhất của CapNhatThongTinNguoiDung
+     * @return Instance duy nhất của UserProfileUpdater
      */
     private static volatile UserProfileUpdater instance;
     public static UserProfileUpdater getInstance() {
@@ -84,7 +84,7 @@ public class UserProfileUpdater {
      * - "avatar": Đường dẫn hình ảnh avatar
      *
      * @param updates Map chứa cặp key-value của các trường cần cập nhật
-     *                Ví dụ: updates.put("name", "Nguyễn Văn A");
+     * Ví dụ: updates.put("name", "Nguyễn Văn A");
      */
     public void updateUser(Map<String, String> updates) {
         try {
@@ -118,6 +118,9 @@ public class UserProfileUpdater {
                 // Chuyển từ String sang Double để lưu số
                 currentUser.setAvailableBalance(Double.parseDouble(updates.get("balance")));
             }
+            if (updates.containsKey("actualBalance")) {
+                currentUser.setActualBalance(Double.parseDouble(updates.get("actualBalance")));
+            }
             if (updates.containsKey("bankName")) {
                 currentUser.setBankName(updates.get("bankName"));
             }
@@ -128,21 +131,37 @@ public class UserProfileUpdater {
             // 🔹 BƯỚC 4a: ⭐ LƯU VÀO FILE JSON - QUAN TRỌNG NHẤT!!!
             // Nếu bỏ qua bước này, dữ liệu chỉ thay đổi trong RAM
             // Khi app đóng, tất cả thay đổi sẽ mất vĩnh viễn
-            // capNhatNguoiDung() sẽ cập nhật bản ghi cũ (giữ nguyên ID)
+            // userRepository.update() sẽ cập nhật bản ghi cũ (giữ nguyên ID)
             userRepository.update(currentUser);
 
             // 🔹 BƯỚC 4b: ĐỒNG BỘ SỐ DƯ LÊN SERVER CHUNG
-            if (updates.containsKey("balance")) {
+            if (updates.containsKey("balance") || updates.containsKey("actualBalance")) {
                 String token = prefs.get("auth_token", null);
                 if (token != null && !token.isEmpty()) {
                     boolean serverUpdated = com.mycompany.utils.ApiClient.updateBalance(
                         currentUser.getEmail(),
-                        currentUser.getAvailableBalance(),
+                        currentUser.getActualBalance(),
                         token
                     );
                     if (!serverUpdated) {
                         org.slf4j.LoggerFactory.getLogger(UserProfileUpdater.class)
                             .warn("[UserProfileUpdater] ⚠️ Không thể đồng bộ số dư lên server.");
+                    }
+                }
+            }
+
+            if (updates.containsKey("bankAccount") || updates.containsKey("bankName")) {
+                String token = prefs.get("auth_token", null);
+                if (token != null && !token.isEmpty()) {
+                    boolean serverUpdated = com.mycompany.utils.ApiClient.updateBankAccount(
+                        currentUser.getEmail(),
+                        currentUser.getBankAccountNumber(),
+                        currentUser.getBankName(),
+                        token
+                    );
+                    if (!serverUpdated) {
+                        org.slf4j.LoggerFactory.getLogger(UserProfileUpdater.class)
+                            .warn("[UserProfileUpdater] Không thể đồng bộ STK lên server.");
                     }
                 }
             }
@@ -166,5 +185,4 @@ public class UserProfileUpdater {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi cập nhật", "Không thể cập nhật thông tin người dùng! " + e.getMessage());
         }
     }
-
 }

@@ -107,5 +107,11 @@ public interface AuctionWebSocketListener {
     void onError(String errorMessage);
 
     void onSessionEnded(JsonObject message);
+
+    default void onBalanceUpdate(JsonObject message) {
+    }
+
+    default void onPaymentResult(JsonObject message) {
+    }
 }
 

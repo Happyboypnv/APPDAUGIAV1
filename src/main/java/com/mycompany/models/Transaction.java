@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * A Transaction contains:
  *  - id           : unique identifier of the transaction
  *  - auctionSession: the ended auction session, containing seller, buyer, product, and final price
- *  - status       : current status of the transaction (PENDING_PAYMENT, PAID, REFUNDED)
+ *  - status       : current status of the transaction (PAID, REFUNDED)
  *  - createdAt    : timestamp when the transaction was created
  */
 public class Transaction {
@@ -42,10 +42,14 @@ public class Transaction {
      * @param auctionSession the auction session that has ended
      */
     public Transaction(String id, AuctionSession auctionSession) {
+        this(id, auctionSession, LocalDateTime.now());
+    }
+
+    public Transaction(String id, AuctionSession auctionSession, LocalDateTime createdAt) {
         this.id = id;
         this.auctionSession = auctionSession;
-        this.status = TransactionStatus.PENDING_PAYMENT;
-        this.createdAt = LocalDateTime.now();
+        this.status = TransactionStatus.PAID;
+        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
     }
 
     // ===== GETTERS =====

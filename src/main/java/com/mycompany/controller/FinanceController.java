@@ -10,6 +10,7 @@ import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.models.User;
 import com.mycompany.utils.UserProfileUpdater;
 import com.mycompany.utils.SessionManager;
+import com.mycompany.utils.UserRepositorySQLite;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -47,15 +48,15 @@ public class FinanceController implements Initializable {
 
     // @FXML FIELDS - Các thành phần UI được inject từ FXML
     @FXML private TextField  bankAccount, // Số tài khoản ngân hàng
-                             depositField, // Ô nhập số tiền nạp
-                             withdrawField, // Ô nhập số tiền rút
-                             currentBalanceField; // Hiển thị số dư hiện tại
+        depositField, // Ô nhập số tiền nạp
+        withdrawField, // Ô nhập số tiền rút
+        currentBalanceField; // Hiển thị số dư hiện tại
 
     @FXML private ComboBox<String> banks; // Dropdown chọn ngân hàng
 
     @FXML private Button linkToBankButton, // Nút liên kết ngân hàng
-                         depositButton, // Nút nạp tiền
-                         withdrawButton; // Nút rút tiền
+        depositButton, // Nút nạp tiền
+        withdrawButton; // Nút rút tiền
 
     @FXML ImageView editBankAccountBtn; // Nút edit số tài khoản
 
@@ -78,7 +79,8 @@ public class FinanceController implements Initializable {
 
         User user = SessionManager.getInstance().getCurrentUser();
         if (user != null) {
-            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getAvailableBalance()));
+            user = reloadCurrentUser(user);
+            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getActualBalance()));
             bankAccount.setText(user.getBankAccountNumber());
             if (user.getBankName() != null) {
                 banks.setValue(user.getBankName());
@@ -120,8 +122,8 @@ public class FinanceController implements Initializable {
         // Kiểm tra format số tài khoản
         if (bankAcc == null || bankAcc.isEmpty() || !bankAcc.matches(bankAccountRegex)) {
             HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.ERROR, "Lỗi thông tin",
-                    "Số tài khoản ngân hàng không hợp lệ (10-15 chữ số).");
+                Alert.AlertType.ERROR, "Lỗi thông tin",
+                "Số tài khoản ngân hàng không hợp lệ (10-15 chữ số).");
             return;
         }
 
@@ -166,7 +168,7 @@ public class FinanceController implements Initializable {
             FinanceAction.getInstance().deposit(amount);
         } catch (NumberFormatException e) {
             HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền không hợp lệ.");
+                Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền không hợp lệ.");
         }
         depositField.clear();
         refreshBalance(); // Tách ra hàm riêng
@@ -176,8 +178,18 @@ public class FinanceController implements Initializable {
     private void refreshBalance() {
         User user = SessionManager.getInstance().getCurrentUser();
         if (user != null) {
-            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getAvailableBalance()));
+            user = reloadCurrentUser(user);
+            currentBalanceField.setText(String.format("%,.0f VNĐ", user.getActualBalance()));
         }
+    }
+
+    private User reloadCurrentUser(User currentUser) {
+        User refreshed = new UserRepositorySQLite().findByEmail(currentUser.getEmail());
+        if (refreshed != null) {
+            SessionManager.getInstance().setSession(refreshed, SessionManager.getInstance().getCurrentToken());
+            return refreshed;
+        }
+        return currentUser;
     }
 
     /**
@@ -199,10 +211,9 @@ public class FinanceController implements Initializable {
             FinanceAction.getInstance().withdraw(amount);
         } catch (NumberFormatException e) {
             HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền không hợp lệ.");
+                Alert.AlertType.ERROR, "Lỗi thông tin", "Số tiền không hợp lệ.");
         }
         withdrawField.clear();
         refreshBalance(); // Dùng lại
     }
 }
-

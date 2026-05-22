@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mycompany.action.AuctionSessionService;
 import com.mycompany.action.AuctionSessionRegistry;
+import com.mycompany.exception.AuctionRoom.InvalidBidException;
 import com.mycompany.models.*;
 import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.IAuctionRepository;
@@ -52,9 +53,9 @@ public class BidController {
     // ===== PHỤ THUỘC =====
 
     private final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .serializeNulls()
-            .create();
+        .setPrettyPrinting()
+        .serializeNulls()
+        .create();
 
     /** Kho phiên đấu giá — tái sử dụng implementation SQLite đã có */
     private final IAuctionRepository auctionRepository = new AuctionRepositorySQLite();
@@ -79,7 +80,7 @@ public class BidController {
      *   POST /api/bids            → handleDatGia()
      *   GET  /api/bids/{phienId}  → handleLayLichSu()
      */
-    public void route(HttpExchange exchange) throws IOException {
+    public void route(HttpExchange exchange) throws IOException, InvalidBidException {
         String method = exchange.getRequestMethod().toUpperCase();
         String path   = exchange.getRequestURI().getPath();
 
@@ -130,7 +131,7 @@ public class BidController {
      * Response 404: { "bug": "Không tìm thấy phiên: PH999999" }
      * Response 409: { "bug": "Phiên không ở trạng thái DANG_DIEN_RA" }
      */
-    private void handleSetPrice(HttpExchange exchange) throws IOException {
+    private void handleSetPrice(HttpExchange exchange) throws IOException, InvalidBidException {
         // Bước 1: Xác thực token → lấy người đặt giá
         User nguoiDat = checkToken(exchange);
         if (nguoiDat == null) return;
@@ -163,13 +164,19 @@ public class BidController {
         // Bước 4: Kiểm tra nhanh trạng thái (object từ Registry là live state)
         if (phien.getStatus() != SessionStatus.IN_PROGRESS) {
             guiPhanHoi(exchange, 409, bug(
-                    "Phiên không ở trạng thái IN_PROGRESS. Trạng thái hiện tại: " + phien.getStatus().name()));
+                "Phiên không ở trạng thái IN_PROGRESS. Trạng thái hiện tại: " + phien.getStatus().name()));
             return;
         }
 
         // Bước 5: Kiểm tra người bán tự đặt giá
         if (nguoiDat.getUserId().equals(phien.getSeller().getUserId())) {
-            guiPhanHoi(exchange, 400, bug("Bạn là người tạo phiên, không thể tự đặt giá!"));
+            guiPhanHoi(exchange, 400, bug("Người tạo phiên ko thể đặt giá"));
+            return;
+        }
+
+        List<User> bidders = phien.getBidderList();
+        if (!bidders.isEmpty() && bidders.get(bidders.size() - 1).getUserId().equals(nguoiDat.getUserId())) {
+            guiPhanHoi(exchange, 400, bug("Bạn không được đặt giá 2 lần liên tiếp. Hãy chờ người khác đặt giá cao hơn."));
             return;
         }
 
@@ -177,8 +184,8 @@ public class BidController {
         double giaToiThieu = phien.getCurrentPrice() + phien.getPriceStep();
         if (req.getGia() < giaToiThieu) {
             guiPhanHoi(exchange, 400, bug(String.format(
-                    "Giá đặt phải ≥ %.0f (giaHienTai=%.0f + buocGia=%.0f)",
-                    giaToiThieu, phien.getCurrentPrice(), phien.getPriceStep())));
+                "Giá đặt phải ≥ %.0f (giaHienTai=%.0f + buocGia=%.0f)",
+                giaToiThieu, phien.getCurrentPrice(), phien.getPriceStep())));
             return;
         }
         // Bước 8: Kiểm tra setPrice có thực sự thành công không
@@ -190,11 +197,14 @@ public class BidController {
         }
         // Bước 9: Lưu trạng thái phiên đã cập nhật vào SQLite
         auctionRepository.update(phien);
+        if (auctionRepository instanceof AuctionRepositorySQLite) {
+            ((AuctionRepositorySQLite) auctionRepository).saveBidRecord(phien.getSessionId(), nguoiDat.getUserId(), req.getGia());
+        }
 
         guiPhanHoi(exchange, 200, gson.toJson(new DatGiaResponse(
-                "Đặt giá thành công",
-                phien.getCurrentPrice(),
-                phien.getEndTime() != null ? phien.getEndTime().toString() : null
+            "Đặt giá thành công",
+            phien.getCurrentPrice(),
+            phien.getEndTime() != null ? phien.getEndTime().toString() : null
         )));
     }
 

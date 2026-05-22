@@ -5,6 +5,7 @@ import com.mycompany.models.Transaction;
 import com.mycompany.models.TransactionStatus;
 import org.slf4j.Logger;
 
+import java.time.LocalDateTime;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
     private String RandNewTransactionId() {
         synchronized (TRANSACTION_ID_GENERATION_LOCK) {
             String sql = "SELECT MAX(CAST(SUBSTR(ma_giao_dich, 3) AS INTEGER)) " +
-                    "FROM giao_dich";
+                "FROM giao_dich";
             try (Statement stmt = DatabaseConnection.getConnection().createStatement();
                  ResultSet rs   = stmt.executeQuery(sql)) {
                 if (rs.next()) {
@@ -57,24 +58,30 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
      */
     @Override
     public void save(Transaction transaction) {
-        if (isTransactionAvailable(transaction.getId())) {
-           logger.info("[WARN] Giao dịch đã tồn tại: " + transaction.getId());
+        String transactionId = (transaction.getId() == null
+            || transaction.getId().isBlank()
+            || "TEMP".equals(transaction.getId()))
+            ? RandNewTransactionId()
+            : transaction.getId();
+
+        if (isTransactionAvailable(transactionId)) {
+            logger.info("[WARN] Giao dịch đã tồn tại: " + transactionId);
             return;
         }
 
         String sql = "INSERT INTO giao_dich " +
-                "(ma_giao_dich, ma_phien, trang_thai, thoi_gian_tao) " +
-                "VALUES (?, ?, ?, ?)";
+            "(ma_giao_dich, ma_phien, trang_thai, thoi_gian_tao) " +
+            "VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, transaction.getId());
+            ps.setString(1, transactionId);
             ps.setString(2, transaction.getAuctionSession().getSessionId());
             ps.setString(3, transaction.getStatus().name());
             ps.setString(4, transaction.getCreatedAt().toString());
 
             int rowsAffected = ps.executeUpdate();
             ps.getConnection().commit();
-           logger.info("[SUCCESS] Lưu giao dịch thành công: " + transaction.getId());
+            logger.info("[SUCCESS] Lưu giao dịch thành công: " + transactionId);
         } catch (SQLException e) {
             logger.error("[ERROR] Lỗi lưu giao dịch: " + e.getMessage());
         }
@@ -87,7 +94,7 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
     public Map<String, Transaction> findAll() {
         Map<String, Transaction> result = new HashMap<>();
         String sql = "SELECT gd.*, pd.* FROM giao_dich gd " +
-                "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien";
+            "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien";
 
         try (Statement stmt = DatabaseConnection.getConnection().createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -99,7 +106,8 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
                 AuctionSession phien = auctionRepository.findById(auctionID);
 
                 if (phien != null) {
-                    Transaction transaction = new Transaction(transactionID, phien);
+                    Transaction transaction = new Transaction(transactionID, phien,
+                        LocalDateTime.parse(rs.getString("thoi_gian_tao")));
                     transaction.setStatus(TransactionStatus.valueOf(rs.getString("trang_thai")));
                     result.put(transactionID, transaction);
                 }
@@ -123,7 +131,8 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
                     String auctionID = rs.getString("ma_phien");
                     AuctionSession phien = auctionRepository.findById(auctionID);
                     if (phien != null) {
-                        Transaction transaction = new Transaction(transactionID, phien);
+                        Transaction transaction = new Transaction(transactionID, phien,
+                            LocalDateTime.parse(rs.getString("thoi_gian_tao")));
                         transaction.setStatus(TransactionStatus.valueOf(rs.getString("trang_thai")));
                         return transaction;
                     }
@@ -197,8 +206,8 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
         List<Transaction> result = new ArrayList<>();
         // Lấy giao dịch nơi người dùng là người bán hoặc người mua
         String sql = "SELECT DISTINCT gd.* FROM giao_dich gd " +
-                "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien " +
-                "WHERE pd.ma_nguoi_ban = ? OR pd.ma_nguoi_thang_cuoc = ?";
+            "LEFT JOIN phien_dau_gia pd ON gd.ma_phien = pd.ma_phien " +
+            "WHERE pd.ma_nguoi_ban = ? OR pd.ma_nguoi_thang_cuoc = ?";
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, maNguoiDung);

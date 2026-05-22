@@ -181,12 +181,19 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         window.show();
     }
 
-    public void goToChangePassword(ActionEvent event) throws IOException {
-        StackPane changeRoot = FXMLLoader.load(
-                getClass().getResource("/view/ChangePassword.fxml"));
-        Scene changeScene = new Scene(changeRoot);
+    public void goToTransactionHistory(Event event) throws IOException {
+        StackPane root = FXMLLoader.load(getClass().getResource("/view/TransactionHistory.fxml"));
+        Scene scene = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(changeScene);
+        window.setScene(scene);
+        window.show();
+    }
+
+    public void goToChangePassword(ActionEvent event) throws IOException {
+        StackPane changeRoot = FXMLLoader.load(getClass().getResource("/view/ChangePassword.fxml"));
+        Scene scene = new Scene(changeRoot);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
         window.show();
     }
 
