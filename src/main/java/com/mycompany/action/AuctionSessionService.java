@@ -1,5 +1,6 @@
 package com.mycompany.action;
 
+import com.mycompany.exception.AuctionRoom.InvalidBidException;
 import com.mycompany.models.AuctionSession;
 import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
@@ -135,16 +136,18 @@ public class AuctionSessionService {
         }
     }
 
-    public boolean setPrice(AuctionSession auction, User bidder, double gia) {
+    public boolean setPrice(AuctionSession auction, User bidder, double gia) throws InvalidBidException {
         synchronized (getLock(auction.getSessionId())) {
             // 1. Kiểm tra trạng thái phiên
             if (auction.getStatus() != SessionStatus.IN_PROGRESS) {
                 return false;
             }
 
-            // 2. Chủ phòng không được tự đấu giá
-            if (bidder.equals(auction.getSeller())) {
-                return false;
+            // 2. Người tạo phiên không được đặt giá
+            if (bidder.getUserId().equals(auction.getSeller().getUserId())) {
+                throw new com.mycompany.exception.AuctionRoom.InvalidBidException(
+                    "Người tạo phiên không được tự đặt giá!"
+                );
             }
 
             // 3. Tính toán giá tối thiểu cần đặt

@@ -3435,3 +3435,412 @@
 2026-05-22 15:55:15.327 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
 2026-05-22 15:55:16.601 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
 2026-05-22 15:55:16.613 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.
+2026-05-22 16:14:29.028 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã đăng ký Shutdown Hook.
+2026-05-22 16:14:29.330 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:14:29.330 [main] INFO  c.mycompany.utils.DatabaseConnection - Khởi tạo Database thành công.
+2026-05-22 16:14:29.335 [main] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:14:29.372 [main] INFO  com.mycompany.server.ServerApp - Dong ngay phien PH000001 (endTime=2026-05-22T15:59 da qua)
+2026-05-22 16:14:29.374 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:29.375 [main] INFO  com.mycompany.server.ServerApp -   KHOI PHUC PHIEN DAU GIA:
+2026-05-22 16:14:29.375 [Thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:14:29.375 [main] INFO  com.mycompany.server.ServerApp -   Mo ngay (da den gio):       0
+2026-05-22 16:14:29.375 [main] INFO  com.mycompany.server.ServerApp -   Len lich mo (chua den gio): 0
+2026-05-22 16:14:29.375 [main] INFO  com.mycompany.server.ServerApp -   Dong ngay (qua gio dong):   1
+2026-05-22 16:14:29.375 [main] INFO  com.mycompany.server.ServerApp -   Khoi phuc dang chay:        0
+2026-05-22 16:14:29.375 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:29.375 [main] INFO  c.m.utils.UserRepositorySQLite - 🔄 Bắt đầu migrate mật khẩu plain text...
+2026-05-22 16:14:29.377 [main] INFO  c.m.utils.UserRepositorySQLite - 🎉 Hoàn thành migrate 0 users
+2026-05-22 16:14:29.512 [main] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ Cleanup task started (interval: 300000 ms)
+2026-05-22 16:14:29.527 [WebSocket-Server-Thread] INFO  c.m.s.w.AuctionWebSocketServer - 🎯 AuctionWebSocketServer initialized on port 8081
+2026-05-22 16:14:29.532 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🚀 AuctionWebSocketServer started on port 8081
+2026-05-22 16:14:31.023 [main] INFO  com.mycompany.server.ServerApp - ✅ WebSocket server đã được inject vào AuctionSessionService
+2026-05-22 16:14:31.023 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:31.023 [main] INFO  com.mycompany.server.ServerApp -   🚨 SERVER STARTUP REPORT
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   HTTP  http://localhost:8080 (REST API)
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   WS    ws://localhost:8081 (WebSocket real-time)
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   ✅ SERVER ĐÃ KHỞI ĐỘNG THÀNH CÔNG!
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   Địa chỉ: http://localhost:8080
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   USERS:
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/login
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/register
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/users/logout
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/users/{email}
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   AUCTIONS:
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/auctions/{id}
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/auctions           [cần token]
+2026-05-22 16:14:31.024 [main] INFO  com.mycompany.server.ServerApp -   PUT  http://localhost:8080/api/auctions/{id}/start [cần token]
+2026-05-22 16:14:31.025 [main] INFO  com.mycompany.server.ServerApp - ----------------------------------------
+2026-05-22 16:14:31.025 [main] INFO  com.mycompany.server.ServerApp -   BIDS:
+2026-05-22 16:14:31.025 [main] INFO  com.mycompany.server.ServerApp -   POST http://localhost:8080/api/bids               [cần token]
+2026-05-22 16:14:31.025 [main] INFO  com.mycompany.server.ServerApp -   GET  http://localhost:8080/api/bids/{phienId}
+2026-05-22 16:14:31.025 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:31.025 [main] INFO  com.mycompany.server.ServerApp -   Nhấn Ctrl+C để dừng server
+2026-05-22 16:14:31.025 [main] INFO  com.mycompany.server.ServerApp - ========================================
+2026-05-22 16:14:45.358 [JavaFX Application Thread] INFO  com.mycompany.App - ?? ?ang kh?i t?o database...
+2026-05-22 16:14:45.363 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ? ?? ??ng k? Shutdown Hook.
+2026-05-22 16:14:45.661 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ? ?? c�i ??t PRAGMA v� t?t AutoCommit cho Connection
+2026-05-22 16:14:45.662 [JavaFX Application Thread] INFO  c.mycompany.utils.DatabaseConnection - Kh?i t?o Database th�nh c�ng.
+2026-05-22 16:14:45.663 [JavaFX Application Thread] INFO  com.mycompany.App - ? Database ?? s?n s�ng!
+2026-05-22 16:14:45.663 [JavaFX Application Thread] INFO  com.mycompany.App - ? ?ang ki?m tra migration passwords...
+2026-05-22 16:14:45.664 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - ? B?t ??u migrate m?t kh?u plain text...
+2026-05-22 16:14:45.666 [JavaFX Application Thread] DEBUG c.mycompany.utils.DatabaseConnection - ? ?? c�i ??t PRAGMA v� t?t AutoCommit cho Connection
+2026-05-22 16:14:45.669 [JavaFX Application Thread] INFO  c.m.utils.UserRepositorySQLite - ? Ho�n th�nh migrate 0 users
+2026-05-22 16:14:45.669 [JavaFX Application Thread] INFO  com.mycompany.App - ? Migration ho�n th�nh!
+2026-05-22 16:14:58.738 [pool-1-thread-1] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:14:58.740 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Tìm thấy user với email: hgtrung007@gmail.com
+2026-05-22 16:14:58.740 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password hash trong DB: cVCSCBUdWmX4v8DRkLgrxjvXGuTEtRZ0qfW1Bq4s8eo=
+2026-05-22 16:14:58.740 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Salt trong DB: VYEf6QZ8mRYoPvlRbGIqqw==
+2026-05-22 16:14:58.740 [pool-1-thread-1] INFO  c.m.utils.UserRepositorySQLite -  Password nhập vào: Trung123123@
+2026-05-22 16:14:58.744 [pool-1-thread-1] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] ✅ User hgtrung007@gmail.com logged in on device 127.0.0.1_98744
+2026-05-22 16:14:58.745 [pool-1-thread-1] INFO  c.m.server.controller.UserController - [LoginController] ✅ User hgtrung007@gmail.com logged in successfully. Device: 127.0.0.1_98744
+2026-05-22 16:14:58.771 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] Login response status: SUCCESS
+2026-05-22 16:14:59.622 [pool-1-thread-3] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:15:02.561 [pool-1-thread-5] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:15:03.377 [pool-1-thread-6] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:15:04.928 [pool-1-thread-8] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:15:09.633 [pool-1-thread-10] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:15:14.627 [pool-1-thread-2] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:15:19.633 [pool-1-thread-4] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:15:29.640 [Thread-13] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON g?i l�n: {"tenPhien":"test#1","tenSanPham":"?n c?t","maSanPham":"SP_1779441329631","danhMuc":"Xe c?","moTa":"12345566756","giaKhoiDiem":3155235.0,"thoiGianGiay":180,"thoiGianBatDau":"2026-05-22T16:17"}
+2026-05-22 16:15:29.640 [Thread-13] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_hgtrung007@gmail.com_1779441298744
+2026-05-22 16:15:29.650 [pool-1-thread-10] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Đã upsert san_pham: SP_1779441329631
+2026-05-22 16:15:29.652 [pool-1-thread-10] INFO  c.m.utils.AuctionRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-22 16:15:29.652 [pool-1-thread-10] INFO  c.m.utils.AuctionRepositorySQLite - COMMIT thành công cho auction: PH000001
+2026-05-22 16:15:29.653 [pool-1-thread-10] INFO  c.mycompany.action.AuctionScheduler - Đã thêm phiên đấu giá PH000001 vào đồng hồ
+2026-05-22 16:15:29.673 [Thread-13] INFO  com.mycompany.utils.ApiClient - [createAuction] Server tr? v?: {
+  "maPhien": "PH000001",
+  "thongBao": "T?o phi�n th�nh c�ng"
+}
+2026-05-22 16:16:59.661 [Thread-1] INFO  c.m.action.AuctionSessionService - Phiên PH000001 đã mở lúc 2026-05-22T16:17, sẽ đóng lúc 2026-05-22T16:20
+2026-05-22 16:16:59.661 [Thread-1] INFO  c.mycompany.action.AuctionScheduler - Đã mở phiên đấu giá PH000001
+2026-05-22 16:19:59.701 [Thread-15] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:19:59.704 [Thread-15] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000001
+2026-05-22 16:19:59.704 [Thread-15] INFO  c.m.s.w.AuctionWebSocketServer - 📢 Broadcast SESSION_ENDED cho phòng: PH000001
+2026-05-22 16:20:21.440 [pool-1-thread-9] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:20:42.864 [Thread-141] INFO  com.mycompany.utils.ApiClient - [createAuction] JSON g?i l�n: {"tenPhien":"test#2","tenSanPham":"12346789","maSanPham":"SP_1779441642864","danhMuc":"Ngh? thu?t","moTa":"123456","giaKhoiDiem":1.2345678E7,"thoiGianGiay":180,"thoiGianBatDau":"2026-05-22T16:22"}
+2026-05-22 16:20:42.865 [Thread-141] INFO  com.mycompany.utils.ApiClient - [createAuction] Token: USER_hgtrung007@gmail.com_1779441298744
+2026-05-22 16:20:42.867 [pool-1-thread-6] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Đã upsert san_pham: SP_1779441642864
+2026-05-22 16:20:42.868 [pool-1-thread-6] INFO  c.m.utils.AuctionRepositorySQLite -  INSERT thành công, số dòng ảnh hưởng: 1
+2026-05-22 16:20:42.868 [pool-1-thread-6] INFO  c.m.utils.AuctionRepositorySQLite - COMMIT thành công cho auction: PH000001
+2026-05-22 16:20:42.869 [pool-1-thread-6] INFO  c.mycompany.action.AuctionScheduler - Đã thêm phiên đấu giá PH000001 vào đồng hồ
+2026-05-22 16:20:42.869 [Thread-141] INFO  com.mycompany.utils.ApiClient - [createAuction] Server tr? v?: {
+  "maPhien": "PH000001",
+  "thongBao": "T?o phi�n th�nh c�ng"
+}
+2026-05-22 16:21:59.910 [Thread-14] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:21:59.910 [Thread-14] INFO  c.m.action.AuctionSessionService - Phiên PH000001 đã mở lúc 2026-05-22T16:22, sẽ đóng lúc 2026-05-22T16:25
+2026-05-22 16:21:59.911 [Thread-14] INFO  c.mycompany.action.AuctionScheduler - Đã mở phiên đấu giá PH000001
+2026-05-22 16:22:09.174 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-22 16:22:09.188 [WebSocketWorker-27] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:55414
+2026-05-22 16:22:09.192 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket connection opened
+2026-05-22 16:22:09.193 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? WebSocket connected ? ready to receive real-time updates
+2026-05-22 16:22:09.195 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: CONNECTED
+2026-05-22 16:22:09.195 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent JOIN: {"action":"JOIN","phienId":"PH000001","email":"hgtrung007@gmail.com"}
+2026-05-22 16:22:09.195 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ? ?? k?t n?i v� JOIN ph�ng: PH000001
+2026-05-22 16:22:09.196 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ?? Unknown event: CONNECTED
+2026-05-22 16:22:09.197 [WebSocketWorker-27] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email hgtrung007@gmail.com joining room: PH000001
+2026-05-22 16:22:09.198 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: USER_JOINED
+2026-05-22 16:22:09.198 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? User joined: hgtrung007@gmail.com
+2026-05-22 16:22:09.510 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.3087E7}
+2026-05-22 16:22:09.542 [WebSocketWorker-27] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:22:09.543 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.3087E7
+2026-05-22 16:22:09.544 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:09.545 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.3087E7,"timestamp":1779441729543,"status":"SUCCESS","currentPrice":1.3087E7,"fullName":"Trung"}
+2026-05-22 16:22:09.556 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.3087E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:10.647 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.3873E7}
+2026-05-22 16:22:10.648 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:10.649 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.3873E7
+2026-05-22 16:22:10.651 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:10.652 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.3873E7,"timestamp":1779441730648,"status":"SUCCESS","currentPrice":1.3873E7,"fullName":"Trung"}
+2026-05-22 16:22:10.653 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.3873E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:11.216 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.4706E7}
+2026-05-22 16:22:11.217 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:11.218 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.4706E7
+2026-05-22 16:22:11.219 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:11.219 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.4706E7,"timestamp":1779441731217,"status":"SUCCESS","currentPrice":1.4706E7,"fullName":"Trung"}
+2026-05-22 16:22:11.220 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.4706E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:11.791 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.5589E7}
+2026-05-22 16:22:11.792 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:11.792 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.5589E7
+2026-05-22 16:22:11.794 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:11.795 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.5589E7,"timestamp":1779441731792,"status":"SUCCESS","currentPrice":1.5589E7,"fullName":"Trung"}
+2026-05-22 16:22:11.796 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.5589E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:12.495 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.6525E7}
+2026-05-22 16:22:12.495 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:12.497 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.6525E7
+2026-05-22 16:22:12.498 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:12.498 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.6525E7,"timestamp":1779441732496,"status":"SUCCESS","currentPrice":1.6525E7,"fullName":"Trung"}
+2026-05-22 16:22:12.499 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.6525E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:13.207 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.7517E7}
+2026-05-22 16:22:13.208 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:13.209 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.7517E7
+2026-05-22 16:22:13.210 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:13.211 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.7517E7,"timestamp":1779441733208,"status":"SUCCESS","currentPrice":1.7517E7,"fullName":"Trung"}
+2026-05-22 16:22:13.212 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.7517E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:14.688 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.8569E7}
+2026-05-22 16:22:14.689 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:14.690 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.8569E7
+2026-05-22 16:22:14.691 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:14.691 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.8569E7,"timestamp":1779441734689,"status":"SUCCESS","currentPrice":1.8569E7,"fullName":"Trung"}
+2026-05-22 16:22:14.692 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.8569E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:16.238 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.9684E7}
+2026-05-22 16:22:16.239 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:16.240 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.9684E7
+2026-05-22 16:22:16.240 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:16.240 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.9684E7,"timestamp":1779441736239,"status":"SUCCESS","currentPrice":1.9684E7,"fullName":"Trung"}
+2026-05-22 16:22:16.241 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.9684E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:16.359 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":2.0866E7}
+2026-05-22 16:22:16.360 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:16.361 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=2.0866E7
+2026-05-22 16:22:16.362 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:16.362 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":2.0866E7,"timestamp":1779441736360,"status":"SUCCESS","currentPrice":2.0866E7,"fullName":"Trung"}
+2026-05-22 16:22:16.362 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 2.0866E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:16.502 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":2.2118E7}
+2026-05-22 16:22:16.503 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:16.504 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=2.2118E7
+2026-05-22 16:22:16.505 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:16.505 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":2.2118E7,"timestamp":1779441736503,"status":"SUCCESS","currentPrice":2.2118E7,"fullName":"Trung"}
+2026-05-22 16:22:16.507 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 2.2118E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:16.783 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":2.3446E7}
+2026-05-22 16:22:16.784 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:16.785 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=2.3446E7
+2026-05-22 16:22:16.786 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:16.786 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":2.3446E7,"timestamp":1779441736785,"status":"SUCCESS","currentPrice":2.3446E7,"fullName":"Trung"}
+2026-05-22 16:22:16.787 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 2.3446E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:16.919 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":2.4853E7}
+2026-05-22 16:22:16.920 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:16.921 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=2.4853E7
+2026-05-22 16:22:16.921 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:16.922 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":2.4853E7,"timestamp":1779441736920,"status":"SUCCESS","currentPrice":2.4853E7,"fullName":"Trung"}
+2026-05-22 16:22:16.923 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 2.4853E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:17.072 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":2.6345E7}
+2026-05-22 16:22:17.074 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:17.075 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=2.6345E7
+2026-05-22 16:22:17.076 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:17.077 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":2.6345E7,"timestamp":1779441737074,"status":"SUCCESS","currentPrice":2.6345E7,"fullName":"Trung"}
+2026-05-22 16:22:17.077 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 2.6345E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:17.200 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":2.7926E7}
+2026-05-22 16:22:17.200 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:17.200 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=2.7926E7
+2026-05-22 16:22:17.202 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:17.202 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":2.7926E7,"timestamp":1779441737200,"status":"SUCCESS","currentPrice":2.7926E7,"fullName":"Trung"}
+2026-05-22 16:22:17.202 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 2.7926E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:17.327 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":2.9602E7}
+2026-05-22 16:22:17.329 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:17.332 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=2.9602E7
+2026-05-22 16:22:17.333 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:17.334 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":2.9602E7,"timestamp":1779441737332,"status":"SUCCESS","currentPrice":2.9602E7,"fullName":"Trung"}
+2026-05-22 16:22:17.336 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 2.9602E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:17.607 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":3.1379E7}
+2026-05-22 16:22:17.608 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:17.608 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=3.1379E7
+2026-05-22 16:22:17.610 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:17.610 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":3.1379E7,"timestamp":1779441737608,"status":"SUCCESS","currentPrice":3.1379E7,"fullName":"Trung"}
+2026-05-22 16:22:17.610 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 3.1379E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:22:17.760 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":3.3262E7}
+2026-05-22 16:22:17.761 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:22:17.762 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=3.3262E7
+2026-05-22 16:22:17.763 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:22:17.764 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":3.3262E7,"timestamp":1779441737761,"status":"SUCCESS","currentPrice":3.3262E7,"fullName":"Trung"}
+2026-05-22 16:22:17.765 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 3.3262E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:24:48.695 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":3.5258E7}
+2026-05-22 16:24:48.696 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:24:48.697 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=3.5258E7
+2026-05-22 16:24:48.698 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:24:48.698 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":3.5258E7,"timestamp":1779441888696,"status":"SUCCESS","currentPrice":3.5258E7,"fullName":"Trung"}
+2026-05-22 16:24:48.699 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 3.5258E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:24:56.742 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":3.7374E7}
+2026-05-22 16:24:56.744 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:24:56.745 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=3.7374E7
+2026-05-22 16:24:56.746 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:24:56.746 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":3.7374E7,"timestamp":1779441896744,"status":"SUCCESS","currentPrice":3.7374E7,"fullName":"Trung"}
+2026-05-22 16:24:56.747 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 3.7374E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:24:59.118 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":3.9617E7}
+2026-05-22 16:24:59.120 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:24:59.120 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=3.9617E7
+2026-05-22 16:24:59.122 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:24:59.122 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":3.9617E7,"timestamp":1779441899120,"status":"SUCCESS","currentPrice":3.9617E7,"fullName":"Trung"}
+2026-05-22 16:24:59.123 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 3.9617E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:24:59.950 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":4.1995E7}
+2026-05-22 16:24:59.951 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:24:59.952 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=4.1995E7
+2026-05-22 16:24:59.952 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:24:59.953 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":4.1995E7,"timestamp":1779441899951,"status":"SUCCESS","currentPrice":4.1995E7,"fullName":"Trung"}
+2026-05-22 16:24:59.953 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 4.1995E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:00.591 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":4.4515E7}
+2026-05-22 16:25:00.592 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:00.593 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=4.4515E7
+2026-05-22 16:25:00.593 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:00.594 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":4.4515E7,"timestamp":1779441900592,"status":"SUCCESS","currentPrice":4.4515E7,"fullName":"Trung"}
+2026-05-22 16:25:00.595 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 4.4515E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:01.536 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":4.7186E7}
+2026-05-22 16:25:01.537 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:01.538 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=4.7186E7
+2026-05-22 16:25:01.539 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:01.540 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":4.7186E7,"timestamp":1779441901537,"status":"SUCCESS","currentPrice":4.7186E7,"fullName":"Trung"}
+2026-05-22 16:25:01.541 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 4.7186E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:02.127 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":5.0018E7}
+2026-05-22 16:25:02.128 [WebSocketWorker-27] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:02.129 [WebSocketWorker-27] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=5.0018E7
+2026-05-22 16:25:02.129 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:02.129 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":5.0018E7,"timestamp":1779441902128,"status":"SUCCESS","currentPrice":5.0018E7,"fullName":"Trung"}
+2026-05-22 16:25:02.130 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 5.0018E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:03.958 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Disconnecting from WebSocket server...
+2026-05-22 16:25:03.964 [WebSocketConnectReadThread-283] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket closed: 
+2026-05-22 16:25:03.964 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000001
+2026-05-22 16:25:03.965 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000001
+2026-05-22 16:25:03.966 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:55414
+2026-05-22 16:25:07.964 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-22 16:25:07.970 [WebSocketWorker-28] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:55563
+2026-05-22 16:25:07.970 [WebSocketConnectReadThread-427] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket connection opened
+2026-05-22 16:25:07.971 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? WebSocket connected ? ready to receive real-time updates
+2026-05-22 16:25:07.971 [WebSocketConnectReadThread-427] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: CONNECTED
+2026-05-22 16:25:07.971 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent JOIN: {"action":"JOIN","phienId":"PH000001","email":"hgtrung007@gmail.com"}
+2026-05-22 16:25:07.972 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ?? Unknown event: CONNECTED
+2026-05-22 16:25:07.972 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ? ?? k?t n?i v� JOIN ph�ng: PH000001
+2026-05-22 16:25:07.972 [WebSocketWorker-28] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email hgtrung007@gmail.com joining room: PH000001
+2026-05-22 16:25:07.973 [WebSocketConnectReadThread-427] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: USER_JOINED
+2026-05-22 16:25:07.974 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? User joined: hgtrung007@gmail.com
+2026-05-22 16:25:11.030 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":5.302E7}
+2026-05-22 16:25:11.077 [WebSocketWorker-28] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:25:11.079 [WebSocketWorker-28] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:11.079 [WebSocketWorker-28] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=5.302E7
+2026-05-22 16:25:11.079 [WebSocketConnectReadThread-427] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:11.079 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":5.302E7,"timestamp":1779441911079,"status":"SUCCESS","currentPrice":5.302E7,"fullName":"Trung"}
+2026-05-22 16:25:11.080 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 5.302E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:12.063 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Disconnecting from WebSocket server...
+2026-05-22 16:25:12.064 [WebSocketConnectReadThread-427] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket closed: 
+2026-05-22 16:25:12.064 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000001
+2026-05-22 16:25:12.065 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000001
+2026-05-22 16:25:12.065 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:55563
+2026-05-22 16:25:13.998 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-22 16:25:14.009 [WebSocketWorker-29] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:55571
+2026-05-22 16:25:14.009 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket connection opened
+2026-05-22 16:25:14.010 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? WebSocket connected ? ready to receive real-time updates
+2026-05-22 16:25:14.010 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: CONNECTED
+2026-05-22 16:25:14.010 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent JOIN: {"action":"JOIN","phienId":"PH000001","email":"hgtrung007@gmail.com"}
+2026-05-22 16:25:14.010 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ? ?? k?t n?i v� JOIN ph�ng: PH000001
+2026-05-22 16:25:14.011 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ?? Unknown event: CONNECTED
+2026-05-22 16:25:14.011 [WebSocketWorker-29] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email hgtrung007@gmail.com joining room: PH000001
+2026-05-22 16:25:14.012 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: USER_JOINED
+2026-05-22 16:25:14.012 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? User joined: hgtrung007@gmail.com
+2026-05-22 16:25:19.423 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":5.6202E7}
+2026-05-22 16:25:19.459 [WebSocketWorker-29] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:25:19.460 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:19.460 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=5.6202E7
+2026-05-22 16:25:19.460 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:19.461 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":5.6202E7,"timestamp":1779441919460,"status":"SUCCESS","currentPrice":5.6202E7,"fullName":"Trung"}
+2026-05-22 16:25:19.461 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 5.6202E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:21.271 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":5.9575E7}
+2026-05-22 16:25:21.271 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:21.272 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=5.9575E7
+2026-05-22 16:25:21.273 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:21.273 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":5.9575E7,"timestamp":1779441921272,"status":"SUCCESS","currentPrice":5.9575E7,"fullName":"Trung"}
+2026-05-22 16:25:21.274 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 5.9575E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:22.855 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":6.315E7}
+2026-05-22 16:25:22.855 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:22.856 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=6.315E7
+2026-05-22 16:25:22.857 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:22.857 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":6.315E7,"timestamp":1779441922855,"status":"SUCCESS","currentPrice":6.315E7,"fullName":"Trung"}
+2026-05-22 16:25:22.858 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 6.315E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:23.023 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":6.6939E7}
+2026-05-22 16:25:23.023 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:23.024 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=6.6939E7
+2026-05-22 16:25:23.025 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:23.026 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":6.6939E7,"timestamp":1779441923024,"status":"SUCCESS","currentPrice":6.6939E7,"fullName":"Trung"}
+2026-05-22 16:25:23.027 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 6.6939E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:23.167 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":7.0956E7}
+2026-05-22 16:25:23.168 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:23.169 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=7.0956E7
+2026-05-22 16:25:23.169 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:23.170 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":7.0956E7,"timestamp":1779441923168,"status":"SUCCESS","currentPrice":7.0956E7,"fullName":"Trung"}
+2026-05-22 16:25:23.171 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 7.0956E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:23.310 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":7.5214E7}
+2026-05-22 16:25:23.311 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:23.311 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=7.5214E7
+2026-05-22 16:25:23.312 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:23.312 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":7.5214E7,"timestamp":1779441923311,"status":"SUCCESS","currentPrice":7.5214E7,"fullName":"Trung"}
+2026-05-22 16:25:23.312 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 7.5214E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:23.447 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":7.9727E7}
+2026-05-22 16:25:23.448 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:23.448 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=7.9727E7
+2026-05-22 16:25:23.449 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:23.449 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":7.9727E7,"timestamp":1779441923448,"status":"SUCCESS","currentPrice":7.9727E7,"fullName":"Trung"}
+2026-05-22 16:25:23.450 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 7.9727E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:23.614 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":8.4511E7}
+2026-05-22 16:25:23.615 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:23.615 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=8.4511E7
+2026-05-22 16:25:23.616 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:23.616 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":8.4511E7,"timestamp":1779441923615,"status":"SUCCESS","currentPrice":8.4511E7,"fullName":"Trung"}
+2026-05-22 16:25:23.617 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 8.4511E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:23.751 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":8.9582E7}
+2026-05-22 16:25:23.752 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:23.752 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=8.9582E7
+2026-05-22 16:25:23.753 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:23.754 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":8.9582E7,"timestamp":1779441923752,"status":"SUCCESS","currentPrice":8.9582E7,"fullName":"Trung"}
+2026-05-22 16:25:23.754 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 8.9582E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:23.879 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":9.4957E7}
+2026-05-22 16:25:23.879 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:23.880 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=9.4957E7
+2026-05-22 16:25:23.881 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:23.881 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":9.4957E7,"timestamp":1779441923880,"status":"SUCCESS","currentPrice":9.4957E7,"fullName":"Trung"}
+2026-05-22 16:25:23.881 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 9.4957E7 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:24.023 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.00655E8}
+2026-05-22 16:25:24.024 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:24.024 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.00655E8
+2026-05-22 16:25:24.025 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:24.025 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.00655E8,"timestamp":1779441924024,"status":"SUCCESS","currentPrice":1.00655E8,"fullName":"Trung"}
+2026-05-22 16:25:24.026 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.00655E8 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:24.167 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.06695E8}
+2026-05-22 16:25:24.168 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:24.169 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.06695E8
+2026-05-22 16:25:24.170 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:24.170 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.06695E8,"timestamp":1779441924168,"status":"SUCCESS","currentPrice":1.06695E8,"fullName":"Trung"}
+2026-05-22 16:25:24.171 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.06695E8 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:24.319 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.13097E8}
+2026-05-22 16:25:24.319 [WebSocketWorker-29] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:25:24.320 [WebSocketWorker-29] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.13097E8
+2026-05-22 16:25:24.320 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:25:24.321 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.13097E8,"timestamp":1779441924319,"status":"SUCCESS","currentPrice":1.13097E8,"fullName":"Trung"}
+2026-05-22 16:25:24.322 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.13097E8 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:25:29.278 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Disconnecting from WebSocket server...
+2026-05-22 16:25:29.279 [WebSocketConnectReadThread-438] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket closed: 
+2026-05-22 16:25:29.279 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000001
+2026-05-22 16:25:29.279 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000001
+2026-05-22 16:25:29.280 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:55571
+2026-05-22 16:25:59.579 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? AuctionWebSocketClient initialized for: ws://localhost:8081
+2026-05-22 16:25:59.585 [WebSocketWorker-30] INFO  c.m.s.w.AuctionWebSocketServer - ✅ Client connected: /127.0.0.1:55651
+2026-05-22 16:25:59.588 [WebSocketConnectReadThread-505] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket connection opened
+2026-05-22 16:25:59.588 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? WebSocket connected ? ready to receive real-time updates
+2026-05-22 16:25:59.588 [WebSocketConnectReadThread-505] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: CONNECTED
+2026-05-22 16:25:59.588 [BiddingRoom-WebSocket-Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent JOIN: {"action":"JOIN","phienId":"PH000001","email":"hgtrung007@gmail.com"}
+2026-05-22 16:25:59.589 [BiddingRoom-WebSocket-Thread] INFO  c.m.controller.BiddingRoomController - ? ?? k?t n?i v� JOIN ph�ng: PH000001
+2026-05-22 16:25:59.589 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ?? Unknown event: CONNECTED
+2026-05-22 16:25:59.589 [WebSocketWorker-30] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Email hgtrung007@gmail.com joining room: PH000001
+2026-05-22 16:25:59.589 [WebSocketConnectReadThread-505] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: USER_JOINED
+2026-05-22 16:25:59.590 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? User joined: hgtrung007@gmail.com
+2026-05-22 16:26:02.758 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Sent BID: {"action":"BID","phienId":"PH000001","email":"hgtrung007@gmail.com","giaRa":1.19883E8}
+2026-05-22 16:26:02.779 [WebSocketWorker-30] DEBUG c.mycompany.utils.DatabaseConnection - ✅ Đã cài đặt PRAGMA và tắt AutoCommit cho Connection
+2026-05-22 16:26:02.779 [WebSocketWorker-30] INFO  c.m.action.AuctionSessionService - ℹ️ Cùng user đặt lại, không hoàn tiền
+2026-05-22 16:26:02.780 [WebSocketWorker-30] INFO  c.m.utils.AuctionRepositorySQLite - ✅ Lưu bid record: phien=PH000001, user=PPTT000001, gia=1.19883E8
+2026-05-22 16:26:02.780 [WebSocketConnectReadThread-505] INFO  c.m.s.w.AuctionWebSocketClient - ? Received message: BID_RESULT
+2026-05-22 16:26:02.781 [JavaFX Application Thread] INFO  c.m.s.c.AuctionWebSocketControllerAdapter - ? onBidResult status=SUCCESS, message={"event":"BID_RESULT","email":"hgtrung007@gmail.com","giaRa":1.19883E8,"timestamp":1779441962779,"status":"SUCCESS","currentPrice":1.19883E8,"fullName":"Trung"}
+2026-05-22 16:26:02.781 [JavaFX Application Thread] INFO  c.m.controller.BiddingRoomController - ? syncNewPrice UI updated: 1.19883E8 VN?, ng??i d?n ??u: Trung
+2026-05-22 16:26:03.911 [JavaFX Application Thread] INFO  c.m.s.w.AuctionWebSocketClient - ? Disconnecting from WebSocket server...
+2026-05-22 16:26:03.912 [WebSocketConnectReadThread-505] INFO  c.m.s.w.AuctionWebSocketClient - ? WebSocket closed: 
+2026-05-22 16:26:03.912 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🗑️ Room cleaned up: PH000001
+2026-05-22 16:26:03.912 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - ⚠️ No clients in room: PH000001
+2026-05-22 16:26:03.912 [WebSocketSelector-35] INFO  c.m.s.w.AuctionWebSocketServer - 🚪 Client disconnected: /127.0.0.1:55651
+2026-05-22 16:26:10.905 [pool-1-thread-4] INFO  c.m.server.controller.UserController - [LoginController] 🚪 User hgtrung007@gmail.com logging out...
+2026-05-22 16:26:10.908 [pool-1-thread-4] INFO  c.m.s.s.OnlineUsersManager - [OnlineUsersManager] 🚪 User hgtrung007@gmail.com logged out
+2026-05-22 16:26:10.908 [pool-1-thread-4] INFO  c.m.server.controller.UserController - [LoginController] ✅ User hgtrung007@gmail.com successfully logged out
+2026-05-22 16:26:10.911 [JavaFX Application Thread] INFO  com.mycompany.utils.ApiClient - [ApiClient] ? Logout successful
+2026-05-22 16:26:10.943 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ?ang ?�ng t?t c? database connections...
+2026-05-22 16:26:10.953 [Thread-3] INFO  c.mycompany.utils.DatabaseConnection - ? ?? gi?i ph�ng to�n b? t�i nguy�n Database.
+2026-05-22 16:26:12.356 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - Đang đóng tất cả database connections...
+2026-05-22 16:26:12.360 [Thread-0] INFO  c.mycompany.utils.DatabaseConnection - ✅ Đã giải phóng toàn bộ tài nguyên Database.

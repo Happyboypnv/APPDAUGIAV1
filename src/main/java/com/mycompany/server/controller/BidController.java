@@ -169,7 +169,7 @@ public class BidController {
 
         // Bước 5: Kiểm tra người bán tự đặt giá
         if (nguoiDat.getUserId().equals(phien.getSeller().getUserId())) {
-            guiPhanHoi(exchange, 400, bug("Người bán không thể tự đặt giá cho phiên của mình"));
+            guiPhanHoi(exchange, 400, bug("Bạn là người tạo phiên, không thể tự đặt giá!"));
             return;
         }
 
@@ -266,7 +266,7 @@ public class BidController {
                     } catch (Exception ignored) {
                         thoiGianHienThi = thoiGianRaw != null ? thoiGianRaw : "";
                     }
-                    lichSu.add(new LuotDatGia(stt++, tenNguoiDat + " — " +
+                    lichSu.add(new LuotDatGia(stt++, tenNguoiDat + ": " +
                         String.format("%,.0f", giaTra) + " VNĐ",
                         rs.getString("ma_nguoi_dung"),
                         thoiGianHienThi));
