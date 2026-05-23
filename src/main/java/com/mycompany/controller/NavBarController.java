@@ -325,4 +325,17 @@ public class NavBarController implements Initializable { // Controller chung cho
             logger.error("Lỗi cleanup BiddingRoom: " + e.getMessage());
         }
     }
+    /**
+     * Điều hướng đến trang Lịch sử giao dịch
+     */
+    @FXML
+    public void navigateToTransactionHistory(MouseEvent event) {
+        // TODO: Implement khi có trang Transaction History
+        // Tạm thời hiện thông báo chưa hoàn thiện
+        HandleNavigationAndAlert.getInstance().showAlert(
+            Alert.AlertType.INFORMATION,
+            "Thông báo",
+            "Tính năng lịch sử giao dịch đang được phát triển!"
+        );
+    }
 }

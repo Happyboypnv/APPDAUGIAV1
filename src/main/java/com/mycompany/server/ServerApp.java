@@ -48,8 +48,6 @@ public class ServerApp {
   private static final String SIGN_IN = "/api/users/login";
   private static final String SIGN_UP = "/api/users/register";
   private static final String SIGN_OUT = "/api/users/logout";
-  private static final String UPDATE_BALANCE = "/api/users/balance";
-  private static final String UPDATE_BANK_ACCOUNT = "/api/users/bank-account";
 
   /**
    * Cổng server lắng nghe
@@ -83,7 +81,7 @@ public class ServerApp {
           if (!session.getStartTime().isAfter(now)) {
             // Da den hoac qua gio mo -> mo ngay (delay=0)
             registry.add(session);
-            scheduler.setASAuction(session);
+              scheduler.setASAuction(session);
             countOpened++;
             logger.info("Mo ngay phien {} (startTime={} da qua)", session.getSessionId(), session.getStartTime());
           } else {
@@ -175,8 +173,21 @@ public class ServerApp {
       userController.handleLogout(exchange);
     });
 
-    //Update Balance
-    server.createContext(UPDATE_BALANCE, exchange -> {
+    /**
+     * PUT /api/users/profile  →  cập nhật thông tin cá nhân (name, phone, address, ...)
+     */
+    server.createContext("/api/users/profile", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+      userController.handleUpdateProfile(exchange);
+    });
+
+    /**
+     * PUT /api/users/balance  →  cập nhật số dư (nạp / rút tiền)
+     */
+    server.createContext("/api/users/balance", exchange -> {
       if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
         xuLyCors(exchange);
         return;
@@ -184,12 +195,15 @@ public class ServerApp {
       userController.handleUpdateBalance(exchange);
     });
 
-    server.createContext(UPDATE_BANK_ACCOUNT, exchange -> {
+    /**
+     * POST /api/users/change-password  →  đổi mật khẩu
+     */
+    server.createContext("/api/users/change-password", exchange -> {
       if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
         xuLyCors(exchange);
         return;
       }
-      userController.handleUpdateBankAccount(exchange);
+      userController.handleChangePassword(exchange);
     });
 
     /**
@@ -205,7 +219,7 @@ public class ServerApp {
       // Bỏ qua nếu là /api/users/login hoặc /api/users/register
       // (đã được xử lý bởi context riêng ở trên)
       String path = exchange.getRequestURI().getPath();
-      if (path.equals(SIGN_IN) || path.equals(SIGN_UP) || path.equals(UPDATE_BALANCE) || path.equals(UPDATE_BANK_ACCOUNT)) {
+      if (path.equals(SIGN_IN) || path.equals(SIGN_UP)) {
         // Java HttpServer ưu tiên context cụ thể hơn, nhưng thêm check để an toàn
         exchange.sendResponseHeaders(404, -1);
         return;

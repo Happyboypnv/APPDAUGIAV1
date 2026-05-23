@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
 
 public class LoginAction {
-    private final IUserRepository userRepository = new UserRepositorySQLite();
     private final Lock lock = new ReentrantLock();
 
     private LoginAction() {}
@@ -157,47 +156,34 @@ public class LoginAction {
                             ? response.getThongBao() : "Sai email hoặc mật khẩu!");
                     }
 
-                    // Lấy thông tin user từ DB local để tạo object NguoiDung
-                    // Refresh connection trước để đảm bảo thấy data server vừa INSERT
-                    DatabaseConnection.refreshConnection();
-                    // Retry tối đa 3 lần để tránh race condition khi server vừa INSERT xong
+                    // Lấy thông tin user từ SERVER (không còn đọc DB local)
+                    String serverToken = response.getToken();
+                    String userJson = ApiClient.getUser(email, serverToken);
                     User user = null;
-                    for (int attempt = 0; attempt < 3 && user == null; attempt++) {
-                        if (attempt > 0) {
-                            try { Thread.sleep(200); } catch (InterruptedException ie) {
-                                Thread.currentThread().interrupt();
-                            }
-                        }
-                        user = userRepository.findByEmail(email);
-                    }
-
-                    if (user == null) {
-                        // Server xác thực thành công nhưng DB local chưa có user
-                        // (trường hợp client và server dùng DB khác nhau hoặc chưa sync)
-                        // Dùng thông tin từ server response để tạo session tạm thời
+                    if (userJson != null) {
+                        com.google.gson.JsonObject obj =
+                            new com.google.gson.Gson().fromJson(userJson, com.google.gson.JsonObject.class);
                         user = new User(
-                            response.getHoTen(),
-                            email,
-                            "",
-                            ""
-                        );
-                        // Thử lưu vào local DB (sẽ bị skip nếu email đã tồn tại — không sao)
-                        userRepository.save(user);
-                        // Re-fetch to get the generated local ID
-                        user = userRepository.findByEmail(email);
+                            obj.has("hoTen") ? obj.get("hoTen").getAsString() : response.getHoTen(),
+                            email, "", "");
+                        if (obj.has("maNguoiDung")) user.setUserId(obj.get("maNguoiDung").getAsString());
+                        if (obj.has("soDienThoai")) user.setPhoneNumber(obj.get("soDienThoai").getAsString());
+                        if (obj.has("diaChi"))      user.setAddress(obj.get("diaChi").getAsString());
+                        if (obj.has("ngaySinh"))    user.setDateOfBirth(obj.get("ngaySinh").getAsString());
+                        if (obj.has("soDuKhaDung")) user.setAvailableBalance(obj.get("soDuKhaDung").getAsDouble());
                     }
-
                     if (user == null) {
-                        throw new UserException("Không thể tạo session người dùng!");
+                        // Fallback: dùng thông tin tối thiểu từ login response
+                        user = new User(response.getHoTen(), email, "", "");
                     }
 
-                    String localToken = TokenUtil.generateToken(user); // ✅ no longer crashes
+                    String localToken = TokenUtil.generateToken(user);
 
                     // Lưu session
                     SessionManager.getInstance().setSession(user, localToken);
 
                     // Lưu server token (USER_...) — dùng để gọi API tạo phiên, đặt giá
-                    SessionManager.getInstance().setServerToken(response.getToken());
+                    SessionManager.getInstance().setServerToken(serverToken);
 
                     HandleNavigationAndAlert.getInstance().showAlert(
                             Alert.AlertType.INFORMATION, "Thành công",

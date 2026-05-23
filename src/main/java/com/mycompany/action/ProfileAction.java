@@ -2,9 +2,9 @@ package com.mycompany.action;
 
 import com.mycompany.exception.Login.*;
 import com.mycompany.models.User;
-import com.mycompany.utils.IUserRepository;
+import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.SessionManager;
-import com.mycompany.utils.UserRepositorySQLite;
+import com.mycompany.utils.UserProfileUpdater;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -48,7 +48,6 @@ import org.slf4j.LoggerFactory;
  * - Business Logic Layer: Tách logic validation ra khỏi UI
  */
 public class ProfileAction {
-    private final IUserRepository khoLuuTruNguoiDung = new UserRepositorySQLite();
     private static final Logger logger = LoggerFactory.getLogger(ProfileAction.class);
 
     private ProfileAction() {}
@@ -204,7 +203,12 @@ public class ProfileAction {
 
         User currentUser = SessionManager.getInstance().getCurrentUser();
         currentUser.setAvatarPath("image/" + uniqueFileName);
-        khoLuuTruNguoiDung.update(currentUser);
+
+        // Gửi lên server thay vì ghi thẳng vào DB local
+        java.util.Map<String, String> updates = new java.util.HashMap<>();
+        updates.put("avatar", "image/" + uniqueFileName);
+        UserProfileUpdater.getInstance().updateUser(updates);
+
         logger.info("Cập nhật avatar path thành công: " + "image/" + uniqueFileName);
 
         // Return relative path for storage in database

@@ -164,11 +164,11 @@ public class UserController {
 
         // 🔹 NEW: Add user to online users list
         OnlineUserSession session = onlineUsersManager.addOrReplaceSession(
-            req.getEmail(),
-            token,
-            deviceId,
-            clientIp,
-            userAgent
+                req.getEmail(),
+                token,
+                deviceId,
+                clientIp,
+                userAgent
         );
 
         // 🔹 NEW: Broadcast login event via WebSocket (will be implemented later)
@@ -179,7 +179,7 @@ public class UserController {
         response.setSessionStatus("SUCCESS");
 
         logger.info("[LoginController] ✅ User {} logged in successfully. Device: {}",
-            req.getEmail(), deviceId);
+                req.getEmail(), deviceId);
 
         guiPhanHoi(exchange, 200, gson.toJson(response));
     }
@@ -217,9 +217,9 @@ public class UserController {
 
         // Kiểm tra các trường bắt buộc
         if (req == null || req.getHoTen() == null || req.getEmail() == null
-            || req.getMatKhau() == null || req.getNgaySinh() == null) {
+                || req.getMatKhau() == null || req.getNgaySinh() == null) {
             guiPhanHoi(exchange, 400,
-                gson.toJson(new LoginResponse("Thiếu thông tin bắt buộc (hoTen, email, matKhau, ngaySinh)")));
+                    gson.toJson(new LoginResponse("Thiếu thông tin bắt buộc (hoTen, email, matKhau, ngaySinh)")));
             return;
         }
 
@@ -227,7 +227,7 @@ public class UserController {
         // kiemTraEmail() trả true nếu email CHƯA có → cho phép đăng ký
         if (!khoNguoiDung.isEmailAvailable(req.getEmail())) {
             guiPhanHoi(exchange, 400,
-                gson.toJson(new LoginResponse("Email đã tồn tại trong hệ thống")));
+                    gson.toJson(new LoginResponse("Email đã tồn tại trong hệ thống")));
             return;
         }
 
@@ -237,10 +237,10 @@ public class UserController {
 
         // Tạo NguoiDung với mật khẩu đã hash
         User nguoiDungMoi = new User(
-            req.getHoTen(),
-            req.getEmail(),
-            matKhauDaHash,   // lưu hash, KHÔNG lưu plain text
-            req.getNgaySinh()
+                req.getHoTen(),
+                req.getEmail(),
+                matKhauDaHash,   // lưu hash, KHÔNG lưu plain text
+                req.getNgaySinh()
         );
         // Set salt vào object để KhoLuuTruNguoiDungSQLite lưu vào DB
         nguoiDungMoi.setSalt(salt);
@@ -293,7 +293,7 @@ public class UserController {
         User nguoiDung = khoNguoiDung.findByEmail(email);
         if (nguoiDung == null) {
             guiPhanHoi(exchange, 404,
-                gson.toJson(new LoginResponse("Không tìm thấy người dùng: " + email)));
+                    gson.toJson(new LoginResponse("Không tìm thấy người dùng: " + email)));
             return;
         }
 
@@ -432,90 +432,6 @@ public class UserController {
     // PHƯƠNG THỨC HỖ TRỢ
     // =========================================================
 
-    public void handleUpdateBalance(HttpExchange exchange) throws IOException {
-        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
-            return;
-        }
-        if (!exchange.getRequestMethod().equalsIgnoreCase("PUT")) {
-            guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận PUT\"}");
-            return;
-        }
-
-        String body = docBody(exchange);
-        com.google.gson.JsonObject req;
-        try {
-            req = gson.fromJson(body, com.google.gson.JsonObject.class);
-        } catch (Exception e) {
-            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Body JSON không hợp lệ\"}");
-            return;
-        }
-
-        if (req == null || !req.has("email") || !req.has("balance")) {
-            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Thiếu email hoặc balance\"}");
-            return;
-        }
-
-        String email = req.get("email").getAsString();
-        double newBalance = req.get("balance").getAsDouble();
-
-        User nguoiDung = khoNguoiDung.findByEmail(email);
-        if (nguoiDung == null) {
-            guiPhanHoi(exchange, 404, "{\"thongBao\":\"Không tìm thấy người dùng: " + email + "\"}");
-            return;
-        }
-
-        nguoiDung.setAvailableBalance(newBalance);
-        khoNguoiDung.update(nguoiDung);
-
-        logger.info("[UserController] ✅ Cập nhật số dư {} → {}", email, newBalance);
-        guiPhanHoi(exchange, 200, "{\"thongBao\":\"Cập nhật số dư thành công\"}");
-    }
-
-    public void handleUpdateBankAccount(HttpExchange exchange) throws IOException {
-        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
-            return;
-        }
-        if (!exchange.getRequestMethod().equalsIgnoreCase("PUT")) {
-            guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận PUT\"}");
-            return;
-        }
-
-        String body = docBody(exchange);
-        com.google.gson.JsonObject req;
-        try {
-            req = gson.fromJson(body, com.google.gson.JsonObject.class);
-        } catch (Exception e) {
-            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Body JSON không hợp lệ\"}");
-            return;
-        }
-
-        if (req == null || !req.has("email") || !req.has("bankAccount") || !req.has("bankName")) {
-            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Thiếu email, bankAccount hoặc bankName\"}");
-            return;
-        }
-
-        String email = req.get("email").getAsString();
-        String bankAccount = req.get("bankAccount").getAsString();
-        String bankName = req.get("bankName").getAsString();
-
-        User nguoiDung = khoNguoiDung.findByEmail(email);
-        if (nguoiDung == null) {
-            guiPhanHoi(exchange, 404, "{\"thongBao\":\"Không tìm thấy người dùng: " + email + "\"}");
-            return;
-        }
-
-        nguoiDung.setBankAccountNumber(bankAccount);
-        nguoiDung.setBankName(bankName);
-        khoNguoiDung.update(nguoiDung);
-
-        logger.info("[UserController] Cập nhật STK {} -> {} ({})", email, bankAccount, bankName);
-        guiPhanHoi(exchange, 200, "{\"thongBao\":\"Cập nhật tài khoản ngân hàng thành công\"}");
-    }
-
     /**
      * Lấy IP address của client từ HTTP request headers
      *
@@ -585,6 +501,217 @@ public class UserController {
             // }
         } catch (Exception e) {
             logger.warn("[UserController] Failed to broadcast login event: " + e.getMessage());
+        }
+    }
+
+    // =========================================================
+    // API 5: PUT /api/users/profile  →  cập nhật thông tin cá nhân
+    // =========================================================
+
+    /**
+     * handleUpdateProfile — Cập nhật name, phone, address, bankAccount, bankName, avatar.
+     *
+     *   Method : PUT
+     *   URL    : /api/users/profile
+     *   Headers: Authorization: Bearer <token>
+     *   Body   : { "name":"...", "phone":"...", "address":"...",
+     *              "bankAccount":"...", "bankName":"...", "avatar":"..." }
+     *             (chỉ cần gửi các field muốn cập nhật)
+     *   Response 200: { "thongBao": "Cập nhật thành công" }
+     *   Response 401: thiếu / sai token
+     *   Response 404: không tìm thấy user
+     */
+    public void handleUpdateProfile(HttpExchange exchange) throws IOException {
+        if (!exchange.getRequestMethod().equalsIgnoreCase("PUT")) {
+            guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận PUT\"}");
+            return;
+        }
+
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
+            return;
+        }
+        String token = authHeader.substring("Bearer ".length());
+
+        // Lấy email từ token (định dạng USER_email_timestamp)
+        String email = extractEmailFromToken(token);
+        if (email == null) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Token không hợp lệ\"}");
+            return;
+        }
+
+        User nguoiDung = khoNguoiDung.findByEmail(email);
+        if (nguoiDung == null) {
+            guiPhanHoi(exchange, 404, "{\"thongBao\":\"Không tìm thấy người dùng\"}");
+            return;
+        }
+
+        String body = docBody(exchange);
+        UpdateProfileRequest req = gson.fromJson(body, UpdateProfileRequest.class);
+
+        if (req.name        != null) nguoiDung.setFullName(req.name);
+        if (req.phone       != null) nguoiDung.setPhoneNumber(req.phone);
+        if (req.address     != null) nguoiDung.setAddress(req.address);
+        if (req.bankAccount != null) nguoiDung.setBankAccountNumber(req.bankAccount);
+        if (req.bankName    != null) nguoiDung.setBankName(req.bankName);
+        if (req.avatar      != null) nguoiDung.setAvatarPath(req.avatar);
+
+        khoNguoiDung.update(nguoiDung);
+        logger.info("[UserController] ✅ Cập nhật profile: {}", email);
+        guiPhanHoi(exchange, 200, "{\"thongBao\":\"Cập nhật thành công\"}");
+    }
+
+    // =========================================================
+    // API 6: PUT /api/users/balance  →  cập nhật số dư
+    // =========================================================
+
+    /**
+     * handleUpdateBalance — Nạp hoặc rút tiền (client gửi số dư MỚI sau khi tính toán).
+     *
+     *   Method : PUT
+     *   URL    : /api/users/balance
+     *   Headers: Authorization: Bearer <token>
+     *   Body   : { "balance": 1500000.0 }
+     *   Response 200: { "thongBao": "Cập nhật số dư thành công", "balance": 1500000.0 }
+     *   Response 400: balance âm
+     *   Response 401: thiếu / sai token
+     *   Response 404: không tìm thấy user
+     */
+    public void handleUpdateBalance(HttpExchange exchange) throws IOException {
+        if (!exchange.getRequestMethod().equalsIgnoreCase("PUT")) {
+            guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận PUT\"}");
+            return;
+        }
+
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
+            return;
+        }
+        String token = authHeader.substring("Bearer ".length());
+
+        String email = extractEmailFromToken(token);
+        if (email == null) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Token không hợp lệ\"}");
+            return;
+        }
+
+        User nguoiDung = khoNguoiDung.findByEmail(email);
+        if (nguoiDung == null) {
+            guiPhanHoi(exchange, 404, "{\"thongBao\":\"Không tìm thấy người dùng\"}");
+            return;
+        }
+
+        String body = docBody(exchange);
+        UpdateBalanceRequest req = gson.fromJson(body, UpdateBalanceRequest.class);
+
+        if (req.balance < 0) {
+            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Số dư không được âm\"}");
+            return;
+        }
+
+        nguoiDung.setAvailableBalance(req.balance);
+        khoNguoiDung.update(nguoiDung);
+        logger.info("[UserController] ✅ Cập nhật balance {} → {}", email, req.balance);
+        guiPhanHoi(exchange, 200,
+            "{\"thongBao\":\"Cập nhật số dư thành công\",\"balance\":" + req.balance + "}");
+    }
+
+    // =========================================================
+    // INNER CLASSES: Request bodies cho các API mới
+    // =========================================================
+
+    // =========================================================
+    // API 7: POST /api/users/change-password  →  đổi mật khẩu
+    // =========================================================
+
+    /**
+     * handleChangePassword — Xác minh mật khẩu cũ và cập nhật mật khẩu mới.
+     *
+     *   Method : POST
+     *   URL    : /api/users/change-password
+     *   Headers: Authorization: Bearer <token>
+     *   Body   : { "oldPassword": "...", "newPassword": "..." }
+     *   Response 200: { "thongBao": "Đổi mật khẩu thành công" }
+     *   Response 400: mật khẩu cũ sai
+     *   Response 401: thiếu / sai token
+     *   Response 404: không tìm thấy user
+     */
+    public void handleChangePassword(HttpExchange exchange) throws IOException {
+        if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+            guiPhanHoi(exchange, 405, "{\"thongBao\":\"Chỉ chấp nhận POST\"}");
+            return;
+        }
+
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Cần đăng nhập trước\"}");
+            return;
+        }
+        String token = authHeader.substring("Bearer ".length());
+
+        String email = extractEmailFromToken(token);
+        if (email == null) {
+            guiPhanHoi(exchange, 401, "{\"thongBao\":\"Token không hợp lệ\"}");
+            return;
+        }
+
+        User nguoiDung = khoNguoiDung.findByEmail(email);
+        if (nguoiDung == null) {
+            guiPhanHoi(exchange, 404, "{\"thongBao\":\"Không tìm thấy người dùng\"}");
+            return;
+        }
+
+        String body = docBody(exchange);
+        ChangePasswordRequest req = gson.fromJson(body, ChangePasswordRequest.class);
+
+        // Xác minh mật khẩu cũ (hash + salt trong DB)
+        if (!khoNguoiDung.verifyCredentials(email, req.oldPassword)) {
+            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Mật khẩu cũ không đúng!\"}");
+            return;
+        }
+
+        // Hash mật khẩu mới và lưu
+        String newSalt = PasswordEncoder.createSalt();
+        String hashedNewPassword = PasswordEncoder.passwordEncoder(req.newPassword, newSalt);
+        nguoiDung.setPassword(hashedNewPassword);
+        nguoiDung.setSalt(newSalt);
+        khoNguoiDung.update(nguoiDung);
+
+        logger.info("[UserController] ✅ Đổi mật khẩu thành công: {}", email);
+        guiPhanHoi(exchange, 200, "{\"thongBao\":\"Đổi mật khẩu thành công\"}");
+    }
+
+    private static class ChangePasswordRequest {
+        String oldPassword;
+        String newPassword;
+    }
+
+    private static class UpdateProfileRequest {
+        String name;
+        String phone;
+        String address;
+        String bankAccount;
+        String bankName;
+        String avatar;
+    }
+
+    private static class UpdateBalanceRequest {
+        double balance;
+    }
+
+    /**
+     * Trích xuất email từ token định dạng: USER_email@example.com_timestamp
+     */
+    private String extractEmailFromToken(String token) {
+        try {
+            if (!token.startsWith("USER_")) return null;
+            int lastUnderscore = token.lastIndexOf("_");
+            if (lastUnderscore <= 5) return null;
+            return token.substring(5, lastUnderscore); // bỏ "USER_" đầu và "_timestamp" cuối
+        } catch (Exception e) {
+            return null;
         }
     }
 

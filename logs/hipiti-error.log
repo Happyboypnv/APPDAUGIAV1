@@ -118,3 +118,4 @@
 2026-05-23 01:28:01.166 [Thread-2238] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
 2026-05-23 01:30:28.628 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
 2026-05-23 01:36:03.179 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
+2026-05-23 07:04:34.545 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.

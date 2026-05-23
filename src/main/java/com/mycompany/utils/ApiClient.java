@@ -31,7 +31,7 @@ import com.mycompany.server.dto.LichSuDatGiaResponse;
 public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
-    private static final String BASE_URL = "http://26.71.32.210:8080";
+    private static final String BASE_URL = "http://localhost:8080";
     private static final Gson gson = new Gson();
 
     // ============================================================
@@ -107,7 +107,7 @@ public class ApiClient {
 
                 if (response.getSessionStatus().equals("ALREADY_IN_USE")) {
                     logger.warn("[ApiClient] ⚠️ User already logged in on another device: {}",
-                        response.getExistingDeviceId());
+                            response.getExistingDeviceId());
                 }
             }
 
@@ -164,7 +164,7 @@ public class ApiClient {
         String responseJson = guiGet("/api/auctions", null);
         if (responseJson == null) return new java.util.ArrayList<>();
         java.lang.reflect.Type listType =
-            new com.google.gson.reflect.TypeToken<List<PhienDauGiaDTO>>(){}.getType();
+                new com.google.gson.reflect.TypeToken<List<PhienDauGiaDTO>>(){}.getType();
         try {
             return gson.fromJson(responseJson, listType);
         } catch (Exception e) {
@@ -293,73 +293,89 @@ public class ApiClient {
         return guiGet("/api/users/" + email, token);
     }
 
-    public static boolean updateBalance(String email, double newBalance, String token) {
+    // ============================================================
+    // CẬP NHẬT THÔNG TIN CÁ NHÂN
+    // ============================================================
+
+    /**
+     * Gọi PUT /api/users/profile
+     * Gửi các field muốn thay đổi (null = giữ nguyên).
+     *
+     * @param updates  Map key-value: "name", "phone", "address", "bankAccount", "bankName", "avatar"
+     * @param token    token đăng nhập
+     * @return true nếu server trả về 200
+     */
+    public static boolean updateProfile(java.util.Map<String, String> updates, String token) {
         try {
+            // Chuyển map thành JSON object
             com.google.gson.JsonObject body = new com.google.gson.JsonObject();
-            body.addProperty("email", email);
-            body.addProperty("balance", newBalance);
-            String jsonBody = gson.toJson(body);
+            if (updates.containsKey("name"))        body.addProperty("name",        updates.get("name"));
+            if (updates.containsKey("phone"))       body.addProperty("phone",       updates.get("phone"));
+            if (updates.containsKey("address"))     body.addProperty("address",     updates.get("address"));
+            if (updates.containsKey("bankAccount")) body.addProperty("bankAccount", updates.get("bankAccount"));
+            if (updates.containsKey("bankName"))    body.addProperty("bankName",    updates.get("bankName"));
+            if (updates.containsKey("avatar"))      body.addProperty("avatar",      updates.get("avatar"));
 
-            URL url = new URL(BASE_URL + "/api/users/balance");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
-            conn.setRequestMethod("PUT");
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-            if (token != null) {
-                conn.setRequestProperty("Authorization", "Bearer " + token);
-            }
-
-            byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(bodyBytes);
-            }
-
-            int statusCode = conn.getResponseCode();
-            conn.disconnect();
-            return statusCode == 200;
-
+            String responseJson = guiPut("/api/users/profile", gson.toJson(body), token);
+            return responseJson != null;
         } catch (Exception e) {
-            logger.error("[ApiClient] ❌ Lỗi updateBalance: " + e.getMessage());
+            logger.error("[ApiClient] Lỗi updateProfile: " + e.getMessage());
             return false;
         }
     }
 
-    public static boolean updateBankAccount(String email, String bankAccount, String bankName, String token) {
+    // ============================================================
+    // CẬP NHẬT SỐ DƯ
+    // ============================================================
+
+    /**
+     * Gọi PUT /api/users/balance
+     * Client tính số dư mới rồi gửi lên, server lưu vào DB.
+     *
+     * @param newBalance  số dư mới sau khi nạp/rút
+     * @param token       token đăng nhập
+     * @return true nếu server trả về 200
+     */
+    public static boolean updateBalance(double newBalance, String token) {
         try {
-            com.google.gson.JsonObject body = new com.google.gson.JsonObject();
-            body.addProperty("email", email);
-            body.addProperty("bankAccount", bankAccount);
-            body.addProperty("bankName", bankName);
-            String jsonBody = gson.toJson(body);
-
-            URL url = new URL(BASE_URL + "/api/users/bank-account");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
-            conn.setRequestMethod("PUT");
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-            if (token != null) {
-                conn.setRequestProperty("Authorization", "Bearer " + token);
-            }
-
-            byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(bodyBytes);
-            }
-
-            int statusCode = conn.getResponseCode();
-            conn.disconnect();
-            return statusCode == 200;
+            String jsonBody = "{\"balance\":" + newBalance + "}";
+            String responseJson = guiPut("/api/users/balance", jsonBody, token);
+            return responseJson != null;
         } catch (Exception e) {
-            logger.error("[ApiClient] ❌ Lỗi updateBankAccount: " + e.getMessage());
+            logger.error("[ApiClient] Lỗi updateBalance: " + e.getMessage());
             return false;
         }
     }
+
+    // ============================================================
+    // ĐỔI MẬT KHẨU
+    // ============================================================
+
+    /**
+     * Gọi POST /api/users/change-password
+     * Server xác minh mật khẩu cũ, hash mật khẩu mới và lưu vào DB.
+     *
+     * @param oldPassword  mật khẩu hiện tại (plain text)
+     * @param newPassword  mật khẩu mới (plain text)
+     * @param token        token đăng nhập
+     * @return true nếu đổi thành công, false nếu mật khẩu cũ sai hoặc lỗi mạng
+     */
+    public static boolean changePassword(String oldPassword, String newPassword, String token) {
+        try {
+            com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+            body.addProperty("oldPassword", oldPassword);
+            body.addProperty("newPassword", newPassword);
+            String responseJson = guiPost("/api/users/change-password", gson.toJson(body), token);
+            if (responseJson == null) return false;
+            com.google.gson.JsonObject resp = gson.fromJson(responseJson, com.google.gson.JsonObject.class);
+            // Server trả 200 nếu thành công; guiPost trả null khi 4xx/5xx
+            return resp != null;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi changePassword: " + e.getMessage());
+            return false;
+        }
+    }
+
 
 
     // ============================================================
@@ -404,8 +420,8 @@ public class ApiClient {
             int statusCode = conn.getResponseCode();
             // Nếu status 4xx/5xx thì đọc error stream thay vì input stream
             InputStream is = (statusCode >= 200 && statusCode < 300)
-                ? conn.getInputStream()
-                : conn.getErrorStream();
+                    ? conn.getInputStream()
+                    : conn.getErrorStream();
 
             if (is == null) return null;
 
@@ -416,14 +432,14 @@ public class ApiClient {
         } catch (java.net.ConnectException ce) {
             // Connection refused - server not responding
             String errorMsg = "[ApiClient] ❌ Cannot connect to server at " + BASE_URL +
-                " (Connection refused). Make sure the server is running on port 8080.";
+                            " (Connection refused). Make sure the server is running on port 8080.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
         } catch (java.net.SocketTimeoutException ste) {
             // Server not responding in time
             String errorMsg = "[ApiClient] ❌ Server timeout at " + BASE_URL +
-                " (no response). Server might be overloaded or unresponsive.";
+                            " (no response). Server might be overloaded or unresponsive.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
@@ -443,6 +459,46 @@ public class ApiClient {
             String errorMsg = "[ApiClient] ❌ Error POST " + path + ": " + e.getClass().getSimpleName() + " - " + e.getMessage();
             logger.error(errorMsg);
             System.err.println(errorMsg);
+            return null;
+        }
+    }
+
+    /**
+     * Gửi HTTP PUT request
+     */
+    private static String guiPut(String path, String jsonBody, String token) {
+        try {
+            URL url = new URL(BASE_URL + path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            if (token != null) {
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+            }
+            byte[] bodyBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(bodyBytes);
+            }
+            int statusCode = conn.getResponseCode();
+            InputStream is = (statusCode >= 200 && statusCode < 300)
+                    ? conn.getInputStream()
+                    : conn.getErrorStream();
+            if (is == null) return null;
+            String response = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            conn.disconnect();
+            return (statusCode >= 200 && statusCode < 300) ? response : null;
+        } catch (java.net.ConnectException ce) {
+            logger.error("[ApiClient] ❌ Cannot connect to server at " + BASE_URL);
+            return null;
+        } catch (java.net.SocketTimeoutException ste) {
+            logger.error("[ApiClient] ❌ Server timeout at " + BASE_URL);
+            return null;
+        } catch (Exception e) {
+            logger.error("[ApiClient] ❌ Error PUT " + path + ": " + e.getMessage());
             return null;
         }
     }
@@ -472,8 +528,8 @@ public class ApiClient {
 
             int statusCode = conn.getResponseCode();
             InputStream is = (statusCode >= 200 && statusCode < 300)
-                ? conn.getInputStream()
-                : conn.getErrorStream();
+                    ? conn.getInputStream()
+                    : conn.getErrorStream();
 
             if (is == null) return null;
 
@@ -484,14 +540,14 @@ public class ApiClient {
         } catch (java.net.ConnectException ce) {
             // Connection refused - server not responding
             String errorMsg = "[ApiClient] ❌ Cannot connect to server at " + BASE_URL +
-                " (Connection refused). Make sure the server is running on port 8080.";
+                            " (Connection refused). Make sure the server is running on port 8080.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
         } catch (java.net.SocketTimeoutException ste) {
             // Server not responding in time
             String errorMsg = "[ApiClient] ❌ Server timeout at " + BASE_URL +
-                " (no response). Server might be overloaded or unresponsive.";
+                            " (no response). Server might be overloaded or unresponsive.";
             logger.error(errorMsg);
             System.err.println(errorMsg);
             return null;
