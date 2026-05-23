@@ -281,6 +281,18 @@ public class NavBarController implements Initializable { // Controller chung cho
         }
     }
 
+    @FXML
+    public void navigateToTransactionHistory(MouseEvent event) {
+        try {
+            HandleNavigationAndAlert.getInstance().goToTransactionHistory(event);
+        } catch (IOException e) {
+            e.printStackTrace();
+            HandleNavigationAndAlert.getInstance().showAlert(
+                Alert.AlertType.ERROR, "Lỗi giao diện",
+                "Tải giao diện lịch sử giao dịch không thành công!");
+        }
+    }
+
     /**
      * PHƯƠNG THỨC: goToCreatePhienDauGia(MouseEvent event)
      * MỤC ĐÍCH: Điều hướng đến trang tạo phiên đấu giá
