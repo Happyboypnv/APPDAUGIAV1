@@ -337,4 +337,8 @@ public class NavBarController implements Initializable { // Controller chung cho
             logger.error("Lỗi cleanup BiddingRoom: " + e.getMessage());
         }
     }
+    /**
+     * Điều hướng đến trang Lịch sử giao dịch
+     */
+
 }
