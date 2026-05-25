@@ -5,6 +5,7 @@ import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.models.AuctionSession;
 import com.mycompany.server.dto.PhienDauGiaDTO;
 import com.mycompany.utils.ApiClient;
+import com.mycompany.utils.AuctionRepositorySQLite;
 import com.mycompany.utils.SessionManager;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -57,9 +59,17 @@ public class ReviewPageController implements Initializable {
     @FXML
     private VBox instructionText;
 
+    @FXML
+    private Button approveBtn;
+
+    @FXML
+    private Button denyBtn;
+
     private File selectedImageFile = null;
 
     private PhienDauGiaDTO currentAuctionSession;
+
+    private final AuctionRepositorySQLite auctionRepositorySQLite = new AuctionRepositorySQLite();
 
 
 
@@ -80,7 +90,29 @@ public class ReviewPageController implements Initializable {
         danhMucSanPham.setEditable(false);
 
     }
+    @FXML
+    public void accept(ActionEvent event) {
+        AuctionSession auctionSession = auctionRepositorySQLite.findById(currentAuctionSession.maPhien);
+        AuctionSessionService.getInstance().acceptAuctionRequest(auctionSession);
+        try {
+            HandleNavigationAndAlert.getInstance().handleGoToReviewAuction(event);
+        } catch (IOException e) {
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi hiển thị", "Không load được trang danh sách chờ!");
+            e.printStackTrace();
+        }
+    }
 
+    @FXML
+    public void deny(ActionEvent event) {
+        AuctionSession auctionSession = auctionRepositorySQLite.findById(currentAuctionSession.maPhien);
+        AuctionSessionService.getInstance().denyAuctionRequest(auctionSession);
+        try {
+            HandleNavigationAndAlert.getInstance().handleGoToReviewAuction(event);
+        } catch (IOException e) {
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi hiển thị", "Không load được trang danh sách chờ!");
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void handleSelectImage() {
@@ -108,37 +140,7 @@ public class ReviewPageController implements Initializable {
         }
     }
 
-    // Guard chống double-submit: khi đang xử lý thì bỏ qua mọi click tiếp theo
-    private boolean isSubmitting = false;
 
-
-    private String validateForm(String tenPhien, String tenSanPham, String danhMuc,
-                                String giaStr, LocalDate ngayBD, LocalDate ngayKT,
-                                int gioBD, int phutBD, int gioKT, int phutKT) {
-        if (tenPhien.isEmpty() || tenSanPham.isEmpty())
-            return "Tên phiên và tên sản phẩm không được để trống!";
-        if (danhMuc == null) return "Vui lòng chọn danh mục!";
-
-        try {
-            double gia = Double.parseDouble(giaStr);
-            if (gia < 1000) return "Giá khởi điểm phải từ 1.000 VNĐ!";
-        } catch (NumberFormatException e) {
-            return "Giá khởi điểm phải là số!";
-        }
-
-        if (ngayBD == null || ngayKT == null)
-            return "Vui lòng chọn đầy đủ ngày bắt đầu/kết thúc!";
-
-        LocalDateTime start = LocalDateTime.of(ngayBD, LocalTime.of(gioBD, phutBD));
-        LocalDateTime end = LocalDateTime.of(ngayKT, LocalTime.of(gioKT, phutKT));
-
-        if (!end.isAfter(start)) return "Thời gian kết thúc phải sau thời gian bắt đầu!";
-
-        long giay = Duration.between(start, end).getSeconds();
-        if (giay < 60) return "Thời gian đấu giá tối thiểu là 1 phút!";
-
-        return null;
-    }
 
     public void setCurrentAuctionSession (PhienDauGiaDTO phien) {
         this.currentAuctionSession = phien;

@@ -65,9 +65,12 @@ public class AuctionScheduler {
                     logger.info("⏸️  Phiên {} chưa được duyệt nhưng startTime đã qua, kiểm tra lại sau 30s", maPhien);
                     auctionSessionService.pollDeferredAuction(phien, 0);
                 } else {
-                    logger.info("⏭️  Phiên {} chưa được duyệt, chờ admin duyệt trước startTime", maPhien);
-                    // Wait - either admin approves or startTime arrives
-                    // Schedule a check that monitors for decision
+                    logger.info("⏭️  Phiên {} chưa được duyệt, sẽ bắt đầu đếm chờ duyệt sau {}s", maPhien, delay);
+                    ScheduledFuture<?> future = executor.schedule(() -> {
+                        auctionSessionService.pollDeferredAuction(phien, 0);
+                        asFutures.remove(maPhien);
+                    }, delay, TimeUnit.SECONDS);
+                    asFutures.put(maPhien, future);
                 }
                 break;
 

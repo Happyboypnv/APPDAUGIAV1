@@ -83,9 +83,9 @@
                                                                 <Font size="16.0" />
                                                             </font>
                                                         </Label>
-                                                        <TextArea fx:id="moTaField" prefHeight="150.0" prefWidth="200.0" promptText="Nhập mô tả sản phẩm..." stylesheets="@../style/TextArea.css" wrapText="true">
+                                                        <TextArea fx:id="moTaField" prefHeight="150.0" prefWidth="200.0" stylesheets="@../style/TextArea.css" wrapText="true">
                                                             <styleClass>
-                                                                <String fx:value="text-area" />
+                                                                <String fx:value="text-area-custom" />
                                                             </styleClass>
                                                         </TextArea>
                                                     </children>
@@ -183,8 +183,8 @@
                                         <Insets top="20.0" />
                                     </VBox.margin>
                                     <children>
-                                        <Button mnemonicParsing="false" prefHeight="45.0" prefWidth="120.0" styleClass="button-cancel" stylesheets="@../style/Button.css" text="Hủy" />
-                                        <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="173.0" styleClass="button-create" stylesheets="@../style/Button.css" text="Duyệt" />
+                                        <Button fx:id="denyBtn" mnemonicParsing="false" onAction="#deny" prefHeight="45.0" prefWidth="120.0" styleClass="button-cancel" stylesheets="@../style/Button.css" text="Hủy" />
+                                        <Button fx:id="approveBtn" mnemonicParsing="false" onAction="#accept" prefHeight="50.0" prefWidth="173.0" styleClass="button-create" stylesheets="@../style/Button.css" text="Duyệt" />
                                     </children>
                                 </HBox>
                             </children>

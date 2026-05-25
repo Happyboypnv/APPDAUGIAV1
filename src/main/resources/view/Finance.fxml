@@ -23,7 +23,7 @@
             <Insets right="60.0" top="30.0" />
          </StackPane.margin>
       </Label>
-      <ComboBox fx:id="banks" prefWidth="150.0" styleClass="combo-box" stylesheets="@../style/dropDown.css" StackPane.alignment="TOP_CENTER">
+      <ComboBox fx:id="banks" prefWidth="150.0" styleClass="combo-box-popup" stylesheets="@../style/dropDown.css" StackPane.alignment="TOP_CENTER">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

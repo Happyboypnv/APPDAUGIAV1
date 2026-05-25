@@ -243,6 +243,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
            auction.setClosed(rs.getBoolean("is_closed"));
            auction.setAccepted(rs.getInt("is_accepted")); // ✅ Load is_accepted from DB
            auction.setWinner(winner);
+           logger.info("[AuctionRepositorySQLite] Tìm thấy phiên {} - {} - {}", auctionId, rs.getString("ten_phien"), rs.getString("trang_thai"));
            return auction;
         }
       }

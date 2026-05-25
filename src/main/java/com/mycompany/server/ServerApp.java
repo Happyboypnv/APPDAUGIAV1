@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -59,8 +60,7 @@ public class ServerApp {
     // ===== KHỞI TẠO DATABASE =====
     DatabaseConnection.initialize();
     AuctionRepositorySQLite auctionRepo = new AuctionRepositorySQLite();
-    UserRepositorySQLite userRepositorySQLite = new UserRepositorySQLite();
-//    userRepositorySQLite.authorizeAdmin("adminphong@gmail.com");
+
     try {
       Map<String, AuctionSession> allSessions = auctionRepo.findAll();
       AuctionScheduler scheduler = AuctionScheduler.getInstance();

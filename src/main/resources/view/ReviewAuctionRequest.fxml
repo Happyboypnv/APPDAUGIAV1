@@ -21,7 +21,7 @@
                     </padding>
                     <children>
 
-                        <Label text="Danh sách phiên đấu giá" textFill="WHITE">
+                        <Label text="Yêu cầu duyệt phiên" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="31.0" />
                             </font>

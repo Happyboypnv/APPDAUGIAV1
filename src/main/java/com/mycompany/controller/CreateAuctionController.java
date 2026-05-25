@@ -78,14 +78,15 @@ public class CreateAuctionController implements Initializable {
   }
 
   private void setupSpinners() {
+    LocalTime defaultStartTime = LocalTime.now().plusMinutes(1);
     // Giờ: 0 - 23
-    gioBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour()));
+    gioBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, defaultStartTime.getHour()));
     gioKetThucSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour()));
     gioBatDauSpinner.setEditable(true);
     gioKetThucSpinner.setEditable(true);
 
     // Phút: 0 - 59, bước nhảy 1
-    phutBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
+    phutBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, defaultStartTime.getMinute()));
     phutKetThucSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
     phutBatDauSpinner.setEditable(true);
     phutKetThucSpinner.setEditable(true);
@@ -109,7 +110,7 @@ public class CreateAuctionController implements Initializable {
   }
 
   private void setupDatePickers() {
-    ngayBatDauPicker.setValue(LocalDate.now());
+    ngayBatDauPicker.setValue(LocalDateTime.now().plusMinutes(1).toLocalDate());
     ngayKetThucPicker.setValue(LocalDate.now().plusDays(1));
     previewImage.setVisible(false);
   }
@@ -310,6 +311,8 @@ public class CreateAuctionController implements Initializable {
 
     LocalDateTime start = LocalDateTime.of(ngayBD, LocalTime.of(gioBD, phutBD));
     LocalDateTime end = LocalDateTime.of(ngayKT, LocalTime.of(gioKT, phutKT));
+
+    if (!start.isAfter(LocalDateTime.now())) return "Thời gian bắt đầu phải ở tương lai!";
 
     if (!end.isAfter(start)) return "Thời gian kết thúc phải sau thời gian bắt đầu!";
 

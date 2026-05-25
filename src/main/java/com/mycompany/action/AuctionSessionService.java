@@ -60,8 +60,7 @@ public class AuctionSessionService {
      */
     public void startAuction(AuctionSession auction) {
         synchronized (getLock(auction.getSessionId())) {
-            if (auction.getStatus() != SessionStatus.WAITING) return;
-
+            if (auction.getStatus() != SessionStatus.WAITING || auction.isAccepted() != 1) return;
             LocalDateTime now = LocalDateTime.now();
 
             // Nếu phiên có startTime được lên lịch sẵn: giữ nguyên startTime,
@@ -252,12 +251,14 @@ public class AuctionSessionService {
      */
     public void acceptAuctionRequest(AuctionSession auction) {
         synchronized (getLock(auction.getSessionId())) {
-            if (auction.getStatus() != SessionStatus.WAITING) {
-                logger.warn("❌ Không thể duyệt phiên {} vì không ở trạng thái WAITING", auction.getSessionId());
+            if (auction.getStatus() != SessionStatus.PENDING) {
+                logger.warn("❌ Không thể duyệt phiên {} vì không ở trạng thái PENDING", auction.getSessionId());
                 return;
             }
             auction.setAccepted(1);
+            auction.setStatus(SessionStatus.WAITING);
             auctionRepository.update(auction);
+            auctionScheduler.setASAuction(auction);
             
             // Check if startTime has already passed - if so, start immediately
             LocalDateTime now = LocalDateTime.now();
@@ -277,12 +278,13 @@ public class AuctionSessionService {
      */
     public void denyAuctionRequest(AuctionSession auction) {
         synchronized (getLock(auction.getSessionId())) {
-            if (auction.getStatus() != SessionStatus.WAITING) {
-                logger.warn("❌ Không thể từ chối phiên {} vì không ở trạng thái WAITING", auction.getSessionId());
+            if (auction.getStatus() != SessionStatus.PENDING) {
+                logger.warn("❌ Không thể từ chối phiên {} vì không ở trạng thái PENDING", auction.getSessionId());
                 return;
             }
             // Set isAccepted = 0 to explicitly mark as DENIED
             auction.setAccepted(0);
+            auction.setStatus(SessionStatus.CANCELLED);
             auctionRepository.update(auction);
             auctionScheduler.cancelAS(auction);
             logger.info("✅ Phiên {} đã bị admin từ chối (isAccepted = 0)", auction.getSessionId());
@@ -313,6 +315,21 @@ public class AuctionSessionService {
                     AuctionSession latestAuction = auctionRepository.findById(maPhien);
                     if (latestAuction == null) {
                         logger.warn("❌ Phiên {} không tìm thấy trong DB", maPhien);
+                        return;
+                    }
+
+                    LocalDateTime now = LocalDateTime.now();
+                    if (latestAuction.getStartTime() != null && latestAuction.getStartTime().isAfter(now)) {
+                        long secondsUntilStart = Duration.between(now, latestAuction.getStartTime()).getSeconds();
+                        logger.info("⏭️  Phiên {} chưa đến startTime, bắt đầu đếm chờ duyệt sau {}s", maPhien, secondsUntilStart);
+                        auctionScheduler.setASAuction(latestAuction);
+                        return;
+                    }
+
+                    if (latestAuction.getStatus() == SessionStatus.IN_PROGRESS ||
+                            latestAuction.getStatus() == SessionStatus.PAID ||
+                            latestAuction.getStatus() == SessionStatus.CANCELLED) {
+                        logger.info("ℹ️  Dừng poll phiên {} vì trạng thái hiện tại là {}", maPhien, latestAuction.getStatus());
                         return;
                     }
                     
