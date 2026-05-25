@@ -270,6 +270,32 @@ public class ApiClient {
     }
 
     /**
+     * Gọi PUT /api/auctions/{maPhien}/start để duyệt và bắt đầu phiên đấu giá.
+     * @return true nếu thành công
+     */
+    public static boolean startAuction(String maPhien, String token) {
+        try {
+            URL url = new URL(BASE_URL + "/api/auctions/" + maPhien + "/start");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setDoOutput(true);
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write("{}".getBytes(StandardCharsets.UTF_8));
+            }
+            int status = conn.getResponseCode();
+            conn.disconnect();
+            return status == 200;
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi startAuction: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Gọi DELETE /api/auctions/{maPhien} để xóa phiên đã hủy/kết thúc.
      * @return true nếu xóa thành công
      */

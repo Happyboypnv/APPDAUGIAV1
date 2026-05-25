@@ -1,6 +1,8 @@
 package com.mycompany.server.controller;
 
 import com.google.gson.Gson;
+import com.mycompany.models.Admin;
+import com.mycompany.models.Person;
 import com.mycompany.models.User;
 import com.mycompany.server.dto.LoginRequest;
 import com.mycompany.server.dto.LoginResponse;
@@ -419,15 +421,19 @@ public class UserController {
         String diaChi;
         String soDienThoai;
         double soDuKhaDung;
+        String role; // "ADMIN" hoặc "USER"
 
-        ThongTinNguoiDung(User nd) {
+        ThongTinNguoiDung(Person nd) {
             this.maNguoiDung  = nd.getUserId();
             this.hoTen        = nd.getFullName();
             this.email        = nd.getEmail();
             this.ngaySinh     = nd.getDateOfBirth();
-            this.diaChi       = nd.getAddress();
-            this.soDienThoai  = nd.getPhoneNumber();
-            this.soDuKhaDung  = nd.getAvailableBalance();
+            this.role         = (nd instanceof Admin) ? "ADMIN" : "USER";
+            if (nd instanceof User u) {
+                this.diaChi       = u.getAddress();
+                this.soDienThoai  = u.getPhoneNumber();
+                this.soDuKhaDung  = u.getAvailableBalance();
+            }
         }
     }
 

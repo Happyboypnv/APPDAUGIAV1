@@ -98,6 +98,44 @@ public class HandleNavigationAndAlert {
         window.show();
     }
 
+    public void handleGoToAdminHome(ActionEvent event) throws IOException {
+        Node node = (Node) event.getSource();
+        Scene scene = node.getScene();
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/Admin_Home.fxml"));
+        Stage stage = (Stage) scene.getWindow();
+        scene.setRoot(root);
+    }
+
+    public void goToAdminProfile(MouseEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/AdminProfile.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
+    public void goToUserManagement(MouseEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/UserManagement.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
+    public void goToAuctionRequests(MouseEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewAuctionRequest.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
+    public void handleGoToReviewAuction(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewAuctionRequest.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
+    public void goToAuctionReview(MouseEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewPage.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
     public void goToChangePassword(ActionEvent event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
         StackPane changeRoot = FXMLLoader.load(getClass().getResource("/resources/view/ChangePassword.fxml"));
@@ -133,5 +171,30 @@ public class HandleNavigationAndAlert {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void handleGoToAdminHome(MouseEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/Admin_Home.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
+    public void handleGoToUserList(MouseEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/UserManagement.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
+    public void handleGoToReviewAuction(MouseEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewAuctionRequest.fxml"));
+        Scene scene = ((Node) event.getSource()).getScene();
+        scene.setRoot(root);
+    }
+
+    public void goToAdminProfile(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/AdminProfile.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

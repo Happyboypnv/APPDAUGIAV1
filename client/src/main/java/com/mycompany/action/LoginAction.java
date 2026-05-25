@@ -1,6 +1,7 @@
 package com.mycompany.action;
 
 import com.mycompany.exception.Login.*;
+import com.mycompany.models.Person;
 import com.mycompany.models.User;
 import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.utils.*;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.time.*;
+import com.mycompany.models.Admin;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
@@ -159,38 +161,58 @@ public class LoginAction {
                     // Lấy thông tin user từ SERVER (không còn đọc DB local)
                     String serverToken = response.getToken();
                     String userJson = ApiClient.getUser(email, serverToken);
-                    User user = null;
+
+                    // Xác định role trước khi tạo object
+                    com.google.gson.JsonObject obj = null;
+                    Person user = null;
+
+
                     if (userJson != null) {
-                        com.google.gson.JsonObject obj =
-                            new com.google.gson.Gson().fromJson(userJson, com.google.gson.JsonObject.class);
-                        user = new User(
-                            obj.has("hoTen") ? obj.get("hoTen").getAsString() : response.getHoTen(),
-                            email, "", "");
-                        if (obj.has("maNguoiDung")) user.setUserId(obj.get("maNguoiDung").getAsString());
-                        if (obj.has("soDienThoai")) user.setPhoneNumber(obj.get("soDienThoai").getAsString());
-                        if (obj.has("diaChi"))      user.setAddress(obj.get("diaChi").getAsString());
-                        if (obj.has("ngaySinh"))    user.setDateOfBirth(obj.get("ngaySinh").getAsString());
-                        if (obj.has("soDuKhaDung")) user.setAvailableBalance(obj.get("soDuKhaDung").getAsDouble());
+                        obj = new com.google.gson.Gson().fromJson(userJson, com.google.gson.JsonObject.class);
+                        boolean isAdmin = obj.has("role") && "ADMIN".equals(obj.get("role").getAsString());
+                        String hoTen = obj.has("hoTen") ? obj.get("hoTen").getAsString() : response.getHoTen();
+
+                        if (isAdmin) {
+                            user = new Admin(hoTen, email, "", "");
+                        } else {
+                            User u = new User(hoTen, email, "", "");
+                            if (obj.has("maNguoiDung")) u.setUserId(obj.get("maNguoiDung").getAsString());
+                            if (obj.has("soDienThoai")) u.setPhoneNumber(obj.get("soDienThoai").getAsString());
+                            if (obj.has("diaChi"))      u.setAddress(obj.get("diaChi").getAsString());
+                            if (obj.has("ngaySinh"))    u.setDateOfBirth(obj.get("ngaySinh").getAsString());
+                            if (obj.has("soDuKhaDung")) u.setActualBalance(obj.get("soDuKhaDung").getAsDouble());
+                            user = u;
+                        }
                     }
+
                     if (user == null) {
-                        // Fallback: dùng thông tin tối thiểu từ login response
                         user = new User(response.getHoTen(), email, "", "");
                     }
 
-                    String localToken = TokenUtil.generateToken(user);
+                    // Chuẩn bị object User để lưu session (Admin không có balance/phone nên dùng User rỗng)
+                    User userForSession;
+                    if (user instanceof Admin) {
+                        userForSession = new User(user.getFullName(), email, "", "");
+                        if (obj != null && obj.has("maNguoiDung"))
+                            userForSession.setUserId(obj.get("maNguoiDung").getAsString());
+                    } else {
+                        userForSession = (User) user;
+                    }
 
-                    // Lưu session
-                    SessionManager.getInstance().setSession(user, localToken);
-
-                    // Lưu server token (USER_...) — dùng để gọi API tạo phiên, đặt giá
+                    String localToken = TokenUtil.generateToken(userForSession);
+                    SessionManager.getInstance().setSession(userForSession, localToken);
                     SessionManager.getInstance().setServerToken(serverToken);
 
                     HandleNavigationAndAlert.getInstance().showAlert(
-                            Alert.AlertType.INFORMATION, "Thành công",
-                            "Đăng nhập thành công! Chào mừng " + user.getFullName() + ".");
+                        Alert.AlertType.INFORMATION, "Thành công",
+                        "Đăng nhập thành công! Chào mừng " + user.getFullName() + ".");
 
                     try {
-                        HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+                        if (user instanceof Admin) {
+                            HandleNavigationAndAlert.getInstance().handleGoToAdminHome(event);
+                        } else {
+                            HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
