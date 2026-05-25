@@ -21,12 +21,6 @@
                     </padding>
                     <children>
 
-                        <Label fx:id="labelWelcome" text="Xin chào!" textFill="WHITE">
-                            <font>
-                                <Font size="20.0" />
-                            </font>
-                        </Label>
-
                         <Label text="Danh sách phiên đấu giá" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="31.0" />

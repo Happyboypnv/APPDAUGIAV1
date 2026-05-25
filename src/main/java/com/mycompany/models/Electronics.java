@@ -3,7 +3,7 @@ package com.mycompany.models;
 class Electronics extends Items {
 
     public Electronics(String name, String productCode, String description) {
-        super(name, productCode, description, "Electronics");
+        super(name, productCode, description, "Điện tử");
     }
 
     @Override

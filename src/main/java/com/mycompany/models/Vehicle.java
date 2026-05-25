@@ -3,7 +3,7 @@ package com.mycompany.models;
 class Vehicle extends Items {
 
     public Vehicle(String name, String productCode, String description) {
-        super(name, productCode, description, "Vehicle");
+        super(name, productCode, description, "Xe cộ");
     }
 
     @Override

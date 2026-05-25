@@ -59,6 +59,8 @@ public class ServerApp {
     // ===== KHỞI TẠO DATABASE =====
     DatabaseConnection.initialize();
     AuctionRepositorySQLite auctionRepo = new AuctionRepositorySQLite();
+    UserRepositorySQLite userRepositorySQLite = new UserRepositorySQLite();
+//    userRepositorySQLite.authorizeAdmin("adminphong@gmail.com");
     try {
       Map<String, AuctionSession> allSessions = auctionRepo.findAll();
       AuctionScheduler scheduler = AuctionScheduler.getInstance();
@@ -77,18 +79,42 @@ public class ServerApp {
         if (status == SessionStatus.WAITING) {
           if (session.getStartTime() == null) continue;
 
+          // ✅ NEW: Check admin authorization before scheduling
+          if (session.isAccepted() == 0) {
+            // Admin already denied this auction before server restart
+            scheduler.cancelAS(session);
+            session.setStatus(SessionStatus.CANCELLED);
+            auctionRepo.update(session);
+            logger.info("❌ Phiên {} đã bị admin từ chối trước, đóng ngay", session.getSessionId());
+            continue;
+          }
+
           if (!session.getStartTime().isAfter(now)) {
-            // Da den hoac qua gio mo -> mo ngay (delay=0)
-            registry.add(session);
-            scheduler.setASAuction(session);
-            countOpened++;
-            logger.info("Mo ngay phien {} (startTime={} da qua)", session.getSessionId(), session.getStartTime());
+            // Da den hoac qua gio mo
+            if (session.isAccepted() == 1) {
+              // Admin approved -> start immediately
+              registry.add(session);
+              scheduler.setASAuction(session);
+              countOpened++;
+              logger.info("✅ Mo ngay phien {} (startTime={} da qua)", session.getSessionId(), session.getStartTime());
+            } else {
+              // Admin hasn't decided yet (isAccepted == -1)
+              // -> poll for decision with retry logic
+              registry.add(session);
+              scheduler.setASAuction(session);  // Will trigger polling
+              countOpened++;
+              logger.info("⏸️  Phien {} chap nhan delay: startTime da qua, dang doi admin duyet", session.getSessionId());
+            }
           } else {
             // Chua den gio mo -> len lich binh thuong
             AuctionSessionRegistry.getInstance().add(session);
             scheduler.setASAuction(session);
-            countScheduled++;
-            logger.info("Len lich mo phien {} luc {}", session.getSessionId(), session.getStartTime());
+            if (session.isAccepted() == 1) {
+              countScheduled++;
+              logger.info("✅ Len lich mo phien {} luc {}", session.getSessionId(), session.getStartTime());
+            } else {
+              logger.info("⏭️  Phien {} chap nhan delay: dang cho admin duyet truoc startTime", session.getSessionId());
+            }
           }
 
         } else if (status == SessionStatus.IN_PROGRESS) {
@@ -108,6 +134,8 @@ public class ServerApp {
         }
         // PAID / CANCELLED -> bo qua
       }
+
+
 
       logger.info("========================================");
       logger.info("  KHOI PHUC PHIEN DAU GIA:");

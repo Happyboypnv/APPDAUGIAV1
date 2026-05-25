@@ -157,17 +157,17 @@ public class AdminHomeController implements Initializable {
         }
     }
 
-    /** Format chuỗi thời gian từ server thành dạng dd/MM/yyyy HH:mm */
-    private String formatThoiGian(String raw) {
-        if (raw == null || raw.isBlank()) return "—";
-        for (DateTimeFormatter f : PARSE_FORMATTERS) {
-            try {
-                return LocalDateTime.parse(raw, f).format(DISPLAY_FORMATTER);
-            } catch (DateTimeParseException ignored) {}
+        /** Format chuỗi thời gian từ server thành dạng dd/MM/yyyy HH:mm */
+        private String formatThoiGian(String raw) {
+            if (raw == null || raw.isBlank()) return "—";
+            for (DateTimeFormatter f : PARSE_FORMATTERS) {
+                try {
+                    return LocalDateTime.parse(raw, f).format(DISPLAY_FORMATTER);
+                } catch (DateTimeParseException ignored) {}
+            }
+            // Nếu không parse được, trả về chuỗi gốc (cắt bớt nếu quá dài)
+            return raw.length() > 16 ? raw.substring(0, 16) : raw;
         }
-        // Nếu không parse được, trả về chuỗi gốc (cắt bớt nếu quá dài)
-        return raw.length() > 16 ? raw.substring(0, 16) : raw;
-    }
 
     // ─── Custom Cell ────────────────────────────────────────────────────────────
 

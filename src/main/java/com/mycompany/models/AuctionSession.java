@@ -19,12 +19,13 @@ public class AuctionSession {
   private final List<User> bidderList = Collections.synchronizedList(new ArrayList<>());
   private User seller;
   private User winner;
-  private Product product;
+  private Items product;
   private boolean hasBid = false;
   private volatile SessionStatus status;
   private boolean isClosed = false;
+  private int isAccepted = -1; // ✅ NEW: Admin authorization flag. -1 là admin chưa duyệt. Duyet xong moi la 0 hay 1
 
-  public AuctionSession(String sessionId, String sessionName, Product product,
+  public AuctionSession(String sessionId, String sessionName, Items product,
                         double startingPrice, User seller, int duration) {
     this.sessionId = sessionId;
     this.sessionName = sessionName;
@@ -33,10 +34,10 @@ public class AuctionSession {
     this.seller = seller;
     this.duration = duration;
     priceStep = 0.0;
-    this.status = SessionStatus.WAITING;
+    this.status = SessionStatus.PENDING;
   }
 
-  public AuctionSession(String sessionName, Product product, double startingPrice,
+  public AuctionSession(String sessionName, Items product, double startingPrice,
                         User seller, LocalDateTime startTime, LocalDateTime endTime) {
     this.sessionName = sessionName;
     this.product = product;
@@ -55,9 +56,9 @@ public class AuctionSession {
    * @param startingPrice the starting price
    * @param seller        the seller
    */
-  public AuctionSession(String sessionId, String sessionName, Product product,
+  public AuctionSession(String sessionId, String sessionName, Items product,
                         double startingPrice, User seller) {
-    this(sessionId, sessionName, product, startingPrice, seller, 0);
+    this(sessionId,sessionName, product, startingPrice, seller,0);
   }
 
   public void addBidder(User bidder) {
@@ -128,7 +129,7 @@ public class AuctionSession {
     return this.priceStep;
   }
 
-  public Product getProduct() {
+  public Items getProduct() {
     return this.product;
   }
 
@@ -187,5 +188,13 @@ public class AuctionSession {
 
   public void setClosed(boolean closed) {
     this.isClosed = closed;
+  }
+
+  public int isAccepted() {
+    return this.isAccepted;
+  }
+
+  public void setAccepted(int accepted) {
+    this.isAccepted = accepted;
   }
 }

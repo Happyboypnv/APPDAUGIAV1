@@ -245,4 +245,106 @@ public class AuctionSessionService {
         }
         return bidderIds.contains(bidder.getUserId());
     }
+
+    /**
+     * ✅ NEW: Accept an auction request (admin only operation).
+     * Only admin can call this to approve pending auctions.
+     */
+    public void acceptAuctionRequest(AuctionSession auction) {
+        synchronized (getLock(auction.getSessionId())) {
+            if (auction.getStatus() != SessionStatus.WAITING) {
+                logger.warn("❌ Không thể duyệt phiên {} vì không ở trạng thái WAITING", auction.getSessionId());
+                return;
+            }
+            auction.setAccepted(1);
+            auctionRepository.update(auction);
+            
+            // Check if startTime has already passed - if so, start immediately
+            LocalDateTime now = LocalDateTime.now();
+            if (auction.getStartTime() != null && !auction.getStartTime().isAfter(now)) {
+                logger.info("✅ Phiên {} được duyệt, startTime đã qua - mở phiên ngay!", auction.getSessionId());
+                startAuction(auction);
+            } else {
+                logger.info("✅ Phiên {} được duyệt, sẽ mở lúc startTime", auction.getSessionId());
+            }
+        }
+    }
+
+    /**
+     * ✅ NEW: Deny an auction request (admin only operation).
+     * Only admin can call this to reject pending auctions.
+     * Sets isAccepted = 0 and triggers immediate cancellation.
+     */
+    public void denyAuctionRequest(AuctionSession auction) {
+        synchronized (getLock(auction.getSessionId())) {
+            if (auction.getStatus() != SessionStatus.WAITING) {
+                logger.warn("❌ Không thể từ chối phiên {} vì không ở trạng thái WAITING", auction.getSessionId());
+                return;
+            }
+            // Set isAccepted = 0 to explicitly mark as DENIED
+            auction.setAccepted(0);
+            auctionRepository.update(auction);
+            auctionScheduler.cancelAS(auction);
+            logger.info("✅ Phiên {} đã bị admin từ chối (isAccepted = 0)", auction.getSessionId());
+            
+            // Close auction immediately
+            closeAuction(auction, SessionStatus.CANCELLED);
+        }
+    }
+
+    /**
+     * ✅ NEW: Poll for admin decision when startTime has passed but auction is still PENDING.
+     * Checks every 30 seconds (max 6 minutes = 12 retries) to see if admin approved/denied.
+     * If admin approved, starts the auction.
+     * If admin denied, cancels the auction.
+     * If timeout, auto-cancels the auction.
+     */
+    public void pollDeferredAuction(AuctionSession auction, int retryCount) {
+        final int MAX_RETRIES = 12;  // 12 × 30s = 6 minutes
+        final long POLL_DELAY_SECONDS = 30;
+        
+        String maPhien = auction.getSessionId();
+        
+        // Schedule the polling check
+        AuctionScheduler.getInstance().scheduleDelayedCheck(() -> {
+            synchronized (getLock(maPhien)) {
+                // Reload from DB to get latest isAccepted status
+                try {
+                    AuctionSession latestAuction = auctionRepository.findById(maPhien);
+                    if (latestAuction == null) {
+                        logger.warn("❌ Phiên {} không tìm thấy trong DB", maPhien);
+                        return;
+                    }
+                    
+                    logger.info("🔍 Poll phiên {} (lần {}): isAccepted = {}", 
+                            maPhien, retryCount + 1, latestAuction.isAccepted());
+                    
+                    switch (latestAuction.isAccepted()) {
+                        case 1: // APPROVED
+                            logger.info("✅ Admin duyệt phiên {}, mở ngay!", maPhien);
+                            startAuction(latestAuction);
+                            break;
+                            
+                        case 0: // DENIED
+                            logger.info("❌ Admin từ chối phiên {}, hủy ngay!", maPhien);
+                            closeAuction(latestAuction, SessionStatus.CANCELLED);
+                            break;
+                            
+                        case -1: // STILL PENDING
+                            if (retryCount < MAX_RETRIES) {
+                                logger.info("⏸️  Phiên {} vẫn chờ duyệt, kiểm tra lại sau {}s (lần {}/{})", 
+                                        maPhien, POLL_DELAY_SECONDS, retryCount + 1, MAX_RETRIES);
+                                pollDeferredAuction(latestAuction, retryCount + 1);
+                            } else {
+                                logger.warn("⏰ Timeout chờ admin duyệt phiên {}, tự động hủy", maPhien);
+                                closeAuction(latestAuction, SessionStatus.CANCELLED);
+                            }
+                            break;
+                    }
+                } catch (Exception e) {
+                    logger.error("❌ Lỗi polling phiên {}: {}", maPhien, e.getMessage(), e);
+                }
+            }
+        }, POLL_DELAY_SECONDS);
+    }
 }

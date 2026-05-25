@@ -125,7 +125,9 @@ public class DatabaseConnection {
 
         String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
             "ma_san_pham TEXT PRIMARY KEY, " +
-            "ten_san_pham TEXT NOT NULL);";
+            "ten_san_pham TEXT NOT NULL, " +
+                "mo_ta TEXT, " +
+                "phan_loai);";
 
         String sqlPhien = "CREATE TABLE IF NOT EXISTS phien_dau_gia (" +
             "ma_phien TEXT PRIMARY KEY, " +
@@ -139,6 +141,7 @@ public class DatabaseConnection {
             "ma_nguoi_thang_cuoc TEXT, " +
             "ma_san_pham TEXT, " +
             "is_closed INTEGER DEFAULT 0, " +
+                "is_accepted INTEGER DEFAULT -1, " +
             "FOREIGN KEY (ma_nguoi_ban) REFERENCES nguoi_dung(ma_nguoi_dung), " +
             "FOREIGN KEY (ma_nguoi_thang_cuoc) REFERENCES nguoi_dung(ma_nguoi_dung), " +
             "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
@@ -175,6 +178,27 @@ public class DatabaseConnection {
                 logger.info(" Thêm role thành công vào bảng người dùng!");
             } catch (SQLException e) {
                 logger.debug("Cột role đã tồn tại");
+            }
+
+            try {
+                stmt.execute("ALTER TABLE phien_dau_gia ADD COLUMN is_accepted INTEGER DEFAULT -1;");
+                logger.info(" Thêm is_accepted thành công vào bảng phiên!");
+            } catch (SQLException e) {
+                logger.debug("Cột is_accepted đã tồn tại");
+            }
+
+            try {
+                stmt.execute("ALTER TABLE san_pham ADD COLUMN mo_ta TEXT;");
+                logger.info(" Thêm mo_ta thành công vào bảng san_pham!");
+            } catch (SQLException e) {
+                logger.debug("Cột mo_ta đã tồn tại");
+            }
+
+            try {
+                stmt.execute("ALTER TABLE san_pham ADD COLUMN phan_loai TEXT;");
+                logger.info(" Thêm phan_loai thành công vào bảng san pham!");
+            } catch (SQLException e) {
+                logger.debug("Cột phan_loai đã tồn tại");
             }
 
             stmt.execute(sqlSanPham);

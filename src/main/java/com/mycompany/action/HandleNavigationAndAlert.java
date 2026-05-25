@@ -1,5 +1,6 @@
 package com.mycompany.action;
 
+import com.mycompany.controller.ReviewPageController;
 import com.mycompany.models.User;
 import com.sun.javafx.stage.EmbeddedWindow;
 import javafx.event.ActionEvent;
@@ -224,6 +225,37 @@ public class HandleNavigationAndAlert { // Class này đảm nhận nhiệm vụ
         window.setScene(homeScene);
         window.show();
     }
+
+    public void handleGoToUserList(Event event) throws IOException { // phải dùng Event vì phải nhận cả MouseEvent (nút home) và ActionEvent (còn lại)
+        StackPane homeRoot = FXMLLoader.load(getClass().getResource("/view/UserManagement.fxml"));
+        Scene homeScene = new Scene(homeRoot);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(homeScene);
+        window.show();
+    }
+
+    public void handleGoToReviewAuction(Event event) throws IOException { // phải dùng Event vì phải nhận cả MouseEvent (nút home) và ActionEvent (còn lại)
+        StackPane homeRoot = FXMLLoader.load(getClass().getResource("/view/ReviewAuctionRequest.fxml"));
+        Scene homeScene = new Scene(homeRoot);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(homeScene);
+        window.show();
+    }
+
+    public void goToAdminProfile(Stage stage) throws IOException {
+        User user = SessionManager.getInstance().getCurrentUser();
+        if (user == null) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Bạn cần đăng nhập để xem trang cá nhân!");
+            return;
+        }
+        Parent profileRoot = FXMLLoader.load(getClass().getResource("/view/AdminProfile.fxml"));
+        Scene profileScene = new Scene(profileRoot);
+
+        stage.setScene(profileScene);
+        stage.show();
+        // Do menu item khong phai la node => k set stage truc tiep tu no duoc ma phai lay qua ImageView ben Controller
+    }
+
 
     /**
      * showAlert(Alert.AlertType alertType, String title, String message) - Hiển thị hộp thoại thông báo

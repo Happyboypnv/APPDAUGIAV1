@@ -38,7 +38,11 @@ public class AuctionScheduler {
      * Lên lịch tự động chuyển trạng thái AuctionSession từ WAITING → IN_PROGRESS
      * khi đến đúng thời gian startTime của phiên.
      *
-     * Nếu startTime đã qua (delay <= 0), mở phiên ngay lập tức.
+     * ✅ REVISED ALGORITHM:
+     * - isAccepted = -1 (PENDING): If startTime passed, poll every 30s for admin decision (max 6 mins)
+     *                              Otherwise wait for admin OR startTime, whichever comes first
+     * - isAccepted = 0  (DENIED):  Cancel immediately
+     * - isAccepted = 1  (APPROVED): Schedule auto-start at startTime
      *
      * @param phien phiên đấu giá cần lên lịch mở
      */
@@ -51,23 +55,56 @@ public class AuctionScheduler {
 
         long delay = java.time.Duration.between(LocalDateTime.now(), phien.getStartTime()).toSeconds();
 
-        if (delay <= 0) {
-            // Thời gian mở đã qua hoặc đúng lúc → mở ngay lập tức (delay = 0)
-            ScheduledFuture<?> future = executor.schedule(() -> {
-                auctionSessionService.startAuction(phien);
-                logger.info("Đã mở phiên đấu giá {} ngay lập tức vì startTime đã qua", maPhien);
-                asFutures.remove(maPhien);
-            }, 0, TimeUnit.SECONDS);
-            asFutures.put(maPhien, future);
-            logger.info("Đã thêm phiên đấu giá {} để nó bắt đầu ngay lập tức", maPhien);
-        } else {
-            ScheduledFuture<?> future = executor.schedule(() -> {
-                auctionSessionService.startAuction(phien);
-                logger.info("Đã mở phiên đấu giá {}", maPhien);
-                asFutures.remove(maPhien);
-            }, delay, TimeUnit.SECONDS);
-            asFutures.put(maPhien, future);
-            logger.info("Đã thêm phiên đấu giá {} vào đồng hồ", maPhien);
+        // ✅ NEW: Handle all 3 authorization states
+        switch (phien.isAccepted()) {
+
+            case -1: // PENDING - Admin hasn't decided yet
+                if (delay <= 0) {
+                    // StartTime has passed, but admin hasn't decided
+                    // Poll every 30 seconds to check if admin accepts
+                    logger.info("⏸️  Phiên {} chưa được duyệt nhưng startTime đã qua, kiểm tra lại sau 30s", maPhien);
+                    auctionSessionService.pollDeferredAuction(phien, 0);
+                } else {
+                    logger.info("⏭️  Phiên {} chưa được duyệt, chờ admin duyệt trước startTime", maPhien);
+                    // Wait - either admin approves or startTime arrives
+                    // Schedule a check that monitors for decision
+                }
+                break;
+
+            case 0: // DENIED - Admin explicitly rejected this auction
+                logger.info("❌ Phiên {} bị admin từ chối, hủy ngay", maPhien);
+                ScheduledFuture<?> cancelFuture = executor.schedule(() -> {
+                    auctionSessionService.closeAuction(phien, SessionStatus.CANCELLED);
+                    logger.info("❌ Phiên {} đã đóng vì bị admin từ chối", maPhien);
+                    asFutures.remove(maPhien);
+                }, 0, TimeUnit.SECONDS);
+                asFutures.put(maPhien, cancelFuture);
+                break;
+
+            case 1: // APPROVED - Admin approved, proceed with auto-start
+                if (delay <= 0) {
+                    // Start immediately
+                    logger.info("✅ Mở phiên {} ngay lập tức (startTime đã qua)", maPhien);
+                    ScheduledFuture<?> future = executor.schedule(() -> {
+                        auctionSessionService.startAuction(phien);
+                        logger.info("✅ Phiên {} đã mở ngay lập tức", maPhien);
+                        asFutures.remove(maPhien);
+                    }, 0, TimeUnit.SECONDS);
+                    asFutures.put(maPhien, future);
+                } else {
+                    // Schedule for future start
+                    logger.info("✅ Lên lịch mở phiên {} lúc startTime trong {}s", maPhien, delay);
+                    ScheduledFuture<?> future = executor.schedule(() -> {
+                        auctionSessionService.startAuction(phien);
+                        logger.info("✅ Phiên {} đã mở theo lịch", maPhien);
+                        asFutures.remove(maPhien);
+                    }, delay, TimeUnit.SECONDS);
+                    asFutures.put(maPhien, future);
+                }
+                break;
+
+            default:
+                logger.warn("⚠️  Phiên {} có isAccepted không xác định: {}", maPhien, phien.isAccepted());
         }
     }
 
@@ -120,6 +157,15 @@ public class AuctionScheduler {
         if (future != null && !future.isDone()) {
             future.cancel(false);
         }
+    }
+
+    /**
+     * ✅ NEW: Schedule a delayed check (used for polling deferred auctions)
+     * This helper method is used by AuctionSessionService to schedule periodic checks
+     * for admin decisions on pending auctions.
+     */
+    public void scheduleDelayedCheck(Runnable task, long delaySeconds) {
+        executor.schedule(task, delaySeconds, TimeUnit.SECONDS);
     }
 
     public void shutdown() {

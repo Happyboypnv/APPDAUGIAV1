@@ -163,8 +163,8 @@ public class UserRepositorySQLite implements IUserRepository {
                 ps.setString(9, User.getBankAccountNumber());
                 ps.setString(10, User.getBankName());
                 ps.setString(11, User.getAvatarPath());
-                ps.setString(12, User.getUserId());
-                ps.setInt(13,User.getRole());
+                ps.setInt(12, User.getRole());
+                ps.setString(13,User.getUserId());
                 int rowsAffected = ps.executeUpdate();
                 logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
             }

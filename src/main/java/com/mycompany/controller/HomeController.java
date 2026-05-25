@@ -103,13 +103,20 @@ public class HomeController implements Initializable {
 
     private void doRefresh() {
         new Thread(() -> {
-            List<PhienDauGiaDTO> list = ApiClient.getAuctions();
+            List<PhienDauGiaDTO> allAuctions = ApiClient.getAuctions();
+            // Filter to show only WAITING and IN_PROGRESS auctions for users
+            List<PhienDauGiaDTO> filteredList = new java.util.ArrayList<>();
+            for (PhienDauGiaDTO dto : allAuctions) {
+                if ("WAITING".equals(dto.trangThai) || "IN_PROGRESS".equals(dto.trangThai)) {
+                    filteredList.add(dto);
+                }
+            }
             Platform.runLater(() -> {
-                danhSachPhien = list;
+                danhSachPhien = filteredList;
                 // Giữ vị trí scroll hiện tại
                 int selectedIndex = listViewPhien.getSelectionModel().getSelectedIndex();
-                listViewPhien.setItems(FXCollections.observableArrayList(list));
-                if (selectedIndex >= 0 && selectedIndex < list.size()) {
+                listViewPhien.setItems(FXCollections.observableArrayList(filteredList));
+                if (selectedIndex >= 0 && selectedIndex < filteredList.size()) {
                     listViewPhien.getSelectionModel().select(selectedIndex);
                 }
             });
@@ -130,6 +137,9 @@ public class HomeController implements Initializable {
         switch (tt) {
             case "IN_PROGRESS":
                 break; // cho vào bình thường
+            case "PENDING" :
+                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Phiên chưa được duyệt", "Phiên chưa được duyệt bởi admin");
+                return;
             case "WAITING":
                 HandleNavigationAndAlert.getInstance().showAlert(
                     Alert.AlertType.INFORMATION, "Phiên chưa mở",
@@ -305,6 +315,11 @@ public class HomeController implements Initializable {
                     mauChu = "#2ecc71";
                     labelText = "● Đang diễn ra";
                     break;
+                 case "PENDING":
+                     mauNen = "rgba(155,89,182,0.25)";   // tím
+                     mauChu = "#9b59b6";
+                     labelText = "⏳ Chờ duyệt";
+                     break;
                 case "WAITING":
                     mauNen = "rgba(241,196,15,0.25)";   // vàng
                     mauChu = "#f1c40f";

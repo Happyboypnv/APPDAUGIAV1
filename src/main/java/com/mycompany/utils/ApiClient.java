@@ -1,6 +1,9 @@
 package com.mycompany.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mycompany.server.controller.AuctionController;
 import com.mycompany.server.dto.*;
 import org.slf4j.Logger;
@@ -163,14 +166,18 @@ public class ApiClient {
     public static List<PhienDauGiaDTO> getAuctions() {
         String responseJson = guiGet("/api/auctions", null);
         if (responseJson == null) return new java.util.ArrayList<>();
-        java.lang.reflect.Type listType =
-                new com.google.gson.reflect.TypeToken<List<PhienDauGiaDTO>>(){}.getType();
-        try {
-            return gson.fromJson(responseJson, listType);
-        } catch (Exception e) {
-            logger.error("[ApiClient] Lỗi parse auctions: " + e.getMessage());
+
+        JsonElement root = parseJsonResponse(responseJson, "auctions");
+        if (root == null) return new java.util.ArrayList<>();
+
+        if (!root.isJsonArray()) {
+            logUnexpectedResponse("auctions", "JSON array", root);
             return new java.util.ArrayList<>();
         }
+
+        java.lang.reflect.Type listType =
+                new com.google.gson.reflect.TypeToken<List<PhienDauGiaDTO>>(){}.getType();
+        return gson.fromJson(root, listType);
     }
 
     /**
@@ -235,12 +242,22 @@ public class ApiClient {
     public static PhienDauGiaDTO getAuctionById(String maPhien, String token) {
         String responseJson = guiGet("/api/auctions/" + maPhien, token);
         if (responseJson == null) return null;
-        try {
-            return gson.fromJson(responseJson, PhienDauGiaDTO.class);
-        } catch (Exception e) {
-            logger.error("[ApiClient] Lỗi parse auction: " + e.getMessage());
+
+        JsonElement root = parseJsonResponse(responseJson, "auction " + maPhien);
+        if (root == null) return null;
+
+        if (!root.isJsonObject()) {
+            logUnexpectedResponse("auction " + maPhien, "JSON object", root);
             return null;
         }
+
+        JsonObject obj = root.getAsJsonObject();
+        if (isServerError(obj)) {
+            logger.error("[ApiClient] Server trả lỗi khi lấy phiên {}: {}", maPhien, extractServerMessage(obj));
+            return null;
+        }
+
+        return gson.fromJson(obj, PhienDauGiaDTO.class);
     }
 
     /**
@@ -440,5 +457,37 @@ public class ApiClient {
             System.err.println(errorMsg);
             return null;
         }
+    }
+
+    private static JsonElement parseJsonResponse(String responseJson, String context) {
+        try {
+            return JsonParser.parseString(responseJson);
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse {} response: {}. Body: {}", context, e.getMessage(), responseJson);
+            return null;
+        }
+    }
+
+    private static void logUnexpectedResponse(String context, String expected, JsonElement root) {
+        if (root.isJsonObject()) {
+            JsonObject obj = root.getAsJsonObject();
+            logger.error("[ApiClient] Response {} phải là {}, nhưng server trả object: {}",
+                    context, expected, extractServerMessage(obj));
+            return;
+        }
+        logger.error("[ApiClient] Response {} phải là {}, nhưng server trả: {}", context, expected, root);
+    }
+
+    private static boolean isServerError(JsonObject obj) {
+        return obj.has("sendBug") || obj.has("bug") || obj.has("error");
+    }
+
+    private static String extractServerMessage(JsonObject obj) {
+        for (String key : new String[]{"sendBug", "bug", "error", "message", "thongBao"}) {
+            if (obj.has(key) && !obj.get(key).isJsonNull()) {
+                return obj.get(key).getAsString();
+            }
+        }
+        return obj.toString();
     }
 }

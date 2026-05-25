@@ -86,7 +86,7 @@ public class AdminNavBarController implements Initializable { // Controller chun
         MenuItem logoutItem = new MenuItem("Đăng xuất");
 
         // Gắn event handlers cho menu items
-        profileItem.setOnAction(this::navigateToProfile);
+        profileItem.setOnAction(this::navigateToAdminProfile);
         logoutItem.setOnAction(this::logOut);
 
         // Tạo context menu và thêm items
@@ -149,10 +149,10 @@ public class AdminNavBarController implements Initializable { // Controller chun
      * @param event MouseEvent từ click
      */
     @FXML
-    public void returnToHome(MouseEvent event) {
+    public void returnToAdminHome(MouseEvent event) {
         cleanupBiddingRoom((Node) event.getSource()); // ⭐ cleanup trước
         try {
-            HandleNavigationAndAlert.getInstance().handleGoToHome(event);
+            HandleNavigationAndAlert.getInstance().handleGoToAdminHome(event);
         } catch (IOException e) {
             HandleNavigationAndAlert.getInstance().showAlert(
                     Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện trang chủ không thành công!");
@@ -181,9 +181,9 @@ public class AdminNavBarController implements Initializable { // Controller chun
      * Điều hướng đến trang Tạo Phiên Đấu Giá khi click vào label trong sidebar.
      */
     @FXML
-    public void navigateToCreateAuction(MouseEvent event) {
+    public void navigateToUserList(MouseEvent event) {
         try {
-            HandleNavigationAndAlert.getInstance().goToCreateAuction(event);
+            HandleNavigationAndAlert.getInstance().handleGoToUserList(event);
         } catch (IOException e) {
             e.printStackTrace();
             HandleNavigationAndAlert.getInstance().showAlert(
@@ -226,10 +226,10 @@ public class AdminNavBarController implements Initializable { // Controller chun
      * @param event ActionEvent từ menu item
      */
     @FXML
-    public void navigateToProfile(ActionEvent event) {
+    public void navigateToAdminProfile(ActionEvent event) {
         try {
             Stage stage = (Stage) avatarImage.getScene().getWindow();
-            HandleNavigationAndAlert.getInstance().goToProfile(stage);
+            HandleNavigationAndAlert.getInstance().goToAdminProfile(stage);
         } catch (IOException e) {
             e.printStackTrace();
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển đến trang cá nhân!");
@@ -247,35 +247,16 @@ public class AdminNavBarController implements Initializable { // Controller chun
      * @param event MouseEvent từ label click
      */
     @FXML
-    public void navigateToFinance(MouseEvent event) {
+    public void navigateToReviewAuctionRoom(MouseEvent event) {
         cleanupBiddingRoom((Node) event.getSource()); // ⭐ Cleanup trước khi điều hướng
         try {
-            HandleNavigationAndAlert.getInstance().goToFinance(event);
+            HandleNavigationAndAlert.getInstance().handleGoToReviewAuction(event);
         } catch (IOException e) {
             e.printStackTrace();
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện quản lý tài chính không thành công!");
         }
     }
 
-    /**
-     * PHƯƠNG THỨC: goToCreatePhienDauGia(MouseEvent event)
-     * MỤC ĐÍCH: Điều hướng đến trang tạo phiên đấu giá
-     *
-     * GIẢI THÍCH CHI TIẾT:
-     * 1. Gọi HandleNavigationAndAlert.goToCreatePhienDauGia()
-     * 2. Hiển thị alert nếu có lỗi
-     *
-     * @param event MouseEvent từ label click
-     */
-    @FXML
-    public void goToCreatePhienDauGia(MouseEvent event) {
-        try {
-            HandleNavigationAndAlert.getInstance().goToCreatePhienDauGia(event);
-        } catch (IOException e) {
-            e.printStackTrace();
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi giao diện", "Tải giao diện tạo phiên đấu giá không thành công!");
-        }
-    }
     private void cleanupBiddingRoom(Node sourceNode) {
         try {
             // Lấy scene hiện tại

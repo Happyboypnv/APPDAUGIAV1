@@ -9,5 +9,6 @@ public class PhienDauGiaDTO {
     public String tenSanPham;
     public String thoiGianBatDau;
     public String thoiGianKetThuc;
-
+    public String moTa;
+    public String danhMucSanPham;
 }

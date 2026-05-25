@@ -5,10 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.mycompany.action.AuctionScheduler;
 import com.mycompany.action.AuctionSessionService;
 import com.mycompany.action.AuctionSessionRegistry;
-import com.mycompany.models.AuctionSession;
-import com.mycompany.models.Product;
-import com.mycompany.models.SessionStatus;
-import com.mycompany.models.User;
+import com.mycompany.models.*;
 import com.mycompany.utils.IUserRepository;
 import com.mycompany.utils.IAuctionRepository;
 import com.mycompany.utils.UserRepositorySQLite;
@@ -19,9 +16,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AuctionController — Xử lý các HTTP request liên quan đến phiên đấu giá.
@@ -43,6 +44,7 @@ import java.util.Map;
  */
 public class AuctionController {
 
+  private static final Logger logger = LoggerFactory.getLogger(AuctionController.class);
   // ===== PHỤ THUỘC =====
 
   private final Gson gson = new GsonBuilder()
@@ -216,10 +218,18 @@ public class AuctionController {
       guiPhanHoi(exchange, 400, sendBug("Thiếu hoặc sai thông tin bắt buộc"));
       return;
     }
+    Items item;
+    ItemFactory itemFactory = ItemFactory.getFactory(req.danhMuc);
 
-    Product sanPham = new Product(req.tenSanPham, req.maSanPham);
+    if (itemFactory!= null) {
+      item = itemFactory.createItem(req.tenSanPham, req.maSanPham, req.moTa);
+    } else {
+      logger.error("Tên danh mục ko khớp!");
+      return;
+    }
+
     AuctionSession phienMoi = new AuctionSession(
-        null, req.tenPhien, sanPham, req.giaKhoiDiem, seller, req.thoiGianGiay);
+        null, req.tenPhien, item, req.giaKhoiDiem, seller, req.thoiGianGiay);
 
     // Tính startTime và endTime
     java.time.LocalDateTime thoiGianBD;
@@ -414,8 +424,6 @@ public class AuctionController {
   // =========================================================
   // INNER CLASSES: DTO (Data Transfer Objects)
   // =========================================================
-
-  /** Request body cho POST /api/auctions */
   public static class TaoPhienRequest {
     String tenPhien;
     String tenSanPham;
@@ -456,6 +464,8 @@ public class AuctionController {
     String trangThai;
     String tenNguoiBan;
     String tenSanPham;
+    String moTa;
+    String danhMucSanPham;
     String thoiGianBatDau;
     String thoiGianKetThuc;
 
@@ -466,6 +476,8 @@ public class AuctionController {
       this.trangThai       = p.getStatus().name();
       this.tenNguoiBan     = p.getSeller()    != null ? p.getSeller().getFullName()     : null;
       this.tenSanPham      = p.getProduct()   != null ? p.getProduct().getProductName() : null;
+      this.moTa            = p.getProduct()   != null ? p.getProduct().getDescription() : null;
+      this.danhMucSanPham  = p.getProduct()   != null ? p.getProduct().getCategory()    : null;
       this.thoiGianBatDau  = p.getStartTime() != null ? p.getStartTime().toString()     : null;
       this.thoiGianKetThuc = p.getEndTime()   != null ? p.getEndTime().toString()       : null;
     }
@@ -482,6 +494,8 @@ public class AuctionController {
     String maNguoiBan;
     String tenSanPham;
     String maSanPham;
+    String moTa;
+    String danhMucSanPham;
     String tenNguoiThangCuoc;
     String thoiGianBatDau;
     String thoiGianKetThuc;
@@ -497,6 +511,8 @@ public class AuctionController {
       this.maNguoiBan        = p.getSeller()       != null ? p.getSeller().getUserId()     : null;
       this.tenSanPham        = p.getProduct()        != null ? p.getProduct().getProductName()       : null;
       this.maSanPham         = p.getProduct()        != null ? p.getProduct().getProductCode()        : null;
+      this.moTa              = p.getProduct()        != null ? p.getProduct().getDescription()        : null;
+      this.danhMucSanPham    = p.getProduct()        != null ? p.getProduct().getCategory()           : null;
       this.tenNguoiThangCuoc = p.getWinner() != null ? p.getWinner().getFullName()    : null;
       this.thoiGianBatDau    = p.getStartTime()  != null ? p.getStartTime().toString()   : null;
       this.thoiGianKetThuc   = p.getEndTime() != null ? p.getEndTime().toString()  : null;
