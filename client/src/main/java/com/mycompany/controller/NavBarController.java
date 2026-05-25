@@ -214,10 +214,15 @@ public class NavBarController implements Initializable {
 
     @FXML
     public void navigateToTransactionHistory(MouseEvent event) {
-        HandleNavigationAndAlert.getInstance().showAlert(
-                Alert.AlertType.INFORMATION,
-                "Thông báo",
-                "Tính năng lịch sử giao dịch đang được phát triển!"
-        );
+        cleanupBiddingRoom((Node) event.getSource());
+        try {
+            HandleNavigationAndAlert.getInstance().goToTransactionHistory(event);
+        } catch (IOException e) {
+            e.printStackTrace();
+            HandleNavigationAndAlert.getInstance().showAlert(
+                Alert.AlertType.ERROR, "Lỗi giao diện",
+                "Không thể mở trang lịch sử giao dịch!"
+            );
+        }
     }
 }
