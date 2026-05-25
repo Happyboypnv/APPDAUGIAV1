@@ -120,28 +120,3 @@
 2026-05-23 01:36:03.179 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
 2026-05-23 07:04:34.545 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://localhost:8080 (Connection refused). Make sure the server is running on port 8080.
 2026-05-23 14:52:32.571 [pool-1-thread-7] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-23 15:00:41.245 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-23 15:03:26.959 [WebSocketWorker-27] ERROR c.m.utils.UserRepositorySQLite - Lỗi holdBalance: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-23 15:05:16.609 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
-2026-05-23 15:05:36.555 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? Kh�ng th? k?t n?i WebSocket sau timeout
-2026-05-23 15:05:42.393 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
-2026-05-23 15:06:49.969 [BiddingRoom-WebSocket-Thread] ERROR c.m.controller.BiddingRoomController - ? L?i k?t n?i WebSocket: sleep interrupted
-2026-05-23 15:08:51.454 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-23 15:09:10.075 [main] ERROR c.mycompany.utils.DatabaseConnection - Lỗi khởi tạo DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-23 15:11:00.196 [pool-1-thread-1] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-23 15:11:01.964 [pool-1-thread-3] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-23 15:11:35.412 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-23 15:12:59.906 [pool-1-thread-9] ERROR c.m.utils.AuctionRepositorySQLite - [ERROR] Lỗi khi xóa phiên đấu giá: [SQLITE_CONSTRAINT_FOREIGNKEY] A foreign key constraint failed (FOREIGN KEY constraint failed)
-2026-05-23 15:13:29.594 [JavaFX Application Thread] ERROR c.mycompany.utils.DatabaseConnection - L?i kh?i t?o DB: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-23 15:21:59.829 [Thread-16] ERROR c.m.utils.UserRepositorySQLite - Lỗi releaseHold: [SQLITE_BUSY_SNAPSHOT] Another database connection has already written to the database (database is locked)
-2026-05-23 15:23:53.637 [Thread-110] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:23:53.649 [Thread-109] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:23:54.423 [Thread-111] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:23:55.491 [Thread-112] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:23:58.327 [Thread-113] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:23:58.579 [Thread-114] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:23:59.810 [Thread-115] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:24:00.414 [Thread-116] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:24:01.574 [JavaFX Application Thread] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:24:03.619 [Thread-118] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
-2026-05-23 15:24:03.634 [Thread-117] ERROR com.mycompany.utils.ApiClient - [ApiClient] ? Cannot connect to server at http://26.71.32.210:8080 (Connection refused). Make sure the server is running on port 8080.
