@@ -131,7 +131,7 @@ public class BidController {
      * Response 404: { "bug": "Không tìm thấy phiên: PH999999" }
      * Response 409: { "bug": "Phiên không ở trạng thái DANG_DIEN_RA" }
      */
-    private void handleSetPrice(HttpExchange exchange) throws IOException, InvalidBidException {
+    private void handleSetPrice(HttpExchange exchange) throws IOException, InvalidBidException{
         // Bước 1: Xác thực token → lấy người đặt giá
         User nguoiDat = checkToken(exchange);
         if (nguoiDat == null) return;
