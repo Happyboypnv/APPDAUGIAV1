@@ -3,8 +3,8 @@ package com.mycompany.models;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
+import com.mycompany.exception.AuctionRoom.AuctionClosedException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -318,5 +318,51 @@ class AuctionSessionTest {
     void hasBid_setTrue() {
         session.setHasBid(true);
         assertTrue(session.isHasBid());
+    }
+
+    @Test
+    @DisplayName("AuctionClosedException chứa đúng sessionId và status")
+    void auctionClosedException_hasCorrectFields() {
+        AuctionClosedException ex = new AuctionClosedException("session-001", "CANCELLED");
+        assertEquals("session-001", ex.getSessionId());
+        assertEquals("CANCELLED", ex.getSessionStatus());
+    }
+
+    @Test
+    @DisplayName("AuctionClosedException message chứa sessionId")
+    void auctionClosedException_messageContainsSessionId() {
+        AuctionClosedException ex = new AuctionClosedException("session-XYZ", "PAID");
+        assertTrue(ex.getMessage().contains("session-XYZ"));
+    }
+
+    @Test
+    @DisplayName("AuctionClosedException message chứa trạng thái")
+    void auctionClosedException_messageContainsStatus() {
+        AuctionClosedException ex = new AuctionClosedException("session-001", "WAITING");
+        assertTrue(ex.getMessage().contains("WAITING"));
+    }
+
+    @Test
+    @DisplayName("Không thể đặt giá khi phiên ở trạng thái CANCELLED")
+    void bid_onCancelledSession_shouldBeRejected() {
+        session.setStatus(SessionStatus.CANCELLED);
+        assertNotEquals(SessionStatus.IN_PROGRESS, session.getStatus(),
+            "Phiên CANCELLED không được nhận bid");
+    }
+
+    @Test
+    @DisplayName("Không thể đặt giá khi phiên ở trạng thái PAID")
+    void bid_onPaidSession_shouldBeRejected() {
+        session.setStatus(SessionStatus.PAID);
+        assertNotEquals(SessionStatus.IN_PROGRESS, session.getStatus(),
+            "Phiên PAID không được nhận bid");
+    }
+
+    @Test
+    @DisplayName("Không thể đặt giá khi phiên ở trạng thái WAITING")
+    void bid_onWaitingSession_shouldBeRejected() {
+        session.setStatus(SessionStatus.WAITING);
+        assertNotEquals(SessionStatus.IN_PROGRESS, session.getStatus(),
+            "Phiên WAITING không được nhận bid");
     }
 }
