@@ -31,9 +31,13 @@ public class AuctionScheduler {
 
     private final Map<String, ScheduledFuture<?>> acFutures = new ConcurrentHashMap<>();
     private final Map<String, ScheduledFuture<?>> asFutures = new ConcurrentHashMap<>();
+    private final Map<String, ScheduledFuture<?>> deferredPollFutures = new ConcurrentHashMap<>();
     private final Map<String, ScheduledFuture<?>> paymentFutures = new ConcurrentHashMap<>();
-    private final AuctionSessionService auctionSessionService = AuctionSessionService.getInstance();
     private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuctionScheduler.class);
+
+    private AuctionSessionService auctionSessionService() {
+        return AuctionSessionService.getInstance();
+    }
 
     /**
      * Lên lịch timeout cho PAYMENT_PENDING.
@@ -45,7 +49,7 @@ public class AuctionScheduler {
         cancelPaymentTimeout(phien);
         ScheduledFuture<?> future = executor.schedule(() -> {
             try {
-                auctionSessionService.finalizePayment(phien, false);
+                auctionSessionService().finalizePayment(phien, false);
             } catch (Exception ex) {
                 logger.error("Lỗi finalizePayment tự động cho {}: {}", maPhien, ex.getMessage());
             } finally {
@@ -79,10 +83,39 @@ public class AuctionScheduler {
 
         long delay = java.time.Duration.between(LocalDateTime.now(), phien.getStartTime()).toSeconds();
 
+        switch (phien.isAccepted()) {
+            case -1:
+                if (delay <= 0) {
+                    logger.info("Phiên {} chưa được duyệt nhưng start time đã qua, chờ admin duyệt", maPhien);
+                    auctionSessionService().pollDeferredAuction(phien, 0);
+                } else {
+                    ScheduledFuture<?> future = executor.schedule(() -> {
+                        asFutures.remove(maPhien);
+                        auctionSessionService().pollDeferredAuction(phien, 0);
+                    }, delay, TimeUnit.SECONDS);
+                    asFutures.put(maPhien, future);
+                    logger.info("Phiên {} chưa được duyệt, sẽ kiểm tra lại khi đến startTime", maPhien);
+                }
+                return;
+            case 0:
+                ScheduledFuture<?> cancelFuture = executor.schedule(() -> {
+                    auctionSessionService().closeAuction(phien, SessionStatus.CANCELLED);
+                    asFutures.remove(maPhien);
+                }, 0, TimeUnit.SECONDS);
+                asFutures.put(maPhien, cancelFuture);
+                logger.info("[AuctionScheduler] Phiên đã bị huỷ bởi admin, đang đóng phiên...");
+                return;
+            case 1:
+                break;
+            default:
+                logger.warn("Phiên {} cÃ³ tráº¡ng thÃ¡i duyá»‡t khÃ´ng há»£p lá»‡: {}", maPhien, phien.isAccepted());
+                return;
+        }
+
         if (delay <= 0) {
             // Thời gian mở đã qua hoặc đúng lúc → mở ngay lập tức (delay = 0)
             ScheduledFuture<?> future = executor.schedule(() -> {
-                auctionSessionService.startAuction(phien);
+                auctionSessionService().startAuction(phien);
                 logger.info("Đã mở phiên đấu giá {} ngay lập tức vì startTime đã qua", maPhien);
                 asFutures.remove(maPhien);
             }, 0, TimeUnit.SECONDS);
@@ -90,7 +123,7 @@ public class AuctionScheduler {
             logger.info("Đã thêm phiên đấu giá {} để nó bắt đầu ngay lập tức", maPhien);
         } else {
             ScheduledFuture<?> future = executor.schedule(() -> {
-                auctionSessionService.startAuction(phien);
+                auctionSessionService().startAuction(phien);
                 logger.info("Đã mở phiên đấu giá {}", maPhien);
                 asFutures.remove(maPhien);
             }, delay, TimeUnit.SECONDS);
@@ -111,6 +144,7 @@ public class AuctionScheduler {
         if (future != null && !future.isDone()) {
             future.cancel(false);
         }
+        cancelDeferredAuctionPoll(phien);
     }
 
     /**
@@ -130,12 +164,12 @@ public class AuctionScheduler {
 
         if (delay <= 0) {
             ScheduledFuture<?> future = executor.schedule(() -> {
-                auctionSessionService.closeAuction(phien, phien.getHasBid() ? SessionStatus.PAID : SessionStatus.CANCELLED);
+                auctionSessionService().closeAuction(phien, phien.getHasBid() ? SessionStatus.PAID : SessionStatus.CANCELLED);
             }, 0, TimeUnit.SECONDS);
             acFutures.put(maPhien, future);
         } else {
             ScheduledFuture<?> future = executor.schedule(() -> {
-                auctionSessionService.closeAuction(phien, phien.getHasBid() ? SessionStatus.PAID : SessionStatus.CANCELLED);
+                auctionSessionService().closeAuction(phien, phien.getHasBid() ? SessionStatus.PAID : SessionStatus.CANCELLED);
             }, delay, TimeUnit.SECONDS);
             acFutures.put(maPhien, future);
         }
@@ -148,6 +182,28 @@ public class AuctionScheduler {
         if (future != null && !future.isDone()) {
             future.cancel(false);
         }
+        cancelDeferredAuctionPoll(phien);
+    }
+
+    public void scheduleDeferredAuctionPoll(AuctionSession phien, int retryCount, long delaySeconds) {
+        String maPhien = phien.getSessionId();
+        cancelDeferredAuctionPoll(phien);
+
+        ScheduledFuture<?> future = executor.schedule(() -> {
+            deferredPollFutures.remove(maPhien);
+            auctionSessionService().pollDeferredAuction(phien, retryCount);
+        }, Math.max(0, delaySeconds), TimeUnit.SECONDS);
+        deferredPollFutures.put(maPhien, future);
+
+        logger.info("[AuctionScheduler] Bắt đầu lên lịch phiên...");
+    }
+
+    public void cancelDeferredAuctionPoll(AuctionSession phien) {
+        ScheduledFuture<?> future = deferredPollFutures.remove(phien.getSessionId());
+        if (future != null && !future.isDone()) {
+            future.cancel(false);
+        }
+        logger.info("[AuctionScheduler] Phiên đã bắt đầu, huỷ đếm ngược...");
     }
 
     public void shutdown() {

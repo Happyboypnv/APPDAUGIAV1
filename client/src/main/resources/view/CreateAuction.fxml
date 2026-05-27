@@ -76,7 +76,7 @@
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="danhMucSanPham" maxWidth="1.7976931348623157E308" prefHeight="35.0" />
+                                          <ComboBox fx:id="danhMucSanPham" maxWidth="1.7976931348623157E308" prefHeight="35.0" styleClass="combo-box-popup" stylesheets="@../style/dropDown.css" />
                                        </children>
                                     </VBox>
                                     <VBox spacing="5.0">
@@ -88,7 +88,7 @@
                                           </Label>
                                           <TextArea fx:id="moTaField" prefHeight="150.0" prefWidth="200.0" promptText="Nhập mô tả sản phẩm..." stylesheets="@../style/TextArea.css" wrapText="true">
                                              <styleClass>
-                                                <String fx:value="text-area" />
+                                                <String fx:value="text-area-custom" />
                                              </styleClass>
                                           </TextArea>
                                        </children>
@@ -153,8 +153,8 @@
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <DatePicker fx:id="ngayBatDauPicker" prefHeight="35.0" maxWidth="1.7976931348623157E308" />
-                                          <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                          <DatePicker fx:id="ngayBatDauPicker" maxWidth="1.7976931348623157E308" prefHeight="35.0" />
+                                          <HBox alignment="CENTER_LEFT" spacing="8.0">
                                              <children>
                                                 <Label text="Giờ:" textFill="#aab4d4">
                                                    <font><Font size="13.0" /></font>
@@ -177,8 +177,8 @@
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <DatePicker fx:id="ngayKetThucPicker" prefHeight="35.0" maxWidth="1.7976931348623157E308" />
-                                          <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                          <DatePicker fx:id="ngayKetThucPicker" maxWidth="1.7976931348623157E308" prefHeight="35.0" />
+                                          <HBox alignment="CENTER_LEFT" spacing="8.0">
                                              <children>
                                                 <Label text="Giờ:" textFill="#aab4d4">
                                                    <font><Font size="13.0" /></font>

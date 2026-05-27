@@ -1,8 +1,10 @@
 package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
+import com.mycompany.models.User;
 import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.SessionManager;
+import com.mycompany.utils.UserProfileUpdater;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,11 +22,14 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class CreateAuctionController implements Initializable {
 
@@ -62,6 +67,8 @@ public class CreateAuctionController implements Initializable {
 
   private File selectedImageFile = null;
 
+  private String filePath = null;
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     setupDanhMuc();
@@ -79,13 +86,15 @@ public class CreateAuctionController implements Initializable {
 
   private void setupSpinners() {
     // Giờ: 0 - 23
-    gioBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour()));
+    LocalTime defaultStartTime = LocalTime.now().plusMinutes(1);
+    // Giờ: 0 - 23
+    gioBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, defaultStartTime.getHour()));
     gioKetThucSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour()));
     gioBatDauSpinner.setEditable(true);
     gioKetThucSpinner.setEditable(true);
 
     // Phút: 0 - 59, bước nhảy 1
-    phutBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
+    phutBatDauSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, defaultStartTime.getMinute()));
     phutKetThucSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
     phutBatDauSpinner.setEditable(true);
     phutKetThucSpinner.setEditable(true);
@@ -109,7 +118,7 @@ public class CreateAuctionController implements Initializable {
   }
 
   private void setupDatePickers() {
-    ngayBatDauPicker.setValue(LocalDate.now());
+    ngayBatDauPicker.setValue(LocalDateTime.now().plusMinutes(1).toLocalDate());
     ngayKetThucPicker.setValue(LocalDate.now().plusDays(1));
     previewImage.setVisible(false);
   }
@@ -142,10 +151,65 @@ public class CreateAuctionController implements Initializable {
         new FileChooser.ExtensionFilter("Ảnh", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
     );
     Stage stage = (Stage) dropArea.getScene().getWindow();
-    File file = fileChooser.showOpenDialog(stage);
-    if (file != null) {
-      loadImage(file);
+    File selectedFile = fileChooser.showOpenDialog(stage);
+    if (selectedFile != null) {
+      loadImage(selectedFile);
+    } else {
+      HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR,"Chọn Ảnh", "Lỗi chọn ảnh");
+      return;
     }
+
+    String fileName = selectedFile.getName().toLowerCase();
+    if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg") && !fileName.endsWith(".png")) {
+      HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi chọn ảnh", "Chỉ hỗ trợ các định dạng: .jpg, .jpeg, .png");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    long fileSizeInBytes = selectedFile.length();
+    long maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    if (fileSizeInBytes > maxSizeInBytes) {
+      HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi chọn ảnh", "Kích thước file quá lớn! Vui lòng chọn file nhỏ hơn 5MB");
+      return;
+    }
+
+    // Generate unique filename to avoid conflicts
+    String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+    String uniqueFileName = "product_" + UUID.randomUUID().toString() + fileExtension;
+
+    // Get the image directory path
+    // Gets the JAR/application directory and creates src/main/resources/image path
+    String projectDir = System.getProperty("user.dir");
+    String imageDir = projectDir + File.separator + "user_data" + File.separator + "image";
+
+    File destDir = new File(imageDir);
+
+    // Create directory if it doesn't exist
+    if (!destDir.exists()) {
+      destDir.mkdirs();
+    }
+
+    // Copy file to image directory
+    File destFile = new File(destDir, uniqueFileName);
+    try {
+      Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi copy file", "Không copy file được sang đường dẫn!");
+      e.printStackTrace();
+    }
+
+    this.filePath = "image/" + uniqueFileName;
+
+//    User currentUser = SessionManager.getInstance().getCurrentUser();
+//    currentUser.setAvatarPath("image/" + uniqueFileName);
+//
+//    // Gửi lên server thay vì ghi thẳng vào DB local
+//    java.util.Map<String, String> updates = new java.util.HashMap<>();
+//    updates.put("avatar", "image/" + uniqueFileName);
+//    UserProfileUpdater.getInstance().updateUser(updates);
+
+    HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Cập nhật ảnh sản phẩm","Cập nhật product path thành công: " + "image/" + uniqueFileName);
+
   }
 
   private void loadImage(File file) {
@@ -178,6 +242,7 @@ public class CreateAuctionController implements Initializable {
     String danhMuc = danhMucSanPham.getValue();
     String moTa = moTaField.getText().trim();
     String giaStr = giaKhoiDiemField.getText().trim().replace(",", "").replace(".", "");
+    String duongDan = filePath;
 
     LocalDate ngayBD = ngayBatDauPicker.getValue();
     LocalDate ngayKT = ngayKetThucPicker.getValue();
@@ -186,7 +251,7 @@ public class CreateAuctionController implements Initializable {
     int gioKT = gioKetThucSpinner.getValue();
     int phutKT = phutKetThucSpinner.getValue();
 
-    String error = validateForm(tenPhien, tenSanPham, danhMuc, giaStr, ngayBD, ngayKT, gioBD, phutBD, gioKT, phutKT);
+    String error = validateForm(tenPhien, tenSanPham, danhMuc, moTa, giaStr, ngayBD, ngayKT, gioBD, phutBD, gioKT, phutKT, duongDan);
     if (error != null) {
       isSubmitting = false;
       btn.setDisable(false);
@@ -237,7 +302,7 @@ public class CreateAuctionController implements Initializable {
             danhMuc, moTa,
             thoiGianBatDauISO,
             giaKhoiDiem,
-            (int) thoiGianGiay,
+            (int) thoiGianGiay, duongDan,
             finalToken
         );
       }
@@ -292,12 +357,14 @@ public class CreateAuctionController implements Initializable {
     }
   }
 
-  private String validateForm(String tenPhien, String tenSanPham, String danhMuc,
+  private String validateForm(String tenPhien, String tenSanPham, String danhMuc, String moTa,
                               String giaStr, LocalDate ngayBD, LocalDate ngayKT,
-                              int gioBD, int phutBD, int gioKT, int phutKT) {
+                              int gioBD, int phutBD, int gioKT, int phutKT, String duongDan) {
     if (tenPhien.isEmpty() || tenSanPham.isEmpty())
       return "Tên phiên và tên sản phẩm không được để trống!";
+    if (moTa.isEmpty()) return "Vui lòng nhập mô tả!";
     if (danhMuc == null) return "Vui lòng chọn danh mục!";
+    if (duongDan == null) return "Vui lòng tải ảnh sản phẩm!";
 
     try {
       double gia = Double.parseDouble(giaStr);
@@ -311,6 +378,8 @@ public class CreateAuctionController implements Initializable {
 
     LocalDateTime start = LocalDateTime.of(ngayBD, LocalTime.of(gioBD, phutBD));
     LocalDateTime end = LocalDateTime.of(ngayKT, LocalTime.of(gioKT, phutKT));
+
+    if (!start.isAfter(LocalDateTime.now())) return "Thời gian bắt đầu phải ở tương lai!";
 
     if (!end.isAfter(start)) return "Thời gian kết thúc phải sau thời gian bắt đầu!";
 

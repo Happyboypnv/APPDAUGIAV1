@@ -94,8 +94,8 @@ public class UserRepositorySQLite implements IUserRepository {
 
       String sql = "INSERT INTO nguoi_dung " +
           "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, " +
-          "dia_chi, so_dien_thoai,so_du_thuc_te, so_du_dong_bang, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          "dia_chi, so_dien_thoai,so_du_thuc_te, so_du_dong_bang, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar, role) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, maMoi);
@@ -111,6 +111,7 @@ public class UserRepositorySQLite implements IUserRepository {
         ps.setString(11, User.getBankAccountNumber());
         ps.setString(12, User.getBankName());
         ps.setString(13, User.getAvatarPath());
+        ps.setInt(14, User.getRole());
 
         logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
             maMoi, User.getFullName(), User.getEmail(), User.getPassword(), User.getSalt(),
@@ -150,7 +151,7 @@ public class UserRepositorySQLite implements IUserRepository {
     String sql = "UPDATE nguoi_dung SET " +
         "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, " +
         "dia_chi = ?, so_dien_thoai = ?, so_du_thuc_te = ?, so_du_dong_bang = ?, so_du_kha_dung = ?, " +
-        "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ? " +
+        "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ?, role = ? " +
         "WHERE ma_nguoi_dung = ?";
 
     Connection conn = null;
@@ -170,7 +171,8 @@ public class UserRepositorySQLite implements IUserRepository {
         ps.setString(11, User.getBankAccountNumber());
         ps.setString(12, User.getBankName());
         ps.setString(13, User.getAvatarPath());
-        ps.setString(14, User.getUserId());
+        ps.setInt(14, User.getRole());
+        ps.setString(15, User.getUserId());
         int rowsAffected = ps.executeUpdate();
         logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
       }
@@ -181,6 +183,27 @@ public class UserRepositorySQLite implements IUserRepository {
         try { conn.rollback(); } catch (SQLException ex) { logger.error("Lỗi rollback update: " + ex.getMessage()); }
       }
       logger.error("Lỗi cập nhật người dùng: " + e.getMessage());
+    }
+  }
+
+  public void authorizeAdmin(String email) {
+    if (email == null || email.isBlank()) {
+      logger.error("KhÃ´ng thá»ƒ cáº¥p quyá»n admin cho email rá»—ng");
+      return;
+    }
+
+    String sql = "UPDATE nguoi_dung SET role = 1 WHERE thu_dien_tu = ?";
+    try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+      ps.setString(1, email);
+      int rowsAffected = ps.executeUpdate();
+      ps.getConnection().commit();
+      if (rowsAffected > 0) {
+        logger.info("Cáº¥p quyá»n admin cho email {} thÃ nh cÃ´ng", email);
+      } else {
+        logger.warn("KhÃ´ng tÃ¬m tháº¥y email Ä‘á»ƒ cáº¥p quyá»n admin: {}", email);
+      }
+    } catch (SQLException e) {
+      logger.error("Lá»—i cáº¥p quyá»n admin DB: " + e.getMessage());
     }
   }
 
@@ -255,6 +278,7 @@ public class UserRepositorySQLite implements IUserRepository {
         nd.setBankAccountNumber(rs.getString("so_tai_khoan_ngan_hang")); // ⭐ thêm
         nd.setBankName(rs.getString("ten_ngan_hang"));
         nd.setAvatarPath(rs.getString("duong_dan_avatar")); // ⭐ Avatar path
+        nd.setRole(rs.getInt("role"));
 
         // FIX QUAN TRỌNG (App Restart Issue):
         // - Trước: Không retrieve/set salt từ database
@@ -441,6 +465,7 @@ public class UserRepositorySQLite implements IUserRepository {
           nd.setBankAccountNumber(rs.getString("so_tai_khoan_ngan_hang")); // ⭐ thêm
           nd.setBankName(rs.getString("ten_ngan_hang"));
           nd.setAvatarPath(rs.getString("duong_dan_avatar"));
+          nd.setRole(rs.getInt("role"));
           nd.setSalt(rs.getString("salt"));
           return nd;
         }

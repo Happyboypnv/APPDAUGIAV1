@@ -50,7 +50,7 @@ public class HomeAction {
             SessionManager.getInstance().logout();
 
             // ĐÃ SỬA: Thêm /resources vào trước đường dẫn để không bị lỗi Location is required
-            Parent signUpRoot = FXMLLoader.load(getClass().getResource("/resources/view/SignIn.fxml"));
+            Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
             Scene signUpScene = new Scene(signUpRoot);
             stage.setScene(signUpScene);
             stage.show();
@@ -62,7 +62,7 @@ public class HomeAction {
 
             // Xóa dự phòng và chuyển về màn hình đăng nhập cho an toàn
             SessionManager.getInstance().logout();
-            Parent signUpRoot = FXMLLoader.load(getClass().getResource("/resources/view/SignIn.fxml"));
+            Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
             stage.setScene(new Scene(signUpRoot));
             stage.show();
         }

@@ -2,6 +2,7 @@ package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.models.AuctionSession;
+import com.mycompany.models.User;
 import com.mycompany.server.dto.PhienDauGiaDTO;
 import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.SessionManager;
@@ -84,11 +85,14 @@ public class ReviewPageController implements Initializable {
 
         danhMucSanPham.setEditable(false);
 
+        instructionText.setVisible(false);
+
+
     }
     @FXML
     public void accept(ActionEvent event) {
         String token = SessionManager.getInstance().getServerToken();
-        boolean success = ApiClient.startAuction(currentAuctionSession.maPhien, token);
+        boolean success = ApiClient.approveAuction(currentAuctionSession.maPhien, token);
         if (!success) {
             HandleNavigationAndAlert.getInstance().showAlert(
                 Alert.AlertType.ERROR, "Lỗi", "Không thể duyệt phiên đấu giá!");
@@ -108,7 +112,7 @@ public class ReviewPageController implements Initializable {
     @FXML
     public void deny(ActionEvent event) {
         String token = SessionManager.getInstance().getServerToken();
-        boolean success = ApiClient.cancelAuction(currentAuctionSession.maPhien, token);
+        boolean success = ApiClient.rejectAuction(currentAuctionSession.maPhien, token);
         if (!success) {
             HandleNavigationAndAlert.getInstance().showAlert(
                 Alert.AlertType.ERROR, "Lỗi", "Không thể từ chối phiên đấu giá!");
@@ -125,33 +129,45 @@ public class ReviewPageController implements Initializable {
         }
     }
 
-    @FXML
-    public void handleSelectImage() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Chọn ảnh sản phẩm");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Ảnh", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
-        );
-        Stage stage = (Stage) dropArea.getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            loadImage(file);
-        }
-    }
-
-    private void loadImage(File file) {
+    private void loadProductImage(PhienDauGiaDTO session) {
         try {
-            Image image = new Image(file.toURI().toString());
-            previewImage.setImage(image);
-            previewImage.setVisible(true);
-            instructionText.setVisible(false);
-            selectedImageFile = file;
+            String productPath;
+            if (session != null && session.productImgPath != null) {
+                System.out.println(session.maPhien);
+                System.out.println(session.productImgPath);
+                productPath = session.productImgPath;
+            } else {
+                productPath = "image/default_avatar.jpg";
+                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING,"Ko tìm thấy đường dẫn", "Không lấy được đường dẫn product từ phiên!");
+            }
+
+            // Trường hợp 1: Nếu là ảnh mặc định ban đầu -> Đọc từ resource tĩnh của bạn
+            if (productPath.equals("image/default_avatar.jpg")) {
+                URL resourceUrl = getClass().getResource("/" + productPath);
+                if (resourceUrl != null) {
+                    previewImage.setImage(new Image(resourceUrl.toExternalForm()));
+                }
+            }
+            // Trường hợp 2: Nếu là ảnh do user thay đổi -> Đọc từ thư mục lưu trữ vĩnh viễn trong dự án
+            else {
+                String projectDir = System.getProperty("user.dir");
+                File externalFile = new File(projectDir + File.separator + "user_data" + File.separator + productPath);
+
+                if (externalFile.exists()) {
+                    previewImage.setImage(new Image(externalFile.toURI().toString()));
+                } else {
+                    // Nếu không tìm thấy file, quay về ảnh mặc định trong resource
+                    previewImage.setImage(new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm()));
+                }
+            }
         } catch (Exception e) {
-            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đọc ảnh!");
+            HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.WARNING, "Lỗi ko xác định", "Lỗi ko xác định");
+            try {
+                Image avt = new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm());
+                previewImage.setImage(avt);
+            } catch (Exception ignored) {}
         }
     }
-
-
 
     public void setCurrentAuctionSession (PhienDauGiaDTO phien) {
         this.currentAuctionSession = phien;
@@ -182,6 +198,7 @@ public class ReviewPageController implements Initializable {
             }
 
             danhMucSanPham.setText(currentAuctionSession.danhMucSanPham);
+            loadProductImage(currentAuctionSession);
         }
     }
 }

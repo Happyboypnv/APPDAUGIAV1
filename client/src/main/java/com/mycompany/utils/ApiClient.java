@@ -198,10 +198,10 @@ public class ApiClient {
     // Thêm 2 tham số moTa và danhMuc
     public static boolean createAuction(String tenPhien, String tenSanPham, String maSanPham,
                                         String danhMuc, String moTa, String thoiGianBatDau,
-                                        double giaKhoiDiem, int thoiGianGiay, String token) {
+                                        double giaKhoiDiem, int thoiGianGiay, String productImgPath, String token) {
         try {
             // Build request body explicitly (avoid anonymous initializer issues)
-            TaoPhienRequest request = new TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,thoiGianBatDau,giaKhoiDiem,thoiGianGiay);
+            TaoPhienRequest request = new TaoPhienRequest(tenPhien,tenSanPham,maSanPham,danhMuc,moTa,thoiGianBatDau,giaKhoiDiem,thoiGianGiay,productImgPath);
             String jsonBody = gson.toJson(request);
             if (jsonBody == null || jsonBody.equals("null")) {
                 logger.error("[createAuction] ❌ JSON serialization failed, got null");
@@ -269,19 +269,27 @@ public class ApiClient {
         }
     }
 
-    /**
-     * Gọi PUT /api/auctions/{maPhien}/start để duyệt và bắt đầu phiên đấu giá.
-     * @return true nếu thành công
-     */
-    public static boolean startAuction(String maPhien, String token) {
+
+    public static boolean approveAuction(String maPhien, String token) {
+        return putAuctionAction(maPhien, "approve", token);
+    }
+
+    public static boolean rejectAuction(String maPhien, String token) {
+        return putAuctionAction(maPhien, "reject", token);
+    }
+
+    private static boolean putAuctionAction(String maPhien, String action, String token) {
         try {
-            URL url = new URL(BASE_URL + "/api/auctions/" + maPhien + "/start");
+            URL url = new URL(BASE_URL + "/api/auctions/" + maPhien + "/" + action);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(5000);
             conn.setRequestMethod("PUT");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Accept", "application/json");
+            if (token != null) {
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+            }
             conn.setDoOutput(true);
             try (OutputStream os = conn.getOutputStream()) {
                 os.write("{}".getBytes(StandardCharsets.UTF_8));
@@ -290,7 +298,7 @@ public class ApiClient {
             conn.disconnect();
             return status == 200;
         } catch (Exception e) {
-            logger.error("[ApiClient] Lỗi startAuction: " + e.getMessage());
+            logger.error("[ApiClient] Lá»—i auction action " + action + ": " + e.getMessage());
             return false;
         }
     }

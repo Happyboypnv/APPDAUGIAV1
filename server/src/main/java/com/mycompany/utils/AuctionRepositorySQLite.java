@@ -74,10 +74,17 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
     // FIX: Bảng san_pham phải có bản ghi trước khi phien_dau_gia tham chiếu đến nó (FOREIGN KEY).
     // Trước đây không có chỗ nào INSERT vào san_pham → SQLITE_CONSTRAINT_FOREIGNKEY.
     // Dùng INSERT OR IGNORE để an toàn: nếu maProduct đã tồn tại thì bỏ qua, không lỗi.
-    String sqlProduct = "INSERT OR IGNORE INTO san_pham (ma_san_pham, ten_san_pham) VALUES (?, ?)";
+    String sqlProduct = "INSERT INTO san_pham (ma_san_pham, ten_san_pham, mo_ta, phan_loai) "
+        + "VALUES (?, ?, ?, ?) "
+        + "ON CONFLICT(ma_san_pham) DO UPDATE SET "
+        + "ten_san_pham = excluded.ten_san_pham, "
+        + "mo_ta = excluded.mo_ta, "
+        + "phan_loai = excluded.phan_loai";
     try (PreparedStatement psSp = DatabaseConnection.getConnection().prepareStatement(sqlProduct)) {
       psSp.setString(1, AuctionSession.getProduct().getProductCode());
       psSp.setString(2, AuctionSession.getProduct().getProductName());
+      psSp.setString(3, AuctionSession.getProduct().getDescription());
+      psSp.setString(4, AuctionSession.getProduct().getCategory());
       psSp.executeUpdate();
       psSp.getConnection().commit();
       logger.info("✅ Đã upsert san_pham: " + AuctionSession.getProduct().getProductCode());
@@ -87,8 +94,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
     }
 
     /// insert vao database
-    String sql = "INSERT INTO phien_dau_gia " + "(ma_phien, ten_phien, gia_hien_tai, buoc_gia, thoi_gian_bat_dau, thoi_gian_ket_thuc, trang_thai, ma_nguoi_ban, ma_san_pham, ma_nguoi_thang_cuoc, is_closed) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO phien_dau_gia " + "(ma_phien, ten_phien, gia_hien_tai, buoc_gia, thoi_gian_bat_dau, thoi_gian_ket_thuc, trang_thai, ma_nguoi_ban, ma_san_pham, ma_nguoi_thang_cuoc, is_closed, is_accepted,product_img_path) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
     try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
       ps.setString(1, AuctionSession.getSessionId());
       ps.setString(2, AuctionSession.getSessionName());
@@ -101,6 +108,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
       ps.setString(9, AuctionSession.getProduct().getProductCode());
       ps.setString(10, AuctionSession.getWinner() != null ? AuctionSession.getWinner().getUserId() : null);
       ps.setBoolean(11, AuctionSession.isClosed());
+      ps.setInt(12, AuctionSession.isAccepted());
+      ps.setString(13, AuctionSession.getProductImgPath());
       // Thực thi câu lệnh INSERT
       // executeUpdate() = dùng cho INSERT, UPDATE, DELETE (không lấy dữ liệu trả về)
       // Trả về số dòng bị ảnh hưởng (1 = thành công)
@@ -126,7 +135,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
     Map<String, AuctionSession> result = new HashMap<>();
     String sql = "SELECT p.*, " +
         "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
-        "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
+        "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, sp.mo_ta as mo_ta, sp.phan_loai as phan_loai, " +
         "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
         "FROM phien_dau_gia p " +
         "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
@@ -151,7 +160,11 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
         // Create Product
         Product Product = null;
         if (rs.getString("ma_san_pham") != null) {
-          Product = new Product(rs.getString("ten_san_pham"), rs.getString("ma_san_pham"));
+          Product = new Product(
+              rs.getString("ten_san_pham"),
+              rs.getString("ma_san_pham"),
+              rs.getString("mo_ta"),
+              rs.getString("phan_loai"));
         }
         // Create winner
         User winner = null;
@@ -172,6 +185,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
         AuctionSession.setEndTime(rs.getString("thoi_gian_ket_thuc") != null ? LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")) : null);
         AuctionSession.setStatus(SessionStatus.valueOf(rs.getString("trang_thai")));
         AuctionSession.setClosed(rs.getBoolean("is_closed"));
+        AuctionSession.setAccepted(rs.getInt("is_accepted"));
+        AuctionSession.setProductImgPath(rs.getString("product_img_path"));
         AuctionSession.setWinner(winner);
         result.put(AuctionSession.getSessionId(), AuctionSession);
       }
@@ -191,7 +206,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
   public AuctionSession findById(String auctionId) {
     String sql = "SELECT p.*, " +
         "nb.ma_nguoi_dung as ma_nguoi_ban, nb.ho_ten as ten_nguoi_ban, nb.thu_dien_tu as email_nguoi_ban, nb.mat_khau as mat_khau_nguoi_ban, nb.ngay_sinh as ngay_sinh_nguoi_ban, nb.dia_chi as dia_chi_nguoi_ban, nb.so_dien_thoai as so_dien_thoai_nguoi_ban, nb.so_du_kha_dung as so_du_kha_dung_nguoi_ban, " +
-        "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, " +
+        "sp.ma_san_pham as ma_san_pham, sp.ten_san_pham as ten_san_pham, sp.mo_ta as mo_ta, sp.phan_loai as phan_loai, " +
         "ntc.ma_nguoi_dung as ma_nguoi_thang_cuoc, ntc.ho_ten as ten_nguoi_thang_cuoc, ntc.thu_dien_tu as email_nguoi_thang_cuoc, ntc.mat_khau as mat_khau_nguoi_thang_cuoc, ntc.ngay_sinh as ngay_sinh_nguoi_thang_cuoc, ntc.dia_chi as dia_chi_nguoi_thang_cuoc, ntc.so_dien_thoai as so_dien_thoai_nguoi_thang_cuoc, ntc.so_du_kha_dung as so_du_kha_dung_nguoi_thang_cuoc " +
         "FROM phien_dau_gia p " +
         "LEFT JOIN nguoi_dung nb ON p.ma_nguoi_ban = nb.ma_nguoi_dung " +
@@ -211,7 +226,11 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
           // Create Product
           Product product = null;
           if (rs.getString("ma_san_pham") != null) {
-            product = new Product(rs.getString("ten_san_pham"), rs.getString("ma_san_pham"));
+            product = new Product(
+                rs.getString("ten_san_pham"),
+                rs.getString("ma_san_pham"),
+                rs.getString("mo_ta"),
+                rs.getString("phan_loai"));
           }
           // Create winner
           User winner = null;
@@ -232,6 +251,8 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
           auction.setEndTime(rs.getString("thoi_gian_ket_thuc") != null ? LocalDateTime.parse(rs.getString("thoi_gian_ket_thuc")) : null);
           auction.setStatus(SessionStatus.valueOf(rs.getString("trang_thai")));
           auction.setClosed(rs.getBoolean("is_closed"));
+          auction.setAccepted(rs.getInt("is_accepted"));
+          auction.setProductImgPath(rs.getString("product_img_path"));
           auction.setWinner(winner);
           return auction;
         }
@@ -244,7 +265,7 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
 
   @Override
   public boolean update(AuctionSession AuctionSession) {
-    String sql = "UPDATE phien_dau_gia SET ten_phien = ?, gia_hien_tai = ?, buoc_gia = ?, thoi_gian_bat_dau = ?, thoi_gian_ket_thuc = ?, trang_thai = ?, ma_nguoi_ban = ?, ma_san_pham = ?, ma_nguoi_thang_cuoc = ?, is_closed = ? WHERE ma_phien = ?";
+    String sql = "UPDATE phien_dau_gia SET ten_phien = ?, gia_hien_tai = ?, buoc_gia = ?, thoi_gian_bat_dau = ?, thoi_gian_ket_thuc = ?, trang_thai = ?, ma_nguoi_ban = ?, ma_san_pham = ?, ma_nguoi_thang_cuoc = ?, is_closed = ?, is_accepted = ?, product_img_path = ? WHERE ma_phien = ?";
     try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
       ps.setString(1, AuctionSession.getSessionName());
       ps.setDouble(2, AuctionSession.getCurrentPrice());
@@ -256,7 +277,9 @@ public class AuctionRepositorySQLite implements IAuctionRepository {
       ps.setString(8, AuctionSession.getProduct().getProductCode());
       ps.setString(9, AuctionSession.getWinner() != null ? AuctionSession.getWinner().getUserId() : null);
       ps.setBoolean(10, AuctionSession.isClosed());
-      ps.setString(11, AuctionSession.getSessionId());
+      ps.setInt(11, AuctionSession.isAccepted());
+      ps.setString(12, AuctionSession.getProductImgPath());
+      ps.setString(13, AuctionSession.getSessionId());
       int rows = ps.executeUpdate();
       ps.getConnection().commit();
       return rows > 0;

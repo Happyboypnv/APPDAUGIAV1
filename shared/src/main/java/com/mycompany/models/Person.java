@@ -23,6 +23,7 @@ public class Person implements Serializable {
     private String email;
     private String dateOfBirth;
     private String password;
+    private int role;
 
     /**
      * Salt field for password hashing.
@@ -60,6 +61,12 @@ public class Person implements Serializable {
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
+        this.role = 0;
+    }
+
+    protected Person(String fullName, String email, String password, String dateOfBirth, int role) {
+        this(fullName, email, password, dateOfBirth);
+        this.role = role;
     }
 
     /**
@@ -93,6 +100,10 @@ public class Person implements Serializable {
         return password;
     }
 
+    public int getRole() {
+        return role;
+    }
+
     /** Returns the salt used for password hashing. */
     public String getSalt() {
         return salt;
@@ -123,6 +134,10 @@ public class Person implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     /** Sets the salt for password hashing. Required when migrating legacy users. */

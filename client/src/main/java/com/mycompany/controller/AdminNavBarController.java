@@ -2,6 +2,7 @@ package com.mycompany.controller;
 
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.HomeAction;
+import com.mycompany.controller.BiddingRoomController;
 import com.mycompany.models.User;
 import com.mycompany.utils.SessionManager;
 import javafx.event.ActionEvent;
@@ -121,9 +122,11 @@ public class AdminNavBarController implements Initializable { // Controller chun
 
                 if (externalFile.exists()) {
                     avatarImage.setImage(new Image(externalFile.toURI().toString()));
+                    logger.info("Đường ẫn ảnh Client tìm: " + externalFile.getAbsolutePath());
                 } else {
                     // Nếu không tìm thấy file, quay về ảnh mặc định trong resource
                     avatarImage.setImage(new Image(getClass().getResource("/image/default_avatar.jpg").toExternalForm()));
+                    logger.info("Ko tim thay duong dan!");
                 }
             }
         } catch (Exception e) {

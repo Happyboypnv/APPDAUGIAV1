@@ -31,6 +31,7 @@ public class LoginResponse {
 
     /** Thông báo kết quả: thành công hoặc lý do thất bại */
     private String thongBao;
+    private int role;
 
     /**
      * NEW: Session status for multi-device detection
@@ -84,12 +85,14 @@ public class LoginResponse {
     public String getEmail()    { return email; }
     public String getHoTen()    { return hoTen; }
     public String getThongBao() { return thongBao; }
+    public int getRole() { return role; }
     public String getSessionStatus() { return sessionStatus; }
     public String getExistingDeviceId() { return existingDeviceId; }
     public String getExistingIpAddress() { return existingIpAddress; }
     
     // Setters
     public void setSessionStatus(String sessionStatus) { this.sessionStatus = sessionStatus; }
+    public void setRole(int role) { this.role = role; }
     public void setExistingDeviceId(String deviceId) { this.existingDeviceId = deviceId; }
     public void setExistingIpAddress(String ipAddress) { this.existingIpAddress = ipAddress; }
 

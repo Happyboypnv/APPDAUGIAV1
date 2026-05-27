@@ -11,4 +11,5 @@ public class PhienDauGiaDTO {
     public String thoiGianKetThuc;
     public String moTa;
     public String danhMucSanPham;
+    public String productImgPath;
 }

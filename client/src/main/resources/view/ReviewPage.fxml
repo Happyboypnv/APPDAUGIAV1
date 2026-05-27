@@ -100,7 +100,7 @@
                                                         <Font size="16.0" />
                                                     </font>
                                                 </Label>
-                                                <StackPane fx:id="dropArea" onMouseClicked="#handleSelectImage" prefHeight="195.0" prefWidth="300.0" styleClass="upload-box">
+                                                <StackPane fx:id="dropArea" prefHeight="195.0" prefWidth="300.0">
                                                     <children>
                                                         <VBox fx:id="instructionText" alignment="CENTER" spacing="10">
                                                             <children>

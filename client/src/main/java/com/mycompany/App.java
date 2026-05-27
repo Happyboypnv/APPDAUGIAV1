@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +53,7 @@ public class    App extends Application {
 
             // 1. Tải file giao diện đăng ký (SignUp.fxml)
             // Đảm bảo tên file khớp chính xác (phân biệt hoa thường)
-            Parent root = FXMLLoader.load(getClass().getResource("/resources/view/SignIn.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
 
             // 2. Tạo Scene
             // Vì giao diện của bạn có bo góc (Radius), nên để Fill là TRANSPARENT

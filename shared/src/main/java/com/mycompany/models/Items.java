@@ -1,6 +1,6 @@
 package com.mycompany.models;
 
-abstract class Items extends Product {
+public abstract class Items extends Product {
 
     protected String description;
     protected String category;
@@ -12,4 +12,14 @@ abstract class Items extends Product {
     }
 
     public abstract String getDisplayInfo();
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String getCategory() {
+        return category;
+    }
 }

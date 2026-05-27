@@ -23,6 +23,8 @@ public class AuctionSession {
   private boolean hasBid = false;
   private volatile SessionStatus status;
   private boolean isClosed = false;
+  private int isAccepted = -1;
+  private String productImgPath;
 
   public AuctionSession(String sessionId, String sessionName, Product product,
                         double startingPrice, User seller, int duration) {
@@ -33,7 +35,7 @@ public class AuctionSession {
     this.seller = seller;
     this.duration = duration;
     priceStep = 0.0;
-    this.status = SessionStatus.WAITING;
+    this.status = SessionStatus.PENDING;
   }
 
   public AuctionSession(String sessionName, Product product, double startingPrice,
@@ -108,6 +110,14 @@ public class AuctionSession {
 
   public void setSessionId(String sessionId) {
     this.sessionId = sessionId;
+  }
+
+  public void setAccepted(int accepted) {
+    this.isAccepted = accepted;
+  }
+
+  public void setProductImgPath(String productImgPath) {
+    this.productImgPath = productImgPath;
   }
 
   // ===== GETTERS =====
@@ -185,7 +195,15 @@ public class AuctionSession {
     return this.isClosed;
   }
 
+  public int isAccepted() {
+    return this.isAccepted;
+  }
+
   public void setClosed(boolean closed) {
     this.isClosed = closed;
+  }
+
+  public String getProductImgPath() {
+    return productImgPath;
   }
 }

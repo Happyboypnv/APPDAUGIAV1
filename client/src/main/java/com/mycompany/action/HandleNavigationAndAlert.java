@@ -31,7 +31,7 @@ public class HandleNavigationAndAlert {
 
     public void handleGoToHome(Event event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
-        StackPane homeRoot = FXMLLoader.load(getClass().getResource("/resources/view/Home.fxml"));
+        StackPane homeRoot = FXMLLoader.load(getClass().getResource("/view/Home.fxml"));
         Scene homeScene = new Scene(homeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(homeScene);
@@ -40,7 +40,7 @@ public class HandleNavigationAndAlert {
 
     public void handleGoToSignIn(ActionEvent event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
-        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/resources/view/SignIn.fxml"));
+        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
         Scene signUpScene = new Scene(signUpRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(signUpScene);
@@ -49,7 +49,7 @@ public class HandleNavigationAndAlert {
 
     public void handleGoToSignUp(ActionEvent event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
-        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/resources/view/SignUp.fxml"));
+        Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"));
         Scene signUpScene = new Scene(signUpRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(signUpScene);
@@ -59,7 +59,7 @@ public class HandleNavigationAndAlert {
     public void goToCreateAuction(Event event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
         javafx.scene.layout.StackPane root =
-                FXMLLoader.load(getClass().getResource("/resources/view/CreateAuction.fxml"));
+                FXMLLoader.load(getClass().getResource("/view/CreateAuction.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -73,7 +73,7 @@ public class HandleNavigationAndAlert {
             return;
         }
         // Đã sửa đường dẫn thêm /resources
-        Parent profileRoot = FXMLLoader.load(getClass().getResource("/resources/view/Profile.fxml"));
+        Parent profileRoot = FXMLLoader.load(getClass().getResource("/view/Profile.fxml"));
         Scene profileScene = new Scene(profileRoot);
 
         stage.setScene(profileScene);
@@ -82,7 +82,7 @@ public class HandleNavigationAndAlert {
 
     public void goToFinance(Event event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
-        StackPane financeRoot = FXMLLoader.load(getClass().getResource("/resources/view/Finance.fxml"));
+        StackPane financeRoot = FXMLLoader.load(getClass().getResource("/view/Finance.fxml"));
         Scene homeScene = new Scene(financeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(homeScene);
@@ -91,7 +91,7 @@ public class HandleNavigationAndAlert {
 
     public void goToTransactionHistory(Event event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
-        StackPane root = FXMLLoader.load(getClass().getResource("/resources/view/TransactionHistory.fxml"));
+        StackPane root = FXMLLoader.load(getClass().getResource("/view/TransactionHistory.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -101,44 +101,44 @@ public class HandleNavigationAndAlert {
     public void handleGoToAdminHome(ActionEvent event) throws IOException {
         Node node = (Node) event.getSource();
         Scene scene = node.getScene();
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/Admin_Home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/Admin_Home.fxml"));
         Stage stage = (Stage) scene.getWindow();
         scene.setRoot(root);
     }
 
     public void goToAdminProfile(MouseEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/AdminProfile.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/AdminProfile.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void goToUserManagement(MouseEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/UserManagement.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/UserManagement.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void goToAuctionRequests(MouseEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewAuctionRequest.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ReviewAuctionRequest.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void handleGoToReviewAuction(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewAuctionRequest.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ReviewAuctionRequest.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void goToAuctionReview(MouseEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewPage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ReviewPage.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void goToChangePassword(ActionEvent event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
-        StackPane changeRoot = FXMLLoader.load(getClass().getResource("/resources/view/ChangePassword.fxml"));
+        StackPane changeRoot = FXMLLoader.load(getClass().getResource("/view/ChangePassword.fxml"));
         Scene scene = new Scene(changeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -148,7 +148,7 @@ public class HandleNavigationAndAlert {
     public void goToBiddingRoom(javafx.scene.input.MouseEvent event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
         javafx.scene.layout.StackPane root = FXMLLoader.load(
-                getClass().getResource("/resources/view/BiddingRoom.fxml"));
+                getClass().getResource("/view/BiddingRoom.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -158,7 +158,7 @@ public class HandleNavigationAndAlert {
     public void goToCreatePhienDauGia(Event event) throws IOException {
         // Đã sửa đường dẫn thêm /resources
         javafx.scene.layout.StackPane root = FXMLLoader.load(
-                getClass().getResource("/resources/view/CreatePhienDauGia.fxml"));
+                getClass().getResource("/view/CreatePhienDauGia.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -174,25 +174,25 @@ public class HandleNavigationAndAlert {
     }
 
     public void handleGoToAdminHome(MouseEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/Admin_Home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/Admin_Home.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void handleGoToUserList(MouseEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/UserManagement.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/UserManagement.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void handleGoToReviewAuction(MouseEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/ReviewAuctionRequest.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ReviewAuctionRequest.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
 
     public void goToAdminProfile(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/AdminProfile.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/AdminProfile.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

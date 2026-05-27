@@ -122,11 +122,14 @@ public class DatabaseConnection {
         "so_du_kha_dung REAL DEFAULT 0, " +
         "so_tai_khoan_ngan_hang TEXT, " +
         "ten_ngan_hang TEXT, " +
-        "duong_dan_avatar TEXT);";
+        "duong_dan_avatar TEXT, " +
+        "role INTEGER DEFAULT 0);";
 
     String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
         "ma_san_pham TEXT PRIMARY KEY, " +
-        "ten_san_pham TEXT NOT NULL);";
+        "ten_san_pham TEXT NOT NULL, " +
+        "mo_ta TEXT, " +
+        "phan_loai TEXT);";
 
     String sqlPhien = "CREATE TABLE IF NOT EXISTS phien_dau_gia (" +
         "ma_phien TEXT PRIMARY KEY, " +
@@ -140,6 +143,8 @@ public class DatabaseConnection {
         "ma_nguoi_thang_cuoc TEXT, " +
         "ma_san_pham TEXT, " +
         "is_closed INTEGER DEFAULT 0, " +
+        "is_accepted INTEGER DEFAULT -1, " +
+            "product_img_path TEXT , " +
         "FOREIGN KEY (ma_nguoi_ban) REFERENCES nguoi_dung(ma_nguoi_dung), " +
         "FOREIGN KEY (ma_nguoi_thang_cuoc) REFERENCES nguoi_dung(ma_nguoi_dung), " +
         "FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham));";
@@ -176,10 +181,15 @@ public class DatabaseConnection {
       addColumnIfMissing(conn, "nguoi_dung", "so_du_thuc_te", "REAL DEFAULT 0");
       addColumnIfMissing(conn, "nguoi_dung", "so_du_dong_bang", "REAL DEFAULT 0");
       addColumnIfMissing(conn, "nguoi_dung", "so_du_kha_dung", "REAL DEFAULT 0");
+      addColumnIfMissing(conn, "nguoi_dung", "role", "INTEGER DEFAULT 0");
       stmt.execute("UPDATE nguoi_dung SET so_du_thuc_te = so_du_kha_dung WHERE so_du_thuc_te = 0 AND so_du_kha_dung > 0");
 
       stmt.execute(sqlSanPham);
+      addColumnIfMissing(conn, "san_pham", "mo_ta", "TEXT");
+      addColumnIfMissing(conn, "san_pham", "phan_loai", "TEXT");
       stmt.execute(sqlPhien);
+      addColumnIfMissing(conn, "phien_dau_gia", "product_img_path", "TEXT");
+      addColumnIfMissing(conn, "phien_dau_gia", "is_accepted", "INTEGER DEFAULT -1");
       stmt.execute(sqlGiaoDich);
       stmt.execute(sqlNguoiTraGia);
       stmt.execute(sqlEscrowLog);

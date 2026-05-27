@@ -105,20 +105,20 @@ public class HomeController implements Initializable {
 
     private void doRefresh() {
         new Thread(() -> {
-            List<PhienDauGiaDTO> list = ApiClient.getAuctions();
-            String userId = SessionManager.getInstance().getCurrentUser() != null
-                ? SessionManager.getInstance().getCurrentUser().getUserId()
-                : null;
-            Set<String> hiddenAuctionIds = hiddenAuctionRepository.findHiddenAuctionIds(userId);
-            List<PhienDauGiaDTO> visibleList = list.stream()
-                .filter(phien -> phien.maPhien == null || !hiddenAuctionIds.contains(phien.maPhien))
-                .toList();
+            List<PhienDauGiaDTO> allAuctions = ApiClient.getAuctions();
+            // Filter to show only WAITING and IN_PROGRESS auctions for users
+            List<PhienDauGiaDTO> filteredList = new java.util.ArrayList<>();
+            for (PhienDauGiaDTO dto : allAuctions) {
+                if ("WAITING".equals(dto.trangThai) || "IN_PROGRESS".equals(dto.trangThai) || "PAID".equals(dto.trangThai)) {
+                    filteredList.add(dto);
+                }
+            }
             Platform.runLater(() -> {
-                danhSachPhien = visibleList;
+                danhSachPhien = filteredList;
                 // Giữ vị trí scroll hiện tại
                 int selectedIndex = listViewPhien.getSelectionModel().getSelectedIndex();
-                listViewPhien.setItems(FXCollections.observableArrayList(visibleList));
-                if (selectedIndex >= 0 && selectedIndex < visibleList.size()) {
+                listViewPhien.setItems(FXCollections.observableArrayList(filteredList));
+                if (selectedIndex >= 0 && selectedIndex < filteredList.size()) {
                     listViewPhien.getSelectionModel().select(selectedIndex);
                 }
             });
@@ -145,7 +145,7 @@ public class HomeController implements Initializable {
                     "Phiên đấu giá này chưa đến giờ bắt đầu. Vui lòng quay lại sau!");
                 return;
             case "PAID":
-            case "CANCELLED":
+            case "CANCELLED", "FINISHED":
                 HandleNavigationAndAlert.getInstance().showAlert(
                     Alert.AlertType.WARNING, "Phiên đã đóng",
                     "Phiên đấu giá này đã kết thúc, không thể vào phòng.");
@@ -329,6 +329,11 @@ public class HomeController implements Initializable {
                     mauChu = "#e74c3c";
                     labelText = "✕ Đã hủy";
                     break;
+                case "FINSHED":
+                    mauNen = "rgba(231,76,60,0.25)";    // đỏ (cùng màu PAID)
+                    mauChu = "#e74c3c";
+                    labelText = "✕ Đã kết thúc";
+                    break;
                 default:
                     mauNen = "rgba(255,255,255,0.1)";
                     mauChu = "#ccc";
@@ -381,8 +386,8 @@ public class HomeController implements Initializable {
                 root.getChildren().remove(btnWatch);
             }
 
-            // Hiện nút Xóa chỉ cho PAID và CANCELLED
-            if ("PAID".equals(tt) || "CANCELLED".equals(tt)) {
+            // Hiện nút Xóa chỉ cho PAID, CANCELLED và FINISHED
+            if ("PAID".equals(tt) || "CANCELLED".equals(tt) || "FINISHED".equals(tt)) {
                 final String maPhienToDelete = p.maPhien;
                 final String tenPhienToDelete = p.tenPhien;
                 btnXoa.setOnAction(e -> {

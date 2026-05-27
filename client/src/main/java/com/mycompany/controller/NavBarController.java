@@ -77,7 +77,7 @@ public class NavBarController implements Initializable {
         contextMenu.getItems().addAll(profileItem, logoutItem);
 
         // 🔹 ĐÃ SỬA: Thêm /resources vào trước đường dẫn file ảnh home
-        Image home = new Image(getClass().getResource("/resources/image/square.png").toExternalForm());
+        Image home = new Image(getClass().getResource("/image/square.png").toExternalForm());
         homeIcon.setImage(home);
     }
 
@@ -93,29 +93,40 @@ public class NavBarController implements Initializable {
 
             // Trường hợp 1: Nếu là ảnh mặc định ban đầu -> Đọc từ resource tĩnh
             if (avatarPath.equals("image/default_avatar.jpg")) {
-                // 🔹 ĐÃ SỬA: Thêm /resources vào trước đường dẫn resource tĩnh ban đầu
-                URL resourceUrl = getClass().getResource("/resources/" + avatarPath);
+                // FIX: Load default avatar from /image/ path in resources (NOT /resources/)
+                URL resourceUrl = getClass().getResource("/" + avatarPath);
                 if (resourceUrl != null) {
                     avatarImage.setImage(new Image(resourceUrl.toExternalForm()));
+                } else {
+                    logger.warn("Cannot find default avatar in resources: /" + avatarPath);
                 }
             }
-            // Trường hợp 2: Nếu là ảnh do user thay đổi
+            // Trường hợp 2: Nếu là ảnh do user thay đổi -> Đọc từ thư mục user_data
             else {
                 String projectDir = System.getProperty("user.dir");
                 File externalFile = new File(projectDir + File.separator + "user_data" + File.separator + avatarPath);
 
                 if (externalFile.exists()) {
                     avatarImage.setImage(new Image(externalFile.toURI().toString()));
+                    logger.info("✅ Avatar found at: " + externalFile.getAbsolutePath());
                 } else {
-                    // 🔹 ĐÃ SỬA: Thêm /resources vào trước đường dẫn fallback dự phòng ảnh mặc định
-                    avatarImage.setImage(new Image(getClass().getResource("/resources/image/default_avatar.jpg").toExternalForm()));
+                    // If file not found, fallback to default avatar in resources
+                    logger.warn("Avatar file not found at: " + externalFile.getAbsolutePath() + ", using default.");
+                    URL resourceUrl = getClass().getResource("/image/default_avatar.jpg");
+                    if (resourceUrl != null) {
+                        avatarImage.setImage(new Image(resourceUrl.toExternalForm()));
+                    }
                 }
             }
         } catch (Exception e) {
+            logger.error("Error loading avatar: " + e.getMessage());
             try {
-                // 🔹 ĐÃ SỬA: Thêm /resources vào trước đường dẫn fallback trong khối catch lỗi ngoại lệ
-                Image avt = new Image(getClass().getResource("/resources/image/default_avatar.jpg").toExternalForm());
-                avatarImage.setImage(avt);
+                // Fallback: load default avatar from resources
+                URL resourceUrl = getClass().getResource("/image/default_avatar.jpg");
+                if (resourceUrl != null) {
+                    Image avt = new Image(resourceUrl.toExternalForm());
+                    avatarImage.setImage(avt);
+                }
             } catch (Exception ignored) {}
         }
     }

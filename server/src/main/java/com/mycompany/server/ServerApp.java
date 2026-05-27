@@ -61,6 +61,7 @@ public class ServerApp {
     // ===== KHỞI TẠO DATABASE =====
     DatabaseConnection.initialize();
     AuctionRepositorySQLite auctionRepo = new AuctionRepositorySQLite();
+
     try {
       Map<String, AuctionSession> allSessions = auctionRepo.findAll();
       AuctionScheduler scheduler = AuctionScheduler.getInstance();
@@ -76,8 +77,21 @@ public class ServerApp {
       for (AuctionSession session : allSessions.values()) {
         SessionStatus status = session.getStatus();
 
-        if (status == SessionStatus.WAITING) {
+        if (status == SessionStatus.PENDING) {
+          registry.add(session);
+          scheduler.setASAuction(session);
+          logger.info("Khoi phuc phien {} dang cho admin duyet", session.getSessionId());
+
+        } else if (status == SessionStatus.WAITING) {
           if (session.getStartTime() == null) continue;
+
+          if (session.isAccepted() == 0) {
+            scheduler.cancelAS(session);
+            session.setStatus(SessionStatus.CANCELLED);
+            auctionRepo.update(session);
+            logger.info("Phien {} da bi admin tu choi truoc do", session.getSessionId());
+            continue;
+          }
 
           if (!session.getStartTime().isAfter(now)) {
             // Da den hoac qua gio mo -> mo ngay (delay=0)

@@ -6,6 +6,8 @@ import com.mycompany.action.AuctionScheduler;
 import com.mycompany.action.AuctionSessionService;
 import com.mycompany.action.AuctionSessionRegistry;
 import com.mycompany.models.AuctionSession;
+import com.mycompany.models.ItemFactory;
+import com.mycompany.models.Items;
 import com.mycompany.models.Product;
 import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
@@ -99,6 +101,18 @@ public class AuctionController {
     // POST /api/auctions  → tạo phiên mới
     if (method.equals("POST") && path.equals("/api/auctions")) {
       handleCreateAuction(exchange);
+      return;
+    }
+
+    if (method.equals("PUT") && path.endsWith("/approve")) {
+      String segment = path.replace("/api/auctions/", "").replace("/approve", "");
+      handleApproveAuction(exchange, segment);
+      return;
+    }
+
+    if (method.equals("PUT") && path.endsWith("/reject")) {
+      String segment = path.replace("/api/auctions/", "").replace("/reject", "");
+      handleRejectAuction(exchange, segment);
       return;
     }
 
@@ -224,27 +238,40 @@ public class AuctionController {
       return;
     }
 
-    Product sanPham = new Product(req.tenSanPham, req.maSanPham);
-    AuctionSession phienMoi = new AuctionSession(
-        null, req.tenPhien, sanPham, req.giaKhoiDiem, seller, req.thoiGianGiay);
-
-    // Tính startTime và endTime
-    java.time.LocalDateTime thoiGianBD;
-    if (req.thoiGianBatDau != null && !req.thoiGianBatDau.isBlank()) {
-      try {
-        thoiGianBD = java.time.LocalDateTime.parse(req.thoiGianBatDau);
-      } catch (Exception e) {
-        guiPhanHoi(exchange, 400, sendBug("thoiGianBatDau không đúng định dạng ISO-8601 (vd: 2026-05-20T09:00:00)"));
-        return;
-      }
+    Product sanPham;
+    ItemFactory itemFactory = ItemFactory.getFactory(req.danhMuc);
+    if (itemFactory != null) {
+      Items item = itemFactory.createItem(req.tenSanPham, req.maSanPham, req.moTa);
+      sanPham = item;
     } else {
-      // Client không truyền thoiGianBatDau → bắt đầu ngay bây giờ
-      thoiGianBD = java.time.LocalDateTime.now();
+      sanPham = new Product(req.tenSanPham, req.maSanPham, req.moTa, req.danhMuc);
     }
-    phienMoi.setStartTime(thoiGianBD);
-    phienMoi.setEndTime(thoiGianBD.plusSeconds(req.thoiGianGiay)); // FIX: endTime không còn null
+     AuctionSession phienMoi = new AuctionSession(
+         null, req.tenPhien, sanPham, req.giaKhoiDiem, seller, req.thoiGianGiay);
 
-    auctionRepository.save(phienMoi);
+     // Tính startTime và endTime
+     java.time.LocalDateTime thoiGianBD;
+     if (req.thoiGianBatDau != null && !req.thoiGianBatDau.isBlank()) {
+       try {
+         thoiGianBD = java.time.LocalDateTime.parse(req.thoiGianBatDau);
+       } catch (Exception e) {
+         guiPhanHoi(exchange, 400, sendBug("thoiGianBatDau không đúng định dạng ISO-8601 (vd: 2026-05-20T09:00:00)"));
+         return;
+       }
+     } else {
+       // Client không truyền thoiGianBatDau → bắt đầu ngay bây giờ
+       thoiGianBD = java.time.LocalDateTime.now();
+     }
+     phienMoi.setStartTime(thoiGianBD);
+     phienMoi.setEndTime(thoiGianBD.plusSeconds(req.thoiGianGiay)); // FIX: endTime không còn null
+
+     // FIX: Set productImgPath từ request vào AuctionSession trước khi save
+     if (req.productImgPath != null && !req.productImgPath.isBlank()) {
+       phienMoi.setProductImgPath(req.productImgPath);
+       logger.info("✅ Đặt productImgPath: " + req.productImgPath);
+     }
+
+     auctionRepository.save(phienMoi);
 
     // FIX: Đồng bộ vào in-memory store để WebSocket tìm thấy
     AuctionSessionRegistry.getInstance().add(phienMoi);
@@ -293,6 +320,11 @@ public class AuctionController {
       return;
     }
 
+    if (phien.isAccepted() != 1) {
+      guiPhanHoi(exchange, 403, sendBug("PhiÃªn chÆ°a Ä‘Æ°á»£c admin duyá»‡t"));
+      return;
+    }
+
     auctionSessionService.startAuction(phien);
     auctionRepository.update(phien);
 
@@ -305,6 +337,50 @@ public class AuctionController {
   // =========================================================
 // API 5: DELETE /api/auctions/{id}  →  xóa phiên đã hủy/kết thúc
 // =========================================================
+  private void handleApproveAuction(HttpExchange exchange, String maPhien) throws IOException {
+    User admin = checkToken(exchange);
+    if (admin == null) return;
+    if (!isAdmin(admin)) {
+      guiPhanHoi(exchange, 403, sendBug("Chá»‰ admin má»›i Ä‘Æ°á»£c duyá»‡t phiÃªn"));
+      return;
+    }
+
+    AuctionSession phien = auctionRepository.findById(maPhien);
+    if (phien == null) {
+      guiPhanHoi(exchange, 404, sendBug("KhÃ´ng tÃ¬m tháº¥y phiÃªn: " + maPhien));
+      return;
+    }
+    if (phien.getStatus() != SessionStatus.PENDING) {
+      guiPhanHoi(exchange, 400, sendBug("Chá»‰ cÃ³ thá»ƒ duyá»‡t phiÃªn Ä‘ang PENDING"));
+      return;
+    }
+
+    auctionSessionService.acceptAuctionRequest(phien);
+    guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("ÄÃ£ duyá»‡t phiÃªn " + maPhien)));
+  }
+
+  private void handleRejectAuction(HttpExchange exchange, String maPhien) throws IOException {
+    User admin = checkToken(exchange);
+    if (admin == null) return;
+    if (!isAdmin(admin)) {
+      guiPhanHoi(exchange, 403, sendBug("Chá»‰ admin má»›i Ä‘Æ°á»£c tá»« chá»‘i phiÃªn"));
+      return;
+    }
+
+    AuctionSession phien = auctionRepository.findById(maPhien);
+    if (phien == null) {
+      guiPhanHoi(exchange, 404, sendBug("KhÃ´ng tÃ¬m tháº¥y phiÃªn: " + maPhien));
+      return;
+    }
+    if (phien.getStatus() != SessionStatus.PENDING) {
+      guiPhanHoi(exchange, 400, sendBug("Chá»‰ cÃ³ thá»ƒ tá»« chá»‘i phiÃªn Ä‘ang PENDING"));
+      return;
+    }
+
+    auctionSessionService.denyAuctionRequest(phien);
+    guiPhanHoi(exchange, 200, gson.toJson(new ThongBao("ÄÃ£ tá»« chá»‘i phiÃªn " + maPhien)));
+  }
+
   private void handleDeleteAuction(HttpExchange exchange, String maPhien) throws IOException {
     User nguoiYeuCau = checkToken(exchange);
     if (nguoiYeuCau == null) return;
@@ -377,8 +453,8 @@ public class AuctionController {
     // Phiên WAITING: chỉ người tạo phiên mới được hủy
     boolean isSeller = phien.getSeller() != null
         && phien.getSeller().getUserId().equals(nguoiYeuCau.getUserId());
-    if (!isSeller) {
-      guiPhanHoi(exchange, 403, sendBug("Chỉ người tạo phiên mới được hủy"));
+    if (!isSeller && !isAdmin(nguoiYeuCau)) {
+      guiPhanHoi(exchange, 403, sendBug("Chỉ người tạo phiên hoặc admin mới được hủy"));
       return;
     }
 
@@ -438,6 +514,10 @@ public class AuctionController {
     return nguoiDung;
   }
 
+  private boolean isAdmin(User user) {
+    return user != null && user.getRole() == 1;
+  }
+
   /** Trích xuất đoạn sau prefix từ URL path */
   private String getIDByPath(String path, String prefix) {
     if (!path.startsWith(prefix) || path.length() <= prefix.length()) return null;
@@ -486,6 +566,7 @@ public class AuctionController {
     double giaKhoiDiem;
     int    thoiGianGiay;
     String thoiGianBatDau; // ISO-8601, vd: "2026-05-20T09:00:00" — tuỳ chọn, nếu có sẽ lên lịch tự động mở
+    String productImgPath; // Đường dẫn ảnh sản phẩm trên local directory của seller
 
     public TaoPhienRequest(String tenPhien, String tenSanPham, String maSanPham, String danhMuc, String moTa, String thoiGianBatDau, double giaKhoiDiem, int thoiGianGiay) {
       this.tenPhien = tenPhien;
@@ -517,8 +598,11 @@ public class AuctionController {
     String trangThai;
     String tenNguoiBan;
     String tenSanPham;
+    String moTa;
+    String danhMucSanPham;
     String thoiGianBatDau;
     String thoiGianKetThuc;
+    String productImgPath;
 
     TomTatPhien(AuctionSession p) {
       this.maPhien         = p.getSessionId();
@@ -527,8 +611,11 @@ public class AuctionController {
       this.trangThai       = p.getStatus().name();
       this.tenNguoiBan     = p.getSeller()    != null ? p.getSeller().getFullName()     : null;
       this.tenSanPham      = p.getProduct()   != null ? p.getProduct().getProductName() : null;
+      this.moTa            = p.getProduct()   != null ? p.getProduct().getDescription() : null;
+      this.danhMucSanPham  = p.getProduct()   != null ? p.getProduct().getCategory()    : null;
       this.thoiGianBatDau  = p.getStartTime() != null ? p.getStartTime().toString()     : null;
       this.thoiGianKetThuc = p.getEndTime()   != null ? p.getEndTime().toString()       : null;
+      this.productImgPath  = p.getProductImgPath();
     }
   }
 
@@ -543,10 +630,13 @@ public class AuctionController {
     String maNguoiBan;
     String tenSanPham;
     String maSanPham;
+    String moTa;
+    String danhMucSanPham;
     String tenNguoiThangCuoc;
     String thoiGianBatDau;
     String thoiGianKetThuc;
     int    soNguoiTraGia;
+    String productImgPath;
 
     ChiTietPhien(AuctionSession p) {
       this.maPhien           = p.getSessionId();
@@ -558,10 +648,13 @@ public class AuctionController {
       this.maNguoiBan        = p.getSeller()       != null ? p.getSeller().getUserId()     : null;
       this.tenSanPham        = p.getProduct()        != null ? p.getProduct().getProductName()       : null;
       this.maSanPham         = p.getProduct()        != null ? p.getProduct().getProductCode()        : null;
+      this.moTa              = p.getProduct()        != null ? p.getProduct().getDescription()        : null;
+      this.danhMucSanPham    = p.getProduct()        != null ? p.getProduct().getCategory()           : null;
       this.tenNguoiThangCuoc = p.getWinner() != null ? p.getWinner().getFullName()    : null;
       this.thoiGianBatDau    = p.getStartTime()  != null ? p.getStartTime().toString()   : null;
       this.thoiGianKetThuc   = p.getEndTime() != null ? p.getEndTime().toString()  : null;
       this.soNguoiTraGia     = p.getBidderList() != null ? p.getBidderList().size() : 0;
+      this.productImgPath    = p.getProductImgPath();
     }
   }
 

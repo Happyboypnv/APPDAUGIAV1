@@ -60,9 +60,10 @@ public class AuctionSessionService {
    */
   public void startAuction(AuctionSession auction) {
     synchronized (getLock(auction.getSessionId())) {
-      if (auction.getStatus() != SessionStatus.WAITING) return;
+      if (auction.getStatus() != SessionStatus.WAITING || auction.isAccepted() != 1) return;
 
       LocalDateTime now = LocalDateTime.now();
+      auctionScheduler.cancelAS(auction);
 
       // Nếu phiên có startTime được lên lịch sẵn: giữ nguyên startTime,
       // chỉ tính lại endTime dựa trên duration (nếu endTime chưa có).
@@ -140,6 +141,7 @@ public class AuctionSessionService {
             }
           }
         }
+        auction.setClosed(true);
 
         auctionRepository.update(auction);
         auctionSessionRegistry.delete(auction);
@@ -258,6 +260,92 @@ public class AuctionSessionService {
       }
 
       return payWinningAuction(auction, winner);
+    }
+  }
+
+  public void acceptAuctionRequest(AuctionSession auction) {
+    synchronized (getLock(auction.getSessionId())) {
+      if (auction.getStatus() != SessionStatus.PENDING) {
+        logger.warn("KhÃ´ng thá»ƒ duyá»‡t phiÃªn {} vÃ¬ khÃ´ng á»Ÿ tráº¡ng thÃ¡i PENDING", auction.getSessionId());
+        return;
+      }
+
+      auction.setAccepted(1);
+      auction.setStatus(SessionStatus.WAITING);
+      auctionRepository.update(auction);
+      auctionSessionRegistry.add(auction);
+
+      if (auction.getStartTime() != null && !auction.getStartTime().isAfter(LocalDateTime.now())) {
+        startAuction(auction);
+      } else {
+        auctionScheduler.setASAuction(auction);
+      }
+    }
+  }
+
+  public void denyAuctionRequest(AuctionSession auction) {
+    synchronized (getLock(auction.getSessionId())) {
+      if (auction.getStatus() != SessionStatus.PENDING) {
+        logger.warn("KhÃ´ng thá»ƒ tá»« chá»‘i phiÃªn {} vÃ¬ khÃ´ng á»Ÿ tráº¡ng thÃ¡i PENDING", auction.getSessionId());
+        return;
+      }
+
+      auction.setAccepted(0);
+      auction.setStatus(SessionStatus.CANCELLED);
+      auction.setClosed(true);
+      auctionRepository.update(auction);
+      auctionScheduler.cancelAS(auction);
+      auctionSessionRegistry.delete(auction);
+    }
+  }
+
+  public void pollDeferredAuction(AuctionSession auction, int retryCount) {
+    final int maxRetries = 12;
+    final long pollDelaySeconds = 30;
+    String maPhien = auction.getSessionId();
+
+    synchronized (getLock(maPhien)) {
+      AuctionSession latestAuction = auctionRepository.findById(maPhien);
+        if (latestAuction == null) {
+          logger.warn("Không tìm thấy phiên {} khi chờ admin duyệt", maPhien);
+          return;
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        if (latestAuction.getStartTime() != null && latestAuction.getStartTime().isAfter(now)) {
+          auctionScheduler.setASAuction(latestAuction);
+          return;
+        }
+
+        if (latestAuction.getStatus() == SessionStatus.IN_PROGRESS ||
+            latestAuction.getStatus() == SessionStatus.PAID ||
+            latestAuction.getStatus() == SessionStatus.CANCELLED) {
+          auctionScheduler.cancelDeferredAuctionPoll(latestAuction);
+          return;
+        }
+
+        switch (latestAuction.isAccepted()) {
+          case 1:
+            if (latestAuction.getStatus() == SessionStatus.PENDING) {
+              latestAuction.setStatus(SessionStatus.WAITING);
+              auctionRepository.update(latestAuction);
+            }
+            startAuction(latestAuction);
+            break;
+          case 0:
+            closeAuction(latestAuction, SessionStatus.CANCELLED);
+            break;
+          case -1:
+            if (retryCount < maxRetries) {
+              auctionScheduler.scheduleDeferredAuctionPoll(latestAuction, retryCount + 1, pollDelaySeconds);
+            } else {
+              latestAuction.setAccepted(0);
+              closeAuction(latestAuction, SessionStatus.CANCELLED);
+            }
+            break;
+          default:
+            logger.warn("PhiÃªn {} cÃ³ isAccepted khÃ´ng há»£p lá»‡: {}", maPhien, latestAuction.isAccepted());
+      }
     }
   }
 
