@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.mycompany.action.AuctionSessionService;
 import com.mycompany.action.AuctionSessionRegistry;
 import com.mycompany.models.AuctionSession;
+import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
 import com.mycompany.utils.UserRepositorySQLite;
 import com.mycompany.utils.AuctionRepositorySQLite;
@@ -244,19 +245,27 @@ public class AuctionWebSocketServer extends WebSocketServer {
      * @param conn WebSocket connection
      * @param json Message JSON
      */
-    private void handleBid(WebSocket conn, JsonObject json) {
-        try {
-            String phienId = json.get("phienId").getAsString();
-            String email = json.get("email").getAsString();
-            double giaRa = json.get("giaRa").getAsDouble();
+     private void handleBid(WebSocket conn, JsonObject json) {
+         try {
+             String phienId = json.get("phienId").getAsString();
+             String email = json.get("email").getAsString();
+             double giaRa = json.get("giaRa").getAsDouble();
 
-            AuctionSession phienHienTai = AuctionSessionRegistry.getInstance().find(phienId);
+             AuctionSession phienHienTai = AuctionSessionRegistry.getInstance().find(phienId);
 
-            // FIX: Null check thay vì NPE
-            if (phienHienTai == null) {
-                sendError(conn, "Phiên đấu giá không tồn tại");
-                return;
-            }
+             // FIX: Nếu không tìm thấy trong Registry (in-memory), thử tìm trong database
+             // và load vào Registry để các bid tiếp theo có thể tìm thấy
+             if (phienHienTai == null) {
+                 AuctionSession phienFromDB = auctionRepositorySQLite.findById(phienId);
+                 if (phienFromDB == null) {
+                     sendError(conn, "Phiên đấu giá không tồn tại");
+                     return;
+                 }
+                 // Load từ DB thành công → đưa vào Registry để các bid tiếp theo tìm thấy
+                 phienHienTai = phienFromDB;
+                 AuctionSessionRegistry.getInstance().add(phienHienTai);
+                 logger.info("✅ Loaded auction từ DB vào Registry: " + phienId);
+             }
 
             // FIX: Lấy giá SAU khi setPrice thành công, không phải trước
             User bidder = userRepositorySQLite.findByEmail(email);
@@ -274,25 +283,45 @@ public class AuctionWebSocketServer extends WebSocketServer {
                 sendError(conn, "Bạn không được đặt giá 2 lần liên tiếp. Hãy chờ người khác đặt giá cao hơn.");
                 return;
             }
-            boolean bidIsCompleted = auctionSessionService.setPrice(phienHienTai, bidder, giaRa);
+             boolean bidIsCompleted = auctionSessionService.setPrice(phienHienTai, bidder, giaRa);
 
-            JsonObject response = new JsonObject();
-            response.addProperty("event", "BID_RESULT");
-            response.addProperty("email", email);
-            response.addProperty("giaRa", giaRa);
-            response.addProperty("timestamp", System.currentTimeMillis());
+             JsonObject response = new JsonObject();
+             response.addProperty("event", "BID_RESULT");
+             response.addProperty("email", email);
+             response.addProperty("giaRa", giaRa);
+             response.addProperty("timestamp", System.currentTimeMillis());
 
-            if (bidIsCompleted) {
-                auctionRepositorySQLite.update(phienHienTai);
-                auctionRepositorySQLite.saveBidRecord(phienHienTai.getSessionId(), bidder.getUserId(), giaRa);
-                response.addProperty("status", "SUCCESS");
-                // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
-                response.addProperty("currentPrice", phienHienTai.getCurrentPrice());
-                response.addProperty("fullName", bidder.getFullName()); //Hiển thị full name của người chơi
-            } else {
-                response.addProperty("status", "FAILED");
-                response.addProperty("message", "Giá không hợp lệ hoặc phiên đã kết thúc");
-            }
+             if (bidIsCompleted) {
+                 auctionRepositorySQLite.update(phienHienTai);
+                 auctionRepositorySQLite.saveBidRecord(phienHienTai.getSessionId(), bidder.getUserId(), giaRa);
+                 response.addProperty("status", "SUCCESS");
+                 // FIX: Gửi giá MỚI (sau khi đặt), không phải giá cũ
+                 response.addProperty("currentPrice", phienHienTai.getCurrentPrice());
+                 response.addProperty("fullName", bidder.getFullName()); //Hiển thị full name của người chơi
+             } else {
+                 response.addProperty("status", "FAILED");
+                 // FIX: Cung cấp thông báo lỗi chi tiết hơn dựa vào trạng thái phiên
+                 String errorMessage = "Giá không hợp lệ hoặc phiên đã kết thúc";
+                 if (phienHienTai.isClosed()) {
+                     errorMessage = "Phiên đấu giá đã đóng";
+                 } else if (phienHienTai.getStatus() != SessionStatus.IN_PROGRESS) {
+                     errorMessage = "Phiên không ở trạng thái IN_PROGRESS (trạng thái hiện tại: " + phienHienTai.getStatus().name() + ")";
+                 } else {
+                     // Kiểm tra thêm các điều kiện khác
+                     double minPrice = phienHienTai.isHasBid()
+                         ? phienHienTai.getCurrentPrice() + phienHienTai.getPriceStep()
+                         : phienHienTai.getCurrentPrice();
+                     if (giaRa < minPrice) {
+                         errorMessage = String.format("Giá đặt phải ≥ %.0f (giaHienTai=%.0f + buocGia=%.0f)",
+                             minPrice, phienHienTai.getCurrentPrice(), phienHienTai.getPriceStep());
+                     } else {
+                         errorMessage = "Số dư không đủ hoặc bạn vừa đặt giá, hãy chờ người khác đặt cao hơn";
+                     }
+                 }
+                 response.addProperty("message", errorMessage);
+                 logger.warn("❌ BID REJECTED - phien={}, user={}, gia={}, reason={}",
+                     phienId, email, giaRa, errorMessage);
+             }
 
             broadcastToRoom(phienId, gson.toJson(response));
 

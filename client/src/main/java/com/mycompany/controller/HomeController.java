@@ -322,14 +322,14 @@ public class HomeController implements Initializable {
                 case "PAID":
                     mauNen = "rgba(231,76,60,0.25)";    // đỏ
                     mauChu = "#e74c3c";
-                    labelText = "✕ Đã đóng";
+                    labelText = "✕ Đã thanh toán";
                     break;
                 case "CANCELLED":
                     mauNen = "rgba(231,76,60,0.25)";    // đỏ (cùng màu PAID)
                     mauChu = "#e74c3c";
                     labelText = "✕ Đã hủy";
                     break;
-                case "FINSHED":
+                case "FINISHED":
                     mauNen = "rgba(231,76,60,0.25)";    // đỏ (cùng màu PAID)
                     mauChu = "#e74c3c";
                     labelText = "✕ Đã kết thúc";

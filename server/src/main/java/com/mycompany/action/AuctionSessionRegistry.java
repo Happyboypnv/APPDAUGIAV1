@@ -27,7 +27,7 @@ public class AuctionSessionRegistry {
     private final Map<String, AuctionSession> listAuction = new ConcurrentHashMap<>();
 
     public void add(AuctionSession phien) {
-        listAuction.putIfAbsent(phien.getSessionId(), phien);
+        listAuction.put(phien.getSessionId(), phien);
     }
 
     public void delete(AuctionSession phien) {
