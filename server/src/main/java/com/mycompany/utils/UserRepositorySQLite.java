@@ -366,7 +366,36 @@ public class UserRepositorySQLite implements IUserRepository {
     // Email không tồn tại hoặc password sai → đăng nhập thất bại
     return false;
   }
+  @Override
+  public boolean isBankAccountAvailable(String bankAccount) {
+    // ===== BƯỚC 1: Chuẩn bị câu SELECT =====
+    // SELECT 1 = chỉ trả về số 1 (là trick để check existence)
+    // WHERE so_tai_khoan_ngan_hang = ? = tìm tài khoản cần kiểm tra
+    String sql = "SELECT 1 FROM nguoi_dung WHERE so_tai_khoan_ngan_hang = ?";
+    // try-with-resources: tự động đóng PreparedStatement
+    try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+      // Điền tài khoản vào placeholder ?
+      ps.setString(1, bankAccount);
 
+      // ===== BƯỚC 3: Kiểm tra kết quả =====
+      // Wrap ResultSet trong try-with-resources riêng để auto-close
+      try (ResultSet rs = ps.executeQuery()) {
+        // rs.next() = kiểm tra xem câu SELECT có trả về dòng nào không
+        // true = tìm thấy tk (tk ĐÃ tồn tại)
+        // false = không tìm thấy (tk chưa tồn tại)
+
+        // return !rs.next() = đảo ngược logic
+        // Nếu rs.next() = true (tk tồn tại) → return false
+        // Nếu rs.next() = false (tk chưa có) → return true
+        return !rs.next();
+      }
+    } catch (SQLException e) {
+      // Nếu có lỗi kết nối → cho phép đăng ký (để không block user)
+      // Quy tắc an toàn: nếu không chắc → cho phép user thử
+      logger.error("Lỗi kiểm tra tài khoản: " + e.getMessage());
+      return true;
+    }
+  }
   /**
    * METHOD: kiemTraEmail()
    * Mục đích: Kiểm tra email đã tồn tại trong database chưa.
@@ -475,6 +504,9 @@ public class UserRepositorySQLite implements IUserRepository {
     }
     return null;
   }
+
+
+
   /**
    * METHOD: migratePlainTextPasswords()
    * Mục đích: Migrate mật khẩu plain text (từ JSON) sang hashed passwords

@@ -16,4 +16,5 @@ public interface IUserRepository {
     boolean isEmailAvailable(String email);
     void delete(User nguoiDung);
     User findByEmail(String email);
+    boolean isBankAccountAvailable(String bankAccount);
 }

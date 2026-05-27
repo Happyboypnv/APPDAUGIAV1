@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import com.mycompany.server.dto.LichSuDatGiaResponse;
@@ -239,6 +240,41 @@ public class ApiClient {
         } catch (Exception e) {
             logger.error("[ApiClient] Lỗi parse auction: " + e.getMessage());
             return null;
+        }
+    }
+
+    public static boolean checkBankAcc(String bankAcc, String token) {
+        try {
+            // 1. Mã hóa số tài khoản để gắn vào URL an toàn
+            String encodedBankAcc = URLEncoder.encode(bankAcc, StandardCharsets.UTF_8);
+
+            // 2. Tạo đường dẫn path (giống cách làm ở createContext phía Server)
+            String path = "/api/users/bankacc?bankAccount=" + encodedBankAcc;
+
+            // 3. Gọi hàm guiGet
+            String responseBody = guiGet(path, token);
+
+            // Nếu kết nối lỗi hoặc server sập (guiGet trả về null), mặc định coi như không hợp lệ
+            if (responseBody == null) {
+                return false;
+            }
+
+            // 4. Xử lý dữ liệu trả về tùy theo thiết kế phía Server của bạn:
+
+            // THÀNH PHẦN A: Nếu Server trả về chữ thuần "true" hoặc "false" (text/plain)
+            return Boolean.parseBoolean(responseBody.trim());
+
+        /* // THÀNH PHẦN B: Nếu Server trả về JSON dạng {"available": true} giống hàm getBalance
+        JsonObject resp = gson.fromJson(responseBody, JsonObject.class);
+        if (resp != null && resp.has("available")) {
+            return resp.get("available").getAsBoolean();
+        }
+        return false;
+        */
+
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi checkBankAcc: " + e.getMessage());
+            return false;
         }
     }
 

@@ -658,6 +658,13 @@ public class AuctionController {
     }
   }
 
+  private static class IsBankAccAvailable {
+    boolean isAvailable;
+
+    IsBankAccAvailable(boolean isAvailable) {
+      this.isAvailable = isAvailable;
+    }
+  }
   /** Wrapper thông báo thành công */
   private static class ThongBao {
     String thongBao;

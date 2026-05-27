@@ -181,6 +181,8 @@ public class LoginAction {
                             if (obj.has("diaChi"))      u.setAddress(obj.get("diaChi").getAsString());
                             if (obj.has("ngaySinh"))    u.setDateOfBirth(obj.get("ngaySinh").getAsString());
                             if (obj.has("soDuKhaDung")) u.setActualBalance(obj.get("soDuKhaDung").getAsDouble());
+                            if (obj.has("soTaiKhoanNganHang")) u.setBankAccountNumber(obj.get("soTaiKhoanNganHang").getAsString());
+                            if (obj.has("tenNganHang"))        u.setBankName(obj.get("tenNganHang").getAsString());
                             user = u;
                         }
                     }

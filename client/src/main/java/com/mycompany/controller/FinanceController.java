@@ -8,8 +8,10 @@ import java.util.ResourceBundle;
 import com.mycompany.action.FinanceAction;
 import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.models.User;
+import com.mycompany.utils.ApiClient;
 import com.mycompany.utils.UserProfileUpdater;
 import com.mycompany.utils.SessionManager;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -132,20 +134,48 @@ public class FinanceController implements Initializable {
             HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.ERROR, "Lỗi thông tin", "Vui lòng chọn ngân hàng!");
             return;
         }
+        String token = SessionManager.getInstance().getServerToken();
 
-        // 🔹 BƯỚC 2: Disable editing mode (lock field)
-        FinanceAction.getInstance().editBankAccount(bankAccount, false);
+        Task<Boolean> checkBankTask = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+                // Gọi hàm API vừa viết ở bước 1
+                return ApiClient.checkBankAcc(bankAcc, token);
+            }
+        };
 
-        // 🔹 BƯỚC 3: Cập nhật thông tin ngân hàng
-        Map<String, String> newBankAcc = new HashMap<>();
-        newBankAcc.put("bankAccount", bankAcc);
-        newBankAcc.put("bankName", customBoxBankName);
+        checkBankTask.setOnSucceeded(e -> {
+            boolean chuaLienKet = checkBankTask.getValue();
+            if (chuaLienKet) {
+                // Tài khoản hợp lệ (chưa liên kết với ai) -> Cho phép tiếp tục
+                System.out.println("Tài khoản hợp lệ, chưa liên kết!");
+                // 🔹 BƯỚC 2: Disable editing mode (lock field)
+                FinanceAction.getInstance().editBankAccount(bankAccount, false);
 
-        // Lưu vào JSON file và cập nhật session
-        UserProfileUpdater.getInstance().updateUser(newBankAcc);
+                // 🔹 BƯỚC 3: Cập nhật thông tin ngân hàng
+                Map<String, String> newBankAcc = new HashMap<>();
+                newBankAcc.put("bankAccount", bankAcc);
+                newBankAcc.put("bankName", customBoxBankName);
 
-        // 🔹 BƯỚC 4: Thông báo thành công
-        HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Liên kết tài khoản ngân hàng thành công!");
+                // Lưu vào JSON file và cập nhật session
+                UserProfileUpdater.getInstance().updateUser(newBankAcc);
+
+                // 🔹 BƯỚC 4: Thông báo thành công
+                HandleNavigationAndAlert.getInstance().showAlert(Alert.AlertType.INFORMATION, "Thành công", "Liên kết tài khoản ngân hàng thành công!");
+            } else {
+                // Tài khoản đã có người dùng rồi
+                HandleNavigationAndAlert.getInstance().showAlert(
+                        Alert.AlertType.WARNING, "Thông báo", "Số tài khoản này đã được liên kết hệ thống!"
+                );
+            }
+        });
+
+        checkBankTask.setOnFailed(e -> {
+            System.out.println("Lỗi kết nối API kiểm tra tài khoản");
+        });
+
+       // Chạy task ngầm
+        new Thread(checkBankTask).start();
     }
 
     /**

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -424,6 +425,8 @@ public class UserController {
         String soDienThoai;
         double soDuKhaDung;
         String role; // "ADMIN" hoặc "USER"
+        String soTaiKhoanNganHang;
+        String tenNganHang;
 
         ThongTinNguoiDung(Person nd) {
             this.maNguoiDung  = nd.getUserId();
@@ -435,6 +438,8 @@ public class UserController {
                 this.diaChi       = u.getAddress();
                 this.soDienThoai  = u.getPhoneNumber();
                 this.soDuKhaDung  = u.getAvailableBalance();
+                this.soTaiKhoanNganHang = u.getBankAccountNumber();
+                this.tenNganHang        = u.getBankName();
             }
         }
     }
@@ -839,6 +844,72 @@ public class UserController {
         logger.info("[UserController] ✅ Rút {} cho {} → balance={}", req.amount, email, newBalance);
         guiPhanHoi(exchange, 200,
             "{\"thongBao\":\"Rút tiền thành công\",\"balance\":" + newBalance + "}");
+    }
+
+    public void handleCheckBankAcc(HttpExchange exchange) {
+        try {
+            // 1. Kiểm tra phương thức, nếu là OPTIONS (do CORS) thì xử lý riêng hoặc bỏ qua
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                // Gọi hàm xuLyCors của bạn ở đây nếu cần thiết
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
+
+            if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+                exchange.sendResponseHeaders(405, -1); // Method Not Allowed
+                return;
+            }
+
+            // 2. Lấy Query String từ URL (Ví dụ: "bankAccount=123456789")
+            String query = exchange.getRequestURI().getQuery();
+            String bankAccount = null;
+
+            if (query != null) {
+                String[] pairs = query.split("&");
+                for (String pair : pairs) {
+                    String[] idx = pair.split("=");
+                    // Tìm đúng cặp tham số có tên là "bankAccount"
+                    if (idx.length == 2 && idx[0].equals("bankAccount")) {
+                        bankAccount = URLDecoder.decode(idx[1], StandardCharsets.UTF_8);
+                        break;
+                    }
+                }
+            }
+
+            // 3. Kiểm tra dữ liệu hợp lệ
+            if (bankAccount == null || bankAccount.isEmpty()) {
+                String errorMsg = "Thiếu tham số bankAccount";
+                exchange.sendResponseHeaders(400, errorMsg.length());
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(errorMsg.getBytes());
+                }
+                return;
+            }
+            // 4. Gọi xuống tầng Database (Hàm trong ảnh image_08ff63.png của bạn)
+            boolean isAvailable = khoNguoiDung.isBankAccountAvailable(bankAccount);
+
+            // 5. Chuẩn bị dữ liệu phản hồi (Trả về chuỗi "true" hoặc "false")
+            String responseBody = String.valueOf(isAvailable);
+
+            // Cấu hình Header trả về dữ liệu chữ thuần và cấu hình CORS cơ bản
+            exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+
+            // Gửi mã thành công 200 và dữ liệu
+            exchange.sendResponseHeaders(200, responseBody.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(responseBody.getBytes());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                exchange.sendResponseHeaders(500, -1); // Lỗi Server nội bộ
+            } catch (IOException ex) {
+                logger.error("Lỗi server nội bộ");
+                ex.printStackTrace();
+            }
+        }
     }
 
     /** Helper: Xác thực token và trả về email, hoặc gửi 401 và trả về null */

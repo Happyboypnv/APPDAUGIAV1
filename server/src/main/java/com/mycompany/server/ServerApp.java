@@ -265,6 +265,19 @@ public class ServerApp {
       userController.handleGetUser(exchange);
     });
 
+    /**
+     * GET /api/users/bankacc/{so tai khoan}
+     * Trả về true nếu chưa có liên kết, false nếu có rồi
+     */
+    server.createContext("/api/users/bankacc", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+
+      userController.handleCheckBankAcc(exchange);
+    });
+
     // ===== ĐĂNG KÝ ENDPOINTS: AUCTIONS =====
 
     /**
