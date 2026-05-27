@@ -1,40 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.AuctionRequestController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #222941;" styleClass="root-pane" stylesheets="@../style/bidding_dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.AdminHomeController">
     <children>
         <HBox>
             <children>
-
+                <!-- Include the existing Admin Navigation Bar -->
                 <fx:include source="Admin_NavBar.fxml" />
-
-                <VBox alignment="TOP_CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
-                    <padding>
-                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
-                    </padding>
+                <!-- Main Content Dashboard Area -->
+                <VBox alignment="TOP_LEFT" spacing="24.0" styleClass="dashboard-container" stylesheets="@../style/bidding_dashboard.css" HBox.hgrow="ALWAYS">
                     <children>
-
-                        <Label fx:id="labelWelcome" text="Xin chào!" textFill="WHITE">
-                            <font>
-                                <Font size="20.0" />
-                            </font>
-                        </Label>
-
-                        <Label text="Danh sách phiên đấu giá" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="31.0" />
-                            </font>
-                        </Label>
-
-                        <ListView fx:id="listViewPhien" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS" />
-
+                        <!-- Header Section -->
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label fx:id="labelWelcome" styleClass="welcome-label" stylesheets="@../style/bidding_dashboard.css" text="Xin chào!" />
+                                <Label styleClass="dashboard-title" stylesheets="@../style/bidding_dashboard.css" text="Bidding Session Management" />
+                            </children>
+                        </VBox>
+                        <!-- Statistics Grid (Stats Cards) -->
+                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="stats-grid" stylesheets="@../style/bidding_dashboard.css">
+                            <children>
+                                <!-- Card 1: Total Users -->
+                                <VBox styleClass="stat-card, card-blue" stylesheets="@../style/bidding_dashboard.css" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="stat-card-title" stylesheets="@../style/bidding_dashboard.css" text="TOTAL USERS" />
+                                        <VBox VBox.vgrow="ALWAYS" />
+                                        <Label fx:id="totalUser" styleClass="stat-card-value" stylesheets="@../style/bidding_dashboard.css" text="1,245" />
+                                    </children>
+                                </VBox>
+                                <!-- Card 2: Current Sessions -->
+                                <VBox styleClass="stat-card, card-purple" stylesheets="@../style/bidding_dashboard.css" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="stat-card-title" stylesheets="@../style/bidding_dashboard.css" text="TOTAL SESSIONS" />
+                                        <VBox VBox.vgrow="ALWAYS" />
+                                        <Label fx:id="currentSessions" styleClass="stat-card-value" stylesheets="@../style/bidding_dashboard.css" text="58" />
+                                    </children>
+                                </VBox>
+                                <!-- Card 3: Successful Bids -->
+                                <VBox styleClass="stat-card, card-pink" stylesheets="@../style/bidding_dashboard.css" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="stat-card-title" stylesheets="@../style/bidding_dashboard.css" text="SUCCESSFUL TRANSACTIONS" />
+                                        <VBox VBox.vgrow="ALWAYS" />
+                                        <Label fx:id="successfulBids" styleClass="stat-card-value" stylesheets="@../style/bidding_dashboard.css" text="932" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <!-- Tab Navigation Pill -->
+                        <HBox alignment="CENTER" fillHeight="true" styleClass="tab-container" stylesheets="@../style/bidding_dashboard.css">
+                            <children>
+                                <Button fx:id="pendingBtn" maxWidth="Infinity" onAction="#loadPending" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="PENDING" HBox.hgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Button>
+                                <Button fx:id="waitingBtn" maxWidth="Infinity" onAction="#loadWaiting" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="WAITING" HBox.hgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Button>
+                                <Button fx:id="inProgressBtn" maxWidth="Infinity" onAction="#loadInProgress" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="IN PROGRESS" HBox.hgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Button>
+                                <Button fx:id="paidBtn" maxWidth="Infinity" onAction="#loadPaid" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="PAID" HBox.hgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Button>
+                                <Button fx:id="cancelledBtn" maxWidth="Infinity" onAction="#loadCancelled" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="CANCELLED" HBox.hgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Button>
+                            </children>
+                        </HBox>
+                        <!-- List of Bidding Sessions (Dynamic ListView) -->
+                        <ListView fx:id="listViewPhien" styleClass="user-list-view" stylesheets="@../style/bidding_dashboard.css" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
             </children>

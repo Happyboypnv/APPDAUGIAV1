@@ -64,6 +64,46 @@ public class TransactionController {
     sendJson(exchange, 200, gson.toJson(response));
   }
 
+  public void handleCountTransactions(HttpExchange exchange) {
+    try {
+      // 1. Chỉ chấp nhận phương thức GET
+      if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+        String response = "Method Not Allowed";
+        exchange.sendResponseHeaders(415, response.length());
+        try (OutputStream os = exchange.getResponseBody()) {
+          os.write(response.getBytes());
+        }
+        return;
+      }
+
+      // 2. Gọi hàm đếm số lượng người dùng từ UserRepo
+      int totalTransactions = transactionRepository.countAllTransactions();
+
+      // Chuyển con số thành chuỗi để truyền qua HTTP
+      String responseText = String.valueOf(totalTransactions);
+
+      // 3. Cấu hình Headers (Kiểu dữ liệu văn bản thuần hoặc số và xử lý CORS bảo mật)
+      exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
+      exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+
+      // 4. Gửi HTTP Status 200 (OK) và độ dài của dữ liệu trả về
+      byte[] responseBytes = responseText.getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200, responseBytes.length);
+
+      // 5. Ghi dữ liệu vào Body và đóng luồng
+      try (OutputStream os = exchange.getResponseBody()) {
+        os.write(responseBytes);
+      }
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      // Xử lý lỗi hệ thống nếu có sự cố luồng mạng
+      try {
+        exchange.sendResponseHeaders(500, -1);
+      } catch (IOException ignored) {}
+    }
+  }
+
   private User authenticate(HttpExchange exchange) {
     String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;

@@ -2,6 +2,7 @@ package com.mycompany.server.controller;
 
 import com.google.gson.Gson;
 import com.mycompany.models.Admin;
+import com.mycompany.models.AuctionSession;
 import com.mycompany.models.Person;
 import com.mycompany.models.User;
 import com.mycompany.server.dto.LoginRequest;
@@ -17,13 +18,14 @@ import com.sun.net.httpserver.HttpExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * UserController — Xử lý các HTTP request liên quan đến người dùng.
@@ -408,6 +410,57 @@ public class UserController {
         }
     }
 
+    public void handleBanUser(HttpExchange exchange) {
+        try {
+            handleToggleBan(exchange,true);
+        } catch (IOException e) {
+            logger.error("Lỗi khi ban người dùng: " + e.getMessage());
+        }
+    }
+
+    public void handleUnbanUser(HttpExchange exchange) {
+        try {
+            handleToggleBan(exchange,false);
+        } catch (IOException e) {
+            logger.error("Lỗi khi ban người dùng: " + e.getMessage());
+        }
+    }
+
+    // 3. Hàm logic chung để tránh lặp code (gộp cả ban và unban)
+    private void handleToggleBan(HttpExchange exchange, boolean shouldBan) throws IOException {
+        // Chỉ chấp nhận phương thức POST
+        if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+            guiPhanHoi(exchange, 405, "Method Not Allowed");
+            return;
+        }
+
+        // 2. Parse email từ URL
+        String path = exchange.getRequestURI().getPath();
+
+        // Tùy thuộc vào việc request gửi đến đâu, ta chọn prefix phù thích hợp
+        String prefix = shouldBan ? "/api/users/ban/" : "/api/users/unban/";
+
+        if (!path.startsWith(prefix) || path.length() <= prefix.length()) {
+            guiPhanHoi(exchange, 400, "{\"thongBao\":\"Thiếu email trong URL\"}");
+            return;
+        }
+
+        // Cắt chuỗi lấy email
+        String email = path.substring(prefix.length());
+
+        // 3. Tìm kiếm và cập nhật vào Database
+        User nguoiDung = khoNguoiDung.findByEmail(email);
+        if (nguoiDung == null) {
+            guiPhanHoi(exchange, 404, "{\"thongBao\":\"Không tìm thấy người dùng: " + email + "\"}");
+            return;
+        }
+
+        // Cập nhật trạng thái ban
+        int decision = shouldBan ? 1 : 0;
+        nguoiDung.setIsBanned(decision);
+        khoNguoiDung.update(nguoiDung);
+    }
+
     // =========================================================
     // INNER CLASS: Thông tin trả về cho GET /api/users/{email}
     // =========================================================
@@ -427,6 +480,7 @@ public class UserController {
         String role; // "ADMIN" hoặc "USER"
         String soTaiKhoanNganHang;
         String tenNganHang;
+        int isBanned;
 
         ThongTinNguoiDung(Person nd) {
             this.maNguoiDung  = nd.getUserId();
@@ -440,6 +494,7 @@ public class UserController {
                 this.soDuKhaDung  = u.getAvailableBalance();
                 this.soTaiKhoanNganHang = u.getBankAccountNumber();
                 this.tenNganHang        = u.getBankName();
+                this.isBanned = u.getIsBanned();
             }
         }
     }
@@ -846,6 +901,102 @@ public class UserController {
             "{\"thongBao\":\"Rút tiền thành công\",\"balance\":" + newBalance + "}");
     }
 
+    public void handleGetUserCount(HttpExchange exchange) {
+        try {
+            // 1. Chỉ chấp nhận phương thức GET
+            if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+                String response = "Method Not Allowed";
+                exchange.sendResponseHeaders(415, response.length());
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(response.getBytes());
+                }
+                return;
+            }
+
+            // 2. Gọi hàm đếm số lượng người dùng từ UserRepo
+            int totalUsers = khoNguoiDung.countAllUsers();
+
+            // Chuyển con số thành chuỗi để truyền qua HTTP
+            String responseText = String.valueOf(totalUsers);
+
+            // 3. Cấu hình Headers (Kiểu dữ liệu văn bản thuần hoặc số và xử lý CORS bảo mật)
+            exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+
+            // 4. Gửi HTTP Status 200 (OK) và độ dài của dữ liệu trả về
+            byte[] responseBytes = responseText.getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(200, responseBytes.length);
+
+            // 5. Ghi dữ liệu vào Body và đóng luồng
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(responseBytes);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Xử lý lỗi hệ thống nếu có sự cố luồng mạng
+            try {
+                exchange.sendResponseHeaders(500, -1);
+            } catch (IOException ignored) {}
+        }
+    }
+
+    public void handleGetOnlineUserCount(HttpExchange exchange) {
+        try {
+            // 1. Chỉ chấp nhận phương thức GET
+            if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+                String response = "Method Not Allowed";
+                exchange.sendResponseHeaders(415, response.length());
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(response.getBytes());
+                }
+                return;
+            }
+
+            // 2. Gọi hàm đếm số lượng người dùng từ UserRepo
+            int totalUsers = OnlineUsersManager.getInstance().getOnlineUserCount();
+
+            // Chuyển con số thành chuỗi để truyền qua HTTP
+            String responseText = String.valueOf(totalUsers);
+
+            // 3. Cấu hình Headers (Kiểu dữ liệu văn bản thuần hoặc số và xử lý CORS bảo mật)
+            exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+
+            // 4. Gửi HTTP Status 200 (OK) và độ dài của dữ liệu trả về
+            byte[] responseBytes = responseText.getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(200, responseBytes.length);
+
+            // 5. Ghi dữ liệu vào Body và đóng luồng
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(responseBytes);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Xử lý lỗi hệ thống nếu có sự cố luồng mạng
+            try {
+                exchange.sendResponseHeaders(500, -1);
+            } catch (IOException ignored) {}
+        }
+    }
+
+    public void handleFindAllUsers(HttpExchange exchange) throws IOException {
+        try{
+            Map<String, User> tatCaUser = khoNguoiDung.findAll();
+
+            List<ThongTinNguoiDung> danhSach = new ArrayList<>();
+            for (User user : tatCaUser.values()) {
+                danhSach.add(new ThongTinNguoiDung(user));
+            }
+
+            guiPhanHoi(exchange, 200, gson.toJson(danhSach));
+        }
+        catch (Exception e){
+            guiPhanHoi(exchange, 500, sendBug("Lỗi server: " + e.getMessage()));
+        }
+    }
+
     public void handleCheckBankAcc(HttpExchange exchange) {
         try {
             // 1. Kiểm tra phương thức, nếu là OPTIONS (do CORS) thì xử lý riêng hoặc bỏ qua
@@ -885,7 +1036,7 @@ public class UserController {
                 }
                 return;
             }
-            // 4. Gọi xuống tầng Database (Hàm trong ảnh image_08ff63.png của bạn)
+            // 4. Gọi xuống tầng Database
             boolean isAvailable = khoNguoiDung.isBankAccountAvailable(bankAccount);
 
             // 5. Chuẩn bị dữ liệu phản hồi (Trả về chuỗi "true" hoặc "false")
@@ -964,5 +1115,15 @@ public class UserController {
         }
         // FIX: Gọi exchange.close() để tránh EOF phía client
         exchange.close();
+    }
+    /** Tạo JSON lỗi đơn giản */
+    private String sendBug(String thongBao) {
+        return gson.toJson(new ThongBaosendBug(thongBao));
+    }
+
+    /** Wrapper thông báo lỗi */
+    private static class ThongBaosendBug {
+        String sendBug;
+        ThongBaosendBug(String sendBug) { this.sendBug = sendBug; }
     }
 }

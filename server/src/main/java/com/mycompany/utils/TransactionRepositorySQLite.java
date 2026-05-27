@@ -227,6 +227,26 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
         return result;
     }
 
+    @Override
+    public Transaction findByAuctionId(AuctionSession session) {
+        Transaction transaction = null;
+        String sql = "SELECT * FROM giao_dich WHERE ma_phien = ?";
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1,session.getSessionId());
+            try (ResultSet rs = ps.executeQuery()) {
+                String transactionID = rs.getString("ma_giao_dich");
+                transaction = findById(transactionID);
+            }
+
+        } catch (SQLException e) {
+            logger.error("[TRANSACTION REPO] Lỗi lấy giao dịch theo mã phiên" + e.getMessage());
+        }
+        if (transaction==null) {
+            logger.error("[TRANSACTION REPO] Lỗi lấy giao dịch theo mã phiên");
+        }
+        return transaction;
+    }
+
     /**
      * Lấy danh sách giao dịch theo trạng thái
      */
@@ -250,5 +270,21 @@ public class TransactionRepositorySQLite implements ITransactionRepository {
             logger.error("[ERROR] Lỗi lấy giao dịch theo trạng thái: " + e.getMessage());
         }
         return result;
+    }
+
+    @Override
+    public int countAllTransactions() {
+        String sql = "SELECT COUNT(*) FROM giao_dich";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return rs.getInt(1); // Trả về con số đếm duy nhất
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

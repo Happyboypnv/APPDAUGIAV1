@@ -17,4 +17,5 @@ public interface IUserRepository {
     void delete(User nguoiDung);
     User findByEmail(String email);
     boolean isBankAccountAvailable(String bankAccount);
+    int countAllUsers();
 }

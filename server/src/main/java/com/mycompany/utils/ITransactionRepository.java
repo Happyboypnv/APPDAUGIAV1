@@ -1,5 +1,6 @@
 package com.mycompany.utils;
 
+import com.mycompany.models.AuctionSession;
 import com.mycompany.models.Transaction;
 import com.mycompany.models.TransactionStatus;
 
@@ -68,10 +69,14 @@ public interface ITransactionRepository {
      */
     List<Transaction> findByUserId(String maNguoiDung);
 
+    Transaction findByAuctionId(AuctionSession session);
+
     /**
      * Lấy danh sách giao dịch theo trạng thái
      * @param trangThai trạng thái giao dịch cần tìm
      * @return List các giao dịch có trạng thái tương ứng
      */
     List<Transaction> findByStatus(TransactionStatus trangThai);
+
+    int countAllTransactions();
 }

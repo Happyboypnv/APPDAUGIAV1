@@ -1,0 +1,141 @@
+/* Bidding Dashboard Style Sheet - Dark Navy Theme */
+
+/* Root pane background matching Stitch dark navy theme */
+.root-pane {
+    -fx-background-color: #050811;
+}
+
+/* Dashboard container layout */
+.dashboard-container {
+    -fx-background-color: transparent;
+    -fx-padding: 30 30 30 30;
+}
+
+/* Welcome user label */
+.welcome-label {
+    -fx-text-fill: #8a99ad;
+    -fx-font-size: 13px;
+    -fx-font-family: "Inter", "System";
+    -fx-font-weight: bold;
+}
+
+/* Title matching the header section of Stitch mockup */
+.dashboard-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 28px;
+    -fx-font-family: "Inter", "System";
+    -fx-font-weight: 800; /* Extra bold */
+}
+
+/* Statistics cards grid spacing */
+.stats-grid {
+    -fx-spacing: 12px;
+}
+
+/* Base statistics card style matching Stitch */
+.stat-card {
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-padding: 16px;
+    -fx-pref-height: 120px;
+    -fx-min-height: 120px;
+    -fx-max-height: 120px;
+}
+
+/* Blue card style (Total Users) */
+.card-blue {
+    -fx-background-color: linear-gradient(to bottom right, #1a1f3d, #0f1225);
+    -fx-border-color: rgba(59, 130, 246, 0.2);
+    /* Subtle glow */
+    -fx-effect: dropshadow(three-pass-box, rgba(59, 130, 246, 0.15), 10, 0, 0, 4);
+}
+
+/* Purple card style (Current Sessions) */
+.card-purple {
+    -fx-background-color: linear-gradient(to bottom right, #1a1f3d, #0f1225);
+    -fx-border-color: rgba(168, 85, 247, 0.2);
+    -fx-effect: dropshadow(three-pass-box, rgba(168, 85, 247, 0.15), 10, 0, 0, 4);
+}
+
+/* Pink card style (Successful Bids) */
+.card-pink {
+    -fx-background-color: linear-gradient(to bottom right, #1a1f3d, #0f1225);
+    -fx-border-color: rgba(236, 72, 153, 0.2);
+    -fx-effect: dropshadow(three-pass-box, rgba(236, 72, 153, 0.15), 10, 0, 0, 4);
+}
+
+/* Card titles */
+.stat-card-title {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 11px;
+    -fx-font-family: "Inter", "System";
+    -fx-font-weight: 800;
+}
+
+/* Card numbers */
+.stat-card-value {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-family: "Inter", "System";
+    -fx-font-weight: 800;
+}
+
+/* Navigation tabs pill container */
+.tab-container {
+    -fx-background-color: rgba(26, 31, 61, 0.5);
+    -fx-background-radius: 30px;
+    -fx-border-color: #2d3359;
+    -fx-border-radius: 30px;
+    -fx-border-width: 1px;
+    -fx-padding: 3px;
+    -fx-alignment: center;
+}
+
+/* Tab button styling */
+.tab-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 10px;
+    -fx-font-family: "Inter", "System";
+    -fx-font-weight: 800;
+    -fx-padding: 8px 14px;
+    -fx-background-radius: 25px;
+    -fx-cursor: hand;
+}
+
+.tab-button:hover {
+    -fx-text-fill: #ffffff;
+}
+
+/* Active tab button styling (e.g. PENDING or IN PROGRESS) */
+.tab-button-active {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 25px;
+}
+
+/* Session list view */
+.user-list-view {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+/* ListCell styling */
+.user-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 6px 0px;
+}
+
+.user-list-view .list-cell:filled:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-background-radius: 12px;
+}
+
+.user-list-view .list-cell:filled:selected {
+    -fx-background-color: rgba(14, 165, 233, 0.1);
+    -fx-background-radius: 12px;
+}

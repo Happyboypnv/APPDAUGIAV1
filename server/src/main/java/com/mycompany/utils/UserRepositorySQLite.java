@@ -94,8 +94,8 @@ public class UserRepositorySQLite implements IUserRepository {
 
       String sql = "INSERT INTO nguoi_dung " +
           "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, " +
-          "dia_chi, so_dien_thoai,so_du_thuc_te, so_du_dong_bang, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar, role) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          "dia_chi, so_dien_thoai,so_du_thuc_te, so_du_dong_bang, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar, role, is_banned) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
       try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, maMoi);
@@ -112,6 +112,7 @@ public class UserRepositorySQLite implements IUserRepository {
         ps.setString(12, User.getBankName());
         ps.setString(13, User.getAvatarPath());
         ps.setInt(14, User.getRole());
+        ps.setInt(15, User.getIsBanned());
 
         logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
             maMoi, User.getFullName(), User.getEmail(), User.getPassword(), User.getSalt(),
@@ -151,7 +152,7 @@ public class UserRepositorySQLite implements IUserRepository {
     String sql = "UPDATE nguoi_dung SET " +
         "ho_ten = ?, thu_dien_tu = ?, mat_khau = ?, salt = ?, ngay_sinh = ?, " +
         "dia_chi = ?, so_dien_thoai = ?, so_du_thuc_te = ?, so_du_dong_bang = ?, so_du_kha_dung = ?, " +
-        "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ?, role = ? " +
+        "so_tai_khoan_ngan_hang = ?, ten_ngan_hang = ?, duong_dan_avatar = ?, role = ?, is_banned = ? " +
         "WHERE ma_nguoi_dung = ?";
 
     Connection conn = null;
@@ -172,7 +173,8 @@ public class UserRepositorySQLite implements IUserRepository {
         ps.setString(12, User.getBankName());
         ps.setString(13, User.getAvatarPath());
         ps.setInt(14, User.getRole());
-        ps.setString(15, User.getUserId());
+        ps.setInt(15, User.getIsBanned());
+        ps.setString(16, User.getUserId());
         int rowsAffected = ps.executeUpdate();
         logger.info("Cập nhật user thành công, số dòng ảnh hưởng: " + rowsAffected);
       }
@@ -279,6 +281,7 @@ public class UserRepositorySQLite implements IUserRepository {
         nd.setBankName(rs.getString("ten_ngan_hang"));
         nd.setAvatarPath(rs.getString("duong_dan_avatar")); // ⭐ Avatar path
         nd.setRole(rs.getInt("role"));
+        nd.setIsBanned(rs.getInt("is_banned"));
 
         // FIX QUAN TRỌNG (App Restart Issue):
         // - Trước: Không retrieve/set salt từ database
@@ -299,6 +302,21 @@ public class UserRepositorySQLite implements IUserRepository {
 
     // Trả về Map (có thể rỗng nếu DB không có người dùng hoặc có lỗi)
     return result;
+  }
+  @Override
+  public int countAllUsers() {
+    String sql = "SELECT COUNT(*) FROM nguoi_dung";
+    try (Connection conn = DatabaseConnection.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+
+      if (rs.next()) {
+        return rs.getInt(1); // Trả về con số đếm duy nhất
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0;
   }
 
   /**
@@ -495,6 +513,7 @@ public class UserRepositorySQLite implements IUserRepository {
           nd.setBankName(rs.getString("ten_ngan_hang"));
           nd.setAvatarPath(rs.getString("duong_dan_avatar"));
           nd.setRole(rs.getInt("role"));
+          nd.setIsBanned(rs.getInt("is_banned"));
           nd.setSalt(rs.getString("salt"));
           return nd;
         }

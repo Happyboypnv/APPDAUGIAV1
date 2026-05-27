@@ -123,7 +123,8 @@ public class DatabaseConnection {
         "so_tai_khoan_ngan_hang TEXT, " +
         "ten_ngan_hang TEXT, " +
         "duong_dan_avatar TEXT, " +
-        "role INTEGER DEFAULT 0);";
+        "role INTEGER DEFAULT 0, " +
+            "is_banned INTEGER DEFAULT 0);";
 
     String sqlSanPham = "CREATE TABLE IF NOT EXISTS san_pham (" +
         "ma_san_pham TEXT PRIMARY KEY, " +
@@ -182,6 +183,7 @@ public class DatabaseConnection {
       addColumnIfMissing(conn, "nguoi_dung", "so_du_dong_bang", "REAL DEFAULT 0");
       addColumnIfMissing(conn, "nguoi_dung", "so_du_kha_dung", "REAL DEFAULT 0");
       addColumnIfMissing(conn, "nguoi_dung", "role", "INTEGER DEFAULT 0");
+      addColumnIfMissing(conn, "nguoi_dung", "is_banned", "INTEGER DEFAULT 0");
       stmt.execute("UPDATE nguoi_dung SET so_du_thuc_te = so_du_kha_dung WHERE so_du_thuc_te = 0 AND so_du_kha_dung > 0");
 
       stmt.execute(sqlSanPham);

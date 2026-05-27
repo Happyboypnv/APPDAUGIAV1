@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -25,13 +26,14 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.Animation;
 import javafx.util.Duration;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ButtonType;
-import java.util.Optional;
+
 import java.time.temporal.ChronoUnit;
 import java.io.IOException;
 import java.net.URL;
@@ -39,13 +41,12 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.ResourceBundle;
 
 public class AdminHomeController implements Initializable {
 
     @FXML private ListView<PhienDauGiaDTO> listViewPhien;
-    @FXML private Label labelWelcome;
+    @FXML private Label labelWelcome, totalUser, currentSessions, successfulBids;
+    @FXML private Button pendingBtn, waitingBtn, inProgressBtn, paidBtn, cancelledBtn;
 
     private List<PhienDauGiaDTO> danhSachPhien;
     private final DecimalFormat fmt = new DecimalFormat("#,###");
@@ -63,23 +64,31 @@ public class AdminHomeController implements Initializable {
     private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    private List<Button> tabButtons;
+    private String currentStatusFilter = "ALL"; // Thêm dòng này để lưu trạng thái lọc hiện tại
+    List<PhienDauGiaDTO> allAuctions = ApiClient.getAuctions();
+
+    private int currentSessionsNumber = allAuctions.size();
+    private int currentUsersNumber = ApiClient.getTotalUsersCount();
+    private int successfulTransactions = ApiClient.getTotalTransactions();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        tabButtons = Arrays.asList(pendingBtn, waitingBtn, inProgressBtn, paidBtn, cancelledBtn);
+        currentSessions.setText(String.valueOf(currentSessionsNumber));
+        totalUser.setText(String.valueOf(currentUsersNumber));
+        successfulBids.setText(String.valueOf(successfulTransactions));
+
         if (labelWelcome != null && SessionManager.getInstance().getCurrentUser() != null) {
             labelWelcome.setText("Xin chào, " +
                     SessionManager.getInstance().getCurrentUser().getFullName() + "!");
         }
 
-        // Gán custom cell factory trước khi load dữ liệu
         listViewPhien.setCellFactory(lv -> new PhienDauGiaCell());
 
         taiDanhSachPhien();
 
-        listViewPhien.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                vaoPhongDauGia(event);
-            }
-        });
 
         // Tự động dừng Timeline khi scene này bị thay thế (rời Home)
         listViewPhien.sceneProperty().addListener((obs, oldScene, newScene) -> {
@@ -103,73 +112,94 @@ public class AdminHomeController implements Initializable {
 
     private void doRefresh() {
         new Thread(() -> {
-            List<PhienDauGiaDTO> list = ApiClient.getAuctions();
+            if (allAuctions == null) allAuctions = new ArrayList<>();
+
+            List<PhienDauGiaDTO> targetList;
+
+            // Kiểm tra xem có đang lọc theo trạng thái nào không
+            if ("ALL".equals(currentStatusFilter)) {
+                targetList = allAuctions;
+            } else {
+                targetList = new ArrayList<>();
+                for (PhienDauGiaDTO dto : allAuctions) {
+                    if (currentStatusFilter.equals(dto.trangThai)) {
+                        targetList.add(dto);
+                    }
+                }
+            }
+
+            List<PhienDauGiaDTO> finalTargetList = targetList;
             Platform.runLater(() -> {
-                danhSachPhien = list;
-                // Giữ vị trí scroll hiện tại
+                danhSachPhien = finalTargetList;
                 int selectedIndex = listViewPhien.getSelectionModel().getSelectedIndex();
-                listViewPhien.setItems(FXCollections.observableArrayList(list));
-                if (selectedIndex >= 0 && selectedIndex < list.size()) {
+                listViewPhien.setItems(FXCollections.observableArrayList(finalTargetList));
+                if (selectedIndex >= 0 && selectedIndex < finalTargetList.size()) {
                     listViewPhien.getSelectionModel().select(selectedIndex);
                 }
             });
         }).start();
     }
 
-    public void stopAutoRefresh() {
-        if (autoRefreshTimeline != null) {
-            autoRefreshTimeline.stop();
-        }
-    }
-
-    private void vaoPhongDauGia(MouseEvent event) {
-        PhienDauGiaDTO phien = listViewPhien.getSelectionModel().getSelectedItem();
-        if (phien == null) return;
-
-        String tt = phien.trangThai != null ? phien.trangThai : "";
-        switch (tt) {
-            case "IN_PROGRESS":
-                break; // cho vào bình thường
-            case "WAITING":
-                HandleNavigationAndAlert.getInstance().showAlert(
-                        Alert.AlertType.INFORMATION, "Phiên chưa mở",
-                        "Phiên đấu giá này chưa đến giờ bắt đầu. Vui lòng quay lại sau!");
-                return;
-            case "PAID":
-            case "CANCELLED":
-                HandleNavigationAndAlert.getInstance().showAlert(
-                        Alert.AlertType.WARNING, "Phiên đã đóng",
-                        "Phiên đấu giá này đã kết thúc, không thể vào phòng.");
-                return;
-            default:
-                HandleNavigationAndAlert.getInstance().showAlert(
-                        Alert.AlertType.WARNING, "Không thể vào phòng",
-                        "Trạng thái phiên không hợp lệ: " + tt);
-                return;
-        }
-
-        SessionManager.getInstance().setCurrentPhienId(phien.maPhien);
-        try {
-            HandleNavigationAndAlert.getInstance().goToBiddingRoom(event);
-        } catch (IOException e) {
-            HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.ERROR, "Lỗi", "Không thể mở phòng đấu giá!");
-        }
-    }
-
-        /** Format chuỗi thời gian từ server thành dạng dd/MM/yyyy HH:mm */
-        private String formatThoiGian(String raw) {
-            if (raw == null || raw.isBlank()) return "—";
-            for (DateTimeFormatter f : PARSE_FORMATTERS) {
-                try {
-                    return LocalDateTime.parse(raw, f).format(DISPLAY_FORMATTER);
-                } catch (DateTimeParseException ignored) {}
+    private void setActiveTab(Button activeButton) {
+        for (Button btn : tabButtons) {
+            if (btn == activeButton) {
+                // Nếu là nút vừa được nhấn: xóa class active cũ (nếu có để tránh trùng) và ép class active vào
+                if (!btn.getStyleClass().contains("tab-button-active")) {
+                    btn.getStyleClass().add("tab-button-active");
+                }
+            } else {
+                // Các nút còn lại: xóa trạng thái active để nó quay về style mặc định .tab-button
+                btn.getStyleClass().remove("tab-button-active");
             }
-            // Nếu không parse được, trả về chuỗi gốc (cắt bớt nếu quá dài)
-            return raw.length() > 16 ? raw.substring(0, 16) : raw;
         }
+    }
 
-    // ─── Custom Cell ────────────────────────────────────────────────────────────
+    @FXML
+    private void loadPending() {
+        currentStatusFilter = "PENDING";
+        taiDanhSachPhien();
+        setActiveTab(pendingBtn);
+    }
+
+    @FXML
+    private void loadWaiting() {
+        currentStatusFilter = "WAITING";
+        taiDanhSachPhien();
+        setActiveTab(waitingBtn);
+    }
+
+    @FXML
+    private void loadInProgress() {
+        currentStatusFilter = "IN_PROGRESS";
+        taiDanhSachPhien();
+        setActiveTab(inProgressBtn);
+    }
+
+    @FXML
+    private void loadPaid() {
+        currentStatusFilter = "PAID";
+        taiDanhSachPhien();
+        setActiveTab(paidBtn);
+    }
+
+    @FXML
+    private void loadCancelled() {
+        currentStatusFilter = "CANCELLED";
+        taiDanhSachPhien();
+        setActiveTab(cancelledBtn);
+    }
+
+    /** Format chuỗi thời gian từ server thành dạng dd/MM/yyyy HH:mm */
+    private String formatThoiGian(String raw) {
+        if (raw == null || raw.isBlank()) return "—";
+        for (DateTimeFormatter f : PARSE_FORMATTERS) {
+            try {
+                return LocalDateTime.parse(raw, f).format(DISPLAY_FORMATTER);
+            } catch (DateTimeParseException ignored) {}
+        }
+        // Nếu không parse được, trả về chuỗi gốc (cắt bớt nếu quá dài)
+        return raw.length() > 16 ? raw.substring(0, 16) : raw;
+    }
 
     private class PhienDauGiaCell extends ListCell<PhienDauGiaDTO> {
 
@@ -282,7 +312,10 @@ public class AdminHomeController implements Initializable {
                 setGraphic(null);
                 setText(null);
                 setStyle("-fx-background-color: transparent;");
+                setCursor(Cursor.DEFAULT);
                 return;
+            } else {
+                setCursor(Cursor.HAND);
             }
 
             // Tên phiên & sản phẩm
@@ -311,9 +344,9 @@ public class AdminHomeController implements Initializable {
                     labelText = "◷ Đang chờ";
                     break;
                 case "PAID":
-                    mauNen = "rgba(231,76,60,0.25)";    // đỏ
-                    mauChu = "#e74c3c";
-                    labelText = "✕ Đã đóng";
+                    mauNen = "rgba(241,196,15,0.25)";    // vàng
+                    mauChu = "#f1c40f";
+                    labelText = "● Đã thanh toán";
                     break;
                 case "CANCELLED":
                     mauNen = "rgba(231,76,60,0.25)";    // đỏ (cùng màu PAID)
@@ -335,78 +368,79 @@ public class AdminHomeController implements Initializable {
                             "-fx-border-width: 1;"
             );
 
-            // Chỉ hiện nút Chú ý/Bỏ qua cho phiên WAITING hoặc IN_PROGRESS
-            if ("WAITING".equals(tt) || "IN_PROGRESS".equals(tt)) {
-                boolean isWatched = watchedSessions.contains(p.maPhien);
-                btnWatch.setText(isWatched ? "👁 Bỏ qua" : "⭐ Chú ý");
-                btnWatch.setStyle(
-                        isWatched
-                                ? "-fx-background-color: rgba(231,76,60,0.2);-fx-text-fill:#e74c3c;" +
-                                "-fx-background-radius:6;-fx-border-color:#e74c3c;-fx-border-radius:6;" +
-                                "-fx-border-width:1;-fx-cursor:hand;"
-                                : "-fx-background-color: rgba(241,196,15,0.2);-fx-text-fill:#f1c40f;" +
-                                "-fx-background-radius:6;-fx-border-color:#f1c40f;-fx-border-radius:6;" +
-                                "-fx-border-width:1;-fx-cursor:hand;"
-                );
-
-                final String maPhien = p.maPhien;
-                final String thoiGianBD = p.thoiGianBatDau;
-                final String tenPhien = p.tenPhien;
-                btnWatch.setOnAction(e -> {
-                    e.consume(); // ngăn sự kiện nổi bọt lên ListView
-                    if (watchedSessions.contains(maPhien)) {
-                        watchedSessions.remove(maPhien);
-                    } else {
-                        watchedSessions.add(maPhien);
-                        showCountdownInfo(tenPhien, thoiGianBD);
-                    }
-                    // Refresh cell
-                    listViewPhien.refresh();
-                });
-
-                // Thêm nút vào root nếu chưa có
-                if (!root.getChildren().contains(btnWatch)) {
-                    root.getChildren().add(btnWatch);
-                }
-            } else {
-                root.getChildren().remove(btnWatch);
-            }
-
-            // Hiện nút Xóa chỉ cho PAID và CANCELLED
-            if ("PAID".equals(tt) || "CANCELLED".equals(tt)) {
-                final String maPhienToDelete = p.maPhien;
-                final String tenPhienToDelete = p.tenPhien;
-                btnXoa.setOnAction(e -> {
-                    e.consume();
-                    javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
-                            javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                    confirm.setTitle("Xác nhận xóa");
-                    confirm.setHeaderText("Xóa phiên: " + tenPhienToDelete);
-                    confirm.setContentText("Bạn có chắc muốn xóa phiên này không? Hành động không thể hoàn tác.");
-                    Optional<ButtonType> result = confirm.showAndWait();
-                    if (result.isPresent() && result.get() == ButtonType.OK) {
-                        String token = SessionManager.getInstance().getServerToken();
-                        new Thread(() -> {
-                            boolean ok = ApiClient.deleteAuction(maPhienToDelete, token);
-                            Platform.runLater(() -> {
-                                if (ok) {
-                                    HandleNavigationAndAlert.getInstance().showAlert(
-                                            Alert.AlertType.INFORMATION, "Thành công", "Đã xóa phiên!");
-                                    doRefresh(); // Refresh danh sách
-                                } else {
-                                    HandleNavigationAndAlert.getInstance().showAlert(
-                                            Alert.AlertType.ERROR, "Lỗi", "Không thể xóa phiên. Vui lòng thử lại.");
-                                }
-                            });
-                        }).start();
-                    }
-                });
-                if (!root.getChildren().contains(btnXoa)) {
-                    root.getChildren().add(btnXoa);
-                }
-            } else {
-                root.getChildren().remove(btnXoa);
-            }
+//            // Chỉ hiện nút Chú ý/Bỏ qua cho phiên WAITING hoặc IN_PROGRESS
+//            if ("WAITING".equals(tt) || "IN_PROGRESS".equals(tt)) {
+//                boolean isWatched = watchedSessions.contains(p.maPhien);
+//                btnWatch.setText(isWatched ? "👁 Bỏ qua" : "⭐ Chú ý");
+//                btnWatch.setStyle(
+//                        isWatched
+//                                ? "-fx-background-color: rgba(231,76,60,0.2);-fx-text-fill:#e74c3c;" +
+//                                "-fx-background-radius:6;-fx-border-color:#e74c3c;-fx-border-radius:6;" +
+//                                "-fx-border-width:1;-fx-cursor:hand;"
+//                                : "-fx-background-color: rgba(241,196,15,0.2);-fx-text-fill:#f1c40f;" +
+//                                "-fx-background-radius:6;-fx-border-color:#f1c40f;-fx-border-radius:6;" +
+//                                "-fx-border-width:1;-fx-cursor:hand;"
+//                );
+//
+//                final String maPhien = p.maPhien;
+//                final String thoiGianBD = p.thoiGianBatDau;
+//                final String tenPhien = p.tenPhien;
+//                btnWatch.setOnAction(e -> {
+//                    e.consume(); // ngăn sự kiện nổi bọt lên ListView
+//                    if (watchedSessions.contains(maPhien)) {
+//                        watchedSessions.remove(maPhien);
+//                    } else {
+//                        watchedSessions.add(maPhien);
+//                        showCountdownInfo(tenPhien, thoiGianBD);
+//                    }
+//                    // Refresh cell
+//                    listViewPhien.refresh();
+//                });
+//
+//                // Thêm nút vào root nếu chưa có
+//                if (!root.getChildren().contains(btnWatch)) {
+//                    root.getChildren().add(btnWatch);
+//                }
+//            } else {
+//                root.getChildren().remove(btnWatch);
+//            }
+//
+//            // Hiện nút Xóa chỉ cho PAID và CANCELLED
+//            if ("PAID".equals(tt) || "CANCELLED".equals(tt)) {
+//                final String maPhienToDelete = p.maPhien;
+//                final String tenPhienToDelete = p.tenPhien;
+//                btnXoa.setOnAction(e -> {
+//                    e.consume();
+//                    javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
+//                            javafx.scene.control.Alert.AlertType.CONFIRMATION);
+//                    confirm.setTitle("Xác nhận xóa");
+//                    confirm.setHeaderText("Xóa phiên: " + tenPhienToDelete);
+//                    confirm.setContentText("Bạn có chắc muốn xóa phiên này không? Hành động không thể hoàn tác.");
+//                    Optional<ButtonType> result = confirm.showAndWait();
+//                    if (result.isPresent() && result.get() == ButtonType.OK) {
+//                        String token = SessionManager.getInstance().getServerToken();
+//                        new Thread(() -> {
+//                            boolean ok = ApiClient.deleteAuction(maPhienToDelete, token);
+//                            Platform.runLater(() -> {
+//                                if (ok) {
+//                                    HandleNavigationAndAlert.getInstance().showAlert(
+//                                            Alert.AlertType.INFORMATION, "Thành công", "Đã xóa phiên!");
+//                                    if ("PAID".equals(tt)) doCustomRefresh("PAID");
+//                                    else if ("CANCELLED".equals(tt))
+//                                } else {
+//                                    HandleNavigationAndAlert.getInstance().showAlert(
+//                                            Alert.AlertType.ERROR, "Lỗi", "Không thể xóa phiên. Vui lòng thử lại.");
+//                                }
+//                            });
+//                        }).start();
+//                    }
+//                });
+//                if (!root.getChildren().contains(btnXoa)) {
+//                    root.getChildren().add(btnXoa);
+//                }
+//            } else {
+//                root.getChildren().remove(btnXoa);
+//            }
 
             setGraphic(root);
             setText(null);
@@ -414,37 +448,8 @@ public class AdminHomeController implements Initializable {
         }
     }
 
-    private void showCountdownInfo(String tenPhien, String thoiGianBatDau) {
-        String timeInfo;
-        try {
-            LocalDateTime batDau = null;
-            for (DateTimeFormatter f : PARSE_FORMATTERS) {
-                try { batDau = LocalDateTime.parse(thoiGianBatDau, f); break; }
-                catch (DateTimeParseException ignored) {}
-            }
-            if (batDau != null) {
-                LocalDateTime now = LocalDateTime.now();
-                long minutes = ChronoUnit.MINUTES.between(now, batDau);
-                long hours   = ChronoUnit.HOURS.between(now, batDau);
-                if (minutes <= 0) {
-                    timeInfo = "Phiên sắp bắt đầu ngay bây giờ!";
-                } else if (hours < 1) {
-                    timeInfo = "Còn khoảng " + minutes + " phút nữa bắt đầu.";
-                } else {
-                    timeInfo = "Còn khoảng " + hours + " giờ " + (minutes % 60) + " phút nữa bắt đầu.\n"
-                            + "Thời gian bắt đầu: " + batDau.format(DISPLAY_FORMATTER);
-                }
-            } else {
-                timeInfo = "Thời gian bắt đầu: " + thoiGianBatDau;
-            }
-        } catch (Exception e) {
-            timeInfo = "Thời gian bắt đầu: " + thoiGianBatDau;
-        }
 
-        HandleNavigationAndAlert.getInstance().showAlert(
-                Alert.AlertType.INFORMATION,
-                "⭐ Đang theo dõi: " + tenPhien,
-                timeInfo + "\n\nBạn đang theo dõi phiên này. Quay lại trước giờ bắt đầu để tham gia!"
-        );
-    }
+
+
+
 }

@@ -23,7 +23,7 @@ public class Person implements Serializable {
     private String email;
     private String dateOfBirth;
     private String password;
-    private int role;
+    private transient int role;
 
     /**
      * Salt field for password hashing.

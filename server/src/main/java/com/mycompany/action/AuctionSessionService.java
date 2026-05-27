@@ -4,6 +4,7 @@ import com.mycompany.models.AuctionSession;
 import com.mycompany.models.SessionStatus;
 import com.mycompany.models.User;
 import com.mycompany.models.Transaction;
+import com.mycompany.models.TransactionStatus;
 import com.mycompany.server.websocket.AuctionWebSocketServer;
 import com.mycompany.utils.*;
 import com.mycompany.action.TransactionService;
@@ -28,6 +29,8 @@ public class AuctionSessionService {
   private static final AuctionRepositorySQLite auctionRepository = new AuctionRepositorySQLite();
 
   private final TransactionService transactionService = new TransactionService(new TransactionRepositorySQLite());
+  // Repository to inspect existing transactions when closing auctions
+  private final ITransactionRepository transactionRepository = new TransactionRepositorySQLite();
   private final IUserRepository userRepository = new UserRepositorySQLite();
 
   private AuctionSessionService() {}
@@ -89,8 +92,31 @@ public class AuctionSessionService {
 
   public void closeAuction(AuctionSession auction, SessionStatus lyDo) {
     synchronized (getLock(auction.getSessionId())) {
-      if (auction.getStatus() == SessionStatus.PAID ||
-          auction.getStatus() == SessionStatus.CANCELLED) {
+      if (auction.getStatus() == SessionStatus.PAID) {
+        return;
+      }
+
+      // If auction already marked CANCELLED, check if there's a PAID transaction
+      // recorded for this auction. If a PAID transaction exists, update session to PAID.
+      if (auction.getStatus() == SessionStatus.CANCELLED) {
+        try {
+          Transaction tx = transactionRepository.findByAuctionId(auction);
+          if (tx!=null && tx.getStatus() == TransactionStatus.PAID) {
+              auction.setStatus(SessionStatus.PAID);
+              auction.setClosed(true);
+              auctionRepository.update(auction);
+              auctionSessionRegistry.delete(auction);
+              if (webSocketServer != null) {
+                webSocketServer.broadcastSessionEnded(auction.getSessionId());
+              }
+              logger.info("Updated auction {} to PAID because a PAID transaction exists: {}",
+                  auction.getSessionId(), tx.getId());
+              return;
+            }
+        } catch (Exception ex) {
+          logger.warn("Error while checking transactions for auction {}: {}", auction.getSessionId(), ex.getMessage());
+        }
+        // No PAID transaction found -> keep previous behavior and return
         return;
       }
 

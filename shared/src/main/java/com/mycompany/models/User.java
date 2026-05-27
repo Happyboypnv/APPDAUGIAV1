@@ -1,9 +1,14 @@
 package com.mycompany.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
+
+  @SerializedName("role")
+  private String roleNameFromServer;
 
   private String address;
   private String phoneNumber;
@@ -12,6 +17,7 @@ public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
   private List<Transaction> transactions;
   private String bankAccountNumber;
   private String bankName;
+  private int isBanned = 0; // ban đầu ko bị ban
 
   public User(String fullName, String email,
               String password, String dateOfBirth,
@@ -48,6 +54,14 @@ public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
   // ← XÓA setAvailableBalance() cũ, THÊM 4 method này vào
   public double getActualBalance() {
     return actualBalance;
+  }
+
+  public String getRoleNameFromServer() {
+    return roleNameFromServer;
+  }
+
+  public void setRoleNameFromServer(String roleNameFromServer) {
+    this.roleNameFromServer = roleNameFromServer;
   }
 
   public void setActualBalance(double actualBalance) {
@@ -96,6 +110,14 @@ public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
 
   public String getPhoneNumber() {
     return phoneNumber;
+  }
+
+  public int getIsBanned() {
+    return isBanned;
+  }
+
+  public void setIsBanned(int isBanned) {
+    this.isBanned = isBanned;
   }
 
   @Override

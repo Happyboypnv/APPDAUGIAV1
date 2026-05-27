@@ -1,16 +1,20 @@
 package com.mycompany.utils;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
+import com.mycompany.models.User;
 import com.mycompany.server.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import com.mycompany.server.dto.LichSuDatGiaResponse;
 /**
@@ -32,7 +36,12 @@ public class ApiClient {
     private static final Logger logger = LoggerFactory.getLogger(ApiClient.class);
     // Địa chỉ server — đổi IP này nếu server chạy trên máy khác
     private static final String BASE_URL = "http://localhost:8080";
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) ->
+                    new JsonPrimitive(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
+            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) ->
+                    LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+            .create();
 
     // ============================================================
     // ĐĂNG XUẤT
@@ -169,6 +178,28 @@ public class ApiClient {
             return gson.fromJson(responseJson, listType);
         } catch (Exception e) {
             logger.error("[ApiClient] Lỗi parse auctions: " + e.getMessage());
+            return new java.util.ArrayList<>();
+        }
+    }
+    public static String banUser(String email, String token) {
+        // Nối email vào URL Path, body gửi rỗng
+        return guiPost("/api/users/ban/" + email, "{}", token);
+    }
+
+    public static String unbanUser(String email, String token) {
+        // Nối email vào URL Path, body gửi rỗng
+        return guiPost("/api/users/unban/" + email, "{}", token);
+    }
+
+    public static List<User> getAllUsers() {
+        String responseJson = guiGet("/api/users/all-users", null);
+        if (responseJson == null) return new java.util.ArrayList<>();
+        java.lang.reflect.Type listType =
+                new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
+        try {
+            return gson.fromJson(responseJson, listType);
+        } catch (Exception e) {
+            logger.error("[ApiClient] Lỗi parse users: " + e.getMessage());
             return new java.util.ArrayList<>();
         }
     }
@@ -364,38 +395,6 @@ public class ApiClient {
     }
 
     /**
-     * Gọi PUT /api/auctions/{maPhien}/cancel để hủy phiên đấu giá.
-     * Chỉ người tạo phiên mới được hủy phiên WAITING.
-     * Phiên IN_PROGRESS không thể hủy qua HTTP.
-     *
-     * @param maPhien  mã phiên cần hủy
-     * @param token    token đăng nhập của người tạo phiên
-     * @return true nếu hủy thành công, false nếu không có quyền hoặc lỗi
-     */
-    public static boolean cancelAuction(String maPhien, String token) {
-        try {
-            URL url = new URL(BASE_URL + "/api/auctions/" + maPhien + "/cancel");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
-            conn.setRequestMethod("PUT");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-            if (token != null) {
-                conn.setRequestProperty("Authorization", "Bearer " + token);
-            }
-            // Body rỗng vì không cần tham số
-            conn.getOutputStream().write("{}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
-            int status = conn.getResponseCode();
-            conn.disconnect();
-            return status == 200;
-        } catch (Exception e) {
-            logger.error("[ApiClient] Lỗi cancel auction: " + e.getMessage());
-            return false;
-        }
-    }
-    /**
      * Gọi GET /api/users/{email}
      * Cần token trong header Authorization
      *
@@ -521,6 +520,42 @@ public class ApiClient {
         } catch (Exception e) {
             logger.error("[ApiClient] Lỗi getBalance: " + e.getMessage());
             return -1;
+        }
+    }
+
+    public static int getTotalUsersCount() {
+        try {
+            // Gọi đến đúng context path mà bạn đã cấu hình trên server
+            String currentToken = SessionManager.getInstance().getServerToken();
+            String response = guiGet("/api/users/number",currentToken);
+            return Integer.parseInt(response.trim());
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy số lượng người dùng: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public static int getTotalTransactions() {
+        try {
+            // Gọi đến đúng context path mà bạn đã cấu hình trên server
+            String currentToken = SessionManager.getInstance().getServerToken();
+            String response = guiGet("/api/transactions/number",currentToken);
+            return Integer.parseInt(response.trim());
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy số lượng giao dịch: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public static int getTotalOnlineUsersCount() {
+        try {
+            // Gọi đến đúng context path mà bạn đã cấu hình trên server
+            String currentToken = SessionManager.getInstance().getServerToken();
+            String response = guiGet("/api/users/online-number",currentToken);
+            return Integer.parseInt(response.trim());
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy số lượng người dùng: " + e.getMessage());
+            return 0;
         }
     }
 

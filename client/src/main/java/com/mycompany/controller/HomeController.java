@@ -320,9 +320,9 @@ public class HomeController implements Initializable {
                     labelText = "◷ Đang chờ";
                     break;
                 case "PAID":
-                    mauNen = "rgba(231,76,60,0.25)";    // đỏ
-                    mauChu = "#e74c3c";
-                    labelText = "✕ Đã thanh toán";
+                    mauNen = "rgba(241,196,15,0.25)";    // vàng
+                    mauChu = "#f1c40f";
+                    labelText = "● Đã thanh toán";
                     break;
                 case "CANCELLED":
                     mauNen = "rgba(231,76,60,0.25)";    // đỏ (cùng màu PAID)

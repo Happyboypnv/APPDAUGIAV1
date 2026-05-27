@@ -3,40 +3,123 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.UserListController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #222941;" styleClass="root-pane" stylesheets="@../style/user_management.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.UserListController">
+
     <children>
-        <HBox>
+        <HBox styleClass="main-layout">
             <children>
 
+                <!-- ═══════════════════════════════════════════
+                     NAVBAR (giữ nguyên từ file sẵn có)
+                ════════════════════════════════════════════ -->
                 <fx:include source="Admin_NavBar.fxml" />
 
-                <VBox alignment="TOP_CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
+                <!-- ═══════════════════════════════════════════
+                     CONTENT AREA
+                ════════════════════════════════════════════ -->
+                <VBox styleClass="content-area" HBox.hgrow="ALWAYS">
                     <padding>
                         <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
                     </padding>
-                    <children>
 
-                        <Label fx:id="labelWelcome" text="Xin chào!" textFill="WHITE">
-                            <font>
-                                <Font size="20.0" />
-                            </font>
-                        </Label>
+                    <!-- ── Header ── -->
+                    <VBox spacing="4.0" styleClass="page-header">
+                        <children>
+                            <Label fx:id="labelWelcome" styleClass="label-welcome" text="Xin chào!" />
+                            <Label styleClass="label-title" text="Quản lý người dùng" />
+                        </children>
+                    </VBox>
 
-                        <Label text="Danh sách người dùng" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="31.0" />
-                            </font>
-                        </Label>
+                    <!-- Spacer -->
+                    <Region minHeight="24.0" />
 
-                        <ListView fx:id="listViewPhien" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS" />
+                    <!-- ── Search Bar ── -->
+                    <HBox alignment="CENTER_LEFT" styleClass="search-container">
+                        <children>
+                            <!-- Search icon (Unicode magnifier) -->
+                            <Label fx:id="searchIcon" styleClass="search-icon" text="🔍" />
+                            <TextField fx:id="searchField" promptText="Tìm kiếm người dùng..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                        </children>
+                    </HBox>
 
-                    </children>
+                    <!-- Spacer -->
+                    <Region minHeight="20.0" />
+
+                    <!-- ── Stats Row (optional summary badges) ── -->
+                    <HBox spacing="12.0" styleClass="stats-row">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="stat-badge stat-badge--total">
+                                <children>
+                                    <Label styleClass="stat-icon" text="👥" />
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="labelTotalUsers" styleClass="stat-number" text="0" />
+                                            <Label styleClass="stat-label" text="Tổng người dùng" />
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="stat-badge stat-badge--banned">
+                                <children>
+                                    <Label styleClass="stat-icon" text="🚫" />
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="labelBannedUsers" styleClass="stat-number" text="0" />
+                                            <Label styleClass="stat-label" text="Đã bị cấm" />
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="stat-badge stat-badge--active">
+                                <children>
+                                    <Label styleClass="stat-icon" text="✅" />
+                                    <VBox>
+                                        <children>
+                                            <Label fx:id="labelOnlineUsers" styleClass="stat-number" text="0" />
+                                            <Label styleClass="stat-label" text="Đang online" />
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </children>
+                    </HBox>
+
+                    <!-- Spacer -->
+                    <Region minHeight="20.0" />
+
+                    <!-- ── User List (ScrollPane wrapping VBox) ── -->
+                    <!--
+                        fx:id="userListContainer" là VBox động.
+                        Controller sẽ inject VBox này và tạo UserCard
+                        cho mỗi record từ database.
+                    -->
+                    <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" prefWidth="550.0" styleClass="user-scroll-pane" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+
+                        <content>
+                            <VBox fx:id="userListContainer" spacing="14.0" styleClass="user-list">
+                                <padding>
+                                    <Insets bottom="10.0" right="4.0" />
+                                </padding>
+                        <children>
+                           <ListView fx:id="listViewUser" maxHeight="-Infinity" prefHeight="550.0" styleClass="user-list-view" stylesheets="@../style/user_management.css" />
+                        </children>
+
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+
                 </VBox>
+                <!-- END CONTENT AREA -->
+
             </children>
         </HBox>
     </children>

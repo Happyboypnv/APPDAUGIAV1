@@ -244,6 +244,22 @@ public class ServerApp {
       userController.handleChangePassword(exchange);
     });
 
+    server.createContext("/api/users/ban", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+      userController.handleBanUser(exchange);
+    });
+
+    server.createContext("/api/users/unban", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+      userController.handleUnbanUser(exchange);
+    });
+
     /**
      * GET /api/users/{email}
      * Lấy thông tin người dùng theo email
@@ -265,6 +281,15 @@ public class ServerApp {
       userController.handleGetUser(exchange);
     });
 
+    server.createContext("/api/users/all-users", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+
+      userController.handleFindAllUsers(exchange);
+    });
+
     /**
      * GET /api/users/bankacc/{so tai khoan}
      * Trả về true nếu chưa có liên kết, false nếu có rồi
@@ -276,6 +301,24 @@ public class ServerApp {
       }
 
       userController.handleCheckBankAcc(exchange);
+    });
+
+    server.createContext("/api/users/number", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+
+      userController.handleGetUserCount(exchange);
+    });
+
+    server.createContext("/api/users/online-number", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+
+      userController.handleGetOnlineUserCount(exchange);
     });
 
     // ===== ĐĂNG KÝ ENDPOINTS: AUCTIONS =====
@@ -325,6 +368,14 @@ public class ServerApp {
       }
       transactionController.route(exchange);
     });
+
+      server.createContext("/api/transactions/number", exchange -> {
+          if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+              xuLyCors(exchange);
+              return;
+          }
+          transactionController.handleCountTransactions(exchange);
+      });
 
     // ===== CẤU HÌNH THREAD POOL =====
     server.setExecutor(Executors.newFixedThreadPool(10));
