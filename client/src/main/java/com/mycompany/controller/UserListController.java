@@ -46,16 +46,23 @@ public class UserListController implements Initializable {
     @FXML
     ListView<User> listViewUser;
 
-    private List<User> danhSachUsers;
+    private List<User> danhSachUsers = new ArrayList<>();
     private Timeline autoRefreshTimeline;
     private int totalUsers = ApiClient.getTotalUsersCount();
     private int onlineUsers = ApiClient.getTotalOnlineUsersCount();
+    private int bannedUsers = ApiClient.getBannedUsersCount();
+    private User currentUser = SessionManager.getInstance().getCurrentUser();
+    private final ObservableList<User> danhSachUserObservable = FXCollections.observableArrayList();
+    private String currentStatusFilter = "ALL"; // Thêm dòng này để lưu trạng thái lọc hiện tại
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        loadDataFromApi();
         labelTotalUsers.setText(String.valueOf(totalUsers));
         labelOnlineUsers.setText(String.valueOf(onlineUsers));
-
+        labelBannedUsers.setText(String.valueOf(bannedUsers));
 
         if (labelWelcome != null && SessionManager.getInstance().getCurrentUser() != null) {
             labelWelcome.setText("Xin chào, " +
@@ -63,6 +70,7 @@ public class UserListController implements Initializable {
         }
 
         listViewUser.setCellFactory(lv -> new UserCell());
+        listViewUser.setItems(danhSachUserObservable);
 
         taiDanhSachUsers();
 
@@ -76,38 +84,93 @@ public class UserListController implements Initializable {
 
 
     private void taiDanhSachUsers() {
-        // Load lần đầu ngay lập tức
-        doRefresh();
+        // Khởi động lấy dữ liệu từ API lần đầu tiên
+        loadDataFromApi();
 
-        // Auto-refresh mỗi 5 giây
+        // Auto-refresh: Cứ mỗi 5 giây gọi API lấy dữ liệu mới nhất
+        // Tránh việc gọi doRefresh() thủ công làm mất dữ liệu gốc
         autoRefreshTimeline = new Timeline(
-                new KeyFrame(Duration.seconds(5), e -> doRefresh())
+                new KeyFrame(Duration.seconds(5), e -> loadDataFromApi())
         );
         autoRefreshTimeline.setCycleCount(Animation.INDEFINITE);
         autoRefreshTimeline.play();
     }
 
-    private void doRefresh() {
+    private void loadDataFromApi() {
         new Thread(() -> {
-            List<User> allUsers = ApiClient.getAllUsers();
-            // Filter to show only WAITING and IN_PROGRESS auctions for users
+            try {
+                // 1. Gọi API lấy dữ liệu mới nhất từ Server
+                List<User> allUsers = ApiClient.getAllUsers();
 
-            Platform.runLater(() -> {
-                danhSachUsers = allUsers;
-                // Giữ vị trí scroll hiện tại
-                int selectedIndex = listViewUser.getSelectionModel().getSelectedIndex();
-                listViewUser.setItems(FXCollections.observableArrayList(danhSachUsers));
-                if (selectedIndex >= 0 && selectedIndex < danhSachUsers.size()) {
-                    listViewUser.getSelectionModel().select(selectedIndex);
+                if (allUsers != null) {
+                    // 2. Loại bỏ chính mình (currentUser) khỏi danh sách
+                    allUsers.removeIf(user -> user.getEmail().equals(currentUser.getEmail()));
+
+                    // 3. Cập nhật vào bộ nhớ đệm danhSachUsers
+                    danhSachUsers = allUsers;
+
+                    // 4. Tiến hành lọc theo từ khóa hiện tại và đẩy lên giao diện
+                    doRefresh();
                 }
-            });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }).start();
+    }
+
+    private void doRefresh() {
+        List<User> targetList;
+
+        if (currentStatusFilter == null || "ALL".equals(currentStatusFilter) || currentStatusFilter.trim().isEmpty()) {
+            targetList = new ArrayList<>(danhSachUsers);
+        } else {
+            targetList = new ArrayList<>();
+            String filterText = currentStatusFilter.trim().toLowerCase();
+
+            for (User user : danhSachUsers) {
+                if (user.getFullName() != null) {
+                    String fullName = user.getFullName().trim().toLowerCase();
+                    if (fullName.contains(filterText)) {
+                        targetList.add(user);
+                    }
+                }
+            }
+        }
+
+        // Đẩy dữ liệu đã lọc lên giao diện trên UI Thread
+        Platform.runLater(() -> {
+            // TUYỆT ĐỐI KHÔNG ghi đè: danhSachUsers = targetList;
+
+            // Giữ vị trí scroll hiện tại
+            int selectedIndex = listViewUser.getSelectionModel().getSelectedIndex();
+
+            // Cập nhật List View
+            danhSachUserObservable.setAll(targetList);
+
+            if (selectedIndex >= 0 && selectedIndex < targetList.size()) {
+                listViewUser.getSelectionModel().select(selectedIndex);
+            }
+        });
+    }
+
+    @FXML
+    public void handleSearchUser() {
+        String text = searchField.getText();
+        if (text == null || text.trim().isEmpty()) {
+            currentStatusFilter = "ALL";
+        } else {
+            currentStatusFilter = text.trim().toLowerCase();
+        }
+
+        // Chạy hàm lọc cục bộ ngay lập tức (mượt mà, không bị lag)
+        doRefresh();
     }
 
     private class UserCell extends ListCell<User> {
 
         private final HBox root;
         private final Label lblBanBadge;
+        private final Label lblAdminBadge;
         private final Label lblTenNguoiDung;
         private final Label lblEmail;
         private final Label lblSdt;
@@ -124,6 +187,21 @@ public class UserListController implements Initializable {
             lblBanBadge.setPadding(new Insets(4, 8, 4, 8));
             lblBanBadge.setFont(Font.font("System Bold", 11));
             lblBanBadge.setWrapText(false);
+
+            lblAdminBadge = new Label("ADMIN");
+            lblAdminBadge.setPadding(new Insets(2, 6, 2, 6)); // Padding nhỏ hơn badge chính
+            lblAdminBadge.setFont(Font.font("System Bold", 10)); // Font nhỏ hơn
+            // Định kiểu màu vàng Admin (customize & filter)
+            lblAdminBadge.setStyle(
+                    "-fx-background-color: rgba(243, 156, 18, 0.2);" + // vàng cam nhạt nền (Flat UI Orange/Yellow)
+                            "-fx-text-fill: #f39c12;" + // màu vàng chữ (Flat UI Orange/Yellow)
+                            "-fx-background-radius: 6;" +
+                            "-fx-border-color: #f39c12;" +
+                            "-fx-border-radius: 6;" +
+                            "-fx-border-width: 1;"
+            );
+            lblAdminBadge.setVisible(false); // Ẩn mặc định
+            lblAdminBadge.setManaged(false); // Quan trọng để không chiếm không gian layout khi ẩn
 
             // ── Avatar placeholder ────────────────────────────────
             Label lblAvatar = new Label("👤");
@@ -144,7 +222,7 @@ public class UserListController implements Initializable {
             lblEmail.setFont(Font.font(12));
             lblEmail.setTextFill(Color.web("#aab4d4"));
 
-            VBox colInfo = new VBox(3, lblTenNguoiDung, lblEmail);
+            VBox colInfo = new VBox(3, lblAdminBadge, lblTenNguoiDung, lblEmail);
             colInfo.setAlignment(Pos.CENTER_LEFT);
             HBox.setHgrow(colInfo, Priority.ALWAYS);
 
@@ -245,12 +323,68 @@ public class UserListController implements Initializable {
                     ? user.getDateOfBirth() : "—");
 
             // ── Badge + màu viền card theo trạng thái ban ──────────
-            boolean isBanned = user.getIsBanned() == 1;
-            btnBan.setVisible(!isBanned);
-            btnBan.setManaged(!isBanned);
-            btnUnban.setVisible(isBanned);
-            btnUnban.setManaged(isBanned);
+            boolean isUserAdmin = user.getRole()==1;
 
+            if (isUserAdmin) {
+                // Hiện badge ADMIN màu vàng
+                lblAdminBadge.setVisible(true);
+                lblAdminBadge.setManaged(true);
+
+                // Ẩn nút Ban/Unban nhưng giữ khoảng trống tàng hình hoàn hảo (Không lo viền đỏ)
+                btnBan.setVisible(false);
+                btnBan.setManaged(true);
+                btnBan.setDisable(true);
+                btnBan.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+
+                btnUnban.setVisible(false);
+                btnUnban.setManaged(true);
+                btnUnban.setDisable(true);
+                btnUnban.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+
+            } else {
+                // ====== 2. ĐỐI VỚI USER THƯỜNG (PHẢI XOÁ SẠCH TRẠNG THÁI ADMIN CŨ) ======
+                // Bắt buộc ẩn badge ADMIN đi để tránh bị lỗi lây từ cell cũ sang
+                lblAdminBadge.setVisible(false);
+                lblAdminBadge.setManaged(false);
+
+                // Mở khóa lại nút bấm cho user thường
+                btnBan.setDisable(false);
+                btnUnban.setDisable(false);
+
+                // Khôi phục lại style màu sắc nguyên bản của nút bấm
+                btnBan.setStyle(
+                        "-fx-background-color: rgba(231,76,60,0.20);" +
+                                "-fx-text-fill: #e74c3c;" +
+                                "-fx-border-color: #e74c3c;" +
+                                "-fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1; -fx-cursor: hand; -fx-font-weight: bold;"
+                );
+                btnUnban.setStyle(
+                        "-fx-background-color: rgba(46,204,113,0.20);" +
+                                "-fx-text-fill: #2ecc71;" +
+                                "-fx-border-color: #2ecc71;" +
+                                "-fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1; -fx-cursor: hand; -fx-font-weight: bold;"
+                );
+
+                // Hiển thị nút dựa trên trạng thái Bị cấm (isBanned)
+                boolean isBanned = user.getIsBanned() == 1;
+
+                if (isBanned) {
+                    // Nếu bị BAN: hiện nút Unban, ẩn nút Ban
+                    btnBan.setVisible(false);
+                    btnBan.setManaged(false); // Ở đây đặt false vì nút Unban sẽ hiện lên thay thế vào chỗ đó
+
+                    btnUnban.setVisible(true);
+                    btnUnban.setManaged(true);
+                } else {
+                    // Nếu bình thường: hiện nút Ban, ẩn nút Unban
+                    btnBan.setVisible(true);
+                    btnBan.setManaged(true);
+
+                    btnUnban.setVisible(false);
+                    btnUnban.setManaged(false);
+                }
+            }
+            boolean isBanned = user.getIsBanned() == 1;
             if (isBanned) {
                 lblBanBadge.setText("✕ BANNED");
                 lblBanBadge.setStyle(
@@ -269,27 +403,48 @@ public class UserListController implements Initializable {
                                 "-fx-border-width: 1.5;"
                 );
             } else {
-                lblBanBadge.setText("● Hoạt động");
-                lblBanBadge.setStyle(
-                        "-fx-background-color: rgba(46,204,113,0.25);" +
-                                "-fx-text-fill: #2ecc71;" +
-                                "-fx-background-radius: 6;" +
-                                "-fx-border-color: #2ecc71;" +
-                                "-fx-border-radius: 6;" +
-                                "-fx-border-width: 1;"
-                );
-                root.setStyle(
-                        "-fx-background-color: rgba(255,255,255,0.06);" +
-                                "-fx-background-radius: 14;" +
-                                "-fx-border-color: rgba(255,255,255,0.12);" +
-                                "-fx-border-radius: 14;" +
-                                "-fx-border-width: 1.5;"
-                );
+                if (user.isOnline()) {
+                    lblBanBadge.setText("● Hoạt động");
+                    lblBanBadge.setStyle(
+                            "-fx-background-color: rgba(46,204,113,0.25);" +
+                                    "-fx-text-fill: #2ecc71;" +
+                                    "-fx-background-radius: 6;" +
+                                    "-fx-border-color: #2ecc71;" +
+                                    "-fx-border-radius: 6;" +
+                                    "-fx-border-width: 1;"
+                    );
+                    root.setStyle(
+                            "-fx-background-color: rgba(255,255,255,0.06);" +
+                                    "-fx-background-radius: 14;" +
+                                    "-fx-border-color: rgba(255,255,255,0.12);" +
+                                    "-fx-border-radius: 14;" +
+                                    "-fx-border-width: 1.5;"
+                    );
+                } else {
+                    lblBanBadge.setText("● Offline");
+                    lblBanBadge.setStyle(
+                            "-fx-background-color: rgba(43, 43, 43, 1.0);" +
+                                    "-fx-text-fill: #dee2e6;" +
+                                    "-fx-background-radius: 6;" +
+                                    "-fx-border-color: #dee2e6;" +
+                                    "-fx-border-radius: 6;" +
+                                    "-fx-border-width: 1;"
+                    );
+                    root.setStyle(
+                            "-fx-background-color: rgba(255,255,255,0.06);" +
+                                    "-fx-background-radius: 14;" +
+                                    "-fx-border-color: rgba(255,255,255,0.12);" +
+                                    "-fx-border-radius: 14;" +
+                                    "-fx-border-width: 1.5;"
+                    );
+                }
             }
 
             // ── Gán handler (truyền data vào controller) ──────────
-            btnBan.setOnAction(e -> handleBanUser());
-            btnUnban.setOnAction(e -> handleUnbanUser());
+            // Use the current `user` instance from updateItem instead of relying on
+            // listView selection (which can be null when clicking a button inside the cell).
+            btnBan.setOnAction(e -> handleBanUser(user));
+            btnUnban.setOnAction(e -> handleUnbanUser(user));
 
             setGraphic(root);
             setText(null);
@@ -297,17 +452,19 @@ public class UserListController implements Initializable {
         }
     }
 
-    private void handleUnbanUser() {
-        User currentUser = listViewUser.getSelectionModel().getSelectedItem();
-        String email = currentUser.getEmail();
+    private void handleUnbanUser(User user) {
+        // Called from the cell with the specific User instance. Avoids relying on
+        // listView selection which may be null when user clicks a button inside a cell.
+        if (user == null) return;
+        String email = user.getEmail();
         String token = SessionManager.getInstance().getServerToken();
-        ApiClient.banUser(email,token);
+        ApiClient.unbanUser(email, token);
     }
 
-    private void handleBanUser() {
-        User currentUser = listViewUser.getSelectionModel().getSelectedItem();
-        String email = currentUser.getEmail();
+    private void handleBanUser(User user) {
+        if (user == null) return;
+        String email = user.getEmail();
         String token = SessionManager.getInstance().getServerToken();
-        ApiClient.unbanUser(email,token);
+        ApiClient.banUser(email, token);
     }
 }

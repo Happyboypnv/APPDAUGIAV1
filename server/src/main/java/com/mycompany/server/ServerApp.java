@@ -289,6 +289,14 @@ public class ServerApp {
 
       userController.handleFindAllUsers(exchange);
     });
+    server.createContext("/api/users/banned-number", exchange -> {
+      if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+        xuLyCors(exchange);
+        return;
+      }
+
+      userController.handleFindBannedUsers(exchange);
+    });
 
     /**
      * GET /api/users/bankacc/{so tai khoan}

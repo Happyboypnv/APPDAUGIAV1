@@ -197,7 +197,23 @@ public class ApiClient {
         java.lang.reflect.Type listType =
                 new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
         try {
-            return gson.fromJson(responseJson, listType);
+            List<User> users = gson.fromJson(responseJson, listType);
+            if (users == null) return new java.util.ArrayList<>();
+            // Server returns role as a String field ("ADMIN"/"USER") mapped into
+            // User.roleNameFromServer. Person.role is transient (int) so Gson won't
+            // populate it — convert the role name into the integer role here so
+            // client code that calls getRole() sees correct values (1=ADMIN,0=USER).
+            for (User u : users) {
+                try {
+                    String roleName = u.getRoleNameFromServer();
+                    if (roleName != null) {
+                        u.setRole("ADMIN".equalsIgnoreCase(roleName) ? 1 : 0);
+                    }
+                } catch (Exception ignore) {
+                    // Be resilient to malformed entries — skip conversion on error
+                }
+            }
+            return users;
         } catch (Exception e) {
             logger.error("[ApiClient] Lỗi parse users: " + e.getMessage());
             return new java.util.ArrayList<>();
@@ -531,6 +547,18 @@ public class ApiClient {
             return Integer.parseInt(response.trim());
         } catch (Exception e) {
             System.err.println("Lỗi khi lấy số lượng người dùng: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public static int getBannedUsersCount() {
+        try {
+            // Gọi đến đúng context path mà bạn đã cấu hình trên server
+            String currentToken = SessionManager.getInstance().getServerToken();
+            String response = guiGet("/api/users/banned-number",currentToken);
+            return Integer.parseInt(response.trim());
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy số lượng người bị ban: " + e.getMessage());
             return 0;
         }
     }

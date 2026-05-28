@@ -1,5 +1,6 @@
 package com.mycompany.models;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
@@ -18,10 +19,17 @@ import java.io.Serializable;
  */
 public class Person implements Serializable {
 
+    @SerializedName("maNguoiDung")
     private String userId;
+
+    @SerializedName("hoTen")
     private String fullName;
+
     private String email;
+
+    @SerializedName("ngaySinh")
     private String dateOfBirth;
+
     private String password;
     private transient int role;
 

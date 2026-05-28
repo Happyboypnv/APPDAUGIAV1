@@ -1,10 +1,7 @@
 package com.mycompany.server.controller;
 
 import com.google.gson.Gson;
-import com.mycompany.models.Admin;
-import com.mycompany.models.AuctionSession;
-import com.mycompany.models.Person;
-import com.mycompany.models.User;
+import com.mycompany.models.*;
 import com.mycompany.server.dto.LoginRequest;
 import com.mycompany.server.dto.LoginResponse;
 import com.mycompany.server.dto.RegisterRequest;
@@ -129,10 +126,13 @@ public class UserController {
         }
 
         // kiemTraNguoiDung() tự động hash matKhau với salt rồi so sánh với DB
-        boolean hopLe = khoNguoiDung.verifyCredentials(req.getEmail(), req.getMatKhau());
+        LoginStatus status = khoNguoiDung.verifyCredentials(req.getEmail(), req.getMatKhau());
 
-        if (!hopLe) {
+        if (status == LoginStatus.INVALID_CREDENTIALS) {
             guiPhanHoi(exchange, 401, gson.toJson(new LoginResponse("Sai email hoặc mật khẩu")));
+            return;
+        } else if (status == LoginStatus.BANNED) {
+            guiPhanHoi(exchange, 403, gson.toJson(new LoginResponse("Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ Admin.")));
             return;
         }
 
@@ -461,6 +461,49 @@ public class UserController {
         khoNguoiDung.update(nguoiDung);
     }
 
+    public void handleFindBannedUsers(HttpExchange exchange) {
+        try {
+            // 1. Chỉ chấp nhận phương thức GET
+            if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+                String response = "Method Not Allowed";
+                exchange.sendResponseHeaders(415, response.length());
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(response.getBytes());
+                }
+                return;
+            }
+
+            // 2. Gọi hàm đếm số lượng người dùng từ UserRepo
+            int totalUsers = khoNguoiDung.countBannedUsers();
+
+            // Chuyển con số thành chuỗi để truyền qua HTTP
+            String responseText = String.valueOf(totalUsers);
+
+            // 3. Cấu hình Headers (Kiểu dữ liệu văn bản thuần hoặc số và xử lý CORS bảo mật)
+            exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+
+            // 4. Gửi HTTP Status 200 (OK) và độ dài của dữ liệu trả về
+            byte[] responseBytes = responseText.getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(200, responseBytes.length);
+
+            // 5. Ghi dữ liệu vào Body và đóng luồng
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(responseBytes);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Xử lý lỗi hệ thống nếu có sự cố luồng mạng
+            try {
+                exchange.sendResponseHeaders(500, -1);
+            } catch (IOException ignored) {}
+        } catch (RuntimeException ex) {
+            logger.error("Lỗi khi đếm số người bị ban: " + ex.getMessage());
+        }
+    }
+
+
     // =========================================================
     // INNER CLASS: Thông tin trả về cho GET /api/users/{email}
     // =========================================================
@@ -481,6 +524,7 @@ public class UserController {
         String soTaiKhoanNganHang;
         String tenNganHang;
         int isBanned;
+        boolean isOnline;
 
         ThongTinNguoiDung(Person nd) {
             this.maNguoiDung  = nd.getUserId();
@@ -495,6 +539,7 @@ public class UserController {
                 this.soTaiKhoanNganHang = u.getBankAccountNumber();
                 this.tenNganHang        = u.getBankName();
                 this.isBanned = u.getIsBanned();
+                this.isOnline = u.isOnline();
             }
         }
     }
@@ -738,7 +783,7 @@ public class UserController {
         ChangePasswordRequest req = gson.fromJson(body, ChangePasswordRequest.class);
 
         // Xác minh mật khẩu cũ (hash + salt trong DB)
-        if (!khoNguoiDung.verifyCredentials(email, req.oldPassword)) {
+        if (khoNguoiDung.verifyCredentials(email, req.oldPassword) == LoginStatus.INVALID_CREDENTIALS) {
             guiPhanHoi(exchange, 400, "{\"thongBao\":\"Mật khẩu cũ không đúng!\"}");
             return;
         }
@@ -987,6 +1032,8 @@ public class UserController {
 
             List<ThongTinNguoiDung> danhSach = new ArrayList<>();
             for (User user : tatCaUser.values()) {
+                boolean isOnline = OnlineUsersManager.getInstance().isUserOnline(user.getEmail());
+                user.setIsOnline(isOnline);
                 danhSach.add(new ThongTinNguoiDung(user));
             }
 

@@ -10,14 +10,24 @@ public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
   @SerializedName("role")
   private String roleNameFromServer;
 
+  @SerializedName("diaChi")
   private String address;
+
+  @SerializedName("soDienThoai")
   private String phoneNumber;
+
   private double actualBalance;    // ← THAY THẾ availableBalance
   private double frozenBalance;    // ← MỚI
   private List<Transaction> transactions;
+
+  @SerializedName("soTaiKhoanNganHang")
   private String bankAccountNumber;
+
+  @SerializedName("tenNganHang")
   private String bankName;
+
   private int isBanned = 0; // ban đầu ko bị ban
+  private boolean isOnline = false;
 
   public User(String fullName, String email,
               String password, String dateOfBirth,
@@ -119,6 +129,10 @@ public class User extends Person implements CanBeSold, CanLeaveRoom, CanBid {
   public void setIsBanned(int isBanned) {
     this.isBanned = isBanned;
   }
+
+  public void setIsOnline(boolean isOnline) {this.isOnline = isOnline;}
+
+  public boolean isOnline() {return isOnline;}
 
   @Override
   public void buy(Product product) {

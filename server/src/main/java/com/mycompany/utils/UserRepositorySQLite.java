@@ -1,5 +1,6 @@
 package com.mycompany.utils;
 
+import com.mycompany.models.LoginStatus;
 import com.mycompany.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,66 +80,65 @@ public class UserRepositorySQLite implements IUserRepository {
    */
   @Override
   public void save(User User) {
-    Connection conn = null;
-    try {
-      conn = DatabaseConnection.getConnection();
+    try (Connection conn = DatabaseConnection.getConnection()) {
 
-      // Kiểm tra email trong cùng transaction
-      if (!isEmailAvailable(User.getEmail())) {
-        logger.error("Email đã tồn tại: " + User.getEmail());
-        return;
-      }
+      try { // Kiểm tra email trong cùng transaction
+        if (!isEmailAvailable(User.getEmail())) {
+          logger.error("Email đã tồn tại: " + User.getEmail());
+          return;
+        }
 
-      String maMoi = RandomIDGenerator();
-      User.setUserId(maMoi);
+        String maMoi = RandomIDGenerator();
+        User.setUserId(maMoi);
 
-      String sql = "INSERT INTO nguoi_dung " +
-          "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, " +
-          "dia_chi, so_dien_thoai,so_du_thuc_te, so_du_dong_bang, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar, role, is_banned) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO nguoi_dung " +
+                "(ma_nguoi_dung, ho_ten, thu_dien_tu, mat_khau, salt, ngay_sinh, " +
+                "dia_chi, so_dien_thoai,so_du_thuc_te, so_du_dong_bang, so_tai_khoan_ngan_hang, ten_ngan_hang, duong_dan_avatar, role, is_banned) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
-      try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, maMoi);
-        ps.setString(2, User.getFullName());
-        ps.setString(3, User.getEmail());
-        ps.setString(4, User.getPassword());
-        ps.setString(5, User.getSalt());
-        ps.setString(6, User.getDateOfBirth());
-        ps.setString(7, User.getAddress());
-        ps.setString(8, User.getPhoneNumber());
-        ps.setDouble(9, User.getActualBalance());
-        ps.setDouble(10, User.getFrozenBalance());
-        ps.setString(11, User.getBankAccountNumber());
-        ps.setString(12, User.getBankName());
-        ps.setString(13, User.getAvatarPath());
-        ps.setInt(14, User.getRole());
-        ps.setInt(15, User.getIsBanned());
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+          ps.setString(1, maMoi);
+          ps.setString(2, User.getFullName());
+          ps.setString(3, User.getEmail());
+          ps.setString(4, User.getPassword());
+          ps.setString(5, User.getSalt());
+          ps.setString(6, User.getDateOfBirth());
+          ps.setString(7, User.getAddress());
+          ps.setString(8, User.getPhoneNumber());
+          ps.setDouble(9, User.getActualBalance());
+          ps.setDouble(10, User.getFrozenBalance());
+          ps.setString(11, User.getBankAccountNumber());
+          ps.setString(12, User.getBankName());
+          ps.setString(13, User.getAvatarPath());
+          ps.setInt(14, User.getRole());
+          ps.setInt(15, User.getIsBanned());
 
-        logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
-            maMoi, User.getFullName(), User.getEmail(), User.getPassword(), User.getSalt(),
-            User.getDateOfBirth(), User.getAddress(), User.getPhoneNumber(),
-            User.getAvailableBalance(), User.getBankAccountNumber(), User.getBankName(),
-            User.getAvatarPath());
+          logger.info("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+                  maMoi, User.getFullName(), User.getEmail(), User.getPassword(), User.getSalt(),
+                  User.getDateOfBirth(), User.getAddress(), User.getPhoneNumber(),
+                  User.getAvailableBalance(), User.getBankAccountNumber(), User.getBankName(),
+                  User.getAvatarPath());
 
-        int rowsAffected = ps.executeUpdate();
-        logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
-      }
+          int rowsAffected = ps.executeUpdate();
+          logger.info(" INSERT thành công, số dòng ảnh hưởng: " + rowsAffected);
+        }
 
-      // Commit 1 lần duy nhất sau khi tất cả thao tác hoàn tất
-      conn.commit();
-      logger.info("COMMIT thành công cho user: " + maMoi);
-
-    } catch (SQLException e) {
-      // Rollback nếu có lỗi để giải phóng write lock
-      if (conn != null) {
-        try {
-          conn.rollback();
-          logger.warn("ROLLBACK do lỗi lưu user: " + e.getMessage());
-        } catch (SQLException ex) {
-          logger.error("Lỗi rollback: " + ex.getMessage());
+        // Commit 1 lần duy nhất sau khi tất cả thao tác hoàn tất
+        conn.commit();
+        logger.info("COMMIT thành công cho user: " + maMoi);
+      } catch (SQLException e) {
+        // Rollback nếu có lỗi để giải phóng write lock
+        if (conn != null) {
+          try {
+            conn.rollback();
+            logger.warn("ROLLBACK do lỗi lưu user: " + e.getMessage());
+          } catch (SQLException ex) {
+            logger.error("Lỗi rollback: " + ex.getMessage());
+          }
         }
       }
-      logger.error("Lỗi lưu người dùng: " + e.getMessage());
+    } catch (SQLException ex) {
+      logger.error("[UserRepo] Lỗi lấy kết nối" + ex.getMessage());
     }
   }
 
@@ -319,6 +319,23 @@ public class UserRepositorySQLite implements IUserRepository {
     return 0;
   }
 
+  @Override
+  public int countBannedUsers() {
+    String sql = "SELECT COUNT(*) AS total_banned FROM nguoi_dung WHERE is_banned = 1";
+    try (Connection conn = DatabaseConnection.getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+
+      if (rs.next()) {
+        return rs.getInt("total_banned"); // Trả về con số đếm duy nhất
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw new RuntimeException("Lỗi đê số lượng người dùng bị ban", e);
+    }
+    return 0;
+  }
+
   /**
    * METHOD: kiemTraUser()
    * Mục đích: Kiểm tra đăng nhập - xác minh email VÀ password có khớp không.
@@ -337,11 +354,11 @@ public class UserRepositorySQLite implements IUserRepository {
    * @return true = đăng nhập thành công, false = thất bại
    */
   @Override
-  public boolean verifyCredentials(String email, String password) {
+  public LoginStatus verifyCredentials(String email, String password) {
     // THAY ĐỔI: Chỉ lấy cột mat_khau và salt (cần thiết cho kiểm tra)
     // Trước: SELECT * → lấy tất cả cột (chậm hơn)
     // Sau: SELECT mat_khau, salt → chỉ lấy cần thiết (nhanh hơn)
-    String sql = "SELECT mat_khau, salt FROM nguoi_dung WHERE thu_dien_tu = ?";
+    String sql = "SELECT mat_khau, salt, is_banned FROM nguoi_dung WHERE thu_dien_tu = ?";
     // try-with-resources: tự động đóng PreparedStatement
     try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
       // Điền email vào placeholder ?
@@ -357,6 +374,11 @@ public class UserRepositorySQLite implements IUserRepository {
           // THAY ĐỔI: Lấy password hash và salt từ cơ sở dữ liệu
           // Trước: Chỉ có mat_khau (plain text)
           // Sau: mat_khau (hashed) + salt (cho verification)
+          int isBanned = rs.getInt("is_banned");
+          if (isBanned==1) {
+            return LoginStatus.BANNED;
+          }
+
           String matKhauHashTrongDB = rs.getString("mat_khau");
           String saltTrongDB = rs.getString("salt");
 
@@ -365,15 +387,23 @@ public class UserRepositorySQLite implements IUserRepository {
           logger.info(" Salt trong DB: " + saltTrongDB);
           logger.info(" Password nhập vào: " + password);
 
+
+
           // THAY ĐỔI QUAN TRỌNG: Sử dụng BoMaHoaMatKhau để verify password
           // Trước: matKhauTrongDB.equals(password) → plain text comparison
           // Sau: BoMaHoaMatKhau.kiemTraMatKhau() → cryptographic verification
           // matKhauHashTrongDB != null && saltTrongDB != null → đảm bảo không null
           // BoMaHoaMatKhau.kiemTraMatKhau() → verify password với hash + salt
-          return matKhauHashTrongDB != null && saltTrongDB != null &&
+          boolean isCredentialsValid = matKhauHashTrongDB != null && saltTrongDB != null &&
               com.mycompany.utils.PasswordEncoder.checkPassword(password, matKhauHashTrongDB, saltTrongDB);
+          if (isCredentialsValid) {
+            return LoginStatus.SUCCESS;
+          } else {
+            return LoginStatus.INVALID_CREDENTIALS;
+          }
         } else {
           logger.info(" Không tìm thấy user với email: " + email);
+          return LoginStatus.INVALID_CREDENTIALS;
         }
       }
     } catch (SQLException e) {
@@ -382,7 +412,7 @@ public class UserRepositorySQLite implements IUserRepository {
     }
 
     // Email không tồn tại hoặc password sai → đăng nhập thất bại
-    return false;
+    return LoginStatus.INVALID_CREDENTIALS;
   }
   @Override
   public boolean isBankAccountAvailable(String bankAccount) {

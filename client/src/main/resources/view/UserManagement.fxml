@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
@@ -44,7 +45,10 @@
                     <HBox alignment="CENTER_LEFT" styleClass="search-container">
                         <children>
                             <!-- Search icon (Unicode magnifier) -->
-                            <Label fx:id="searchIcon" styleClass="search-icon" text="🔍" />
+                            <Label fx:id="searchIcon" onMouseClicked="#handleSearchUser" styleClass="search-icon" text="🔍">
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor></Label>
                             <TextField fx:id="searchField" promptText="Tìm kiếm người dùng..." styleClass="search-field" HBox.hgrow="ALWAYS" />
                         </children>
                     </HBox>
