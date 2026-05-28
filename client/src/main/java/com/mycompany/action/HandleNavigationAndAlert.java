@@ -1,6 +1,7 @@
 package com.mycompany.action;
 
 import com.mycompany.models.User;
+import com.mycompany.utils.ModernAlert;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +31,6 @@ public class HandleNavigationAndAlert {
     }
 
     public void handleGoToHome(Event event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         StackPane homeRoot = FXMLLoader.load(getClass().getResource("/view/Home.fxml"));
         Scene homeScene = new Scene(homeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -39,7 +39,6 @@ public class HandleNavigationAndAlert {
     }
 
     public void handleGoToSignIn(ActionEvent event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignIn.fxml"));
         Scene signUpScene = new Scene(signUpRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -48,7 +47,6 @@ public class HandleNavigationAndAlert {
     }
 
     public void handleGoToSignUp(ActionEvent event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         Parent signUpRoot = FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"));
         Scene signUpScene = new Scene(signUpRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -57,9 +55,8 @@ public class HandleNavigationAndAlert {
     }
 
     public void goToCreateAuction(Event event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         javafx.scene.layout.StackPane root =
-                FXMLLoader.load(getClass().getResource("/view/CreateAuction.fxml"));
+            FXMLLoader.load(getClass().getResource("/view/CreateAuction.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -72,16 +69,13 @@ public class HandleNavigationAndAlert {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Bạn cần đăng nhập để xem trang cá nhân!");
             return;
         }
-        // Đã sửa đường dẫn thêm /resources
         Parent profileRoot = FXMLLoader.load(getClass().getResource("/view/Profile.fxml"));
         Scene profileScene = new Scene(profileRoot);
-
         stage.setScene(profileScene);
         stage.show();
     }
 
     public void goToFinance(Event event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         StackPane financeRoot = FXMLLoader.load(getClass().getResource("/view/Finance.fxml"));
         Scene homeScene = new Scene(financeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -90,7 +84,6 @@ public class HandleNavigationAndAlert {
     }
 
     public void goToTransactionHistory(Event event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         StackPane root = FXMLLoader.load(getClass().getResource("/view/TransactionHistory.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -141,7 +134,6 @@ public class HandleNavigationAndAlert {
     }
 
     public void goToChangePassword(ActionEvent event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         StackPane changeRoot = FXMLLoader.load(getClass().getResource("/view/ChangePassword.fxml"));
         Scene scene = new Scene(changeRoot);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -150,9 +142,8 @@ public class HandleNavigationAndAlert {
     }
 
     public void goToBiddingRoom(javafx.scene.input.MouseEvent event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         javafx.scene.layout.StackPane root = FXMLLoader.load(
-                getClass().getResource("/view/BiddingRoom.fxml"));
+            getClass().getResource("/view/BiddingRoom.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
@@ -160,21 +151,19 @@ public class HandleNavigationAndAlert {
     }
 
     public void goToCreatePhienDauGia(Event event) throws IOException {
-        // Đã sửa đường dẫn thêm /resources
         javafx.scene.layout.StackPane root = FXMLLoader.load(
-                getClass().getResource("/view/CreatePhienDauGia.fxml"));
+            getClass().getResource("/view/CreatePhienDauGia.fxml"));
         Scene scene = new Scene(root);
         Stage window = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
     }
 
-    public void showAlert (Alert.AlertType alertType, String title, String message){
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    // ─────────────────────────────────────────────────────────────────────────
+    //  showAlert — ModernAlert thay cho hộp thoại trắng mặc định
+    // ─────────────────────────────────────────────────────────────────────────
+    public void showAlert(Alert.AlertType alertType, String title, String message) {
+        ModernAlert.show(alertType, title, message);
     }
 
     public void handleGoToAdminHome(MouseEvent event) throws IOException {

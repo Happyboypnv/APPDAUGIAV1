@@ -2,40 +2,60 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.HomeController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="816.0" prefWidth="959.0"
+           style="-fx-background-color: #1c254b;"
+           styleClass="my-custom-node"
+           stylesheets="@../style/nen.css"
+           xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.mycompany.controller.HomeController">
    <children>
       <HBox>
          <children>
 
             <fx:include source="NavbarComponent.fxml" />
 
-            <VBox alignment="TOP_CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
+            <VBox alignment="TOP_CENTER" spacing="16.0" HBox.hgrow="ALWAYS">
                <padding>
-                  <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                  <Insets bottom="24.0" left="28.0" right="28.0" top="36.0" />
                </padding>
                <children>
 
-                  <Label fx:id="labelWelcome" text="Xin chào!" textFill="WHITE">
+                  <!-- Lời chào -->
+                  <Label fx:id="labelWelcome" text="Xin chào!" textFill="#9aabcc">
                      <font>
-                        <Font size="20.0" />
+                        <Font size="14.0" />
                      </font>
                   </Label>
 
-                  <Label text="Danh sách phiên đấu giá" textFill="WHITE">
+                  <!-- Tiêu đề trang -->
+                  <Label text="Phiên Đấu Giá" textFill="WHITE">
                      <font>
-                        <Font name="System Bold" size="31.0" />
+                        <Font name="System Bold" size="28.0" />
                      </font>
                   </Label>
 
-                  <ListView fx:id="listViewPhien"
-                     style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-border-color: transparent;"
-                     VBox.vgrow="ALWAYS" />
+                  <!-- Grid card (FlowPane bên trong ScrollPane) -->
+                  <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                              style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;">
+                     <content>
+                        <FlowPane fx:id="flowPanePhien"
+                                  hgap="18" vgap="18"
+                                  style="-fx-background-color: transparent;">
+                           <padding>
+                              <Insets bottom="24" top="4" />
+                           </padding>
+                        </FlowPane>
+                     </content>
+                  </ScrollPane>
 
                </children>
             </VBox>
