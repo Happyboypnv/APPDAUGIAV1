@@ -56,6 +56,11 @@ public class AuctionRequestController implements Initializable {
     // Set lưu mã phiên user đang theo dõi
     private final Set<String> watchedSessions = new HashSet<>();
 
+    @FXML
+    private VBox adminNavBar;
+    @FXML
+    private AdminNavBarController adminNavBarController;
+
     // Formatter để parse chuỗi từ server (ISO hoặc "yyyy-MM-dd HH:mm:ss")
     private static final DateTimeFormatter[] PARSE_FORMATTERS = {
             DateTimeFormatter.ISO_LOCAL_DATE_TIME,
@@ -68,6 +73,7 @@ public class AuctionRequestController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        adminNavBarController.setActive("review");
         if (labelWelcome != null && SessionManager.getInstance().getCurrentUser() != null) {
             labelWelcome.setText("Xin chào, " +
                     SessionManager.getInstance().getCurrentUser().getFullName() + "!");

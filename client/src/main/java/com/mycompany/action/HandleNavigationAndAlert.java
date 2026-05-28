@@ -179,7 +179,7 @@ public class HandleNavigationAndAlert {
         scene.setRoot(root);
     }
 
-    public void handleGoToUserList(MouseEvent event) throws IOException {
+    public void handleGoToUserList(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/UserManagement.fxml"));
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
