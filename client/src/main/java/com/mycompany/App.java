@@ -62,6 +62,13 @@ public class    App extends Application {
 
             // 3. Thiết lập Stage (Cửa sổ)
             primaryStage.setTitle("HiPiTi Bidding App");
+            try {
+                primaryStage.getIcons().add(
+                    new javafx.scene.image.Image(
+                        getClass().getResourceAsStream("/image/hipiti_icon.png")
+                    )
+                );
+            } catch (Exception ignored) {}
 
             // Nếu bạn muốn bỏ thanh tiêu đề trắng của Windows để nhìn app "xịn" hơn:
             // primaryStage.initStyle(StageStyle.TRANSPARENT);

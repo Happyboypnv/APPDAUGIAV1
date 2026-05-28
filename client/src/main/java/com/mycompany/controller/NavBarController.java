@@ -4,6 +4,7 @@ import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.action.HomeAction;
 import com.mycompany.models.User;
 import com.mycompany.utils.SessionManager;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -55,6 +56,7 @@ public class NavBarController implements Initializable {
     private Label financeManagement;
 
     private ContextMenu contextMenu;
+    private Label activeNavItem = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,9 +78,37 @@ public class NavBarController implements Initializable {
         contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(profileItem, logoutItem);
 
-        // 🔹 ĐÃ SỬA: Thêm /resources vào trước đường dẫn file ảnh home
         Image home = new Image(getClass().getResource("/image/square.png").toExternalForm());
         homeIcon.setImage(home);
+        Platform.runLater(this::highlightCurrentPage);
+    }
+
+    private void highlightCurrentPage() {
+        if (navBar == null || navBar.getScene() == null) return;
+        Parent root = navBar.getScene().getRoot();
+        if (root == null) return;
+        if (root.lookup("#transactionListView") != null) {
+            setActiveNav(transactionHistory);
+        } else if (root.lookup("#depositButton") != null) {
+            setActiveNav(financeManagement);
+        } else if (root.lookup("#tenPhienField") != null ||
+            root.lookup("#createAuctionButton") != null) {
+            setActiveNav(createAuction);
+        }
+    }
+
+    private void setActiveNav(Label item) {
+        if (activeNavItem != null) {
+            activeNavItem.getStyleClass().remove("nav-item-active");
+            if (!activeNavItem.getStyleClass().contains("nav-item"))
+                activeNavItem.getStyleClass().add("nav-item");
+        }
+        activeNavItem = item;
+        if (item != null) {
+            item.getStyleClass().remove("nav-item");
+            if (!item.getStyleClass().contains("nav-item-active"))
+                item.getStyleClass().add("nav-item-active");
+        }
     }
 
     private void loadAvatarImage(User currentUser) {
@@ -224,7 +254,8 @@ public class NavBarController implements Initializable {
     }
 
     @FXML
-    public void navigateToTransactionHistory(MouseEvent event) {
+    public void navigateToLichSuGiaoDich(MouseEvent event) {
+        setActiveNav(transactionHistory);
         cleanupBiddingRoom((Node) event.getSource());
         try {
             HandleNavigationAndAlert.getInstance().goToTransactionHistory(event);

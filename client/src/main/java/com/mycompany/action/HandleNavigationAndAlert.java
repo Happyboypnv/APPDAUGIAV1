@@ -98,6 +98,10 @@ public class HandleNavigationAndAlert {
         window.show();
     }
 
+    public void goToLichSuGiaoDich(Event event) throws IOException {
+        goToTransactionHistory(event);
+    }
+
     public void handleGoToAdminHome(ActionEvent event) throws IOException {
         Node node = (Node) event.getSource();
         Scene scene = node.getScene();

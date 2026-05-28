@@ -1,43 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<StackPane prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.TransactionHistoryController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity"
+           minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="816.0" prefWidth="959.0"
+           style="-fx-background-color: #1c254b;"
+           xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.mycompany.controller.TransactionHistoryController">
     <children>
-        <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
-        <VBox spacing="18.0" StackPane.alignment="TOP_CENTER">
-            <StackPane.margin>
-                <Insets left="250.0" right="28.0" top="32.0" />
-            </StackPane.margin>
+        <HBox>
             <children>
-                <Label text="Lịch sử giao dịch" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="34.0" />
-                    </font>
-                </Label>
-                <Label fx:id="emptyLabel" text="Chưa có giao dịch nào." textFill="#b6bfff" visible="false" managed="false">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
-                </Label>
-                <TableView fx:id="transactionTable" prefHeight="650.0" prefWidth="680.0" style="-fx-background-color: white;">
-                    <columns>
-                        <TableColumn fx:id="transactionIdColumn" prefWidth="85.0" text="Mã GD" />
-                        <TableColumn fx:id="sessionIdColumn" prefWidth="85.0" text="Mã phiên" />
-                        <TableColumn fx:id="productColumn" prefWidth="130.0" text="Sản phẩm" />
-                        <TableColumn fx:id="roleColumn" prefWidth="90.0" text="Vai trò" />
-                        <TableColumn fx:id="buyerColumn" prefWidth="115.0" text="Người mua" />
-                        <TableColumn fx:id="sellerColumn" prefWidth="115.0" text="Người bán" />
-                        <TableColumn fx:id="amountColumn" prefWidth="120.0" text="Số tiền" />
-                        <TableColumn fx:id="statusColumn" prefWidth="75.0" text="Trạng thái" />
-                        <TableColumn fx:id="createdAtColumn" prefWidth="120.0" text="Thời gian" />
-                    </columns>
-                </TableView>
+                <fx:include source="NavbarComponent.fxml" />
+                <VBox alignment="TOP_LEFT" spacing="16.0" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="30.0" left="35.0" right="30.0" top="40.0" />
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <children>
+                                <Label text="📋" style="-fx-font-size: 28px;" />
+                                <VBox spacing="2">
+                                    <children>
+                                        <Label text="Lịch sử giao dịch" textFill="WHITE">
+                                            <font><Font name="System Bold" size="28.0" /></font>
+                                        </Label>
+                                        <Label fx:id="subTitleLabel"
+                                               text="Tất cả giao dịch của bạn"
+                                               style="-fx-text-fill: rgba(182,191,255,0.65); -fx-font-size: 13px;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <Label fx:id="emptyLabel"
+                               text="Đang tải..."
+                               visible="true"
+                               style="-fx-text-fill: rgba(182,191,255,0.5);
+                                -fx-font-size: 14px; -fx-padding: 20 0 0 4;" />
+                        <ListView fx:id="transactionListView"
+                                  visible="false"
+                                  style="-fx-background-color: transparent;
+                                   -fx-control-inner-background: transparent;
+                                   -fx-border-color: transparent;"
+                                  VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
             </children>
-        </VBox>
+        </HBox>
     </children>
 </StackPane>

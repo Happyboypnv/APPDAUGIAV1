@@ -1,4 +1,4 @@
-/* Làm cho Header của bảng tối màu và chữ trắng */
+/* Header bảng tối màu, chữ trắng */
 .table-view .column-header {
     -fx-background-color: #131a39;
 }
@@ -6,11 +6,27 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
-/* Làm nền bảng trong suốt để thấy màu nền StackPane */
 .table-view {
     -fx-background-color: transparent;
 }
 .table-row-cell {
-    -fx-background-color: #1c254b;
+    -fx-background-color: rgba(255,255,255,0.05);
     -fx-text-fill: white;
+    -fx-border-color: rgba(182,191,255,0.07);
+    -fx-border-width: 0 0 1 0;
+}
+.table-row-cell:odd {
+    -fx-background-color: rgba(255,255,255,0.02);
+}
+.table-row-cell:hover {
+    -fx-background-color: rgba(238,116,85,0.10);
+}
+.table-row-cell:selected {
+    -fx-background-color: rgba(238,116,85,0.20);
+    -fx-border-color: rgba(238,116,85,0.4);
+}
+.table-row-cell .table-cell {
+    -fx-text-fill: rgba(220,225,255,0.9);
+    -fx-font-size: 13px;
+    -fx-padding: 8 12 8 12;
 }

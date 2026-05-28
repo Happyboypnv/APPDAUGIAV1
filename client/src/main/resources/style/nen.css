@@ -5,7 +5,7 @@
     /* Set màu nền (Nên có màu nền tĩnh để hiệu ứng đổ bóng hiển thị đúng) */
     -fx-background-color: #1c254b;
 
-    /* Nếu bạn có dùng viền (border) thì bo luôn góc của viền */
+    /* Bo góc của viền */
     -fx-border-color: transparent;
 
     /* 2. Hiệu ứng đổ bóng */
@@ -13,7 +13,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5);
 }
 .my-custom-form{
-    /* Màu nền trắng với độ trong suốt 15% (bạn có thể chỉnh số 0.15 thành 0.2 hoặc 0.3 tùy ý) */
+    /* Màu nền trắng với độ trong suốt 15% */
     -fx-background-color: rgba(255, 255, 255, 0.15);
 
     /* Bo góc khung (giống trong ảnh là bo khá sâu) */
@@ -32,6 +32,7 @@
 -fx-background-color: rgba(255, 255, 255, 0.2);
 -fx-background-radius: 20;
 -fx-text-fill: white; /* Đổi màu chữ người dùng gõ vào thành màu trắng */}
+
 /* 1. Tạo nền mờ và bo góc cho toàn bộ khung DatePicker */
 .date-picker {
     -fx-background-color: rgba(255, 255, 255, 0.2);
@@ -54,6 +55,11 @@
 .date-picker > .arrow-button > .arrow {
     -fx-background-color: white;
 }
+
+/* =============================================
+   BUTTON — có hiệu ứng nhấn vật lý
+   ============================================= */
+
 .my-custom-button{
     -fx-background-color: #EE7455;
     -fx-text-fill: #FFFFFF;
@@ -62,98 +68,143 @@
     -fx-font-weight: bold;
     -fx-font-size: 16px;
     -fx-padding: 10 20 10 20; /* Căn chỉnh khoảng cách chữ và viền nút */
-}
-/* 1. Tạo hình dáng viên thuốc và nền kính mờ cho khung */
-.custom-dropdown {
-   -fx-background-color: rgba(255, 255, 255, 0.2);
-   -fx-background-radius: 20;
-   -fx-text-fill: white; /* Đổi màu chữ người dùng gõ vào thành màu trắng */
-   /* 1. Tạo nền mờ và bo góc cho toàn bộ khung DatePicker */
-    -fx-pref-height: 42; /* Chỉnh độ cao cho thanh thoát */
-    -fx-pref-width: 300; /* Tùy chỉnh độ rộng theo form của bạn */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(238,116,85,0.45), 10, 0, 0, 4);
 }
 
-/* 2. Chỉnh chữ "Select" bên trong */
+.my-custom-button:hover {
+    -fx-background-color: #d9624a;
+    -fx-effect: dropshadow(three-pass-box, rgba(238,116,85,0.7), 18, 0, 0, 6);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+.my-custom-button:pressed {
+    -fx-background-color: #b84f35;
+    -fx-scale-x: 0.93;
+    -fx-scale-y: 0.93;
+    -fx-effect: dropshadow(three-pass-box, rgba(238,116,85,0.15), 4, 0, 0, 1);
+    -fx-translate-y: 2;
+}
+
+/* =============================================
+   DROPDOWN
+   ============================================= */
+.custom-dropdown {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-pref-height: 42;
+    -fx-pref-width: 300;
+}
 .custom-dropdown > .text-field,
 .custom-dropdown > .list-cell {
-    -fx-background-color: transparent; /* Xóa nền trắng mặc định của ô nhập chữ */
-    -fx-text-fill: rgba(255, 255, 255, 0.8); /* Màu chữ trắng hơi mờ */
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
     -fx-font-family: "Poppins", "Montserrat", sans-serif;
-    -fx-padding: 0 0 0 15; /* Đẩy chữ thụt vào trong một chút */
+    -fx-padding: 0 0 0 15;
 }
-
-/* 3. Làm trong suốt cái nút bấm bên phải */
 .custom-dropdown > .arrow-button {
     -fx-background-color: transparent;
-    -fx-padding: 0 15 0 0; /* Căn lề cho mũi tên */
+    -fx-padding: 0 15 0 0;
+}
+.custom-dropdown > .arrow-button > .arrow {
+    -fx-background-color: white;
+    -fx-shape: "M 1 2.5 L 6 7.5 L 11 2.5 L 10 1.5 L 6 5.5 L 2 1.5 Z";
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
 }
 
-/* 4. Đổi biểu tượng mặc định thành mũi tên chữ V mỏng y hệt ảnh */
-.custom-dropdown > .arrow-button > .arrow {
-    -fx-background-color: white; /* Màu mũi tên */
-    /* Mã SVG vẽ lại hình chữ V mỏng */
-    -fx-shape: "M 1 2.5 L 6 7.5 L 11 2.5 L 10 1.5 L 6 5.5 L 2 1.5 Z";
-    -fx-scale-x: 1.2; /* Phóng to/thu nhỏ mũi tên theo chiều ngang */
-    -fx-scale-y: 1.2; /* Phóng to/thu nhỏ mũi tên theo chiều dọc */
-}
-/* Style for the 'Bidmaster' Text Logo */
+/* =============================================
+   LOGO / TYPOGRAPHY
+   ============================================= */
 .logo-font {
-    /* Font Selection: Choose a heavy, modern font */
     -fx-font-family: "Arial Black", "Roboto", "Segoe UI Bold", sans-serif;
     -fx-font-size: 50px;
     -fx-font-weight: bold;
-
-    /* THE TRICK: Hard-stop linear gradient for alternating colors */
-    /* This makes 'BID' orange and 'MASTER' a high-contrast white/light-blue */
     -fx-text-fill: linear-gradient(to right,
-        #EE7455 0%, #EE7455 38%,
-        #FFFFFF 38%, #FFFFFF 100%);
-
-    /* Slick Drop Shadow & Glow Effect */
-    /* Parameters: (type, color, radius, spread, offsetX, offsetY) */
+    #EE7455 0%, #EE7455 38%,
+    #FFFFFF 38%, #FFFFFF 100%);
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 15, 0, 5, 5);
 }
-
-/* Optional: Add a subtle ambient glow to the text */
 .logo-font:hover {
     -fx-effect: dropshadow(three-pass-box, rgba(238, 116, 85, 0.4), 25, 0, 0, 0);
     -fx-cursor: hand;
 }
-/* Style for the main title */
 .heading-title {
     -fx-font-family: "Montserrat ExtraBold", "Montserrat", "Arial Black";
     -fx-font-size: 42px;
     -fx-font-weight: 900;
     -fx-text-fill: #FFFFFF;
-    /* This makes the text feel more modern/compact */
     -fx-line-spacing: -5px;
 }
-/* Style for the main title */
 .sub-heading-title {
     -fx-font-family: "Montserrat ExtraBold", "Montserrat", "Arial Black";
     -fx-font-size: 25px;
-    -fx-font-weight:600;
+    -fx-font-weight: 600;
     -fx-text-fill: #FFFFFF;
-    /* This makes the text feel more modern/compact */
     -fx-line-spacing: -5px;
-}
-/* Note: We have to target '.line' specifically */
-.custom-separator .line {
-    -fx-border-color: white;
-    -fx-border-width: 2px;      /* Matches the thickness */
-    -fx-border-radius: 10px;    /* Rounds the corners */
-    -fx-background-radius: 10px;
-}
-
-.custom-separator {
-    -fx-padding: 0;
-    -fx-opacity: 1;
 }
 .sub2-heading-title {
     -fx-font-family: "Montserrat ExtraBold", "Montserrat", "Arial Black";
     -fx-font-size: 20px;
-    -fx-font-weight:300;
+    -fx-font-weight: 300;
     -fx-text-fill: #FFFFFF;
-    /* This makes the text feel more modern/compact */
     -fx-line-spacing: -5px;
+}
+.custom-separator .line {
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+.custom-separator {
+    -fx-padding: 0;
+    -fx-opacity: 1;
+}
+
+/* =============================================
+   NAVBAR — active highlight
+   ============================================= */
+.nav-item {
+    -fx-text-fill: #b6bfff;
+    -fx-font-size: 17px;
+    -fx-font-family: "Montserrat";
+    -fx-padding: 11 15 11 15;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+.nav-item:hover {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(182, 191, 255, 0.10);
+}
+.nav-item-active {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 17px;
+    -fx-font-family: "Montserrat";
+    -fx-font-weight: bold;
+    -fx-padding: 11 15 11 15;
+    -fx-background-color: rgba(238, 116, 85, 0.17);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(238, 116, 85, 0.55);
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(238,116,85,0.22), 10, 0, 0, 2);
+}
+
+/* =============================================
+   LISTVIEW gốc — xoá nền/border mặc định
+   ============================================= */
+.list-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 4 0;
+}
+.list-view .list-cell:selected,
+.list-view .list-cell:focused {
+    -fx-background-color: transparent;
 }
