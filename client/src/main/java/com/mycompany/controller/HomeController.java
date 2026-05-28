@@ -69,7 +69,7 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (labelWelcome != null && SessionManager.getInstance().getCurrentUser() != null) {
             labelWelcome.setText("Xin chào, " +
-                    SessionManager.getInstance().getCurrentUser().getFullName() + "!");
+                SessionManager.getInstance().getCurrentUser().getFullName() + "!");
         }
 
         // Gán custom cell factory trước khi load dữ liệu
@@ -106,9 +106,17 @@ public class HomeController implements Initializable {
     private void doRefresh() {
         new Thread(() -> {
             List<PhienDauGiaDTO> allAuctions = ApiClient.getAuctions();
-            // Filter to show only WAITING and IN_PROGRESS auctions for users
+
+            // Lấy danh sách phiên đã ẩn của user hiện tại
+            String userId = SessionManager.getInstance().getCurrentUser() != null
+                ? SessionManager.getInstance().getCurrentUser().getUserId()
+                : null;
+            Set<String> hiddenIds = hiddenAuctionRepository.findHiddenAuctionIds(userId);
+
+            // Filter: chỉ hiện WAITING / IN_PROGRESS / PAID, và loại bỏ các phiên đã ẩn
             List<PhienDauGiaDTO> filteredList = new java.util.ArrayList<>();
             for (PhienDauGiaDTO dto : allAuctions) {
+                if (hiddenIds.contains(dto.maPhien)) continue;
                 if ("WAITING".equals(dto.trangThai) || "IN_PROGRESS".equals(dto.trangThai) || "PAID".equals(dto.trangThai)) {
                     filteredList.add(dto);
                 }
@@ -162,7 +170,7 @@ public class HomeController implements Initializable {
             HandleNavigationAndAlert.getInstance().goToBiddingRoom(event);
         } catch (IOException e) {
             HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.ERROR, "Lỗi", "Không thể mở phòng đấu giá!");
+                Alert.AlertType.ERROR, "Lỗi", "Không thể mở phòng đấu giá!");
         }
     }
 
@@ -246,10 +254,10 @@ public class HomeController implements Initializable {
             root.setPadding(new Insets(10, 14, 10, 14));
             root.setStyle(
                 "-fx-background-color: rgba(255,255,255,0.07);" +
-                "-fx-background-radius: 10;" +
-                "-fx-border-color: rgba(255,255,255,0.1);" +
-                "-fx-border-radius: 10;" +
-                "-fx-border-width: 1;"
+                    "-fx-background-radius: 10;" +
+                    "-fx-border-color: rgba(255,255,255,0.1);" +
+                    "-fx-border-radius: 10;" +
+                    "-fx-border-width: 1;"
             );
 
             btnWatch = new Button("⭐ Chú ý");
@@ -342,11 +350,11 @@ public class HomeController implements Initializable {
             lblTrangThai.setText(labelText);
             lblTrangThai.setStyle(
                 "-fx-background-color: " + mauNen + ";" +
-                "-fx-text-fill: " + mauChu + ";" +
-                "-fx-background-radius: 6;" +
-                "-fx-border-color: " + mauChu + ";" +
-                "-fx-border-radius: 6;" +
-                "-fx-border-width: 1;"
+                    "-fx-text-fill: " + mauChu + ";" +
+                    "-fx-background-radius: 6;" +
+                    "-fx-border-color: " + mauChu + ";" +
+                    "-fx-border-radius: 6;" +
+                    "-fx-border-width: 1;"
             );
 
             // Chỉ hiện nút Chú ý/Bỏ qua cho phiên WAITING hoặc IN_PROGRESS

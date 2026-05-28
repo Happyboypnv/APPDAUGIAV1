@@ -80,7 +80,7 @@ public class CreateAuctionController implements Initializable {
   private void setupDanhMuc() {
     danhMucSanPham.getItems().addAll(
         "Đá quý", "Nghệ thuật",
-        "Xe cộ", "Điện tử"
+        "Xe cộ", "Điện tử", "Khác"
     );
   }
 
