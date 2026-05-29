@@ -229,8 +229,8 @@ public class ProfileController implements Initializable {
 
             // 🔹 BƯỚC 3: Disable editing mode cho tất cả fields
             ProfileAction.getInstance().editField(nameField, false);
-            ProfileAction.getInstance().editField(phoneField, false);
-            ProfileAction.getInstance().editField(addressField, false);
+            ProfileAction.getInstance().editField(phoneField, true);
+            ProfileAction.getInstance().editField(addressField, true);
 
             // 🔹 BƯỚC 4: Tạo Map chứa các thay đổi
             Map<String,String> updates = new HashMap<>();
