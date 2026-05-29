@@ -9,155 +9,258 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #1c254b;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.FinanceController">
+<StackPane
+        maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity"
+        prefHeight="816.0" prefWidth="959.0"
+        style="-fx-background-color: #1c254b;"
+        styleClass="my-custom-node"
+        stylesheets="@../style/nen.css"
+        xmlns="http://javafx.com/javafx/25"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.mycompany.controller.FinanceController">
+
    <children>
-       <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
-      <Label alignment="CENTER" text="Liên kết tài khoản" textFill="WHITE" StackPane.alignment="TOP_CENTER">
-         <font>
-            <Font name="System Bold" size="36.0" />
-         </font>
+
+      <!-- ── Sidebar Navbar ─────────────────────────────────── -->
+      <fx:include source="NavbarComponent.fxml" StackPane.alignment="TOP_LEFT" />
+
+      <!-- ── Main content area (offset to the right of navbar) ─ -->
+      <VBox alignment="TOP_LEFT" spacing="0"
+            style="-fx-padding: 40 48 40 48;"
+            StackPane.alignment="TOP_LEFT">
          <StackPane.margin>
-            <Insets right="60.0" top="30.0" />
+            <Insets left="240.0" />
          </StackPane.margin>
-      </Label>
-      <ComboBox fx:id="banks" prefWidth="150.0" styleClass="combo-box" stylesheets="@../style/dropDown.css" StackPane.alignment="TOP_CENTER">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <StackPane.margin>
-            <Insets left="160.0" top="105.0" />
-         </StackPane.margin>
-      </ComboBox>
-      <Label text="Ngân hàng:" textFill="WHITE" StackPane.alignment="TOP_CENTER">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-         <StackPane.margin>
-            <Insets right="150.0" top="100.0" />
-         </StackPane.margin>
-      </Label>
-      <Label text="Số tài khoản:" textFill="WHITE" StackPane.alignment="TOP_CENTER">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-         <StackPane.margin>
-            <Insets right="130.0" top="150.0" />
-         </StackPane.margin>
-      </Label>
-      <TextField fx:id="bankAccount" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="TOP_RIGHT">
-         <cursor>
-            <Cursor fx:constant="TEXT" />
-         </cursor>
-         <StackPane.margin>
-            <Insets right="150.0" top="150.0" />
-         </StackPane.margin>
-      </TextField>
-      <Separator maxWidth="-Infinity" prefHeight="53.0" prefWidth="611.0" styleClass="custom-separator" stylesheets="@../style/nen.css" StackPane.alignment="CENTER_RIGHT">
-         <StackPane.margin>
-            <Insets bottom="140.0" right="50.0" />
-         </StackPane.margin>
-      </Separator>
-      <Label text="Nạp Tiền" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="36.0" />
-         </font>
-         <StackPane.margin>
-            <Insets bottom="-60.0" right="135.0" />
-         </StackPane.margin>
-      </Label>
-      <Button fx:id="linkToBankButton" mnemonicParsing="false" onMouseClicked="#onClickedLinkToBank" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Liên kết" StackPane.alignment="CENTER_RIGHT">
-         <StackPane.margin>
-            <Insets bottom="240.0" right="280.0" />
-         </StackPane.margin>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Label text="Số tiền:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-         <StackPane.margin>
-            <Insets right="190.0" top="160.0" />
-         </StackPane.margin>
-      </Label>
-      <TextField fx:id="depositField" alignment="CENTER_RIGHT" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="CENTER">
-         <cursor>
-            <Cursor fx:constant="TEXT" />
-         </cursor>
-         <StackPane.margin>
-            <Insets bottom="-60.0" left="200.0" top="100.0" />
-         </StackPane.margin>
-      </TextField>
-      <Label text="Rút Tiền" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="36.0" />
-         </font>
-         <StackPane.margin>
-            <Insets right="140.0" top="420.0" />
-         </StackPane.margin>
-      </Label>
-      <Label text="Số tiền:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-         <StackPane.margin>
-            <Insets right="190.0" top="520.0" />
-         </StackPane.margin>
-      </Label>
-      <TextField fx:id="withdrawField" alignment="CENTER_RIGHT" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="CENTER">
-         <cursor>
-            <Cursor fx:constant="TEXT" />
-         </cursor>
-         <StackPane.margin>
-            <Insets left="200.0" top="520.0" />
-         </StackPane.margin>
-      </TextField>
-      <Label text="Số dư hiện tại: " textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="36.0" />
-         </font>
-         <StackPane.margin>
-            <Insets bottom="50.0" right="30.0" />
-         </StackPane.margin>
-      </Label>
-      <TextField fx:id="currentBalanceField" alignment="CENTER_RIGHT" editable="false" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" opacity="0.0" prefHeight="40.0" prefWidth="270.0" style="-fx-opacity: 0.8;" styleClass="my-custom-text" stylesheets="@../style/nen.css" StackPane.alignment="CENTER_RIGHT">
-         <cursor>
-            <Cursor fx:constant="TEXT" />
-         </cursor>
-         <StackPane.margin>
-            <Insets bottom="50.0" right="50.0" />
-         </StackPane.margin>
-      </TextField>
-      <Button fx:id="depositButton" mnemonicParsing="false" onMouseClicked="#onClickedDeposit" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Xác nhận" StackPane.alignment="CENTER_RIGHT">
-         <StackPane.margin>
-            <Insets right="280.0" top="300.0" />
-         </StackPane.margin>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Button fx:id="withdrawButton" mnemonicParsing="false" onMouseClicked="#onClickedWithdraw" prefHeight="46.0" prefWidth="157.0" styleClass="my-custom-button" stylesheets="@../style/nen.css" text="Xác nhận" StackPane.alignment="CENTER_RIGHT">
-         <StackPane.margin>
-            <Insets right="280.0" top="650.0" />
-         </StackPane.margin>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <ImageView fx:id="editBankAccountBtn" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#onClickedEditBankAccount" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT">
-         <image>
-            <Image url="@../image/pen.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <StackPane.margin>
-            <Insets bottom="470.0" right="100.0" />
-         </StackPane.margin>
-      </ImageView>
-    </children>
+
+         <!-- PAGE TITLE -->
+         <Label text="Tài Chính"
+                style="-fx-text-fill: #ffffff; -fx-font-size: 28px; -fx-font-weight: bold; -fx-font-family: 'Montserrat';">
+            <VBox.margin><Insets bottom="4.0" /></VBox.margin>
+         </Label>
+         <Label text="Quản lý tài khoản ngân hàng và số dư của bạn"
+                style="-fx-text-fill: rgba(182,191,255,0.55); -fx-font-size: 13px; -fx-font-family: 'Montserrat';">
+            <VBox.margin><Insets bottom="28.0" /></VBox.margin>
+         </Label>
+
+         <!-- ══ BALANCE CARD ══════════════════════════════════ -->
+         <HBox alignment="CENTER_LEFT" spacing="0"
+               style="-fx-background-color: linear-gradient(to right, #EE7455, #c95e41);
+                         -fx-background-radius: 18;
+                         -fx-padding: 28 32 28 32;
+                         -fx-effect: dropshadow(three-pass-box, rgba(238,116,85,0.35), 20, 0, 0, 6);">
+            <VBox.margin><Insets bottom="28.0" /></VBox.margin>
+
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+               <Label text="Số dư khả dụng"
+                      style="-fx-text-fill: rgba(255,255,255,0.75); -fx-font-size: 13px; -fx-font-family: 'Montserrat';" />
+               <TextField fx:id="currentBalanceField"
+                          editable="false"
+                          style="-fx-background-color: transparent;
+                                      -fx-text-fill: #ffffff;
+                                      -fx-font-size: 32px;
+                                      -fx-font-weight: bold;
+                                      -fx-font-family: 'Montserrat';
+                                      -fx-padding: 0;
+                                      -fx-border-width: 0;
+                                      -fx-background-radius: 0;"
+                          prefWidth="380.0" />
+            </VBox>
+
+            <VBox alignment="CENTER_RIGHT" spacing="4">
+               <Label text="💳"
+                      style="-fx-font-size: 38px; -fx-opacity: 0.55;" />
+            </VBox>
+         </HBox>
+
+         <!-- ══ TWO-COLUMN SECTION: Bank Link | Deposit+Withdraw ══ -->
+         <HBox spacing="24" alignment="TOP_LEFT">
+
+            <!-- ── LEFT CARD: Liên kết ngân hàng ─────────────── -->
+            <VBox spacing="20" HBox.hgrow="ALWAYS"
+                  style="-fx-background-color: rgba(255,255,255,0.05);
+                             -fx-background-radius: 18;
+                             -fx-border-color: rgba(255,255,255,0.09);
+                             -fx-border-radius: 18;
+                             -fx-border-width: 1;
+                             -fx-padding: 28 28 28 28;">
+
+               <!-- Card header -->
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <Label text="🏦"  style="-fx-font-size: 20px;" />
+                  <Label text="Liên kết ngân hàng"
+                         style="-fx-text-fill: #ffffff; -fx-font-size: 16px;
+                                      -fx-font-weight: bold; -fx-font-family: 'Montserrat';" />
+               </HBox>
+
+               <Separator styleClass="custom-separator" stylesheets="@../style/nen.css"
+                          style="-fx-opacity: 0.3;" />
+
+               <!-- Ngân hàng row -->
+               <VBox spacing="8">
+                  <Label text="Ngân hàng"
+                         style="-fx-text-fill: rgba(182,191,255,0.7); -fx-font-size: 12px;
+                                      -fx-font-family: 'Montserrat'; -fx-font-weight: bold;" />
+                  <ComboBox fx:id="banks" prefWidth="999.0" prefHeight="42.0"
+                            styleClass="combo-box"
+                            stylesheets="@../style/dropDown.css"
+                            style="-fx-max-width: Infinity;">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                  </ComboBox>
+               </VBox>
+
+               <!-- Số tài khoản row -->
+               <VBox spacing="8">
+                  <Label text="Số tài khoản"
+                         style="-fx-text-fill: rgba(182,191,255,0.7); -fx-font-size: 12px;
+                                      -fx-font-family: 'Montserrat'; -fx-font-weight: bold;" />
+                  <HBox spacing="10" alignment="CENTER_LEFT">
+                     <TextField fx:id="bankAccount"
+                                editable="false"
+                                prefHeight="42.0"
+                                HBox.hgrow="ALWAYS"
+                                styleClass="my-custom-text"
+                                stylesheets="@../style/nen.css"
+                                style="-fx-font-size: 14px; -fx-font-family: 'Montserrat';">
+                        <cursor><Cursor fx:constant="TEXT" /></cursor>
+                     </TextField>
+                     <ImageView fx:id="editBankAccountBtn"
+                                fitHeight="22.0" fitWidth="22.0"
+                                onMouseClicked="#onClickedEditBankAccount"
+                                pickOnBounds="true" preserveRatio="true"
+                                style="-fx-opacity: 0.7;">
+                        <image><Image url="@../image/pen.png" /></image>
+                        <cursor><Cursor fx:constant="HAND" /></cursor>
+                     </ImageView>
+                  </HBox>
+               </VBox>
+
+               <!-- Spacer -->
+               <Region VBox.vgrow="ALWAYS" />
+
+               <!-- Liên kết button -->
+               <Button fx:id="linkToBankButton"
+                       text="Liên kết tài khoản"
+                       onMouseClicked="#onClickedLinkToBank"
+                       prefHeight="44.0" prefWidth="999.0"
+                       styleClass="my-custom-button"
+                       stylesheets="@../style/nen.css"
+                       style="-fx-max-width: Infinity; -fx-font-size: 14px;">
+                  <cursor><Cursor fx:constant="HAND" /></cursor>
+               </Button>
+
+            </VBox>
+
+            <!-- ── RIGHT COLUMN: Nạp + Rút ───────────────────── -->
+            <VBox spacing="20" HBox.hgrow="ALWAYS">
+
+               <!-- Nạp tiền card -->
+               <VBox spacing="16"
+                     style="-fx-background-color: rgba(255,255,255,0.05);
+                                 -fx-background-radius: 18;
+                                 -fx-border-color: rgba(255,255,255,0.09);
+                                 -fx-border-radius: 18;
+                                 -fx-border-width: 1;
+                                 -fx-padding: 24 28 24 28;">
+
+                  <HBox alignment="CENTER_LEFT" spacing="10">
+                     <Label text="⬇"  style="-fx-font-size: 18px; -fx-text-fill: #2ecc71;" />
+                     <Label text="Nạp tiền"
+                            style="-fx-text-fill: #ffffff; -fx-font-size: 15px;
+                                          -fx-font-weight: bold; -fx-font-family: 'Montserrat';" />
+                  </HBox>
+
+                  <Separator styleClass="custom-separator" stylesheets="@../style/nen.css"
+                             style="-fx-opacity: 0.3;" />
+
+                  <VBox spacing="8">
+                     <Label text="Số tiền (VNĐ)"
+                            style="-fx-text-fill: rgba(182,191,255,0.7); -fx-font-size: 12px;
+                                          -fx-font-family: 'Montserrat'; -fx-font-weight: bold;" />
+                     <TextField fx:id="depositField"
+                                promptText="Nhập số tiền..."
+                                prefHeight="42.0" prefWidth="999.0"
+                                styleClass="my-custom-text"
+                                stylesheets="@../style/nen.css"
+                                style="-fx-font-size: 14px; -fx-font-family: 'Montserrat';">
+                        <cursor><Cursor fx:constant="TEXT" /></cursor>
+                     </TextField>
+                  </VBox>
+
+                  <Button fx:id="depositButton"
+                          text="Xác nhận nạp tiền"
+                          onMouseClicked="#onClickedDeposit"
+                          prefHeight="42.0" prefWidth="999.0"
+                          style="-fx-background-color: #2ecc71;
+                                       -fx-text-fill: #ffffff;
+                                       -fx-background-radius: 30;
+                                       -fx-font-weight: bold;
+                                       -fx-font-size: 13px;
+                                       -fx-font-family: 'Montserrat';
+                                       -fx-cursor: hand;
+                                       -fx-max-width: Infinity;
+                                       -fx-effect: dropshadow(three-pass-box, rgba(46,204,113,0.35), 12, 0, 0, 4);">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                  </Button>
+
+               </VBox>
+
+               <!-- Rút tiền card -->
+               <VBox spacing="16"
+                     style="-fx-background-color: rgba(255,255,255,0.05);
+                                 -fx-background-radius: 18;
+                                 -fx-border-color: rgba(255,255,255,0.09);
+                                 -fx-border-radius: 18;
+                                 -fx-border-width: 1;
+                                 -fx-padding: 24 28 24 28;">
+
+                  <HBox alignment="CENTER_LEFT" spacing="10">
+                     <Label text="⬆"  style="-fx-font-size: 18px; -fx-text-fill: #EE7455;" />
+                     <Label text="Rút tiền"
+                            style="-fx-text-fill: #ffffff; -fx-font-size: 15px;
+                                          -fx-font-weight: bold; -fx-font-family: 'Montserrat';" />
+                  </HBox>
+
+                  <Separator styleClass="custom-separator" stylesheets="@../style/nen.css"
+                             style="-fx-opacity: 0.3;" />
+
+                  <VBox spacing="8">
+                     <Label text="Số tiền (VNĐ)"
+                            style="-fx-text-fill: rgba(182,191,255,0.7); -fx-font-size: 12px;
+                                          -fx-font-family: 'Montserrat'; -fx-font-weight: bold;" />
+                     <TextField fx:id="withdrawField"
+                                promptText="Nhập số tiền..."
+                                prefHeight="42.0" prefWidth="999.0"
+                                styleClass="my-custom-text"
+                                stylesheets="@../style/nen.css"
+                                style="-fx-font-size: 14px; -fx-font-family: 'Montserrat';">
+                        <cursor><Cursor fx:constant="TEXT" /></cursor>
+                     </TextField>
+                  </VBox>
+
+                  <Button fx:id="withdrawButton"
+                          text="Xác nhận rút tiền"
+                          onMouseClicked="#onClickedWithdraw"
+                          prefHeight="42.0" prefWidth="999.0"
+                          styleClass="my-custom-button"
+                          stylesheets="@../style/nen.css"
+                          style="-fx-max-width: Infinity; -fx-font-size: 13px;">
+                     <cursor><Cursor fx:constant="HAND" /></cursor>
+                  </Button>
+
+               </VBox>
+
+            </VBox>
+
+         </HBox>
+
+      </VBox>
+
+   </children>
 </StackPane>

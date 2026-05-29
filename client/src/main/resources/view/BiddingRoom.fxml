@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -11,93 +12,231 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="959.0" style="-fx-background-color: #222941;" styleClass="my-custom-node" stylesheets="@../style/nen.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.controller.BiddingRoomController">
+<StackPane
+        maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity"
+        prefHeight="816.0" prefWidth="959.0"
+        style="-fx-background-color: #1c254b;"
+        styleClass="my-custom-node"
+        stylesheets="@../style/nen.css"
+        xmlns="http://javafx.com/javafx/25"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.mycompany.controller.BiddingRoomController">
+
     <children>
         <HBox>
             <children>
+                <!-- Sidebar -->
                 <fx:include source="NavbarComponent.fxml" />
 
-                <VBox spacing="20.0" HBox.hgrow="ALWAYS">
-                    <padding>
-                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-                    </padding>
-                    <children>
+                <!-- Main content -->
+                <VBox spacing="20.0" HBox.hgrow="ALWAYS"
+                      style="-fx-padding: 28 32 28 32;">
 
-                        <HBox alignment="CENTER_LEFT" spacing="20.0">
-                            <children>
-                                <Label fx:id="auctionNameLabel" style="-fx-text-fill: #a0a8c0; -fx-font-size: 18px;" text="PHÒNG ĐẤU GIÁ: ĐANG TẢI..." HBox.hgrow="ALWAYS" />
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Label fx:id="currentTimeLabel" style="-fx-text-fill: #f5d061; -fx-font-size: 28px; -fx-font-weight: bold;" text="--:--" />
-                                <Button fx:id="closeButton" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #a0a8c0; -fx-font-size: 18px; -fx-cursor: hand;" text="✕" />
-                            </children>
+                    <!-- ── Header bar ───────────────────────────────── -->
+                    <HBox alignment="CENTER_LEFT" spacing="16"
+                          style="-fx-background-color: rgba(255,255,255,0.05);
+                                 -fx-background-radius: 14;
+                                 -fx-border-color: rgba(255,255,255,0.09);
+                                 -fx-border-radius: 14;
+                                 -fx-border-width: 1;
+                                 -fx-padding: 14 20 14 20;">
+                        <Label fx:id="auctionNameLabel"
+                               style="-fx-text-fill: rgba(182,191,255,0.8);
+                                      -fx-font-size: 15px;
+                                      -fx-font-family: 'Montserrat';
+                                      -fx-font-weight: bold;"
+                               text="PHÒNG ĐẤU GIÁ: ĐANG TẢI..."
+                               HBox.hgrow="ALWAYS" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <!-- Countdown chip -->
+                        <HBox alignment="CENTER" spacing="8"
+                              style="-fx-background-color: rgba(245,208,97,0.12);
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: rgba(245,208,97,0.3);
+                                     -fx-border-radius: 10;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 6 16 6 16;">
+                            <Label style="-fx-text-fill: rgba(245,208,97,0.7); -fx-font-size: 13px;">⏱</Label>
+                            <Label fx:id="currentTimeLabel"
+                                   style="-fx-text-fill: #f5d061;
+                                          -fx-font-size: 22px;
+                                          -fx-font-weight: bold;
+                                          -fx-font-family: 'Montserrat';"
+                                   text="--:--:--" />
                         </HBox>
+                        <Button fx:id="closeButton"
+                                text="✕"
+                                style="-fx-background-color: rgba(255,255,255,0.07);
+                                       -fx-text-fill: rgba(182,191,255,0.6);
+                                       -fx-font-size: 16px;
+                                       -fx-background-radius: 8;
+                                       -fx-cursor: hand;
+                                       -fx-border-color: rgba(255,255,255,0.1);
+                                       -fx-border-radius: 8;
+                                       -fx-border-width: 1;
+                                       -fx-pref-width: 36; -fx-pref-height: 36;" />
+                    </HBox>
 
-                        <HBox spacing="30.0" VBox.vgrow="ALWAYS">
-                            <children>
+                    <!-- ── Body: image left | right panel ───────────── -->
+                    <HBox spacing="24" VBox.vgrow="ALWAYS">
 
-                                <VBox spacing="10.0">
-                                    <children>
-                                        <ImageView fx:id="mainWatchImage" fitHeight="350.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
-                                        </ImageView>
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
-                                                <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
-                                                <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+                        <!-- Image panel -->
+                        <VBox spacing="12" alignment="TOP_CENTER"
+                              style="-fx-background-color: rgba(255,255,255,0.04);
+                                     -fx-background-radius: 16;
+                                     -fx-border-color: rgba(255,255,255,0.08);
+                                     -fx-border-radius: 16;
+                                     -fx-border-width: 1;
+                                     -fx-padding: 20;">
+                            <ImageView fx:id="mainWatchImage"
+                                       fitHeight="320.0" fitWidth="260.0"
+                                       pickOnBounds="true" preserveRatio="true"
+                                       style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 16, 0, 0, 6);" />
+                            <!-- Thumbnail row -->
+                            <HBox spacing="8" alignment="CENTER">
+                                <ImageView fitHeight="60" fitWidth="60" pickOnBounds="true" preserveRatio="true"
+                                           style="-fx-opacity: 0.6; -fx-effect: dropshadow(three-pass-box,rgba(0,0,0,0.3),6,0,0,2);" />
+                                <ImageView fitHeight="60" fitWidth="60" pickOnBounds="true" preserveRatio="true"
+                                           style="-fx-opacity: 0.6; -fx-effect: dropshadow(three-pass-box,rgba(0,0,0,0.3),6,0,0,2);" />
+                                <ImageView fitHeight="60" fitWidth="60" pickOnBounds="true" preserveRatio="true"
+                                           style="-fx-opacity: 0.6; -fx-effect: dropshadow(three-pass-box,rgba(0,0,0,0.3),6,0,0,2);" />
+                            </HBox>
+                        </VBox>
 
-                                <VBox spacing="20.0" HBox.hgrow="ALWAYS">
-                                    <children>
+                        <!-- Right panel -->
+                        <VBox spacing="16" HBox.hgrow="ALWAYS">
 
-                                        <VBox style="-fx-background-color: #1c2238; -fx-background-radius: 10; -fx-padding: 15;" VBox.vgrow="ALWAYS">
-                                            <children>
-                                                <Label style="-fx-text-fill: #a0a8c0; -fx-font-size: 14px;" text="LỊCH SỬ ĐẤU GIÁ">
-                                                    <VBox.margin>
-                                                        <Insets bottom="10.0" />
-                                                    </VBox.margin>
-                                                </Label>
-                                                <ListView fx:id="bidHistoryListView" prefHeight="100.0" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-text-fill: white;" VBox.vgrow="ALWAYS" />
-                                            </children>
-                                        </VBox>
+                            <!-- Bid history card -->
+                            <VBox VBox.vgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(255,255,255,0.04);
+                                         -fx-background-radius: 16;
+                                         -fx-border-color: rgba(255,255,255,0.08);
+                                         -fx-border-radius: 16;
+                                         -fx-border-width: 1;
+                                         -fx-padding: 18 20 18 20;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <VBox.margin><Insets bottom="12.0" /></VBox.margin>
+                                    <Label text="📋" style="-fx-font-size: 14px;" />
+                                    <Label text="LỊCH SỬ ĐẤU GIÁ"
+                                           style="-fx-text-fill: rgba(182,191,255,0.55);
+                                                  -fx-font-size: 11px;
+                                                  -fx-font-weight: bold;
+                                                  -fx-font-family: 'Montserrat';" />
+                                </HBox>
+                                <ListView fx:id="bidHistoryListView"
+                                          prefHeight="120.0"
+                                          VBox.vgrow="ALWAYS"
+                                          style="-fx-background-color: transparent;
+                                                 -fx-control-inner-background: transparent;
+                                                 -fx-text-fill: white;
+                                                 -fx-border-color: transparent;" />
+                            </VBox>
 
-                                        <VBox style="-fx-background-color: #171d2f; -fx-border-color: #3874ff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-width: 2; -fx-padding: 20;">
-                                            <children>
-                                                <Label style="-fx-text-fill: #a0a8c0; -fx-font-size: 14px;" text="GIÁ HIỆN TẠI" />
-                                                <Label fx:id="currentPriceLabel" style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;" text="135,000,000 VND">
-                                                    <VBox.margin>
-                                                        <Insets bottom="10.0" top="5.0" />
-                                                    </VBox.margin>
-                                                </Label>
-                                                <Label fx:id="topBidderLabel" style="-fx-text-fill: white; -fx-font-size: 14px;" text="Người giữ giá cao nhất: Nguyễn Văn Tuấn" />
-                                            </children>
-                                        </VBox>
+                            <!-- Current price card -->
+                            <VBox style="-fx-background-color: rgba(56,116,255,0.08);
+                                         -fx-background-radius: 16;
+                                         -fx-border-color: rgba(56,116,255,0.45);
+                                         -fx-border-radius: 16;
+                                         -fx-border-width: 1.5;
+                                         -fx-padding: 20 24 20 24;">
+                                <Label text="GIÁ HIỆN TẠI"
+                                       style="-fx-text-fill: rgba(182,191,255,0.55);
+                                              -fx-font-size: 11px;
+                                              -fx-font-weight: bold;
+                                              -fx-font-family: 'Montserrat';">
+                                    <VBox.margin><Insets bottom="6.0" /></VBox.margin>
+                                </Label>
+                                <Label fx:id="currentPriceLabel"
+                                       text="135,000,000 VNĐ"
+                                       style="-fx-text-fill: #ffffff;
+                                              -fx-font-size: 30px;
+                                              -fx-font-weight: bold;
+                                              -fx-font-family: 'Montserrat';
+                                              -fx-effect: dropshadow(gaussian, rgba(56,116,255,0.5), 12, 0, 0, 0);">
+                                    <VBox.margin><Insets bottom="8.0" /></VBox.margin>
+                                </Label>
+                                <HBox alignment="CENTER_LEFT" spacing="6">
+                                    <Label text="🏆" style="-fx-font-size: 13px;" />
+                                    <Label fx:id="topBidderLabel"
+                                           text="Người giữ giá cao nhất: —"
+                                           style="-fx-text-fill: rgba(182,191,255,0.8);
+                                                  -fx-font-size: 13px;
+                                                  -fx-font-family: 'Montserrat';" />
+                                </HBox>
+                            </VBox>
 
-                                        <VBox spacing="10.0">
-                                            <children>
-                                                <Label style="-fx-text-fill: #a0a8c0; -fx-font-size: 14px;" text="ĐẶT GIÁ" />
-                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                    <children>
-                                                        <Button fx:id="decreaseBidButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #3b435f; -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 5; -fx-cursor: hand;" text="-" />
-                                                        <TextField fx:id="bidAmountField" alignment="CENTER" prefHeight="40.0" style="-fx-background-color: #171d2f; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5;" text="140,000,000" HBox.hgrow="ALWAYS" />
-                                                        <Button fx:id="increaseBidButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #3b435f; -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 5; -fx-cursor: hand;" text="+" />
-                                                    </children>
-                                                </HBox>
-                                                <Button fx:id="placeBidButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" style="-fx-background-color: #274586; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-border-color: #3874ff; -fx-border-radius: 8; -fx-border-width: 1.5; -fx-cursor: hand;" text="ĐẶT GIÁ NGAY">
-                                                    <VBox.margin>
-                                                        <Insets top="10.0" />
-                                                    </VBox.margin>
-                                                </Button>
-                                            </children>
-                                        </VBox>
+                            <!-- Bid input card -->
+                            <VBox spacing="12"
+                                  style="-fx-background-color: rgba(255,255,255,0.04);
+                                         -fx-background-radius: 16;
+                                         -fx-border-color: rgba(255,255,255,0.08);
+                                         -fx-border-radius: 16;
+                                         -fx-border-width: 1;
+                                         -fx-padding: 20 24 20 24;">
+                                <Label text="ĐẶT GIÁ"
+                                       style="-fx-text-fill: rgba(182,191,255,0.55);
+                                              -fx-font-size: 11px;
+                                              -fx-font-weight: bold;
+                                              -fx-font-family: 'Montserrat';">
+                                    <VBox.margin><Insets bottom="2.0" /></VBox.margin>
+                                </Label>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Button fx:id="decreaseBidButton"
+                                            text="−"
+                                            prefHeight="44" prefWidth="44"
+                                            style="-fx-background-color: rgba(255,255,255,0.08);
+                                                   -fx-text-fill: #ffffff;
+                                                   -fx-font-size: 20px;
+                                                   -fx-background-radius: 10;
+                                                   -fx-cursor: hand;
+                                                   -fx-border-color: rgba(255,255,255,0.12);
+                                                   -fx-border-radius: 10;
+                                                   -fx-border-width: 1;" />
+                                    <TextField fx:id="bidAmountField"
+                                               alignment="CENTER"
+                                               prefHeight="44"
+                                               text="140,000,000"
+                                               HBox.hgrow="ALWAYS"
+                                               style="-fx-background-color: rgba(255,255,255,0.08);
+                                                      -fx-text-fill: #ffffff;
+                                                      -fx-font-size: 16px;
+                                                      -fx-font-weight: bold;
+                                                      -fx-font-family: 'Montserrat';
+                                                      -fx-background-radius: 10;
+                                                      -fx-border-color: rgba(255,255,255,0.12);
+                                                      -fx-border-radius: 10;
+                                                      -fx-border-width: 1;" />
+                                    <Button fx:id="increaseBidButton"
+                                            text="+"
+                                            prefHeight="44" prefWidth="44"
+                                            style="-fx-background-color: rgba(255,255,255,0.08);
+                                                   -fx-text-fill: #ffffff;
+                                                   -fx-font-size: 20px;
+                                                   -fx-background-radius: 10;
+                                                   -fx-cursor: hand;
+                                                   -fx-border-color: rgba(255,255,255,0.12);
+                                                   -fx-border-radius: 10;
+                                                   -fx-border-width: 1;" />
+                                </HBox>
+                                <Button fx:id="placeBidButton"
+                                        text="ĐẶT GIÁ NGAY"
+                                        maxWidth="1.7976931348623157E308"
+                                        prefHeight="50"
+                                        style="-fx-background-color: linear-gradient(to right, #2a52b5, #3874ff);
+                                               -fx-text-fill: white;
+                                               -fx-font-size: 15px;
+                                               -fx-font-weight: bold;
+                                               -fx-font-family: 'Montserrat';
+                                               -fx-background-radius: 12;
+                                               -fx-cursor: hand;
+                                               -fx-effect: dropshadow(three-pass-box, rgba(56,116,255,0.4), 14, 0, 0, 5);">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                            </VBox>
 
-                                    </children>
-                                </VBox>
-                            </children>
-                        </HBox>
-                    </children>
+                        </VBox>
+                    </HBox>
                 </VBox>
             </children>
         </HBox>

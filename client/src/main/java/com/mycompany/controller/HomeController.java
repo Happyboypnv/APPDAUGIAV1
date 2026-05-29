@@ -1,101 +1,99 @@
 package com.mycompany.controller;
 
-import com.mycompany.action.HandleNavigationAndAlert;
 import com.mycompany.local.HiddenAuctionRepository;
-import com.mycompany.models.SessionStatus;
 import com.mycompany.utils.ApiClient;
+import com.mycompany.utils.ModernAlert;
 import com.mycompany.utils.SessionManager;
 import com.mycompany.server.dto.PhienDauGiaDTO;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import javafx.animation.Animation;
-import javafx.util.Duration;
-import java.util.HashSet;
-import java.util.Set;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.ButtonType;
-import java.util.Optional;
-import java.time.temporal.ChronoUnit;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 public class HomeController implements Initializable {
 
-    @FXML private ListView<PhienDauGiaDTO> listViewPhien;
-    @FXML private Label labelWelcome;
+    // ── FXML refs ──────────────────────────────────────────────────────────
+    @FXML private FlowPane flowPanePhien;
+    @FXML private Label    labelWelcome;
 
-    private List<PhienDauGiaDTO> danhSachPhien;
+    // ── State ──────────────────────────────────────────────────────────────
     private final DecimalFormat fmt = new DecimalFormat("#,###");
     private Timeline autoRefreshTimeline;
-    private final HiddenAuctionRepository hiddenAuctionRepository = new HiddenAuctionRepository();
-    // Set lưu mã phiên user đang theo dõi
+    private Timeline countdownTimeline;
+    private final HiddenAuctionRepository hiddenRepo = new HiddenAuctionRepository();
     private final Set<String> watchedSessions = new HashSet<>();
 
-    // Formatter để parse chuỗi từ server (ISO hoặc "yyyy-MM-dd HH:mm:ss")
-    private static final DateTimeFormatter[] PARSE_FORMATTERS = {
+    // Danh sách (Label, endTimeStr) để cập nhật mỗi giây
+    private final List<CountdownEntry> countdownEntries = new ArrayList<>();
+
+    private static final DateTimeFormatter[] PARSE_FMT = {
         DateTimeFormatter.ISO_LOCAL_DATE_TIME,
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
     };
-    // Formatter để hiển thị ra UI
-    private static final DateTimeFormatter DISPLAY_FORMATTER =
+    private static final DateTimeFormatter DISPLAY_FMT =
         DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    // ── Inner record ───────────────────────────────────────────────────────
+    private static class CountdownEntry {
+        final Label  label;
+        final String endTimeStr;
+        CountdownEntry(Label label, String endTimeStr) {
+            this.label = label; this.endTimeStr = endTimeStr;
+        }
+    }
+
+    // ── Lifecycle ──────────────────────────────────────────────────────────
+
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL url, ResourceBundle rb) {
         if (labelWelcome != null && SessionManager.getInstance().getCurrentUser() != null) {
             labelWelcome.setText("Xin chào, " +
-                    SessionManager.getInstance().getCurrentUser().getFullName() + "!");
+                SessionManager.getInstance().getCurrentUser().getFullName() + "!");
         }
 
-        // Gán custom cell factory trước khi load dữ liệu
-        listViewPhien.setCellFactory(lv -> new PhienDauGiaCell());
+        startData();
+        startCountdown();
 
-        taiDanhSachPhien();
-
-        listViewPhien.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                vaoPhongDauGia(event);
-            }
-        });
-
-        // Tự động dừng Timeline khi scene này bị thay thế (rời Home)
-        listViewPhien.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene == null && autoRefreshTimeline != null) {
-                autoRefreshTimeline.stop();
-            }
+        // Dừng timelines khi rời trang
+        flowPanePhien.sceneProperty().addListener((obs, o, n) -> {
+            if (n == null) stopAll();
         });
     }
 
-    private void taiDanhSachPhien() {
-        // Load lần đầu ngay lập tức
-        doRefresh();
+    // ── Timelines ──────────────────────────────────────────────────────────
 
-        // Auto-refresh mỗi 5 giây
+    private void startData() {
+        doRefresh();
         autoRefreshTimeline = new Timeline(
             new KeyFrame(Duration.seconds(5), e -> doRefresh())
         );
@@ -103,355 +101,369 @@ public class HomeController implements Initializable {
         autoRefreshTimeline.play();
     }
 
+    private void startCountdown() {
+        countdownTimeline = new Timeline(
+            new KeyFrame(Duration.seconds(1), e -> {
+                for (CountdownEntry ce : countdownEntries) {
+                    refreshCountdownLabel(ce.label, ce.endTimeStr);
+                }
+            })
+        );
+        countdownTimeline.setCycleCount(Animation.INDEFINITE);
+        countdownTimeline.play();
+    }
+
+    public void stopAll() {
+        if (autoRefreshTimeline != null) autoRefreshTimeline.stop();
+        if (countdownTimeline  != null) countdownTimeline.stop();
+    }
+    /** Alias giữ tương thích với code cũ. */
+    public void stopAutoRefresh() { stopAll(); }
+
+    // ── Data refresh ───────────────────────────────────────────────────────
+
     private void doRefresh() {
         new Thread(() -> {
-            List<PhienDauGiaDTO> allAuctions = ApiClient.getAuctions();
-            // Filter to show only WAITING and IN_PROGRESS auctions for users
-            List<PhienDauGiaDTO> filteredList = new java.util.ArrayList<>();
-            for (PhienDauGiaDTO dto : allAuctions) {
-                if ("WAITING".equals(dto.trangThai) || "IN_PROGRESS".equals(dto.trangThai) || "PAID".equals(dto.trangThai)) {
-                    filteredList.add(dto);
+            List<PhienDauGiaDTO> all = ApiClient.getAuctions();
+            String uid = SessionManager.getInstance().getCurrentUser() != null
+                ? SessionManager.getInstance().getCurrentUser().getUserId() : null;
+            Set<String> hidden = hiddenRepo.findHiddenAuctionIds(uid);
+
+            List<PhienDauGiaDTO> filtered = new ArrayList<>();
+            for (PhienDauGiaDTO d : all) {
+                if (hidden.contains(d.maPhien)) continue;
+                if ("WAITING".equals(d.trangThai) || "IN_PROGRESS".equals(d.trangThai)
+                    || "PAID".equals(d.trangThai)) {
+                    filtered.add(d);
                 }
             }
-            Platform.runLater(() -> {
-                danhSachPhien = filteredList;
-                // Giữ vị trí scroll hiện tại
-                int selectedIndex = listViewPhien.getSelectionModel().getSelectedIndex();
-                listViewPhien.setItems(FXCollections.observableArrayList(filteredList));
-                if (selectedIndex >= 0 && selectedIndex < filteredList.size()) {
-                    listViewPhien.getSelectionModel().select(selectedIndex);
-                }
-            });
+            Platform.runLater(() -> rebuildCards(filtered));
         }).start();
     }
 
-    public void stopAutoRefresh() {
-        if (autoRefreshTimeline != null) {
-            autoRefreshTimeline.stop();
+    private void rebuildCards(List<PhienDauGiaDTO> list) {
+        countdownEntries.clear();
+        flowPanePhien.getChildren().clear();
+        for (PhienDauGiaDTO p : list) {
+            flowPanePhien.getChildren().add(createCard(p));
         }
     }
 
-    private void vaoPhongDauGia(MouseEvent event) {
-        PhienDauGiaDTO phien = listViewPhien.getSelectionModel().getSelectedItem();
-        if (phien == null) return;
+    // ── Card builder ───────────────────────────────────────────────────────
 
-        String tt = phien.trangThai != null ? phien.trangThai : "";
-        switch (tt) {
-            case "IN_PROGRESS":
-                break; // cho vào bình thường
-            case "WAITING":
-                HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.INFORMATION, "Phiên chưa mở",
-                    "Phiên đấu giá này chưa đến giờ bắt đầu. Vui lòng quay lại sau!");
-                return;
-            case "PAID":
-            case "CANCELLED", "FINISHED":
-                HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.WARNING, "Phiên đã đóng",
-                    "Phiên đấu giá này đã kết thúc, không thể vào phòng.");
-                return;
-            default:
-                HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.WARNING, "Không thể vào phòng",
-                    "Trạng thái phiên không hợp lệ: " + tt);
-                return;
-        }
+    private VBox createCard(PhienDauGiaDTO p) {
+        String tt = p.trangThai != null ? p.trangThai : "";
 
-        SessionManager.getInstance().setCurrentPhienId(phien.maPhien);
-        try {
-            HandleNavigationAndAlert.getInstance().goToBiddingRoom(event);
-        } catch (IOException e) {
-            HandleNavigationAndAlert.getInstance().showAlert(
-                    Alert.AlertType.ERROR, "Lỗi", "Không thể mở phòng đấu giá!");
-        }
-    }
+        // ── Khung card ───────────────────────────────────────────────
+        VBox card = new VBox(0);
+        card.setPrefWidth(274);
+        card.setMaxWidth(274);
+        final String styleNormal =
+            "-fx-background-color: rgba(255,255,255,0.06);" +
+                "-fx-background-radius: 16;" +
+                "-fx-border-color: rgba(255,255,255,0.11);" +
+                "-fx-border-radius: 16;" +
+                "-fx-border-width: 1;" +
+                "-fx-effect: dropshadow(gaussian,rgba(0,0,0,0.38),15,0,0,5);" +
+                "-fx-cursor: hand;";
+        final String styleHover =
+            "-fx-background-color: rgba(255,255,255,0.09);" +
+                "-fx-background-radius: 16;" +
+                "-fx-border-color: rgba(238,116,85,0.45);" +
+                "-fx-border-radius: 16;" +
+                "-fx-border-width: 1;" +
+                "-fx-effect: dropshadow(gaussian,rgba(0,0,0,0.55),22,0,0,8);" +
+                "-fx-cursor: hand;" +
+                "-fx-scale-x: 1.012; -fx-scale-y: 1.012;";
+        card.setStyle(styleNormal);
 
-    /** Format chuỗi thời gian từ server thành dạng dd/MM/yyyy HH:mm */
-    private String formatThoiGian(String raw) {
-        if (raw == null || raw.isBlank()) return "—";
-        for (DateTimeFormatter f : PARSE_FORMATTERS) {
-            try {
-                return LocalDateTime.parse(raw, f).format(DISPLAY_FORMATTER);
-            } catch (DateTimeParseException ignored) {}
-        }
-        // Nếu không parse được, trả về chuỗi gốc (cắt bớt nếu quá dài)
-        return raw.length() > 16 ? raw.substring(0, 16) : raw;
-    }
-
-    // ─── Custom Cell ────────────────────────────────────────────────────────────
-
-    private class PhienDauGiaCell extends ListCell<PhienDauGiaDTO> {
-
-        private final HBox root;
-        private final Label lblTrangThai;
-        private final Label lblTenPhien;
-        private final Label lblSanPham;
-        private final Label lblGia;
-        private final Label lblBatDau;
-        private final Label lblKetThuc;
-        private final Button btnWatch;
-        private final Button btnXoa;
-
-        PhienDauGiaCell() {
-            // Badge trạng thái (bên trái)
-            lblTrangThai = new Label();
-            lblTrangThai.setPrefWidth(110);
-            lblTrangThai.setAlignment(Pos.CENTER);
-            lblTrangThai.setPadding(new Insets(4, 8, 4, 8));
-            lblTrangThai.setFont(Font.font("System Bold", 11));
-            lblTrangThai.setWrapText(false);
-
-            // Cột giữa: tên phiên + sản phẩm
-            lblTenPhien = new Label();
-            lblTenPhien.setFont(Font.font("System Bold", 14));
-            lblTenPhien.setTextFill(javafx.scene.paint.Color.WHITE);
-
-            lblSanPham = new Label();
-            lblSanPham.setFont(Font.font(12));
-            lblSanPham.setTextFill(javafx.scene.paint.Color.web("#aab4d4"));
-
-            VBox colInfo = new VBox(3, lblTenPhien, lblSanPham);
-            colInfo.setAlignment(Pos.CENTER_LEFT);
-            HBox.setHgrow(colInfo, Priority.ALWAYS);
-
-            // Cột thời gian
-            Label lblBatDauHeader = makeHeader("🕐 Bắt đầu");
-            lblBatDau = new Label();
-            lblBatDau.setFont(Font.font(12));
-            lblBatDau.setTextFill(javafx.scene.paint.Color.web("#7ec8e3"));
-
-            Label lblKetThucHeader = makeHeader("🏁 Kết thúc");
-            lblKetThuc = new Label();
-            lblKetThuc.setFont(Font.font(12));
-            lblKetThuc.setTextFill(javafx.scene.paint.Color.web("#f9a875"));
-
-            VBox colTime = new VBox(3,
-                lblBatDauHeader, lblBatDau,
-                lblKetThucHeader, lblKetThuc);
-            colTime.setAlignment(Pos.CENTER_LEFT);
-            colTime.setPrefWidth(160);
-
-            // Cột giá (bên phải)
-            Label lblGiaHeader = makeHeader("Giá hiện tại");
-            lblGia = new Label();
-            lblGia.setFont(Font.font("System Bold", 13));
-            lblGia.setTextFill(javafx.scene.paint.Color.web("#2ecc71"));
-
-            VBox colGia = new VBox(3, lblGiaHeader, lblGia);
-            colGia.setAlignment(Pos.CENTER_RIGHT);
-            colGia.setPrefWidth(140);
-
-            root = new HBox(14, lblTrangThai, colInfo, colTime, colGia);
-            root.setAlignment(Pos.CENTER_LEFT);
-            root.setPadding(new Insets(10, 14, 10, 14));
-            root.setStyle(
-                "-fx-background-color: rgba(255,255,255,0.07);" +
-                "-fx-background-radius: 10;" +
-                "-fx-border-color: rgba(255,255,255,0.1);" +
-                "-fx-border-radius: 10;" +
-                "-fx-border-width: 1;"
-            );
-
-            btnWatch = new Button("⭐ Chú ý");
-            btnWatch.setPrefWidth(100);
-            btnWatch.setStyle(
-                "-fx-background-color: rgba(241,196,15,0.2);" +
-                    "-fx-text-fill: #f1c40f;" +
-                    "-fx-background-radius: 6;" +
-                    "-fx-border-color: #f1c40f;" +
-                    "-fx-border-radius: 6;" +
-                    "-fx-border-width: 1;" +
-                    "-fx-cursor: hand;"
-            );
-
-            btnXoa = new Button("🗑 Xóa");
-            btnXoa.setPrefWidth(85);
-            btnXoa.setStyle(
-                "-fx-background-color: rgba(231,76,60,0.2);" +
-                    "-fx-text-fill: #e74c3c;" +
-                    "-fx-background-radius: 6;" +
-                    "-fx-border-color: #e74c3c;" +
-                    "-fx-border-radius: 6;" +
-                    "-fx-border-width: 1;" +
-                    "-fx-cursor: hand;"
-            );
-        }
-
-        private Label makeHeader(String text) {
-            Label l = new Label(text);
-            l.setFont(Font.font(10));
-            l.setTextFill(javafx.scene.paint.Color.web("#6b7db3"));
-            return l;
-        }
-
-        @Override
-        protected void updateItem(PhienDauGiaDTO p, boolean empty) {
-            super.updateItem(p, empty);
-            if (empty || p == null) {
-                setGraphic(null);
-                setText(null);
-                setStyle("-fx-background-color: transparent;");
-                return;
-            }
-
-            // Tên phiên & sản phẩm
-            lblTenPhien.setText(p.tenPhien != null ? p.tenPhien : "—");
-            lblSanPham.setText("Sản phẩm: " + (p.tenSanPham != null ? p.tenSanPham : "?"));
-
-            // Thời gian
-            lblBatDau.setText(formatThoiGian(p.thoiGianBatDau));
-            lblKetThuc.setText(formatThoiGian(p.thoiGianKetThuc));
-
-            // Giá
-            lblGia.setText(fmt.format(p.giaHienTai) + " VNĐ");
-
-            // Badge trạng thái với màu sắc tương ứng
-            String tt = p.trangThai != null ? p.trangThai : "N/A";
-            String mauNen, mauChu, labelText;
-            switch (tt) {
-                case "IN_PROGRESS":
-                    mauNen = "rgba(46,204,113,0.25)";
-                    mauChu = "#2ecc71";
-                    labelText = "● Đang diễn ra";
-                    break;
-                case "WAITING":
-                    mauNen = "rgba(241,196,15,0.25)";   // vàng
-                    mauChu = "#f1c40f";
-                    labelText = "◷ Đang chờ";
-                    break;
-                case "PAID":
-                    mauNen = "rgba(241,196,15,0.25)";    // vàng
-                    mauChu = "#f1c40f";
-                    labelText = "● Đã thanh toán";
-                    break;
-                case "CANCELLED":
-                    mauNen = "rgba(231,76,60,0.25)";    // đỏ (cùng màu PAID)
-                    mauChu = "#e74c3c";
-                    labelText = "✕ Đã hủy";
-                    break;
-                case "FINISHED":
-                    mauNen = "rgba(231,76,60,0.25)";    // đỏ (cùng màu PAID)
-                    mauChu = "#e74c3c";
-                    labelText = "✕ Đã kết thúc";
-                    break;
-                default:
-                    mauNen = "rgba(255,255,255,0.1)";
-                    mauChu = "#ccc";
-                    labelText = tt;
-            }
-            lblTrangThai.setText(labelText);
-            lblTrangThai.setStyle(
-                "-fx-background-color: " + mauNen + ";" +
-                "-fx-text-fill: " + mauChu + ";" +
-                "-fx-background-radius: 6;" +
-                "-fx-border-color: " + mauChu + ";" +
-                "-fx-border-radius: 6;" +
-                "-fx-border-width: 1;"
-            );
-
-            // Chỉ hiện nút Chú ý/Bỏ qua cho phiên WAITING hoặc IN_PROGRESS
-            if ("WAITING".equals(tt) || "IN_PROGRESS".equals(tt)) {
-                boolean isWatched = watchedSessions.contains(p.maPhien);
-                btnWatch.setText(isWatched ? "👁 Bỏ qua" : "⭐ Chú ý");
-                btnWatch.setStyle(
-                    isWatched
-                        ? "-fx-background-color: rgba(231,76,60,0.2);-fx-text-fill:#e74c3c;" +
-                        "-fx-background-radius:6;-fx-border-color:#e74c3c;-fx-border-radius:6;" +
-                        "-fx-border-width:1;-fx-cursor:hand;"
-                        : "-fx-background-color: rgba(241,196,15,0.2);-fx-text-fill:#f1c40f;" +
-                        "-fx-background-radius:6;-fx-border-color:#f1c40f;-fx-border-radius:6;" +
-                        "-fx-border-width:1;-fx-cursor:hand;"
-                );
-
-                final String maPhien = p.maPhien;
-                final String thoiGianBD = p.thoiGianBatDau;
-                final String tenPhien = p.tenPhien;
-                btnWatch.setOnAction(e -> {
-                    e.consume(); // ngăn sự kiện nổi bọt lên ListView
-                    if (watchedSessions.contains(maPhien)) {
-                        watchedSessions.remove(maPhien);
-                    } else {
-                        watchedSessions.add(maPhien);
-                        showCountdownInfo(tenPhien, thoiGianBD);
-                    }
-                    // Refresh cell
-                    listViewPhien.refresh();
-                });
-
-                // Thêm nút vào root nếu chưa có
-                if (!root.getChildren().contains(btnWatch)) {
-                    root.getChildren().add(btnWatch);
-                }
-            } else {
-                root.getChildren().remove(btnWatch);
-            }
-
-            // Hiện nút Xóa chỉ cho PAID, CANCELLED và FINISHED
-            if ("PAID".equals(tt) || "CANCELLED".equals(tt) || "FINISHED".equals(tt)) {
-                final String maPhienToDelete = p.maPhien;
-                final String tenPhienToDelete = p.tenPhien;
-                btnXoa.setOnAction(e -> {
-                    e.consume();
-                    javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
-                        javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                    confirm.setTitle("Xác nhận xóa");
-                    confirm.setHeaderText("Xóa phiên: " + tenPhienToDelete);
-                    confirm.setContentText("Phiên chỉ bị ẩn khỏi danh sách của bạn. Dữ liệu trên server và các user khác không bị ảnh hưởng.");
-                    Optional<ButtonType> result = confirm.showAndWait();
-                    if (result.isPresent() && result.get() == ButtonType.OK) {
-                        String userId = SessionManager.getInstance().getCurrentUser() != null
-                            ? SessionManager.getInstance().getCurrentUser().getUserId()
-                            : null;
-                        hiddenAuctionRepository.hideAuction(userId, maPhienToDelete);
-                        HandleNavigationAndAlert.getInstance().showAlert(
-                            Alert.AlertType.INFORMATION, "Thành công", "Đã ẩn phiên khỏi danh sách của bạn.");
-                        doRefresh();
-                    }
-                });
-                if (!root.getChildren().contains(btnXoa)) {
-                    root.getChildren().add(btnXoa);
-                }
-            } else {
-                root.getChildren().remove(btnXoa);
-            }
-
-            setGraphic(root);
-            setText(null);
-            setStyle("-fx-background-color: transparent; -fx-padding: 4 0 4 0;");
-        }
-    }
-
-    private void showCountdownInfo(String tenPhien, String thoiGianBatDau) {
-        String timeInfo;
-        try {
-            LocalDateTime batDau = null;
-            for (DateTimeFormatter f : PARSE_FORMATTERS) {
-                try { batDau = LocalDateTime.parse(thoiGianBatDau, f); break; }
-                catch (DateTimeParseException ignored) {}
-            }
-            if (batDau != null) {
-                LocalDateTime now = LocalDateTime.now();
-                long minutes = ChronoUnit.MINUTES.between(now, batDau);
-                long hours   = ChronoUnit.HOURS.between(now, batDau);
-                if (minutes <= 0) {
-                    timeInfo = "Phiên sắp bắt đầu ngay bây giờ!";
-                } else if (hours < 1) {
-                    timeInfo = "Còn khoảng " + minutes + " phút nữa bắt đầu.";
-                } else {
-                    timeInfo = "Còn khoảng " + hours + " giờ " + (minutes % 60) + " phút nữa bắt đầu.\n"
-                        + "Thời gian bắt đầu: " + batDau.format(DISPLAY_FORMATTER);
-                }
-            } else {
-                timeInfo = "Thời gian bắt đầu: " + thoiGianBatDau;
-            }
-        } catch (Exception e) {
-            timeInfo = "Thời gian bắt đầu: " + thoiGianBatDau;
-        }
-
-        HandleNavigationAndAlert.getInstance().showAlert(
-            Alert.AlertType.INFORMATION,
-            "⭐ Đang theo dõi: " + tenPhien,
-            timeInfo + "\n\nBạn đang theo dõi phiên này. Quay lại trước giờ bắt đầu để tham gia!"
+        // ── Vùng ảnh ─────────────────────────────────────────────────
+        StackPane imgArea = new StackPane();
+        imgArea.setPrefSize(274, 152);
+        imgArea.setStyle(
+            "-fx-background-color: " + categoryGradient(p.danhMucSanPham) + ";" +
+                "-fx-background-radius: 16 16 0 0;"
         );
+
+        // Clip bo góc trên ảnh
+        Rectangle clip = new Rectangle(274, 152);
+        clip.setArcWidth(32); clip.setArcHeight(32);
+        imgArea.setClip(clip);
+
+        // Load ảnh nếu có
+        loadProductImage(imgArea, p.productImgPath);
+
+        // Gradient overlay phía dưới ảnh
+        Region grad = new Region();
+        grad.setPrefSize(274, 68);
+        grad.setStyle("-fx-background-color: linear-gradient(to bottom,transparent,rgba(15,22,60,0.82));");
+        StackPane.setAlignment(grad, Pos.BOTTOM_CENTER);
+        imgArea.getChildren().add(grad);
+
+        // Badge trạng thái (top-left)
+        Label badge = makeBadge(tt);
+        StackPane.setAlignment(badge, Pos.TOP_LEFT);
+        StackPane.setMargin(badge, new Insets(10, 0, 0, 10));
+        imgArea.getChildren().add(badge);
+
+        // Nút action nhỏ (top-right: ⭐ xem trước / 🗑 xoá)
+        HBox iconBtns = new HBox(5);
+        StackPane.setAlignment(iconBtns, Pos.TOP_RIGHT);
+        StackPane.setMargin(iconBtns, new Insets(8, 8, 0, 0));
+
+        if ("WAITING".equals(tt) || "IN_PROGRESS".equals(tt)) {
+            boolean isWatched = watchedSessions.contains(p.maPhien);
+            Button btnStar = makeIconBtn(isWatched ? "👁" : "⭐",
+                isWatched ? "#e74c3c" : "#f1c40f");
+            btnStar.setOnAction(e -> {
+                e.consume();
+                if (watchedSessions.contains(p.maPhien)) watchedSessions.remove(p.maPhien);
+                else { watchedSessions.add(p.maPhien); showWatchInfo(p.tenPhien, p.thoiGianBatDau); }
+                doRefresh();
+            });
+            iconBtns.getChildren().add(btnStar);
+        }
+
+        if ("PAID".equals(tt) || "CANCELLED".equals(tt) || "FINISHED".equals(tt)) {
+            Button btnDel = makeIconBtn("🗑", "#e74c3c");
+            btnDel.setOnAction(e -> {
+                e.consume();
+                javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Xác nhận ẩn");
+                confirm.setHeaderText("Ẩn phiên: " + p.tenPhien);
+                confirm.setContentText("Phiên chỉ bị ẩn khỏi danh sách của bạn, dữ liệu server không đổi.");
+                Optional<ButtonType> res = confirm.showAndWait();
+                if (res.isPresent() && res.get() == ButtonType.OK) {
+                    String uid = SessionManager.getInstance().getCurrentUser() != null
+                        ? SessionManager.getInstance().getCurrentUser().getUserId() : null;
+                    hiddenRepo.hideAuction(uid, p.maPhien);
+                    doRefresh();
+                }
+            });
+            iconBtns.getChildren().add(btnDel);
+        }
+
+        imgArea.getChildren().add(iconBtns);
+
+        // ── Phần nội dung bên dưới ảnh ───────────────────────────────
+        VBox content = new VBox(9);
+        content.setPadding(new Insets(14, 14, 14, 14));
+
+        // Tên sản phẩm
+        Label lblSP = new Label(p.tenSanPham != null ? p.tenSanPham : "—");
+        lblSP.setFont(Font.font("System", FontWeight.BOLD, 14));
+        lblSP.setStyle("-fx-text-fill: #ffffff;");
+        lblSP.setWrapText(true);
+        lblSP.setMaxWidth(246);
+        lblSP.setMaxHeight(38);
+
+        // Tên phiên (nhỏ hơn, mờ hơn)
+        Label lblPhien = new Label(p.tenPhien != null ? p.tenPhien : "");
+        lblPhien.setFont(Font.font(11));
+        lblPhien.setStyle("-fx-text-fill: #6b7db3;");
+        lblPhien.setMaxWidth(246);
+
+        // Hàng giá + đếm ngược
+        HBox priceRow = new HBox(8);
+        priceRow.setAlignment(Pos.CENTER_LEFT);
+
+        Label lblGia = new Label(fmt.format(p.giaHienTai) + " VNĐ");
+        lblGia.setFont(Font.font("System", FontWeight.BOLD, 13));
+        lblGia.setStyle("-fx-text-fill: #EE7455;");
+        HBox.setHgrow(lblGia, Priority.ALWAYS);
+
+        // Đếm ngược: IN_PROGRESS → còn lại đến khi kết thúc / WAITING → đến khi bắt đầu
+        String countdownTarget = "IN_PROGRESS".equals(tt) ? p.thoiGianKetThuc : p.thoiGianBatDau;
+        Label lblTimer = new Label("--:--:--");
+        lblTimer.setFont(Font.font(10.5));
+        lblTimer.setStyle(
+            "-fx-text-fill: #f9a875;" +
+                "-fx-background-color: rgba(249,168,117,0.14);" +
+                "-fx-background-radius: 6;" +
+                "-fx-padding: 2 7 2 7;"
+        );
+        refreshCountdownLabel(lblTimer, countdownTarget);
+        countdownEntries.add(new CountdownEntry(lblTimer, countdownTarget));
+        priceRow.getChildren().addAll(lblGia, lblTimer);
+
+        // Nút "Đặt giá"
+        boolean isOpen = "IN_PROGRESS".equals(tt);
+        final String btnActive =
+            "-fx-background-color: #EE7455;" +
+                "-fx-text-fill: #ffffff;" +
+                "-fx-font-weight: bold; -fx-font-size: 12px;" +
+                "-fx-background-radius: 10;" +
+                "-fx-cursor: hand;" +
+                "-fx-effect: dropshadow(gaussian,rgba(238,116,85,0.38),10,0,0,3);";
+        final String btnInactive =
+            "-fx-background-color: rgba(255,255,255,0.07);" +
+                "-fx-text-fill: #4a5478;" +
+                "-fx-font-weight: bold; -fx-font-size: 12px;" +
+                "-fx-background-radius: 10;" +
+                "-fx-cursor: default;";
+        final String btnActiveHover =
+            "-fx-background-color: #d96045;" +
+                "-fx-text-fill: #fff; -fx-font-weight: bold; -fx-font-size: 12px;" +
+                "-fx-background-radius: 10; -fx-cursor: hand;" +
+                "-fx-scale-x: 1.02; -fx-scale-y: 1.02;";
+
+        Button btnDat = new Button("ĐẶT GIÁ");
+        btnDat.setPrefWidth(246);
+        btnDat.setPrefHeight(40);
+        btnDat.setStyle(isOpen ? btnActive : btnInactive);
+
+        if (isOpen) {
+            btnDat.setOnMouseEntered(e -> btnDat.setStyle(btnActiveHover));
+            btnDat.setOnMouseExited(e -> btnDat.setStyle(btnActive));
+            btnDat.setOnAction(e -> { e.consume(); enterRoom(p, btnDat); });
+        }
+
+        content.getChildren().addAll(lblSP, lblPhien, priceRow, btnDat);
+        card.getChildren().addAll(imgArea, content);
+
+        // ── Sự kiện click toàn card ───────────────────────────────────
+        card.setOnMouseEntered(e -> card.setStyle(styleHover));
+        card.setOnMouseExited(e -> card.setStyle(styleNormal));
+        card.setOnMouseClicked(e -> {
+            switch (tt) {
+                case "IN_PROGRESS" -> enterRoom(p, card);
+                case "WAITING"     -> ModernAlert.show(Alert.AlertType.INFORMATION,
+                    "Phiên chưa mở",
+                    "Phiên đấu giá này chưa đến giờ bắt đầu.\nVui lòng quay lại sau!");
+                default -> ModernAlert.show(Alert.AlertType.WARNING,
+                    "Phiên đã đóng",
+                    "Phiên đấu giá này đã kết thúc, không thể vào phòng.");
+            }
+        });
+
+        return card;
+    }
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+
+    /** Tải ảnh sản phẩm từ thư mục user_data, fallback sang gradient nền. */
+    private void loadProductImage(StackPane imgArea, String productImgPath) {
+        if (productImgPath == null || productImgPath.isBlank()) return;
+        try {
+            String projectDir = System.getProperty("user.dir");
+            // productImgPath = "image/filename.jpg", thực tế ở user_data/image/filename.jpg
+            File imgFile = new File(projectDir + File.separator + "user_data"
+                + File.separator + productImgPath);
+            if (!imgFile.exists()) {
+                // Thử không có prefix user_data
+                imgFile = new File(projectDir + File.separator + productImgPath);
+            }
+            if (imgFile.exists()) {
+                Image img = new Image(imgFile.toURI().toString(), 274, 152, false, true, true);
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(274);
+                iv.setFitHeight(152);
+                iv.setPreserveRatio(false);
+                imgArea.getChildren().add(0, iv); // add ảnh dưới cùng (dưới gradient)
+            }
+        } catch (Exception ignored) { /* giữ gradient nền */ }
+    }
+
+    /** Chuyển sang phòng đấu giá. */
+    private void enterRoom(PhienDauGiaDTO p, javafx.scene.Node source) {
+        SessionManager.getInstance().setCurrentPhienId(p.maPhien);
+        try {
+            StackPane root = FXMLLoader.load(getClass().getResource("/view/BiddingRoom.fxml"));
+            Scene scene = new Scene(root);
+            Stage window = (Stage) source.getScene().getWindow();
+            window.setScene(scene);
+            window.show();
+        } catch (IOException ex) {
+            ModernAlert.show(Alert.AlertType.ERROR, "Lỗi", "Không thể mở phòng đấu giá!");
+        }
+    }
+
+    /** Tạo badge trạng thái. */
+    private Label makeBadge(String tt) {
+        String text, bg, fg;
+        switch (tt) {
+            case "IN_PROGRESS" -> { text = "● Đang diễn ra"; bg = "rgba(46,204,113,0.22)"; fg = "#2ecc71"; }
+            case "WAITING"     -> { text = "◷ Đang chờ";     bg = "rgba(241,196,15,0.22)"; fg = "#f1c40f"; }
+            case "PAID"        -> { text = "✔ Đã thanh toán";bg = "rgba(52,152,219,0.22)"; fg = "#3498db"; }
+            case "CANCELLED"   -> { text = "✕ Đã hủy";       bg = "rgba(231,76,60,0.22)";  fg = "#e74c3c"; }
+            case "FINISHED"    -> { text = "✕ Đã kết thúc";  bg = "rgba(231,76,60,0.22)";  fg = "#e74c3c"; }
+            default            -> { text = tt;                bg = "rgba(255,255,255,0.1)"; fg = "#cccccc"; }
+        }
+        Label b = new Label(text);
+        b.setFont(Font.font("System", FontWeight.BOLD, 10));
+        b.setStyle(
+            "-fx-background-color: " + bg + ";" +
+                "-fx-text-fill: " + fg + ";" +
+                "-fx-background-radius: 6;" +
+                "-fx-border-color: " + fg + ";" +
+                "-fx-border-radius: 6;" +
+                "-fx-border-width: 1;" +
+                "-fx-padding: 3 8 3 8;"
+        );
+        return b;
+    }
+
+    /** Tạo nút icon nhỏ overlay trên ảnh. */
+    private Button makeIconBtn(String icon, String color) {
+        Button btn = new Button(icon);
+        btn.setStyle(
+            "-fx-background-color: rgba(0,0,0,0.48);" +
+                "-fx-text-fill: " + color + ";" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 4 8 4 8;" +
+                "-fx-cursor: hand;" +
+                "-fx-font-size: 13;"
+        );
+        return btn;
+    }
+
+    /** Gradient nền theo danh mục. */
+    private String categoryGradient(String cat) {
+        if (cat == null) return "linear-gradient(to bottom right,#2c3e6b,#1a254b)";
+        return switch (cat) {
+            case "Đá quý"     -> "linear-gradient(to bottom right,#4a1c6b,#2a1050)";
+            case "Nghệ thuật" -> "linear-gradient(to bottom right,#1a4a6b,#0d2840)";
+            case "Xe cộ"      -> "linear-gradient(to bottom right,#0d3b6e,#0a1f3c)";
+            case "Điện tử"    -> "linear-gradient(to bottom right,#0d506e,#0a2840)";
+            default            -> "linear-gradient(to bottom right,#2c3e6b,#1a254b)";
+        };
+    }
+
+    /** Cập nhật nhãn đếm ngược. */
+    private void refreshCountdownLabel(Label label, String endTimeStr) {
+        LocalDateTime end = parseDateTime(endTimeStr);
+        if (end == null) { label.setText("--:--:--"); return; }
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(end)) { label.setText("00:00:00"); return; }
+        long secs = ChronoUnit.SECONDS.between(now, end);
+        label.setText(String.format("%02d:%02d:%02d", secs / 3600, (secs % 3600) / 60, secs % 60));
+    }
+
+    private LocalDateTime parseDateTime(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        for (DateTimeFormatter f : PARSE_FMT) {
+            try { return LocalDateTime.parse(raw, f); }
+            catch (DateTimeParseException ignored) {}
+        }
+        return null;
+    }
+
+    private void showWatchInfo(String tenPhien, String thoiGianBD) {
+        String info;
+        LocalDateTime bd = parseDateTime(thoiGianBD);
+        if (bd != null) {
+            long mins = ChronoUnit.MINUTES.between(LocalDateTime.now(), bd);
+            long hrs  = ChronoUnit.HOURS.between(LocalDateTime.now(), bd);
+            info = mins <= 0 ? "Phiên sắp bắt đầu ngay bây giờ!"
+                : hrs < 1   ? "Còn khoảng " + mins + " phút nữa."
+                : "Còn khoảng " + hrs + " giờ " + (mins % 60) + " phút nữa.\n"
+                + "Bắt đầu: " + bd.format(DISPLAY_FMT);
+        } else {
+            info = "Thời gian bắt đầu: " + thoiGianBD;
+        }
+        ModernAlert.show(Alert.AlertType.INFORMATION,
+            "⭐ Theo dõi: " + tenPhien,
+            info + "\n\nBạn sẽ được nhắc khi phiên bắt đầu!");
     }
 }

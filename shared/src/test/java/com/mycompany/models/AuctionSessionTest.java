@@ -59,15 +59,15 @@ class AuctionSessionTest {
 
     @Test
     @DisplayName("Phiên mới tạo phải ở trạng thái WAITING")
-    void newSession_shouldBeWaiting() {
+    void newSession_shouldBePending() {
         AuctionSession fresh = new AuctionSession(
                 "s-002", "Fresh", product, 500_000.0, seller, 1800
         );
-        assertEquals(SessionStatus.WAITING, fresh.getStatus());
+        assertEquals(SessionStatus.PENDING, fresh.getStatus());
     }
 
     @Test
-    @DisplayName("Chuyển trạng thái từ WAITING sang IN_PROGRESS")
+    @DisplayName("Phiên mới tạo phải ở trạng thái PENDING (chờ admin duyệt)")
     void setStatus_inProgress() {
         AuctionSession fresh = new AuctionSession(
                 "s-003", "Fresh2", product, 500_000.0, seller, 1800

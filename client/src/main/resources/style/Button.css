@@ -26,3 +26,29 @@
 .button-cancel:hover {
     -fx-background-color: #95a5a6;      /* Sáng hơn một chút khi di chuột qua */
 }
+
+/* ── Hiệu ứng nhấn cho button-create và button-cancel ── */
+.button-create:pressed {
+    -fx-background-color: #1a6fa3;
+    -fx-scale-x: 0.94;
+    -fx-scale-y: 0.94;
+    -fx-translate-y: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(52,152,219,0.15), 4, 0, 0, 1);
+}
+.button-create:hover {
+    -fx-background-color: #2980b9;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(three-pass-box, rgba(52,152,219,0.5), 14, 0, 0, 4);
+}
+.button-cancel:pressed {
+    -fx-background-color: #5d6d6e;
+    -fx-scale-x: 0.94;
+    -fx-scale-y: 0.94;
+    -fx-translate-y: 2;
+}
+.button-cancel:hover {
+    -fx-background-color: #95a5a6;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}

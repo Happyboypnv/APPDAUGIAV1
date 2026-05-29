@@ -62,6 +62,26 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>com.mycompany.App</mainClass>
+                    <options>
+                        <option>--add-opens=java.base/java.lang=ALL-UNNAMED</option>
+                        <option>--add-opens=java.base/java.util=ALL-UNNAMED</option>
+                    </options>
+                </configuration>
+            </plugin>
+
+            <!--
+                exec:java — chạy thay javafx:run khi gặp ClassNotFoundException.
+                Lệnh: mvn exec:java -pl client
+                Plugin này dùng Maven classpath trực tiếp nên luôn thấy shared jar,
+                không cần shared phải được install vào ~/.m2 trước.
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.mycompany.Main</mainClass>
+                    <classpathScope>runtime</classpathScope>
                 </configuration>
             </plugin>
         </plugins>
