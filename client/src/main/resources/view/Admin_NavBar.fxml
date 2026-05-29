@@ -3,9 +3,12 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <!-- Navbar Component - Can be included in any page - layout chung cho nhiều trang, chỉ cần sửa NavbarComponent.fxml là tất cả các trang đều tự động cập nhật theo -->
 
@@ -22,22 +25,32 @@
                 <Insets bottom="50.0" top="-60.0" />
             </VBox.margin>
         </ImageView>
-        <Label fx:id="userList" onMouseClicked="#navigateToUserList" style="-fx-text-fill: #b6bfff; -fx-font-size: 18px; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 10 10;" text="Danh sách người dùng">
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
-        </Label>
-        <Label fx:id="reviewAuctionRequest" onMouseClicked="#navigateToReviewAuctionRoom" style="-fx-text-fill: #b6bfff; -fx-font-size: 18px; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 10 10;" text="Duyệt phiên">
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
-        </Label>
+      <Label style="-fx-text-fill: #b6bfff; -fx-font-family: 'Montserrat'; -fx-padding: 10 0 -10 10;" text="MENU">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <ToggleButton fx:id="userList" mnemonicParsing="false" onAction="#navigateToUserList" styleClass="nav-item" stylesheets="@../style/menuButton.css" text="List người dùng">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/query_user.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <toggleGroup>
+            <ToggleGroup fx:id="menuGroup" />
+         </toggleGroup>
+      </ToggleButton>
+      <ToggleButton fx:id="reviewAuctionRequest" mnemonicParsing="false" onAction="#navigateToReviewAuctionRoom" styleClass="nav-item" stylesheets="@../style/menuButton.css" text="Duyệt phiên" toggleGroup="$menuGroup">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/to-do-list.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </ToggleButton>
         <ImageView fx:id="avatarImage" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#handleAvatarClick" pickOnBounds="true" preserveRatio="true">
             <VBox.margin>
                 <Insets top="450.0" />

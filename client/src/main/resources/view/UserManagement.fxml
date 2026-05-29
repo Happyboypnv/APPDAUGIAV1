@@ -20,7 +20,7 @@
                 <!-- ═══════════════════════════════════════════
                      NAVBAR (giữ nguyên từ file sẵn có)
                 ════════════════════════════════════════════ -->
-                <fx:include source="Admin_NavBar.fxml" />
+                <fx:include fx:id="adminNavBar" source="Admin_NavBar.fxml" />
 
                 <!-- ═══════════════════════════════════════════
                      CONTENT AREA

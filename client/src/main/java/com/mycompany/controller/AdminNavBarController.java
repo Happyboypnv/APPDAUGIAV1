@@ -12,11 +12,8 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
@@ -47,10 +44,13 @@ public class AdminNavBarController implements Initializable { // Controller chun
     private VBox navBar; // Container chính chứa tất cả các thành phần navbar
 
     @FXML
-    private Label userList; // Label "Danh sách người dùng"
+    private ToggleButton userList; // Label "Danh sách người dùng"
 
     @FXML
-    private Label reviewAuctionRequest; // Label "Duyệt phiên"
+    private ToggleButton reviewAuctionRequest; // Label "Duyệt phiên
+
+    @FXML
+    private ToggleGroup menuGroup;
 
     // Context menu hiển thị khi click vào avatar
     private ContextMenu contextMenu;
@@ -97,6 +97,20 @@ public class AdminNavBarController implements Initializable { // Controller chun
         // 🔹 BƯỚC 4: Load và set home icon
         Image home = new Image(getClass().getResource("/image/square.png").toExternalForm());
         homeIcon.setImage(home);
+    }
+
+    public void setActive(String page) {
+        userList.setSelected(false);
+        reviewAuctionRequest.setSelected(false);
+
+        switch (page) {
+            case "user" :
+                userList.setSelected(true);
+                break;
+            case "review" :
+                reviewAuctionRequest.setSelected(true);
+                break;
+        }
     }
     private void loadAvatarImage(User currentUser) {
         try {
@@ -184,7 +198,7 @@ public class AdminNavBarController implements Initializable { // Controller chun
      * Điều hướng đến trang Tạo Phiên Đấu Giá khi click vào label trong sidebar.
      */
     @FXML
-    public void navigateToUserList(MouseEvent event) {
+    public void navigateToUserList(ActionEvent event) {
         try {
             HandleNavigationAndAlert.getInstance().handleGoToUserList(event);
         } catch (IOException e) {
@@ -250,7 +264,7 @@ public class AdminNavBarController implements Initializable { // Controller chun
      * @param event MouseEvent từ label click
      */
     @FXML
-    public void navigateToReviewAuctionRoom(MouseEvent event) {
+    public void navigateToReviewAuctionRoom(ActionEvent event) {
         cleanupBiddingRoom((Node) event.getSource()); // ⭐ Cleanup trước khi điều hướng
         try {
             HandleNavigationAndAlert.getInstance().handleGoToReviewAuction(event);

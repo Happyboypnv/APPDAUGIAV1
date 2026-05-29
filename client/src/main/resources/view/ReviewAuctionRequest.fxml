@@ -13,7 +13,7 @@
         <HBox>
             <children>
 
-                <fx:include source="Admin_NavBar.fxml" />
+                <fx:include fx:id="adminNavBar" source="Admin_NavBar.fxml" />
 
                 <VBox alignment="TOP_CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
                     <padding>

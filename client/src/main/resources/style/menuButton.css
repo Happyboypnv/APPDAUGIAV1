@@ -1,0 +1,28 @@
+/* Trạng thái cơ bản của nút menu */
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #b6bfff;
+    -fx-alignment: center-left;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+}
+
+/* 1. Khi di chuột vào (Hover) */
+.nav-item:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: #ffffff;
+}
+
+/* 2. Trạng thái được chọn (Giữ màu khi click) */
+.nav-item:selected {
+    -fx-background-color: rgba(239, 83, 80, 0.15);
+    -fx-border-color: rgba(239, 83, 80, 0.4);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+

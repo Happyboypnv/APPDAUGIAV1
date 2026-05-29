@@ -55,10 +55,14 @@ public class UserListController implements Initializable {
     private final ObservableList<User> danhSachUserObservable = FXCollections.observableArrayList();
     private String currentStatusFilter = "ALL"; // Thêm dòng này để lưu trạng thái lọc hiện tại
 
-
+    @FXML
+    private VBox adminNavBar;
+    @FXML
+    private AdminNavBarController adminNavBarController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        adminNavBarController.setActive("user");
         loadDataFromApi();
         labelTotalUsers.setText(String.valueOf(totalUsers));
         labelOnlineUsers.setText(String.valueOf(onlineUsers));

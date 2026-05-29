@@ -20,7 +20,7 @@
             <content>
                 <HBox prefHeight="800.0" prefWidth="950.0">
                     <children>
-                        <fx:include source="Admin_NavBar.fxml" />
+                        <fx:include fx:id="adminNavBar" source="Admin_NavBar.fxml" />
                         <VBox spacing="20.0" HBox.hgrow="ALWAYS">
                             <padding>
                                 <Insets bottom="30.0" left="40.0" right="40.0" top="40.0" />

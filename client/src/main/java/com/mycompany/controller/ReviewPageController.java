@@ -68,9 +68,16 @@ public class ReviewPageController implements Initializable {
 
     private PhienDauGiaDTO currentAuctionSession;
 
+    @FXML
+    private VBox adminNavBar;
+    @FXML
+    private AdminNavBarController adminNavBarController;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        adminNavBarController.setActive("review");
+
         tenPhienField.setEditable(false);
 
         tenSanPhamField.setEditable(false);
