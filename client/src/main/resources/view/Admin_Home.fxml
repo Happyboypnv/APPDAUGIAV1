@@ -59,23 +59,28 @@
                                 <Button fx:id="pendingBtn" maxWidth="Infinity" onAction="#loadPending" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="PENDING" HBox.hgrow="ALWAYS">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Button>
+                           </cursor>
+                        </Button>
                                 <Button fx:id="waitingBtn" maxWidth="Infinity" onAction="#loadWaiting" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="WAITING" HBox.hgrow="ALWAYS">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Button>
+                           </cursor>
+                        </Button>
                                 <Button fx:id="inProgressBtn" maxWidth="Infinity" onAction="#loadInProgress" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="IN PROGRESS" HBox.hgrow="ALWAYS">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Button>
+                           </cursor>
+                        </Button>
                                 <Button fx:id="paidBtn" maxWidth="Infinity" onAction="#loadPaid" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="PAID" HBox.hgrow="ALWAYS">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Button>
+                           </cursor>
+                        </Button>
                                 <Button fx:id="cancelledBtn" maxWidth="Infinity" onAction="#loadCancelled" styleClass="tab-button" stylesheets="@../style/bidding_dashboard.css" text="CANCELLED" HBox.hgrow="ALWAYS">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Button>
+                           </cursor>
+                        </Button>
                             </children>
                         </HBox>
                         <!-- List of Bidding Sessions (Dynamic ListView) -->
