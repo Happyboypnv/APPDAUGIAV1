@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import com.mycompany.utils.ModernAlert;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -194,11 +195,11 @@ public class BiddingRoomController implements Initializable {
                 } else {
                     logger.error("❌ Không thể kết nối WebSocket sau timeout");
                     Platform.runLater(() ->
-                            HandleNavigationAndAlert.getInstance().showAlert(
-                                    Alert.AlertType.WARNING,
-                                    "Cảnh báo",
-                                    "Không thể kết nối real-time. Tính năng đặt giá có thể bị chậm."
-                            )
+                        HandleNavigationAndAlert.getInstance().showAlert(
+                            Alert.AlertType.WARNING,
+                            "Cảnh báo",
+                            "Không thể kết nối real-time. Tính năng đặt giá có thể bị chậm."
+                        )
                     );
                 }
             } catch (Exception e) {
@@ -389,9 +390,9 @@ public class BiddingRoomController implements Initializable {
 
     private void loadDummyBidHistory() {
         bidHistoryList.addAll(
-                "Nguyễn Văn T. : 135,000,000 VND (1 phút trước)",
-                "Trần Thị L. : 130,000,000 VND (2 phút trước)",
-                "Lê Văn B. : 125,000,000 VND (5 phút trước)"
+            "Nguyễn Văn T. : 135,000,000 VND (1 phút trước)",
+            "Trần Thị L. : 130,000,000 VND (2 phút trước)",
+            "Lê Văn B. : 125,000,000 VND (5 phút trước)"
         );
         bidHistoryListView.setItems(bidHistoryList);
     }
@@ -401,11 +402,7 @@ public class BiddingRoomController implements Initializable {
     }
 
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait(); // Có ở HandleNavigationAndAlert rồi
+        ModernAlert.show(Alert.AlertType.WARNING, title, content);
     }
 
     /**
