@@ -148,12 +148,10 @@ public class AuctionWebSocketControllerAdapter implements AuctionWebSocketListen
             } else {
                 String msg = message.has("message") ? message.get("message").getAsString() : "Không rõ lý do";
                 logger.warn("❌ BID_RESULT FAILED: {}", msg);
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.WARNING);
-                alert.setTitle("Đặt giá thất bại");
-                alert.setHeaderText(null);
-                alert.setContentText(msg);
-                alert.show();
+                com.mycompany.utils.ModernAlert.show(
+                    javafx.scene.control.Alert.AlertType.WARNING,
+                    "Đặt giá thất bại",
+                    msg);
             }
         } catch (Exception e) {
             logger.error("❌ Error processing bid result: {}", e.getMessage(), e);
