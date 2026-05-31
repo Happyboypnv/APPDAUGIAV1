@@ -69,12 +69,6 @@
                 </configuration>
             </plugin>
 
-            <!--
-                exec:java — chạy thay javafx:run khi gặp ClassNotFoundException.
-                Lệnh: mvn exec:java -pl client
-                Plugin này dùng Maven classpath trực tiếp nên luôn thấy shared jar,
-                không cần shared phải được install vào ~/.m2 trước.
-            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -83,6 +77,31 @@
                     <mainClass>com.mycompany.Main</mainClass>
                     <classpathScope>runtime</classpathScope>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.mycompany.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
