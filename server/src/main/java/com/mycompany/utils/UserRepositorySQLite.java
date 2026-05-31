@@ -642,8 +642,7 @@ public class UserRepositorySQLite implements IUserRepository {
           conn.rollback();
           return false; // không đủ tiền hoặc user không tồn tại
         }
-        // Ghi escrow log
-        logEscrow(conn, userId, maPhien, amount);
+
         conn.commit();
         logger.info("holdBalance thành công: {} frozen +{} VNĐ", userId, amount);
         return true;
@@ -679,7 +678,6 @@ public class UserRepositorySQLite implements IUserRepository {
         ps.setDouble(4, amount);
         ps.setString(5, userId);
         ps.executeUpdate();
-        deleteEscrowLog(conn, userId, maPhien);
         conn.commit();
         logger.info("releaseHold thành công: {} release {} VNĐ", userId, amount);
       } catch (SQLException e) {
@@ -715,7 +713,6 @@ public class UserRepositorySQLite implements IUserRepository {
           logger.warn("deductOnWin thất bại: userId={} amount={}", userId, amount);
           return false;
         }
-        deleteEscrowLog(conn, userId, maPhien);
         conn.commit();
         logger.info("deductOnWin thành công: {} trừ {} VNĐ", userId, amount);
         return true;
@@ -728,28 +725,6 @@ public class UserRepositorySQLite implements IUserRepository {
     } catch (SQLException e) {
       logger.error("Lỗi deductOnWin: " + e.getMessage());
       return false;
-    }
-  }
-
-  // Helper: ghi escrow log
-  private void logEscrow(Connection conn, String userId, String maPhien, double amount) throws SQLException {
-    String sql = "INSERT INTO escrow_log (ma_nguoi_dung, ma_phien, so_tien_dong_bang, thoi_gian) VALUES (?,?,?,?)";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setString(1, userId);
-      ps.setString(2, maPhien);
-      ps.setDouble(3, amount);
-      ps.setString(4, java.time.LocalDateTime.now().toString());
-      ps.executeUpdate();
-    }
-  }
-
-  // Helper: xóa escrow log khi giải phóng
-  private void deleteEscrowLog(Connection conn, String userId, String maPhien) throws SQLException {
-    String sql = "DELETE FROM escrow_log WHERE ma_nguoi_dung = ? AND ma_phien = ?";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setString(1, userId);
-      ps.setString(2, maPhien);
-      ps.executeUpdate();
     }
   }
 }

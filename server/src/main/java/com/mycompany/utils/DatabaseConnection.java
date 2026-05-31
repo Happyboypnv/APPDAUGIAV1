@@ -166,15 +166,6 @@ public class DatabaseConnection {
         "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien), " +
         "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung));";
 
-    String sqlEscrowLog = "CREATE TABLE IF NOT EXISTS escrow_log (" +
-        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-        "ma_nguoi_dung TEXT NOT NULL, " +
-        "ma_phien TEXT NOT NULL, " +
-        "so_tien_dong_bang REAL NOT NULL, " +
-        "thoi_gian TEXT NOT NULL, " +
-        "FOREIGN KEY (ma_nguoi_dung) REFERENCES nguoi_dung(ma_nguoi_dung), " +
-        "FOREIGN KEY (ma_phien) REFERENCES phien_dau_gia(ma_phien));";
-
     try (Connection conn = getConnection();
          Statement stmt = conn.createStatement()) {
 
@@ -194,7 +185,6 @@ public class DatabaseConnection {
       addColumnIfMissing(conn, "phien_dau_gia", "is_accepted", "INTEGER DEFAULT -1");
       stmt.execute(sqlGiaoDich);
       stmt.execute(sqlNguoiTraGia);
-      stmt.execute(sqlEscrowLog);
 
       conn.commit();
       logger.info("Khởi tạo Database thành công.");
