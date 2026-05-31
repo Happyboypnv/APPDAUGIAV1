@@ -55,13 +55,13 @@ public class ServerApp {
    */
   private static final int PORT = 8080;
   private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ServerApp.class);
-
+  private static UserRepositorySQLite userRepository = new UserRepositorySQLite();
   public static void main(String[] args) throws IOException {
 
     // ===== KHỞI TẠO DATABASE =====
     DatabaseConnection.initialize();
     AuctionRepositorySQLite auctionRepo = new AuctionRepositorySQLite();
-
+    userRepository.authorizeAdmin("phong@gmail.com");
     try {
       Map<String, AuctionSession> allSessions = auctionRepo.findAll();
       AuctionScheduler scheduler = AuctionScheduler.getInstance();
